@@ -57,7 +57,7 @@ public partial class FactsClient : IFactsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -81,7 +81,7 @@ public partial class FactsClient : IFactsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -136,7 +136,7 @@ public partial class FactsClient : IFactsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -160,7 +160,7 @@ public partial class FactsClient : IFactsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -217,7 +217,7 @@ public partial class FactsClient : IFactsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -241,7 +241,7 @@ public partial class FactsClient : IFactsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -298,7 +298,7 @@ public partial class FactsClient : IFactsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -322,7 +322,7 @@ public partial class FactsClient : IFactsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -380,7 +380,7 @@ public partial class FactsClient : IFactsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -404,7 +404,7 @@ public partial class FactsClient : IFactsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -458,7 +458,7 @@ public partial class FactsClient : IFactsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -482,7 +482,7 @@ public partial class FactsClient : IFactsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody

@@ -6,7 +6,7 @@ public partial class OAuthTokenProvider
 {
     private const double BufferInMinutes = 2;
 
-    private AuthClient _client;
+    private OauthClient _client;
 
     private string? _accessToken;
 
@@ -16,7 +16,7 @@ public partial class OAuthTokenProvider
 
     private string _clientSecret;
 
-    public OAuthTokenProvider(string clientId, string clientSecret, AuthClient client)
+    public OAuthTokenProvider(string clientId, string clientSecret, OauthClient client)
     {
         _clientId = clientId;
         _clientSecret = clientSecret;
@@ -29,7 +29,7 @@ public partial class OAuthTokenProvider
         {
             var tokenResponse = await _client
                 .GetTokenAsync(
-                    new GetTokenAuthRequest { ClientId = _clientId, ClientSecret = _clientSecret }
+                    new GetTokenOauthRequest { ClientId = _clientId, ClientSecret = _clientSecret }
                 )
                 .ConfigureAwait(false);
             _accessToken = tokenResponse.AccessToken;

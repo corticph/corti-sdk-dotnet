@@ -3,17 +3,17 @@ using CortiApi.Core;
 
 namespace CortiApi;
 
-public partial class AuthClient : IAuthClient
+public partial class OauthClient : IOauthClient
 {
     private RawClient _client;
 
-    internal AuthClient(RawClient client)
+    internal OauthClient(RawClient client)
     {
         _client = client;
     }
 
-    private async Task<WithRawResponse<GetTokenResponse>> GetTokenAsyncCore(
-        GetTokenAuthRequest request,
+    private async Task<WithRawResponse<GetTokenOauthResponse>> GetTokenAsyncCore(
+        GetTokenOauthRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -30,11 +30,8 @@ public partial class AuthClient : IAuthClient
                 {
                     BaseUrl = _client.Options.Environment.Login,
                     Method = HttpMethod.Post,
-                    Path = string.Format(
-                        "{0}/protocol/openid-connect/token",
-                        ValueConvert.ToPathParameterString(request.TenantName)
-                    ),
-                    Body = request.Body,
+                    Path = "token",
+                    Body = request,
                     Headers = _headers,
                     ContentType = "application/x-www-form-urlencoded",
                     Options = options,
@@ -47,8 +44,8 @@ public partial class AuthClient : IAuthClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                var responseData = JsonUtils.Deserialize<GetTokenResponse>(responseBody)!;
-                return new WithRawResponse<GetTokenResponse>()
+                var responseData = JsonUtils.Deserialize<GetTokenOauthResponse>(responseBody)!;
+                return new WithRawResponse<GetTokenOauthResponse>()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -80,29 +77,20 @@ public partial class AuthClient : IAuthClient
     }
 
     /// <summary>
-    /// Obtain an OAuth2 access token. Supports multiple grant types (client_credentials, authorization_code, refresh_token, password).
-    /// The path parameter tenantName (realm) identifies the Keycloak realm; use the same value as the Tenant-Name header for API requests.
+    /// Minimal endpoint for Fern OAuth; implementation should call the real token endpoint.
     /// </summary>
     /// <example><code>
-    /// await client.Auth.GetTokenAsync(
-    ///     new GetTokenAuthRequest
-    ///     {
-    ///         TenantName = "base",
-    ///         Body = new GetTokenRequestClientCredentials
-    ///         {
-    ///             GrantType = "client_credentials",
-    ///             ClientId = "client_id_123",
-    ///         },
-    ///     }
+    /// await client.Oauth.GetTokenAsync(
+    ///     new GetTokenOauthRequest { ClientId = "client_id", ClientSecret = "client_secret" }
     /// );
     /// </code></example>
-    public WithRawResponseTask<GetTokenResponse> GetTokenAsync(
-        GetTokenAuthRequest request,
+    public WithRawResponseTask<GetTokenOauthResponse> GetTokenAsync(
+        GetTokenOauthRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<GetTokenResponse>(
+        return new WithRawResponseTask<GetTokenOauthResponse>(
             GetTokenAsyncCore(request, options, cancellationToken)
         );
     }

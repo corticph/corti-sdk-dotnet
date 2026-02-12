@@ -5,7 +5,7 @@ namespace CortiApi;
 /// </summary>
 [Serializable]
 public class GatewayTimeoutError(ErrorResponse body)
-    : CortiApiApiException("GatewayTimeoutError", 504, body)
+    : CortiClientApiException("GatewayTimeoutError", 504, body)
 {
     /// <summary>
     /// The body of the response that triggered the exception.

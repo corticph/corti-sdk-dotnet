@@ -1,25 +1,25 @@
 using System.Text.Json.Serialization;
 using CortiApi.Core;
+using OneOf;
 
 namespace CortiApi;
 
 [Serializable]
 public record GetTokenAuthRequest
 {
-    [JsonPropertyName("client_id")]
-    public required string ClientId { get; set; }
-
     /// <summary>
-    /// Optional secret for confidential clients and Authorization code flow
+    /// Keycloak realm / tenant name. Must match the tenant used for API requests (same as Tenant-Name header).
     /// </summary>
-    [JsonPropertyName("client_secret")]
-    public string? ClientSecret { get; set; }
+    [JsonIgnore]
+    public required string TenantName { get; set; }
 
-    [JsonPropertyName("scope")]
-    public string Scope { get; set; } = "openid";
-
-    [JsonPropertyName("grant_type")]
-    public string GrantType { get; set; } = "client_credentials";
+    [JsonIgnore]
+    public required OneOf<
+        GetTokenRequestClientCredentials,
+        GetTokenRequestAuthorizationCode,
+        GetTokenRequestRefreshToken,
+        GetTokenRequestPassword
+    > Body { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

@@ -64,7 +64,7 @@ public partial class TemplatesClient : ITemplatesClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -79,7 +79,9 @@ public partial class TemplatesClient : ITemplatesClient
                 switch (response.StatusCode)
                 {
                     case 401:
-                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new UnauthorizedError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -90,7 +92,7 @@ public partial class TemplatesClient : ITemplatesClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -149,7 +151,7 @@ public partial class TemplatesClient : ITemplatesClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -164,7 +166,9 @@ public partial class TemplatesClient : ITemplatesClient
                 switch (response.StatusCode)
                 {
                     case 401:
-                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new UnauthorizedError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -175,7 +179,7 @@ public partial class TemplatesClient : ITemplatesClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -230,7 +234,7 @@ public partial class TemplatesClient : ITemplatesClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -245,7 +249,9 @@ public partial class TemplatesClient : ITemplatesClient
                 switch (response.StatusCode)
                 {
                     case 401:
-                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new UnauthorizedError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -256,7 +262,7 @@ public partial class TemplatesClient : ITemplatesClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody

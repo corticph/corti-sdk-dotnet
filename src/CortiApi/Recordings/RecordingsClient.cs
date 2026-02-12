@@ -59,7 +59,7 @@ public partial class RecordingsClient : IRecordingsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -74,7 +74,9 @@ public partial class RecordingsClient : IRecordingsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -93,7 +95,7 @@ public partial class RecordingsClient : IRecordingsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -151,7 +153,7 @@ public partial class RecordingsClient : IRecordingsClient
             }
             catch (JsonException e)
             {
-                throw new CortiApiApiException(
+                throw new CortiClientApiException(
                     "Failed to deserialize response",
                     response.StatusCode,
                     responseBody,
@@ -166,7 +168,9 @@ public partial class RecordingsClient : IRecordingsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -185,7 +189,7 @@ public partial class RecordingsClient : IRecordingsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -243,13 +247,15 @@ public partial class RecordingsClient : IRecordingsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new BadRequestError(
+                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        );
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
                         );
                     case 404:
-                        throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new NotFoundError(JsonUtils.Deserialize<ErrorResponse>(responseBody));
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -264,7 +270,7 @@ public partial class RecordingsClient : IRecordingsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
@@ -381,7 +387,7 @@ public partial class RecordingsClient : IRecordingsClient
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
                         );
                     case 404:
-                        throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new NotFoundError(JsonUtils.Deserialize<ErrorResponse>(responseBody));
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -396,7 +402,7 @@ public partial class RecordingsClient : IRecordingsClient
             {
                 // unable to map error response, throwing generic error
             }
-            throw new CortiApiApiException(
+            throw new CortiClientApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,
                 responseBody
