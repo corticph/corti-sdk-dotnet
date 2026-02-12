@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/CortiApi.Test/CortiApi.Test.csproj" />
+  <Project Path="src/CortiApi/CortiApi.csproj" />
+</Solution>
