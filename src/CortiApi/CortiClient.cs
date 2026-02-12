@@ -48,29 +48,11 @@ public partial class CortiClient : ICortiClient
             );
         _client = new RawClient(clientOptionsWithAuth);
         Interactions = new InteractionsClient(_client);
-        Recordings = new RecordingsClient(_client);
-        Transcripts = new TranscriptsClient(_client);
-        Facts = new FactsClient(_client);
-        Documents = new DocumentsClient(_client);
-        Templates = new TemplatesClient(_client);
-        Codes = new CodesClient(_client);
         Auth = new AuthClient(_client);
         Oauth = new OauthClient(_client);
     }
 
     public IInteractionsClient Interactions { get; }
-
-    public IRecordingsClient Recordings { get; }
-
-    public ITranscriptsClient Transcripts { get; }
-
-    public IFactsClient Facts { get; }
-
-    public IDocumentsClient Documents { get; }
-
-    public ITemplatesClient Templates { get; }
-
-    public ICodesClient Codes { get; }
 
     public IAuthClient Auth { get; }
 

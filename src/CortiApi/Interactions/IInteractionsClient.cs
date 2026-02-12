@@ -21,31 +21,4 @@ public partial interface IInteractionsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
-
-    /// <summary>
-    /// Retrieves a previously recorded interaction by its unique identifier (interaction ID).
-    /// </summary>
-    WithRawResponseTask<InteractionsGetResponse> GetAsync(
-        InteractionsGetRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    /// <summary>
-    /// Deletes an existing interaction.
-    /// </summary>
-    Task DeleteAsync(
-        InteractionsDeleteRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    /// <summary>
-    /// Modifies an existing interaction by updating specific fields without overwriting the entire record.
-    /// </summary>
-    WithRawResponseTask<InteractionsGetResponse> UpdateAsync(
-        InteractionsUpdateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
 }
