@@ -41,7 +41,7 @@ Instantiate and use the client with the following:
 ```csharp
 using CortiApi;
 
-var client = new CortiClient("client_id", "client_secret", "TENANT_NAME");
+var client = new CortiClient("TENANT_NAME", "TOKEN");
 await client.Interactions.CreateAsync(
     new InteractionsCreateRequest
     {
@@ -78,7 +78,7 @@ List endpoints are paginated. The SDK provides an async enumerable so that you c
 ```csharp
 using CortiApi;
 
-var client = new CortiClient("client_id", "client_secret", "TENANT_NAME");
+var client = new CortiClient("TENANT_NAME", "TOKEN");
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
 
 await foreach (var item in items)
