@@ -5,5 +5,5 @@
   "generatorConfig": {
     "client-class-name": "CortiClient"
   },
-  "sdkVersion": "0.0.844"
+  "sdkVersion": "0.0.845"
 }
