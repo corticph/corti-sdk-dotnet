@@ -756,3 +756,346 @@ await client.Transcripts.GetStatusAsync(
 </dd>
 </dl>
 </details>
+
+## Facts
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">FactGroupsListAsync</a>() -> WithRawResponseTask&lt;FactsFactGroupsListResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Returns a list of available fact groups, used to categorize facts associated with an interaction.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Facts.FactGroupsListAsync();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">ListAsync</a>(FactsListRequest { ... }) -> WithRawResponseTask&lt;FactsListResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieves a list of facts for a given interaction.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" });
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `FactsListRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">CreateAsync</a>(FactsCreateRequest { ... }) -> WithRawResponseTask&lt;FactsCreateResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Adds new facts to an interaction.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Facts.CreateAsync(
+    new FactsCreateRequest
+    {
+        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        Facts = new List<FactsCreateInput>()
+        {
+            new FactsCreateInput { Text = "text", Group = "other" },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `FactsCreateRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">BatchUpdateAsync</a>(FactsBatchUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsBatchUpdateResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Updates multiple facts associated with an interaction.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Facts.BatchUpdateAsync(
+    new FactsBatchUpdateRequest
+    {
+        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        Facts = new List<FactsBatchUpdateInput>()
+        {
+            new FactsBatchUpdateInput { FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08" },
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `FactsBatchUpdateRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">UpdateAsync</a>(FactsUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsUpdateResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Updates an existing fact associated with a specific interaction.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Facts.UpdateAsync(
+    new FactsUpdateRequest
+    {
+        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `FactsUpdateRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">ExtractAsync</a>(FactsExtractRequest { ... }) -> WithRawResponseTask&lt;FactsExtractResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Extract facts from provided text, without storing them.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Facts.ExtractAsync(
+    new FactsExtractRequest
+    {
+        Context = new List<CommonTextContext>()
+        {
+            new CommonTextContext { Type = CommonTextContextType.Text, Text = "text" },
+        },
+        OutputLanguage = "outputLanguage",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `FactsExtractRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>

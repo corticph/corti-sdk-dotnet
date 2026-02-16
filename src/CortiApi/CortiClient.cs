@@ -40,6 +40,7 @@ public partial class CortiClient : ICortiClient
         Interactions = new InteractionsClient(_client);
         Recordings = new RecordingsClient(_client);
         Transcripts = new TranscriptsClient(_client);
+        Facts = new FactsClient(_client);
     }
 
     public IInteractionsClient Interactions { get; }
@@ -47,4 +48,6 @@ public partial class CortiClient : ICortiClient
     public IRecordingsClient Recordings { get; }
 
     public ITranscriptsClient Transcripts { get; }
+
+    public IFactsClient Facts { get; }
 }
