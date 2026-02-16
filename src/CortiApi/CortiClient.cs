@@ -38,7 +38,10 @@ public partial class CortiClient : ICortiClient
         }
         _client = new RawClient(clientOptionsWithAuth);
         Interactions = new InteractionsClient(_client);
+        Recordings = new RecordingsClient(_client);
     }
 
     public IInteractionsClient Interactions { get; }
+
+    public IRecordingsClient Recordings { get; }
 }
