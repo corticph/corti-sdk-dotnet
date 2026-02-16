@@ -7,12 +7,6 @@ namespace CortiApi;
 public record InteractionsUpdateRequest
 {
     /// <summary>
-    /// The unique identifier of the interaction. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string Id { get; set; }
-
-    /// <summary>
     /// The unique identifier of the medical professional responsible for this interaction.  If nulled, automatically set to a uuid.
     /// </summary>
     [JsonPropertyName("assignedUserId")]

@@ -7,12 +7,6 @@ namespace CortiApi;
 public record TranscriptsListRequest
 {
     /// <summary>
-    /// The unique identifier of the interaction. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string Id { get; set; }
-
-    /// <summary>
     /// Display full transcripts in listing
     /// </summary>
     [JsonIgnore]

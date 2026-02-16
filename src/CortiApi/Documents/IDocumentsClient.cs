@@ -1,3 +1,5 @@
+using OneOf;
+
 namespace CortiApi;
 
 public partial interface IDocumentsClient
@@ -6,7 +8,7 @@ public partial interface IDocumentsClient
     /// List Documents
     /// </summary>
     WithRawResponseTask<DocumentsListResponse> ListAsync(
-        DocumentsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -15,7 +17,8 @@ public partial interface IDocumentsClient
     /// This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
     /// </summary>
     WithRawResponseTask<DocumentsGetResponse> CreateAsync(
-        DocumentsCreateRequest request,
+        string id,
+        OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate> request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -24,18 +27,22 @@ public partial interface IDocumentsClient
     /// Get Document.
     /// </summary>
     WithRawResponseTask<DocumentsGetResponse> GetAsync(
-        DocumentsGetRequest request,
+        string id,
+        string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
     Task DeleteAsync(
-        DocumentsDeleteRequest request,
+        string id,
+        string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
     WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
+        string id,
+        string documentId,
         DocumentsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

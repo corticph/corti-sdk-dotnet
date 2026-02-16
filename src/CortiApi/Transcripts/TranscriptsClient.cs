@@ -13,6 +13,7 @@ public partial class TranscriptsClient : ITranscriptsClient
     }
 
     private async Task<WithRawResponse<TranscriptsListResponse>> ListAsyncCore(
+        string id,
         TranscriptsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -36,7 +37,7 @@ public partial class TranscriptsClient : ITranscriptsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/transcripts/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     QueryString = _queryString,
                     Headers = _headers,
@@ -113,6 +114,7 @@ public partial class TranscriptsClient : ITranscriptsClient
     }
 
     private async Task<WithRawResponse<TranscriptsResponse>> CreateAsyncCore(
+        string id,
         TranscriptsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -132,7 +134,7 @@ public partial class TranscriptsClient : ITranscriptsClient
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "interactions/{0}/transcripts/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
                     Headers = _headers,
@@ -210,7 +212,8 @@ public partial class TranscriptsClient : ITranscriptsClient
     }
 
     private async Task<WithRawResponse<TranscriptsResponse>> GetAsyncCore(
-        TranscriptsGetRequest request,
+        string id,
+        string transcriptId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -229,8 +232,8 @@ public partial class TranscriptsClient : ITranscriptsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/transcripts/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.TranscriptId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(transcriptId)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -306,7 +309,8 @@ public partial class TranscriptsClient : ITranscriptsClient
     }
 
     private async Task<WithRawResponse<TranscriptsStatusResponse>> GetStatusAsyncCore(
-        TranscriptsGetStatusRequest request,
+        string id,
+        string transcriptId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -325,8 +329,8 @@ public partial class TranscriptsClient : ITranscriptsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/transcripts/{1}/status",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.TranscriptId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(transcriptId)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -388,17 +392,19 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.ListAsync(
-    ///     new TranscriptsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new TranscriptsListRequest()
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsListResponse> ListAsync(
+        string id,
         TranscriptsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TranscriptsListResponse>(
-            ListAsyncCore(request, options, cancellationToken)
+            ListAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -407,22 +413,23 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.CreateAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new TranscriptsCreateRequest
     ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///         RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///         PrimaryLanguage = "en",
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsResponse> CreateAsync(
+        string id,
         TranscriptsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TranscriptsResponse>(
-            CreateAsyncCore(request, options, cancellationToken)
+            CreateAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -431,21 +438,19 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.GetAsync(
-    ///     new TranscriptsGetRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsResponse> GetAsync(
-        TranscriptsGetRequest request,
+        string id,
+        string transcriptId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TranscriptsResponse>(
-            GetAsyncCore(request, options, cancellationToken)
+            GetAsyncCore(id, transcriptId, options, cancellationToken)
         );
     }
 
@@ -454,15 +459,13 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.DeleteAsync(
-    ///     new TranscriptsDeleteRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public async Task DeleteAsync(
-        TranscriptsDeleteRequest request,
+        string id,
+        string transcriptId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -481,8 +484,8 @@ public partial class TranscriptsClient : ITranscriptsClient
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "interactions/{0}/transcripts/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.TranscriptId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(transcriptId)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -539,21 +542,19 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.GetStatusAsync(
-    ///     new TranscriptsGetStatusRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsStatusResponse> GetStatusAsync(
-        TranscriptsGetStatusRequest request,
+        string id,
+        string transcriptId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TranscriptsStatusResponse>(
-            GetStatusAsyncCore(request, options, cancellationToken)
+            GetStatusAsyncCore(id, transcriptId, options, cancellationToken)
         );
     }
 }

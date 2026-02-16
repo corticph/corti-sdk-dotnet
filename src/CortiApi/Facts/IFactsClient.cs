@@ -14,7 +14,7 @@ public partial interface IFactsClient
     /// Retrieves a list of facts for a given interaction.
     /// </summary>
     WithRawResponseTask<FactsListResponse> ListAsync(
-        FactsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -23,6 +23,7 @@ public partial interface IFactsClient
     /// Adds new facts to an interaction.
     /// </summary>
     WithRawResponseTask<FactsCreateResponse> CreateAsync(
+        string id,
         FactsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -32,6 +33,7 @@ public partial interface IFactsClient
     /// Updates multiple facts associated with an interaction.
     /// </summary>
     WithRawResponseTask<FactsBatchUpdateResponse> BatchUpdateAsync(
+        string id,
         FactsBatchUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -41,6 +43,8 @@ public partial interface IFactsClient
     /// Updates an existing fact associated with a specific interaction.
     /// </summary>
     WithRawResponseTask<FactsUpdateResponse> UpdateAsync(
+        string id,
+        string factId,
         FactsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

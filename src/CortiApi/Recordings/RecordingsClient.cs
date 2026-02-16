@@ -13,7 +13,7 @@ public partial class RecordingsClient : IRecordingsClient
     }
 
     private async Task<WithRawResponse<RecordingsListResponse>> ListAsyncCore(
-        RecordingsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -32,7 +32,7 @@ public partial class RecordingsClient : IRecordingsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/recordings/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -198,7 +198,8 @@ public partial class RecordingsClient : IRecordingsClient
     }
 
     private async Task<WithRawResponse<System.IO.Stream>> GetAsyncCore(
-        RecordingsGetRequest request,
+        string id,
+        string recordingId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -217,8 +218,8 @@ public partial class RecordingsClient : IRecordingsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/recordings/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.RecordingId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(recordingId)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -282,18 +283,16 @@ public partial class RecordingsClient : IRecordingsClient
     /// Retrieve a list of recordings for a given interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Recordings.ListAsync(
-    ///     new RecordingsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-    /// );
+    /// await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     /// </code></example>
     public WithRawResponseTask<RecordingsListResponse> ListAsync(
-        RecordingsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<RecordingsListResponse>(
-            ListAsyncCore(request, options, cancellationToken)
+            ListAsyncCore(id, options, cancellationToken)
         );
     }
 
@@ -316,18 +315,17 @@ public partial class RecordingsClient : IRecordingsClient
     /// Retrieve a specific recording for a given interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Recordings.GetAsync(
-    ///     new RecordingsGetRequest { Id = "id", RecordingId = "recordingId" }
-    /// );
+    /// await client.Recordings.GetAsync("id", "recordingId");
     /// </code></example>
     public WithRawResponseTask<System.IO.Stream> GetAsync(
-        RecordingsGetRequest request,
+        string id,
+        string recordingId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<System.IO.Stream>(
-            GetAsyncCore(request, options, cancellationToken)
+            GetAsyncCore(id, recordingId, options, cancellationToken)
         );
     }
 
@@ -336,15 +334,13 @@ public partial class RecordingsClient : IRecordingsClient
     /// </summary>
     /// <example><code>
     /// await client.Recordings.DeleteAsync(
-    ///     new RecordingsDeleteRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public async Task DeleteAsync(
-        RecordingsDeleteRequest request,
+        string id,
+        string recordingId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -363,8 +359,8 @@ public partial class RecordingsClient : IRecordingsClient
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "interactions/{0}/recordings/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.RecordingId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(recordingId)
                     ),
                     Headers = _headers,
                     Options = options,

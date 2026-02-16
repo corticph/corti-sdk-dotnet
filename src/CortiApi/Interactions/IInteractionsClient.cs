@@ -26,7 +26,7 @@ public partial interface IInteractionsClient
     /// Retrieves a previously recorded interaction by its unique identifier (interaction ID).
     /// </summary>
     WithRawResponseTask<InteractionsGetResponse> GetAsync(
-        InteractionsGetRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -35,7 +35,7 @@ public partial interface IInteractionsClient
     /// Deletes an existing interaction.
     /// </summary>
     Task DeleteAsync(
-        InteractionsDeleteRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -44,6 +44,7 @@ public partial interface IInteractionsClient
     /// Modifies an existing interaction by updating specific fields without overwriting the entire record.
     /// </summary>
     WithRawResponseTask<InteractionsGetResponse> UpdateAsync(
+        string id,
         InteractionsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

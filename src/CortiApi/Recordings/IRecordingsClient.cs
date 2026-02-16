@@ -6,7 +6,7 @@ public partial interface IRecordingsClient
     /// Retrieve a list of recordings for a given interaction.
     /// </summary>
     WithRawResponseTask<RecordingsListResponse> ListAsync(
-        RecordingsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -25,7 +25,8 @@ public partial interface IRecordingsClient
     /// Retrieve a specific recording for a given interaction.
     /// </summary>
     WithRawResponseTask<System.IO.Stream> GetAsync(
-        RecordingsGetRequest request,
+        string id,
+        string recordingId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -34,7 +35,8 @@ public partial interface IRecordingsClient
     /// Delete a specific recording for a given interaction.
     /// </summary>
     Task DeleteAsync(
-        RecordingsDeleteRequest request,
+        string id,
+        string recordingId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

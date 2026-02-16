@@ -7,12 +7,6 @@ namespace CortiApi;
 public record FactsCreateRequest
 {
     /// <summary>
-    /// The unique identifier of the interaction. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string Id { get; set; }
-
-    /// <summary>
     /// A list of facts to be created.
     /// </summary>
     [JsonPropertyName("facts")]

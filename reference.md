@@ -118,7 +118,7 @@ await client.Interactions.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">GetAsync</a>(InteractionsGetRequest { ... }) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -145,9 +145,7 @@ Retrieves a previously recorded interaction by its unique identifier (interactio
 <dd>
 
 ```csharp
-await client.Interactions.GetAsync(
-    new InteractionsGetRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Interactions.GetAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -162,7 +160,7 @@ await client.Interactions.GetAsync(
 <dl>
 <dd>
 
-**request:** `InteractionsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -174,7 +172,7 @@ await client.Interactions.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">DeleteAsync</a>(InteractionsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">DeleteAsync</a>(id)</code></summary>
 <dl>
 <dd>
 
@@ -201,9 +199,7 @@ Deletes an existing interaction.
 <dd>
 
 ```csharp
-await client.Interactions.DeleteAsync(
-    new InteractionsDeleteRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Interactions.DeleteAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -218,7 +214,7 @@ await client.Interactions.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `InteractionsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -230,7 +226,7 @@ await client.Interactions.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">UpdateAsync</a>(InteractionsUpdateRequest { ... }) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">UpdateAsync</a>(id, InteractionsUpdateRequest { ... }) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -258,7 +254,8 @@ Modifies an existing interaction by updating specific fields without overwriting
 
 ```csharp
 await client.Interactions.UpdateAsync(
-    new InteractionsUpdateRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new InteractionsUpdateRequest()
 );
 ```
 </dd>
@@ -270,6 +267,14 @@ await client.Interactions.UpdateAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -287,7 +292,7 @@ await client.Interactions.UpdateAsync(
 </details>
 
 ## Recordings
-<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">ListAsync</a>(RecordingsListRequest { ... }) -> WithRawResponseTask&lt;RecordingsListResponse&gt;</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;RecordingsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -314,9 +319,7 @@ Retrieve a list of recordings for a given interaction.
 <dd>
 
 ```csharp
-await client.Recordings.ListAsync(
-    new RecordingsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -331,7 +334,7 @@ await client.Recordings.ListAsync(
 <dl>
 <dd>
 
-**request:** `RecordingsListRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -343,7 +346,7 @@ await client.Recordings.ListAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">GetAsync</a>(RecordingsGetRequest { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">GetAsync</a>(id, recordingId) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
 <dl>
 <dd>
 
@@ -370,9 +373,7 @@ Retrieve a specific recording for a given interaction.
 <dd>
 
 ```csharp
-await client.Recordings.GetAsync(
-    new RecordingsGetRequest { Id = "id", RecordingId = "recordingId" }
-);
+await client.Recordings.GetAsync("id", "recordingId");
 ```
 </dd>
 </dl>
@@ -387,7 +388,15 @@ await client.Recordings.GetAsync(
 <dl>
 <dd>
 
-**request:** `RecordingsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**recordingId:** `string` — The unique identifier of the recording. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -399,7 +408,7 @@ await client.Recordings.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">DeleteAsync</a>(RecordingsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">DeleteAsync</a>(id, recordingId)</code></summary>
 <dl>
 <dd>
 
@@ -427,11 +436,8 @@ Delete a specific recording for a given interaction.
 
 ```csharp
 await client.Recordings.DeleteAsync(
-    new RecordingsDeleteRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -447,7 +453,15 @@ await client.Recordings.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `RecordingsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**recordingId:** `string` — The unique identifier of the recording. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -460,7 +474,7 @@ await client.Recordings.DeleteAsync(
 </details>
 
 ## Transcripts
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">ListAsync</a>(TranscriptsListRequest { ... }) -> WithRawResponseTask&lt;TranscriptsListResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">ListAsync</a>(id, TranscriptsListRequest { ... }) -> WithRawResponseTask&lt;TranscriptsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -488,7 +502,8 @@ Retrieves a list of transcripts for a given interaction.
 
 ```csharp
 await client.Transcripts.ListAsync(
-    new TranscriptsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new TranscriptsListRequest()
 );
 ```
 </dd>
@@ -500,6 +515,14 @@ await client.Transcripts.ListAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -516,7 +539,7 @@ await client.Transcripts.ListAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">CreateAsync</a>(TranscriptsCreateRequest { ... }) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">CreateAsync</a>(id, TranscriptsCreateRequest { ... }) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -544,9 +567,9 @@ Create a transcript from an audio file attached, via `/recordings` endpoint, to 
 
 ```csharp
 await client.Transcripts.CreateAsync(
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     new TranscriptsCreateRequest
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         PrimaryLanguage = "en",
     }
@@ -565,6 +588,14 @@ await client.Transcripts.CreateAsync(
 <dl>
 <dd>
 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `TranscriptsCreateRequest` 
     
 </dd>
@@ -577,7 +608,7 @@ await client.Transcripts.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">GetAsync</a>(TranscriptsGetRequest { ... }) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">GetAsync</a>(id, transcriptId) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -605,11 +636,8 @@ Retrieve a transcript from a specific interaction.<br/><Note>Each interaction ma
 
 ```csharp
 await client.Transcripts.GetAsync(
-    new TranscriptsGetRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -625,7 +653,15 @@ await client.Transcripts.GetAsync(
 <dl>
 <dd>
 
-**request:** `TranscriptsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcriptId:** `string` — The unique identifier of the transcript. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -637,7 +673,7 @@ await client.Transcripts.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">DeleteAsync</a>(TranscriptsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">DeleteAsync</a>(id, transcriptId)</code></summary>
 <dl>
 <dd>
 
@@ -665,11 +701,8 @@ Deletes a specific transcript associated with an interaction.
 
 ```csharp
 await client.Transcripts.DeleteAsync(
-    new TranscriptsDeleteRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -685,7 +718,15 @@ await client.Transcripts.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `TranscriptsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcriptId:** `string` — The unique identifier of the transcript. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -697,7 +738,7 @@ await client.Transcripts.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">GetStatusAsync</a>(TranscriptsGetStatusRequest { ... }) -> WithRawResponseTask&lt;TranscriptsStatusResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">GetStatusAsync</a>(id, transcriptId) -> WithRawResponseTask&lt;TranscriptsStatusResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -725,11 +766,8 @@ Poll for transcript creation status.<br/><Note>Status of `completed` indicates t
 
 ```csharp
 await client.Transcripts.GetStatusAsync(
-    new TranscriptsGetStatusRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -745,7 +783,15 @@ await client.Transcripts.GetStatusAsync(
 <dl>
 <dd>
 
-**request:** `TranscriptsGetStatusRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcriptId:** `string` — The unique identifier of the transcript. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -797,7 +843,7 @@ await client.Facts.FactGroupsListAsync();
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">ListAsync</a>(FactsListRequest { ... }) -> WithRawResponseTask&lt;FactsListResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;FactsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -824,7 +870,7 @@ Retrieves a list of facts for a given interaction.
 <dd>
 
 ```csharp
-await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" });
+await client.Facts.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -839,7 +885,7 @@ await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a56
 <dl>
 <dd>
 
-**request:** `FactsListRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -851,7 +897,7 @@ await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a56
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">CreateAsync</a>(FactsCreateRequest { ... }) -> WithRawResponseTask&lt;FactsCreateResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">CreateAsync</a>(id, FactsCreateRequest { ... }) -> WithRawResponseTask&lt;FactsCreateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -879,9 +925,9 @@ Adds new facts to an interaction.
 
 ```csharp
 await client.Facts.CreateAsync(
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     new FactsCreateRequest
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         Facts = new List<FactsCreateInput>()
         {
             new FactsCreateInput { Text = "text", Group = "other" },
@@ -902,6 +948,14 @@ await client.Facts.CreateAsync(
 <dl>
 <dd>
 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `FactsCreateRequest` 
     
 </dd>
@@ -914,7 +968,7 @@ await client.Facts.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">BatchUpdateAsync</a>(FactsBatchUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsBatchUpdateResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">BatchUpdateAsync</a>(id, FactsBatchUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsBatchUpdateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -942,9 +996,9 @@ Updates multiple facts associated with an interaction.
 
 ```csharp
 await client.Facts.BatchUpdateAsync(
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     new FactsBatchUpdateRequest
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         Facts = new List<FactsBatchUpdateInput>()
         {
             new FactsBatchUpdateInput { FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08" },
@@ -965,6 +1019,14 @@ await client.Facts.BatchUpdateAsync(
 <dl>
 <dd>
 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `FactsBatchUpdateRequest` 
     
 </dd>
@@ -977,7 +1039,7 @@ await client.Facts.BatchUpdateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">UpdateAsync</a>(FactsUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsUpdateResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">UpdateAsync</a>(id, factId, FactsUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsUpdateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1005,11 +1067,9 @@ Updates an existing fact associated with a specific interaction.
 
 ```csharp
 await client.Facts.UpdateAsync(
-    new FactsUpdateRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
+    new FactsUpdateRequest()
 );
 ```
 </dd>
@@ -1021,6 +1081,22 @@ await client.Facts.UpdateAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**factId:** `string` — The unique identifier of the fact to update. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -1101,7 +1177,7 @@ await client.Facts.ExtractAsync(
 </details>
 
 ## Documents
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">ListAsync</a>(DocumentsListRequest { ... }) -> WithRawResponseTask&lt;DocumentsListResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;DocumentsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1128,9 +1204,7 @@ List Documents
 <dd>
 
 ```csharp
-await client.Documents.ListAsync(
-    new DocumentsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -1145,7 +1219,7 @@ await client.Documents.ListAsync(
 <dl>
 <dd>
 
-**request:** `DocumentsListRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -1157,7 +1231,7 @@ await client.Documents.ListAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">CreateAsync</a>(DocumentsCreateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">CreateAsync</a>(id, OneOf&lt;DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate&gt; { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1185,31 +1259,28 @@ This endpoint offers different ways to generate a document. Find guides to docum
 
 ```csharp
 await client.Documents.CreateAsync(
-    new DocumentsCreateRequest
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new DocumentsCreateRequestWithTemplateKey
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        Body = new DocumentsCreateRequestWithTemplateKey
+        Context = new List<
+            OneOf<
+                DocumentsContextWithFacts,
+                DocumentsContextWithTranscript,
+                DocumentsContextWithString
+            >
+        >()
         {
-            Context = new List<
-                OneOf<
-                    DocumentsContextWithFacts,
-                    DocumentsContextWithTranscript,
-                    DocumentsContextWithString
-                >
-            >()
+            new DocumentsContextWithFacts
             {
-                new DocumentsContextWithFacts
+                Type = DocumentsContextWithFactsType.Facts,
+                Data = new List<FactsContext>()
                 {
-                    Type = DocumentsContextWithFactsType.Facts,
-                    Data = new List<FactsContext>()
-                    {
-                        new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-                    },
+                    new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
                 },
             },
-            TemplateKey = "templateKey",
-            OutputLanguage = "outputLanguage",
         },
+        TemplateKey = "templateKey",
+        OutputLanguage = "outputLanguage",
     }
 );
 ```
@@ -1226,7 +1297,15 @@ await client.Documents.CreateAsync(
 <dl>
 <dd>
 
-**request:** `DocumentsCreateRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate>` 
     
 </dd>
 </dl>
@@ -1238,7 +1317,7 @@ await client.Documents.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">GetAsync</a>(DocumentsGetRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">GetAsync</a>(id, documentId) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1266,11 +1345,8 @@ Get Document.
 
 ```csharp
 await client.Documents.GetAsync(
-    new DocumentsGetRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -1286,7 +1362,15 @@ await client.Documents.GetAsync(
 <dl>
 <dd>
 
-**request:** `DocumentsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentId:** `string` — The document ID representing the context for the request. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -1298,7 +1382,7 @@ await client.Documents.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">DeleteAsync</a>(DocumentsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">DeleteAsync</a>(id, documentId)</code></summary>
 <dl>
 <dd>
 
@@ -1312,11 +1396,8 @@ await client.Documents.GetAsync(
 
 ```csharp
 await client.Documents.DeleteAsync(
-    new DocumentsDeleteRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -1332,7 +1413,15 @@ await client.Documents.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `DocumentsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentId:** `string` — The document ID representing the context for the request. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -1344,7 +1433,7 @@ await client.Documents.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">UpdateAsync</a>(DocumentsUpdateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">UpdateAsync</a>(id, documentId, DocumentsUpdateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1358,11 +1447,9 @@ await client.Documents.DeleteAsync(
 
 ```csharp
 await client.Documents.UpdateAsync(
-    new DocumentsUpdateRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new DocumentsUpdateRequest()
 );
 ```
 </dd>
@@ -1374,6 +1461,22 @@ await client.Documents.UpdateAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentId:** `string` — The document ID representing the context for the request. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>

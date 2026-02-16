@@ -207,7 +207,7 @@ public partial class InteractionsClient : IInteractionsClient
     }
 
     private async Task<WithRawResponse<InteractionsGetResponse>> GetAsyncCore(
-        InteractionsGetRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -226,7 +226,7 @@ public partial class InteractionsClient : IInteractionsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -290,6 +290,7 @@ public partial class InteractionsClient : IInteractionsClient
     }
 
     private async Task<WithRawResponse<InteractionsGetResponse>> UpdateAsyncCore(
+        string id,
         InteractionsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -309,7 +310,7 @@ public partial class InteractionsClient : IInteractionsClient
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "interactions/{0}",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
                     Headers = _headers,
@@ -445,18 +446,16 @@ public partial class InteractionsClient : IInteractionsClient
     /// Retrieves a previously recorded interaction by its unique identifier (interaction ID).
     /// </summary>
     /// <example><code>
-    /// await client.Interactions.GetAsync(
-    ///     new InteractionsGetRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-    /// );
+    /// await client.Interactions.GetAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     /// </code></example>
     public WithRawResponseTask<InteractionsGetResponse> GetAsync(
-        InteractionsGetRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<InteractionsGetResponse>(
-            GetAsyncCore(request, options, cancellationToken)
+            GetAsyncCore(id, options, cancellationToken)
         );
     }
 
@@ -464,12 +463,10 @@ public partial class InteractionsClient : IInteractionsClient
     /// Deletes an existing interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Interactions.DeleteAsync(
-    ///     new InteractionsDeleteRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-    /// );
+    /// await client.Interactions.DeleteAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     /// </code></example>
     public async Task DeleteAsync(
-        InteractionsDeleteRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -488,7 +485,7 @@ public partial class InteractionsClient : IInteractionsClient
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "interactions/{0}",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -533,17 +530,19 @@ public partial class InteractionsClient : IInteractionsClient
     /// </summary>
     /// <example><code>
     /// await client.Interactions.UpdateAsync(
-    ///     new InteractionsUpdateRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new InteractionsUpdateRequest()
     /// );
     /// </code></example>
     public WithRawResponseTask<InteractionsGetResponse> UpdateAsync(
+        string id,
         InteractionsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<InteractionsGetResponse>(
-            UpdateAsyncCore(request, options, cancellationToken)
+            UpdateAsyncCore(id, request, options, cancellationToken)
         );
     }
 }

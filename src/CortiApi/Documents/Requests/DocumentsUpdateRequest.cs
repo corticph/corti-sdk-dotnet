@@ -7,18 +7,6 @@ namespace CortiApi;
 public record DocumentsUpdateRequest
 {
     /// <summary>
-    /// The unique identifier of the interaction. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string Id { get; set; }
-
-    /// <summary>
-    /// The document ID representing the context for the request. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string DocumentId { get; set; }
-
-    /// <summary>
     /// An optional name for the document.
     /// </summary>
     [JsonPropertyName("name")]

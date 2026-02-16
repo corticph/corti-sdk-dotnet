@@ -7,12 +7,6 @@ namespace CortiApi;
 public record FactsBatchUpdateRequest
 {
     /// <summary>
-    /// The unique identifier of the interaction. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string Id { get; set; }
-
-    /// <summary>
     /// A list of facts to be updated.
     /// </summary>
     [JsonPropertyName("facts")]

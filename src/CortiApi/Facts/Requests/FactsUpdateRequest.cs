@@ -7,18 +7,6 @@ namespace CortiApi;
 public record FactsUpdateRequest
 {
     /// <summary>
-    /// The unique identifier of the interaction. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string Id { get; set; }
-
-    /// <summary>
-    /// The unique identifier of the fact to update. Must be a valid UUID.
-    /// </summary>
-    [JsonIgnore]
-    public required string FactId { get; set; }
-
-    /// <summary>
     /// The updated text of the fact.
     /// </summary>
     [JsonPropertyName("text")]

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using CortiApi.Core;
+using OneOf;
 
 namespace CortiApi;
 
@@ -13,7 +14,7 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     private async Task<WithRawResponse<DocumentsListResponse>> ListAsyncCore(
-        DocumentsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -32,7 +33,7 @@ public partial class DocumentsClient : IDocumentsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/documents/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -104,7 +105,8 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     private async Task<WithRawResponse<DocumentsGetResponse>> CreateAsyncCore(
-        DocumentsCreateRequest request,
+        string id,
+        OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate> request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -123,9 +125,9 @@ public partial class DocumentsClient : IDocumentsClient
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "interactions/{0}/documents/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
-                    Body = request.Body,
+                    Body = request,
                     Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
@@ -197,7 +199,8 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     private async Task<WithRawResponse<DocumentsGetResponse>> GetAsyncCore(
-        DocumentsGetRequest request,
+        string id,
+        string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -216,8 +219,8 @@ public partial class DocumentsClient : IDocumentsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/documents/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.DocumentId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(documentId)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -289,6 +292,8 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     private async Task<WithRawResponse<DocumentsGetResponse>> UpdateAsyncCore(
+        string id,
+        string documentId,
         DocumentsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -308,8 +313,8 @@ public partial class DocumentsClient : IDocumentsClient
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "interactions/{0}/documents/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.DocumentId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(documentId)
                     ),
                     Body = request,
                     Headers = _headers,
@@ -386,18 +391,16 @@ public partial class DocumentsClient : IDocumentsClient
     /// List Documents
     /// </summary>
     /// <example><code>
-    /// await client.Documents.ListAsync(
-    ///     new DocumentsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-    /// );
+    /// await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     /// </code></example>
     public WithRawResponseTask<DocumentsListResponse> ListAsync(
-        DocumentsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<DocumentsListResponse>(
-            ListAsyncCore(request, options, cancellationToken)
+            ListAsyncCore(id, options, cancellationToken)
         );
     }
 
@@ -406,42 +409,40 @@ public partial class DocumentsClient : IDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.CreateAsync(
-    ///     new DocumentsCreateRequest
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new DocumentsCreateRequestWithTemplateKey
     ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         Body = new DocumentsCreateRequestWithTemplateKey
+    ///         Context = new List&lt;
+    ///             OneOf&lt;
+    ///                 DocumentsContextWithFacts,
+    ///                 DocumentsContextWithTranscript,
+    ///                 DocumentsContextWithString
+    ///             &gt;
+    ///         &gt;()
     ///         {
-    ///             Context = new List&lt;
-    ///                 OneOf&lt;
-    ///                     DocumentsContextWithFacts,
-    ///                     DocumentsContextWithTranscript,
-    ///                     DocumentsContextWithString
-    ///                 &gt;
-    ///             &gt;()
+    ///             new DocumentsContextWithFacts
     ///             {
-    ///                 new DocumentsContextWithFacts
+    ///                 Type = DocumentsContextWithFactsType.Facts,
+    ///                 Data = new List&lt;FactsContext&gt;()
     ///                 {
-    ///                     Type = DocumentsContextWithFactsType.Facts,
-    ///                     Data = new List&lt;FactsContext&gt;()
-    ///                     {
-    ///                         new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-    ///                     },
+    ///                     new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
     ///                 },
     ///             },
-    ///             TemplateKey = "templateKey",
-    ///             OutputLanguage = "outputLanguage",
     ///         },
+    ///         TemplateKey = "templateKey",
+    ///         OutputLanguage = "outputLanguage",
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> CreateAsync(
-        DocumentsCreateRequest request,
+        string id,
+        OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate> request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<DocumentsGetResponse>(
-            CreateAsyncCore(request, options, cancellationToken)
+            CreateAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -450,35 +451,31 @@ public partial class DocumentsClient : IDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.GetAsync(
-    ///     new DocumentsGetRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> GetAsync(
-        DocumentsGetRequest request,
+        string id,
+        string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<DocumentsGetResponse>(
-            GetAsyncCore(request, options, cancellationToken)
+            GetAsyncCore(id, documentId, options, cancellationToken)
         );
     }
 
     /// <example><code>
     /// await client.Documents.DeleteAsync(
-    ///     new DocumentsDeleteRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public async Task DeleteAsync(
-        DocumentsDeleteRequest request,
+        string id,
+        string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -497,8 +494,8 @@ public partial class DocumentsClient : IDocumentsClient
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "interactions/{0}/documents/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.DocumentId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(documentId)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -546,21 +543,21 @@ public partial class DocumentsClient : IDocumentsClient
 
     /// <example><code>
     /// await client.Documents.UpdateAsync(
-    ///     new DocumentsUpdateRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new DocumentsUpdateRequest()
     /// );
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
+        string id,
+        string documentId,
         DocumentsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<DocumentsGetResponse>(
-            UpdateAsyncCore(request, options, cancellationToken)
+            UpdateAsyncCore(id, documentId, request, options, cancellationToken)
         );
     }
 }

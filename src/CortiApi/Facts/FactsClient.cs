@@ -90,7 +90,7 @@ public partial class FactsClient : IFactsClient
     }
 
     private async Task<WithRawResponse<FactsListResponse>> ListAsyncCore(
-        FactsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -109,7 +109,7 @@ public partial class FactsClient : IFactsClient
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "interactions/{0}/facts/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Headers = _headers,
                     Options = options,
@@ -169,6 +169,7 @@ public partial class FactsClient : IFactsClient
     }
 
     private async Task<WithRawResponse<FactsCreateResponse>> CreateAsyncCore(
+        string id,
         FactsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -188,7 +189,7 @@ public partial class FactsClient : IFactsClient
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "interactions/{0}/facts/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
                     Headers = _headers,
@@ -250,6 +251,7 @@ public partial class FactsClient : IFactsClient
     }
 
     private async Task<WithRawResponse<FactsBatchUpdateResponse>> BatchUpdateAsyncCore(
+        string id,
         FactsBatchUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -269,7 +271,7 @@ public partial class FactsClient : IFactsClient
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "interactions/{0}/facts/",
-                        ValueConvert.ToPathParameterString(request.Id)
+                        ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
                     Headers = _headers,
@@ -331,6 +333,8 @@ public partial class FactsClient : IFactsClient
     }
 
     private async Task<WithRawResponse<FactsUpdateResponse>> UpdateAsyncCore(
+        string id,
+        string factId,
         FactsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -350,8 +354,8 @@ public partial class FactsClient : IFactsClient
                     Method = HttpMethodExtensions.Patch,
                     Path = string.Format(
                         "interactions/{0}/facts/{1}",
-                        ValueConvert.ToPathParameterString(request.Id),
-                        ValueConvert.ToPathParameterString(request.FactId)
+                        ValueConvert.ToPathParameterString(id),
+                        ValueConvert.ToPathParameterString(factId)
                     ),
                     Body = request,
                     Headers = _headers,
@@ -510,16 +514,16 @@ public partial class FactsClient : IFactsClient
     /// Retrieves a list of facts for a given interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" });
+    /// await client.Facts.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     /// </code></example>
     public WithRawResponseTask<FactsListResponse> ListAsync(
-        FactsListRequest request,
+        string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<FactsListResponse>(
-            ListAsyncCore(request, options, cancellationToken)
+            ListAsyncCore(id, options, cancellationToken)
         );
     }
 
@@ -528,9 +532,9 @@ public partial class FactsClient : IFactsClient
     /// </summary>
     /// <example><code>
     /// await client.Facts.CreateAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new FactsCreateRequest
     ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///         Facts = new List&lt;FactsCreateInput&gt;()
     ///         {
     ///             new FactsCreateInput { Text = "text", Group = "other" },
@@ -539,13 +543,14 @@ public partial class FactsClient : IFactsClient
     /// );
     /// </code></example>
     public WithRawResponseTask<FactsCreateResponse> CreateAsync(
+        string id,
         FactsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<FactsCreateResponse>(
-            CreateAsyncCore(request, options, cancellationToken)
+            CreateAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -554,9 +559,9 @@ public partial class FactsClient : IFactsClient
     /// </summary>
     /// <example><code>
     /// await client.Facts.BatchUpdateAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new FactsBatchUpdateRequest
     ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///         Facts = new List&lt;FactsBatchUpdateInput&gt;()
     ///         {
     ///             new FactsBatchUpdateInput { FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08" },
@@ -565,13 +570,14 @@ public partial class FactsClient : IFactsClient
     /// );
     /// </code></example>
     public WithRawResponseTask<FactsBatchUpdateResponse> BatchUpdateAsync(
+        string id,
         FactsBatchUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<FactsBatchUpdateResponse>(
-            BatchUpdateAsyncCore(request, options, cancellationToken)
+            BatchUpdateAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -580,21 +586,21 @@ public partial class FactsClient : IFactsClient
     /// </summary>
     /// <example><code>
     /// await client.Facts.UpdateAsync(
-    ///     new FactsUpdateRequest
-    ///     {
-    ///         Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///         FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
-    ///     }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
+    ///     new FactsUpdateRequest()
     /// );
     /// </code></example>
     public WithRawResponseTask<FactsUpdateResponse> UpdateAsync(
+        string id,
+        string factId,
         FactsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<FactsUpdateResponse>(
-            UpdateAsyncCore(request, options, cancellationToken)
+            UpdateAsyncCore(id, factId, request, options, cancellationToken)
         );
     }
 
