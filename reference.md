@@ -1100,6 +1100,296 @@ await client.Facts.ExtractAsync(
 </dl>
 </details>
 
+## Documents
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">ListAsync</a>(DocumentsListRequest { ... }) -> WithRawResponseTask&lt;DocumentsListResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List Documents
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Documents.ListAsync(
+    new DocumentsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `DocumentsListRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">CreateAsync</a>(DocumentsCreateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Documents.CreateAsync(
+    new DocumentsCreateRequest
+    {
+        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        Body = new DocumentsCreateRequestWithTemplateKey
+        {
+            Context = new List<
+                OneOf<
+                    DocumentsContextWithFacts,
+                    DocumentsContextWithTranscript,
+                    DocumentsContextWithString
+                >
+            >()
+            {
+                new DocumentsContextWithFacts
+                {
+                    Type = DocumentsContextWithFactsType.Facts,
+                    Data = new List<FactsContext>()
+                    {
+                        new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
+                    },
+                },
+            },
+            TemplateKey = "templateKey",
+            OutputLanguage = "outputLanguage",
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `DocumentsCreateRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">GetAsync</a>(DocumentsGetRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get Document.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Documents.GetAsync(
+    new DocumentsGetRequest
+    {
+        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `DocumentsGetRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">DeleteAsync</a>(DocumentsDeleteRequest { ... })</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Documents.DeleteAsync(
+    new DocumentsDeleteRequest
+    {
+        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `DocumentsDeleteRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">UpdateAsync</a>(DocumentsUpdateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Documents.UpdateAsync(
+    new DocumentsUpdateRequest
+    {
+        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `DocumentsUpdateRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Codes
 <details><summary><code>client.Codes.<a href="/src/CortiApi/Codes/CodesClient.cs">PredictAsync</a>(CodesGeneralPredictRequest { ... }) -> WithRawResponseTask&lt;CodesGeneralResponse&gt;</code></summary>
 <dl>

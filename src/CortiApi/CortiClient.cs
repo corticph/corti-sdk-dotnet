@@ -41,6 +41,7 @@ public partial class CortiClient : ICortiClient
         Recordings = new RecordingsClient(_client);
         Transcripts = new TranscriptsClient(_client);
         Facts = new FactsClient(_client);
+        Documents = new DocumentsClient(_client);
         Codes = new CodesClient(_client);
     }
 
@@ -51,6 +52,8 @@ public partial class CortiClient : ICortiClient
     public ITranscriptsClient Transcripts { get; }
 
     public IFactsClient Facts { get; }
+
+    public IDocumentsClient Documents { get; }
 
     public ICodesClient Codes { get; }
 }
