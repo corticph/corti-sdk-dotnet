@@ -9,7 +9,21 @@
     "include-exception-handler": true,
     "inline-path-parameters": true,
     "experimental-readonly-constants": true,
-    "experimental-enable-websockets": true
+    "experimental-enable-websockets": true,
+    "temporary-websocket-environments": {
+      "/audio-bridge/v2/interactions/": {
+        "environments": {
+          "EU": "wss://api.eu.corti.app",
+          "US": "wss://api.us.corti.app"
+        }
+      },
+      "/audio-bridge/v2/transcribe": {
+        "environments": {
+          "EU": "wss://api.eu.corti.app",
+          "US": "wss://api.us.corti.app"
+        }
+      }
+    }
   },
-  "sdkVersion": "0.0.891"
+  "sdkVersion": "0.0.892"
 }
