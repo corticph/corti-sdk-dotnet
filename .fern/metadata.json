@@ -9,5 +9,5 @@
     "include-exception-handler": true,
     "inline-path-parameters": true
   },
-  "sdkVersion": "0.0.879"
+  "sdkVersion": "0.0.881"
 }

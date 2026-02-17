@@ -3,5 +3,5 @@ namespace CortiApi;
 [Serializable]
 internal class Version
 {
-    public const string Current = "0.0.879";
+    public const string Current = "0.0.881";
 }
