@@ -74,4 +74,9 @@ public partial class CortiClient : ICortiClient
     public ICodesClient Codes { get; }
 
     public IAgentsClient Agents { get; }
+
+    public TranscribeApi CreateTranscribeApi(TranscribeApi.Options options)
+    {
+        return new TranscribeApi(options);
+    }
 }
