@@ -262,7 +262,7 @@ public partial class TranscribeApi : IAsyncDisposable, IDisposable, INotifyPrope
     /// </summary>
     public class Options
     {
-        private string _baseUrl = "wss://api.eu.corti.app";
+        private string _baseUrl = "wss://api.eu.corti.app/audio-bridge/v2";
 
         /// <summary>
         /// The Websocket URL for the API connection.
@@ -298,9 +298,9 @@ public partial class TranscribeApi : IAsyncDisposable, IDisposable, INotifyPrope
     /// </summary>
     public static class Environments
     {
-        public static string EU { get; set; } = "wss://api.eu.corti.app";
+        public static string EU { get; set; } = "wss://api.eu.corti.app/audio-bridge/v2";
 
-        public static string US { get; set; } = "wss://api.us.corti.app";
+        public static string US { get; set; } = "wss://api.us.corti.app/audio-bridge/v2";
 
         internal static string getBaseUrl(string environment)
         {
@@ -312,7 +312,7 @@ public partial class TranscribeApi : IAsyncDisposable, IDisposable, INotifyPrope
                     return US;
                 default:
                     return string.IsNullOrEmpty(environment)
-                        ? "wss://api.eu.corti.app"
+                        ? "wss://api.eu.corti.app/audio-bridge/v2"
                         : environment;
             }
         }
