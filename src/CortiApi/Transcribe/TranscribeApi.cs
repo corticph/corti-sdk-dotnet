@@ -262,10 +262,25 @@ public partial class TranscribeApi : IAsyncDisposable, IDisposable, INotifyPrope
     /// </summary>
     public class Options
     {
+        private string _baseUrl = "wss://api.eu.corti.app";
+
         /// <summary>
         /// The Websocket URL for the API connection.
         /// </summary>
-        public string BaseUrl { get; set; } = "wss";
+        public string BaseUrl
+        {
+            get => TranscribeApi.Environments.getBaseUrl(_baseUrl);
+            set => _baseUrl = value;
+        }
+
+        /// <summary>
+        /// The Environment for the API connection.
+        /// </summary>
+        public string Environment
+        {
+            get => _baseUrl;
+            set => _baseUrl = value;
+        }
 
         /// <summary>
         /// Specifies the tenant context.
@@ -276,5 +291,30 @@ public partial class TranscribeApi : IAsyncDisposable, IDisposable, INotifyPrope
         /// Bearer access token for authentication.
         /// </summary>
         public required string Token { get; set; }
+    }
+
+    /// <summary>
+    /// Selectable endpoint URLs for the API client
+    /// </summary>
+    public static class Environments
+    {
+        public static string EU { get; set; } = "wss://api.eu.corti.app";
+
+        public static string US { get; set; } = "wss://api.us.corti.app";
+
+        internal static string getBaseUrl(string environment)
+        {
+            switch (environment)
+            {
+                case "EU":
+                    return EU;
+                case "US":
+                    return US;
+                default:
+                    return string.IsNullOrEmpty(environment)
+                        ? "wss://api.eu.corti.app"
+                        : environment;
+            }
+        }
     }
 }

@@ -11,13 +11,13 @@
     "experimental-readonly-constants": true,
     "experimental-enable-websockets": true,
     "temporary-websocket-environments": {
-      "/audio-bridge/v2/interactions/": {
+      "/interactions/": {
         "environments": {
           "EU": "wss://api.eu.corti.app",
           "US": "wss://api.us.corti.app"
         }
       },
-      "/audio-bridge/v2/transcribe": {
+      "/transcribe": {
         "environments": {
           "EU": "wss://api.eu.corti.app",
           "US": "wss://api.us.corti.app"
@@ -25,5 +25,5 @@
       }
     }
   },
-  "sdkVersion": "0.0.892"
+  "sdkVersion": "0.0.893"
 }
