@@ -5,7 +5,9 @@
   "generatorConfig": {
     "client-class-name": "CortiClient",
     "use-undiscriminated-unions": true,
-    "generate-error-types": true
+    "generate-error-types": true,
+    "include-exception-handler": true,
+    "inline-path-parameters": true
   },
-  "sdkVersion": "0.0.878"
+  "sdkVersion": "0.0.879"
 }
