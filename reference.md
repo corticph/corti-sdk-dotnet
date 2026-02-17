@@ -1833,3 +1833,182 @@ await client.Agents.CreateAsync(
 </dd>
 </dl>
 </details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;AgentsAgentResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint retrieves an agent by its identifier. The agent contains information about its capabilities and the experts it can call.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.GetAsync("12345678-90ab-cdef-gh12-34567890abc");
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">DeleteAsync</a>(id)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint deletes an agent by its identifier. Once deleted, the agent can no longer be used in threads.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.DeleteAsync("12345678-90ab-cdef-gh12-34567890abc");
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">UpdateAsync</a>(id, AgentsAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint updates an existing agent. Only the fields provided in the request body will be updated; other fields will remain unchanged.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.UpdateAsync(
+    "12345678-90ab-cdef-gh12-34567890abc",
+    new AgentsAgent
+    {
+        Id = "id",
+        Name = "name",
+        Description = "description",
+        SystemPrompt = "systemPrompt",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `AgentsAgent` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>

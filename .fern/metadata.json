@@ -4,7 +4,8 @@
   "generatorVersion": "2.20.5",
   "generatorConfig": {
     "client-class-name": "CortiClient",
-    "use-undiscriminated-unions": true
+    "use-undiscriminated-unions": true,
+    "generate-error-types": true
   },
-  "sdkVersion": "0.0.876"
+  "sdkVersion": "0.0.878"
 }

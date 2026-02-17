@@ -19,4 +19,32 @@ public partial interface IAgentsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// This endpoint retrieves an agent by its identifier. The agent contains information about its capabilities and the experts it can call.
+    /// </summary>
+    WithRawResponseTask<AgentsAgentResponse> GetAsync(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// This endpoint deletes an agent by its identifier. Once deleted, the agent can no longer be used in threads.
+    /// </summary>
+    Task DeleteAsync(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// This endpoint updates an existing agent. Only the fields provided in the request body will be updated; other fields will remain unchanged.
+    /// </summary>
+    WithRawResponseTask<AgentsAgent> UpdateAsync(
+        string id,
+        AgentsAgent request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }
