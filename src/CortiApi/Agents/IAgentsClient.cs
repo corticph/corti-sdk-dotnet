@@ -47,4 +47,54 @@ public partial interface IAgentsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// This endpoint retrieves the agent card in JSON format, which provides metadata about the agent, including its name, description, and the experts it can call.
+    /// </summary>
+    WithRawResponseTask<AgentsAgentCard> GetCardAsync(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// This endpoint sends a message to the specified agent to start or continue a task. The agent processes the message and returns a response. If the message contains a task ID that matches an ongoing task, the agent will continue that task; otherwise, it will start a new task.
+    /// </summary>
+    WithRawResponseTask<AgentsMessageSendResponse> MessageSendAsync(
+        string id,
+        AgentsMessageSendParams request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// This endpoint retrieves the status and details of a specific task associated with the given agent. It provides information about the task's current state, history, and any artifacts produced during its execution.
+    /// </summary>
+    WithRawResponseTask<AgentsTask> GetTaskAsync(
+        string id,
+        string taskId,
+        AgentsGetTaskRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// This endpoint retrieves all tasks and top-level messages associated with a specific context for the given agent.
+    /// </summary>
+    WithRawResponseTask<AgentsContext> GetContextAsync(
+        string id,
+        string contextId,
+        AgentsGetContextRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// This endpoint retrieves the experts registry, which contains information about all available experts that can be referenced when creating agents through the AgentsCreateExpertReference schema.
+    /// </summary>
+    WithRawResponseTask<AgentsRegistryExpertsResponse> GetRegistryExpertsAsync(
+        AgentsGetRegistryExpertsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }

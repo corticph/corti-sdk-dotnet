@@ -2012,3 +2012,338 @@ await client.Agents.UpdateAsync(
 </dd>
 </dl>
 </details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetCardAsync</a>(id) -> WithRawResponseTask&lt;AgentsAgentCard&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint retrieves the agent card in JSON format, which provides metadata about the agent, including its name, description, and the experts it can call.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.GetCardAsync("12345678-90ab-cdef-gh12-34567890abc");
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">MessageSendAsync</a>(id, AgentsMessageSendParams { ... }) -> WithRawResponseTask&lt;AgentsMessageSendResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint sends a message to the specified agent to start or continue a task. The agent processes the message and returns a response. If the message contains a task ID that matches an ongoing task, the agent will continue that task; otherwise, it will start a new task.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.MessageSendAsync(
+    "12345678-90ab-cdef-gh12-34567890abc",
+    new AgentsMessageSendParams
+    {
+        Message = new AgentsMessage
+        {
+            Role = AgentsMessageRole.User,
+            Parts = new List<AgentsPart>()
+            {
+                new AgentsTextPart { Kind = AgentsTextPartKind.Text, Text = "text" },
+            },
+            MessageId = "messageId",
+            Kind = AgentsMessageKind.Message,
+        },
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `AgentsMessageSendParams` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetTaskAsync</a>(id, taskId, AgentsGetTaskRequest { ... }) -> WithRawResponseTask&lt;AgentsTask&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint retrieves the status and details of a specific task associated with the given agent. It provides information about the task's current state, history, and any artifacts produced during its execution.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.GetTaskAsync(
+    "12345678-90ab-cdef-gh12-34567890abc",
+    "taskId",
+    new AgentsGetTaskRequest()
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**taskId:** `string` — The identifier of the task to retrieve.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `AgentsGetTaskRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetContextAsync</a>(id, contextId, AgentsGetContextRequest { ... }) -> WithRawResponseTask&lt;AgentsContext&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint retrieves all tasks and top-level messages associated with a specific context for the given agent.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.GetContextAsync(
+    "12345678-90ab-cdef-gh12-34567890abc",
+    "contextId",
+    new AgentsGetContextRequest()
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**contextId:** `string` — The identifier of the context (thread) to retrieve tasks for.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `AgentsGetContextRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetRegistryExpertsAsync</a>(AgentsGetRegistryExpertsRequest { ... }) -> WithRawResponseTask&lt;AgentsRegistryExpertsResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint retrieves the experts registry, which contains information about all available experts that can be referenced when creating agents through the AgentsCreateExpertReference schema.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.GetRegistryExpertsAsync(
+    new AgentsGetRegistryExpertsRequest { Limit = 100, Offset = 0 }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `AgentsGetRegistryExpertsRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
