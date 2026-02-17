@@ -1,5 +1,3 @@
-using OneOf;
-
 namespace CortiApi;
 
 public partial interface IAgentsClient
@@ -7,7 +5,7 @@ public partial interface IAgentsClient
     /// <summary>
     /// This endpoint retrieves a list of all agents that can be called by the Corti Agent Framework.
     /// </summary>
-    WithRawResponseTask<IEnumerable<OneOf<AgentsAgent, AgentsAgentReference>>> ListAsync(
+    WithRawResponseTask<IEnumerable<AgentsAgentResponse>> ListAsync(
         AgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

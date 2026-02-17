@@ -3,7 +3,8 @@
   "generatorName": "fernapi/fern-csharp-sdk",
   "generatorVersion": "2.20.5",
   "generatorConfig": {
-    "client-class-name": "CortiClient"
+    "client-class-name": "CortiClient",
+    "use-undiscriminated-unions": true
   },
-  "sdkVersion": "0.0.875"
+  "sdkVersion": "0.0.876"
 }

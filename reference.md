@@ -1231,7 +1231,7 @@ await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">CreateAsync</a>(id, OneOf&lt;DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate&gt; { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">CreateAsync</a>(id, DocumentsCreateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1262,13 +1262,7 @@ await client.Documents.CreateAsync(
     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     new DocumentsCreateRequestWithTemplateKey
     {
-        Context = new List<
-            OneOf<
-                DocumentsContextWithFacts,
-                DocumentsContextWithTranscript,
-                DocumentsContextWithString
-            >
-        >()
+        Context = new List<DocumentsContext>()
         {
             new DocumentsContextWithFacts
             {
@@ -1305,7 +1299,7 @@ await client.Documents.CreateAsync(
 <dl>
 <dd>
 
-**request:** `OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate>` 
+**request:** `DocumentsCreateRequest` 
     
 </dd>
 </dl>
@@ -1692,7 +1686,7 @@ await client.Codes.PredictAsync(
             CommonCodingSystemEnum.Icd10Cm,
             CommonCodingSystemEnum.Cpt,
         },
-        Context = new List<OneOf<CommonTextContext, CommonDocumentIdContext>>()
+        Context = new List<CommonAiContext>()
         {
             new CommonTextContext
             {
@@ -1730,7 +1724,7 @@ await client.Codes.PredictAsync(
 </details>
 
 ## Agents
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;AgentsAgentResponse&gt;&gt;</code></summary>
 <dl>
 <dd>
 

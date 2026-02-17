@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using CortiApi.Core;
-using OneOf;
 
 namespace CortiApi;
 
@@ -38,9 +37,7 @@ public record AgentsCreateAgent
     public required string Description { get; set; }
 
     [JsonPropertyName("experts")]
-    public IEnumerable<
-        OneOf<AgentsCreateExpert, AgentsCreateExpertReference>
-    >? Experts { get; set; }
+    public IEnumerable<AgentsCreateAgentExpertsItem>? Experts { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CortiApi.Core;
-using OneOf;
 
 namespace CortiApi;
 
@@ -37,7 +36,7 @@ public record AgentsAgent : IJsonOnDeserialized
     public required string SystemPrompt { get; set; }
 
     [JsonPropertyName("experts")]
-    public IEnumerable<OneOf<AgentsExpert, AgentsExpertReference>>? Experts { get; set; }
+    public IEnumerable<AgentsAgentExpertsItem>? Experts { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

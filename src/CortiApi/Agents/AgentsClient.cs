@@ -1,6 +1,5 @@
 using System.Text.Json;
 using CortiApi.Core;
-using OneOf;
 
 namespace CortiApi;
 
@@ -13,9 +12,7 @@ public partial class AgentsClient : IAgentsClient
         _client = client;
     }
 
-    private async Task<
-        WithRawResponse<IEnumerable<OneOf<AgentsAgent, AgentsAgentReference>>>
-    > ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<AgentsAgentResponse>>> ListAsyncCore(
         AgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -52,10 +49,10 @@ public partial class AgentsClient : IAgentsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                var responseData = JsonUtils.Deserialize<
-                    IEnumerable<OneOf<AgentsAgent, AgentsAgentReference>>
-                >(responseBody)!;
-                return new WithRawResponse<IEnumerable<OneOf<AgentsAgent, AgentsAgentReference>>>()
+                var responseData = JsonUtils.Deserialize<IEnumerable<AgentsAgentResponse>>(
+                    responseBody
+                )!;
+                return new WithRawResponse<IEnumerable<AgentsAgentResponse>>()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -189,13 +186,13 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// await client.Agents.ListAsync(new AgentsListRequest());
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<OneOf<AgentsAgent, AgentsAgentReference>>> ListAsync(
+    public WithRawResponseTask<IEnumerable<AgentsAgentResponse>> ListAsync(
         AgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<OneOf<AgentsAgent, AgentsAgentReference>>>(
+        return new WithRawResponseTask<IEnumerable<AgentsAgentResponse>>(
             ListAsyncCore(request, options, cancellationToken)
         );
     }

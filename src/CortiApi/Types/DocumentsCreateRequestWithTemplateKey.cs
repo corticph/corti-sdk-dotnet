@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CortiApi.Core;
-using OneOf;
 
 namespace CortiApi;
 
@@ -16,16 +15,7 @@ public record DocumentsCreateRequestWithTemplateKey : IJsonOnDeserialized
     /// An array of context objects. Currently only accepts multiple objects when of type `transcript`. See [guide](/textgen/documents-standard#generate-document-from-transcript-as-input).
     /// </summary>
     [JsonPropertyName("context")]
-    public IEnumerable<
-        OneOf<DocumentsContextWithFacts, DocumentsContextWithTranscript, DocumentsContextWithString>
-    > Context { get; set; } =
-        new List<
-            OneOf<
-                DocumentsContextWithFacts,
-                DocumentsContextWithTranscript,
-                DocumentsContextWithString
-            >
-        >();
+    public IEnumerable<DocumentsContext> Context { get; set; } = new List<DocumentsContext>();
 
     /// <summary>
     /// The key of the template referencing the sections for generating a document.

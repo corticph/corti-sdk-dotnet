@@ -116,7 +116,7 @@ public partial class CodesClient : ICodesClient
     ///             CommonCodingSystemEnum.Icd10Cm,
     ///             CommonCodingSystemEnum.Cpt,
     ///         },
-    ///         Context = new List&lt;OneOf&lt;CommonTextContext, CommonDocumentIdContext&gt;&gt;()
+    ///         Context = new List&lt;CommonAiContext&gt;()
     ///         {
     ///             new CommonTextContext
     ///             {

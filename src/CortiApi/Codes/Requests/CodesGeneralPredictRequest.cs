@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using CortiApi.Core;
-using OneOf;
 
 namespace CortiApi;
 
@@ -18,8 +17,7 @@ public record CodesGeneralPredictRequest
     /// Select either `text` or `documentId` as input context to the model for code prediction. Evidence indices in the response map to this array.
     /// </summary>
     [JsonPropertyName("context")]
-    public IEnumerable<OneOf<CommonTextContext, CommonDocumentIdContext>> Context { get; set; } =
-        new List<OneOf<CommonTextContext, CommonDocumentIdContext>>();
+    public IEnumerable<CommonAiContext> Context { get; set; } = new List<CommonAiContext>();
 
     /// <summary>
     /// Maximum number of code candidates to include in the response (per system).

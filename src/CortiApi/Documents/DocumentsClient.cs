@@ -1,6 +1,5 @@
 using System.Text.Json;
 using CortiApi.Core;
-using OneOf;
 
 namespace CortiApi;
 
@@ -104,7 +103,7 @@ public partial class DocumentsClient : IDocumentsClient
 
     private async Task<WithRawResponse<DocumentsGetResponse>> CreateAsyncCore(
         string id,
-        OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate> request,
+        DocumentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -404,13 +403,7 @@ public partial class DocumentsClient : IDocumentsClient
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new DocumentsCreateRequestWithTemplateKey
     ///     {
-    ///         Context = new List&lt;
-    ///             OneOf&lt;
-    ///                 DocumentsContextWithFacts,
-    ///                 DocumentsContextWithTranscript,
-    ///                 DocumentsContextWithString
-    ///             &gt;
-    ///         &gt;()
+    ///         Context = new List&lt;DocumentsContext&gt;()
     ///         {
     ///             new DocumentsContextWithFacts
     ///             {
@@ -428,7 +421,7 @@ public partial class DocumentsClient : IDocumentsClient
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> CreateAsync(
         string id,
-        OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate> request,
+        DocumentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
