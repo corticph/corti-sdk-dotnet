@@ -1728,3 +1728,114 @@ await client.Codes.PredictAsync(
 </dd>
 </dl>
 </details>
+
+## Agents
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint retrieves a list of all agents that can be called by the Corti Agent Framework.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.ListAsync(new AgentsListRequest());
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `AgentsListRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">CreateAsync</a>(AgentsCreateAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+This endpoint allows the creation of a new agent that can be utilized in the `POST /agents/{id}/v1/message:send` endpoint.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Agents.CreateAsync(
+    new AgentsCreateAgent { Name = "name", Description = "description" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `AgentsCreateAgent` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>

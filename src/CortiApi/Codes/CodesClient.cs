@@ -73,9 +73,7 @@ public partial class CodesClient : ICodesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)

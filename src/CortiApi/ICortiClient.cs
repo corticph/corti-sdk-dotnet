@@ -9,4 +9,5 @@ public partial interface ICortiClient
     public IDocumentsClient Documents { get; }
     public ITemplatesClient Templates { get; }
     public ICodesClient Codes { get; }
+    public IAgentsClient Agents { get; }
 }

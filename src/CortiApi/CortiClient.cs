@@ -44,6 +44,7 @@ public partial class CortiClient : ICortiClient
         Documents = new DocumentsClient(_client);
         Templates = new TemplatesClient(_client);
         Codes = new CodesClient(_client);
+        Agents = new AgentsClient(_client);
     }
 
     public IInteractionsClient Interactions { get; }
@@ -59,4 +60,6 @@ public partial class CortiClient : ICortiClient
     public ITemplatesClient Templates { get; }
 
     public ICodesClient Codes { get; }
+
+    public IAgentsClient Agents { get; }
 }

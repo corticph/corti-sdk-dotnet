@@ -80,13 +80,9 @@ public partial class TranscriptsClient : ITranscriptsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 401:
-                        throw new UnauthorizedError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -178,13 +174,9 @@ public partial class TranscriptsClient : ITranscriptsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 401:
-                        throw new UnauthorizedError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -275,13 +267,9 @@ public partial class TranscriptsClient : ITranscriptsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 401:
-                        throw new UnauthorizedError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -372,7 +360,7 @@ public partial class TranscriptsClient : ITranscriptsClient
                 switch (response.StatusCode)
                 {
                     case 404:
-                        throw new NotFoundError(JsonUtils.Deserialize<ErrorResponse>(responseBody));
+                        throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -504,13 +492,9 @@ public partial class TranscriptsClient : ITranscriptsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 401:
-                        throw new UnauthorizedError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)

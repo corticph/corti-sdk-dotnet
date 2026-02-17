@@ -79,9 +79,7 @@ public partial class TemplatesClient : ITemplatesClient
                 switch (response.StatusCode)
                 {
                     case 401:
-                        throw new UnauthorizedError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -166,9 +164,7 @@ public partial class TemplatesClient : ITemplatesClient
                 switch (response.StatusCode)
                 {
                     case 401:
-                        throw new UnauthorizedError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -246,9 +242,7 @@ public partial class TemplatesClient : ITemplatesClient
                 switch (response.StatusCode)
                 {
                     case 401:
-                        throw new UnauthorizedError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new UnauthorizedError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)

@@ -75,9 +75,7 @@ public partial class DocumentsClient : IDocumentsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -169,9 +167,7 @@ public partial class DocumentsClient : IDocumentsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -262,9 +258,7 @@ public partial class DocumentsClient : IDocumentsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -358,9 +352,7 @@ public partial class DocumentsClient : IDocumentsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
@@ -518,7 +510,7 @@ public partial class DocumentsClient : IDocumentsClient
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)
                         );
                     case 404:
-                        throw new NotFoundError(JsonUtils.Deserialize<ErrorResponse>(responseBody));
+                        throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(
                             JsonUtils.Deserialize<ErrorResponse>(responseBody)

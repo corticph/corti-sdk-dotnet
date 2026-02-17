@@ -4,10 +4,4 @@ namespace CortiApi;
 /// This exception type will be thrown for any non-2XX API responses.
 /// </summary>
 [Serializable]
-public class NotFoundError(ErrorResponse body) : CortiClientApiException("NotFoundError", 404, body)
-{
-    /// <summary>
-    /// The body of the response that triggered the exception.
-    /// </summary>
-    public new ErrorResponse Body => body;
-}
+public class NotFoundError(object body) : CortiClientApiException("NotFoundError", 404, body);
