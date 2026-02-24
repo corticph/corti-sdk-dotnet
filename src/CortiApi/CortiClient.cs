@@ -75,6 +75,11 @@ public partial class CortiClient : ICortiClient
 
     public IAgentsClient Agents { get; }
 
+    public StreamApi CreateStreamApi(StreamApi.Options options)
+    {
+        return new StreamApi(options);
+    }
+
     public TranscribeApi CreateTranscribeApi(TranscribeApi.Options options)
     {
         return new TranscribeApi(options);
