@@ -51,6 +51,12 @@ public class AuthTokenRequest
     ) => new("authTokenRequestAuthorizationPkce", value);
 
     /// <summary>
+    /// Factory method to create a union from a Corti.AuthTokenRequestRopc value.
+    /// </summary>
+    public static AuthTokenRequest FromAuthTokenRequestRopc(Corti.AuthTokenRequestRopc value) =>
+        new("authTokenRequestRopc", value);
+
+    /// <summary>
     /// Returns true if <see cref="Type"/> is "authTokenRequestClientCredentials"
     /// </summary>
     public bool IsAuthTokenRequestClientCredentials() =>
@@ -67,6 +73,11 @@ public class AuthTokenRequest
     /// </summary>
     public bool IsAuthTokenRequestAuthorizationPkce() =>
         Type == "authTokenRequestAuthorizationPkce";
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "authTokenRequestRopc"
+    /// </summary>
+    public bool IsAuthTokenRequestRopc() => Type == "authTokenRequestRopc";
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AuthTokenRequestClientCredentials"/> if <see cref="Type"/> is 'authTokenRequestClientCredentials', otherwise throws an exception.
@@ -100,6 +111,15 @@ public class AuthTokenRequest
             : throw new CortiClientException(
                 "Union type is not 'authTokenRequestAuthorizationPkce'"
             );
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.AuthTokenRequestRopc"/> if <see cref="Type"/> is 'authTokenRequestRopc', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'authTokenRequestRopc'.</exception>
+    public Corti.AuthTokenRequestRopc AsAuthTokenRequestRopc() =>
+        IsAuthTokenRequestRopc()
+            ? (Corti.AuthTokenRequestRopc)Value!
+            : throw new CortiClientException("Union type is not 'authTokenRequestRopc'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AuthTokenRequestClientCredentials"/> and returns true if successful.
@@ -149,10 +169,25 @@ public class AuthTokenRequest
         return false;
     }
 
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.AuthTokenRequestRopc"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetAuthTokenRequestRopc(out Corti.AuthTokenRequestRopc? value)
+    {
+        if (Type == "authTokenRequestRopc")
+        {
+            value = (Corti.AuthTokenRequestRopc)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
     public T Match<T>(
         Func<Corti.AuthTokenRequestClientCredentials, T> onAuthTokenRequestClientCredentials,
         Func<Corti.AuthTokenRequestAuthorizationCode, T> onAuthTokenRequestAuthorizationCode,
-        Func<Corti.AuthTokenRequestAuthorizationPkce, T> onAuthTokenRequestAuthorizationPkce
+        Func<Corti.AuthTokenRequestAuthorizationPkce, T> onAuthTokenRequestAuthorizationPkce,
+        Func<Corti.AuthTokenRequestRopc, T> onAuthTokenRequestRopc
     )
     {
         return Type switch
@@ -166,6 +201,7 @@ public class AuthTokenRequest
             "authTokenRequestAuthorizationPkce" => onAuthTokenRequestAuthorizationPkce(
                 AsAuthTokenRequestAuthorizationPkce()
             ),
+            "authTokenRequestRopc" => onAuthTokenRequestRopc(AsAuthTokenRequestRopc()),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
@@ -173,7 +209,8 @@ public class AuthTokenRequest
     public void Visit(
         Action<Corti.AuthTokenRequestClientCredentials> onAuthTokenRequestClientCredentials,
         Action<Corti.AuthTokenRequestAuthorizationCode> onAuthTokenRequestAuthorizationCode,
-        Action<Corti.AuthTokenRequestAuthorizationPkce> onAuthTokenRequestAuthorizationPkce
+        Action<Corti.AuthTokenRequestAuthorizationPkce> onAuthTokenRequestAuthorizationPkce,
+        Action<Corti.AuthTokenRequestRopc> onAuthTokenRequestRopc
     )
     {
         switch (Type)
@@ -186,6 +223,9 @@ public class AuthTokenRequest
                 break;
             case "authTokenRequestAuthorizationPkce":
                 onAuthTokenRequestAuthorizationPkce(AsAuthTokenRequestAuthorizationPkce());
+                break;
+            case "authTokenRequestRopc":
+                onAuthTokenRequestRopc(AsAuthTokenRequestRopc());
                 break;
             default:
                 throw new CortiClientException($"Unknown union type: {Type}");
@@ -239,6 +279,9 @@ public class AuthTokenRequest
         Corti.AuthTokenRequestAuthorizationPkce value
     ) => new("authTokenRequestAuthorizationPkce", value);
 
+    public static implicit operator AuthTokenRequest(Corti.AuthTokenRequestRopc value) =>
+        new("authTokenRequestRopc", value);
+
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<AuthTokenRequest>
     {
@@ -271,6 +314,7 @@ public class AuthTokenRequest
                         "authTokenRequestAuthorizationPkce",
                         typeof(Corti.AuthTokenRequestAuthorizationPkce)
                     ),
+                    ("authTokenRequestRopc", typeof(Corti.AuthTokenRequestRopc)),
                 };
 
                 foreach (var (key, type) in types)
@@ -309,6 +353,7 @@ public class AuthTokenRequest
             }
 
             value.Visit(
+                obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options)

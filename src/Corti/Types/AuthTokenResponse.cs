@@ -32,6 +32,12 @@ public record AuthTokenResponse : IJsonOnDeserialized
     [JsonPropertyName("refresh_expires_in")]
     public int? RefreshExpiresIn { get; set; }
 
+    /// <summary>
+    /// Refresh token for obtaining new access tokens (when grant supports it).
+    /// </summary>
+    [JsonPropertyName("refresh_token")]
+    public string? RefreshToken { get; set; }
+
     [JsonPropertyName("token_type")]
     public required string TokenType { get; set; }
 
@@ -52,6 +58,12 @@ public record AuthTokenResponse : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("scope")]
     public string? Scope { get; set; }
+
+    /// <summary>
+    /// Keycloak session state.
+    /// </summary>
+    [JsonPropertyName("session_state")]
+    public string? SessionState { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
