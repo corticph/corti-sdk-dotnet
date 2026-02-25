@@ -1,7 +1,7 @@
 # Corti C# Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fcorticph%2Fcorti-sdk-csh)
-[![nuget shield](https://img.shields.io/nuget/v/CortiApi)](https://nuget.org/packages/CortiApi)
+[![nuget shield](https://img.shields.io/nuget/v/Corti)](https://nuget.org/packages/Corti)
 
 The Corti C# library provides convenient access to the Corti APIs from C#.
 
@@ -27,7 +27,7 @@ This SDK requires:
 ## Installation
 
 ```sh
-dotnet add package CortiApi
+dotnet add package Corti
 ```
 
 ## Reference
@@ -39,7 +39,7 @@ A full reference for this library is available [here](https://github.com/corticp
 Instantiate and use the client with the following:
 
 ```csharp
-using CortiApi;
+using Corti;
 
 var client = new CortiClient("TOKEN", "TENANT_NAME");
 await client.Auth.TokenAsync(
@@ -59,7 +59,7 @@ When the API returns a non-success status code (4xx or 5xx response), a subclass
 will be thrown.
 
 ```csharp
-using CortiApi;
+using Corti;
 
 try {
     var response = await client.Auth.TokenAsync(...);
@@ -74,7 +74,7 @@ try {
 List endpoints are paginated. The SDK provides an async enumerable so that you can simply loop over the items:
 
 ```csharp
-using CortiApi;
+using Corti;
 
 var client = new CortiClient("TOKEN", "TENANT_NAME");
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
@@ -128,7 +128,7 @@ var response = await client.Auth.TokenAsync(
 Access raw HTTP response data (status code, headers, URL) alongside parsed response data using the `.WithRawResponse()` method.
 
 ```csharp
-using CortiApi;
+using Corti;
 
 // Access raw response data (status code, headers, etc.) alongside the parsed response
 var result = await client.Auth.TokenAsync(...).WithRawResponse();
@@ -156,7 +156,7 @@ var data = await client.Auth.TokenAsync(...);
 This SDK uses forward-compatible enums that can handle unknown values gracefully.
 
 ```csharp
-using CortiApi;
+using Corti;
 
 // Using a built-in value
 var interactionsListRequestSort = InteractionsListRequestSort.Id;

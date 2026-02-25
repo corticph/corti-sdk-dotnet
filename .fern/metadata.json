@@ -3,11 +3,8 @@
   "generatorName": "fernapi/fern-csharp-sdk",
   "generatorVersion": "2.22.2",
   "generatorConfig": {
+    "namespace": "Corti",
     "client-class-name": "CortiClient",
-    "use-undiscriminated-unions": true,
-    "generate-error-types": true,
-    "include-exception-handler": true,
-    "inline-path-parameters": true,
     "experimental-readonly-constants": true,
     "experimental-enable-websockets": true,
     "temporary-websocket-environments": {
@@ -25,5 +22,5 @@
       }
     }
   },
-  "sdkVersion": "0.0.917"
+  "sdkVersion": "0.0.918"
 }
