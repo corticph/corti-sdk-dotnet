@@ -3,7 +3,7 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class CodesClient
+public partial class CodesClient : ICodesClient
 {
     private RawClient _client;
 
@@ -12,36 +12,18 @@ public partial class CodesClient
         _client = client;
     }
 
-    /// <summary>
-    /// Predict medical codes from provided context.&lt;br/&gt;&lt;Note&gt;This is a stateless endpoint, designed to predict ICD-10-CM, ICD-10-PCS, and CPT codes based on input text string or documentId.&lt;br/&gt;&lt;br/&gt;More than one code system may be defined in a single request, and the maximum number of codes to return per system can also be defined.&lt;br/&gt;&lt;br/&gt;Code prediction requests have two possible values for context:&lt;br/&gt;- `text`: One set of code prediction results will be returned based on all input text defined.&lt;br/&gt;- `documentId`: Code prediction will be based on that defined document only.&lt;br/&gt;&lt;br/&gt;The response includes two sets of results:&lt;br/&gt;- `Codes`: Highest confidence bundle of codes, as selected by the code prediction model&lt;br/&gt;- `Candidates`: Full list of candidate codes as predicted by the model, rank sorted by model confidence with maximum possible value of 50.&lt;br/&gt;&lt;br/&gt;All predicted code results are based on input context defined in the request only (not other external data or assets associated with an interaction).&lt;/Note&gt;
-    /// </summary>
-    /// <example><code>
-    /// await client.Codes.PredictAsync(
-    ///     new CodesGeneralPredictRequest
-    ///     {
-    ///         System = new List&lt;CommonCodingSystemEnum&gt;()
-    ///         {
-    ///             CommonCodingSystemEnum.Icd10Cm,
-    ///             CommonCodingSystemEnum.Cpt,
-    ///         },
-    ///         Context = new List&lt;CommonAiContext&gt;()
-    ///         {
-    ///             new CommonAiContext(
-    ///                 new Corti.CommonAiContext.Text(
-    ///                     new Corti.Text { Type = CommonTextContextType.Text, Text_ = "text" }
-    ///                 )
-    ///             ),
-    ///         },
-    ///         MaxCandidates = 5,
-    ///     }
-    /// );
-    /// </code></example>
-    public async Task<CodesGeneralResponse> PredictAsync(
+    private async Task<WithRawResponse<CodesGeneralResponse>> PredictAsyncCore(
         CodesGeneralPredictRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Corti.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -50,6 +32,7 @@ public partial class CodesClient
                     Method = HttpMethod.Post,
                     Path = "tools/coding/",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -61,14 +44,28 @@ public partial class CodesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<CodesGeneralResponse>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<CodesGeneralResponse>(responseBody)!;
+                return new WithRawResponse<CodesGeneralResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new CortiClientException("Failed to deserialize response", e);
+                throw new CortiClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -105,5 +102,40 @@ public partial class CodesClient
                 responseBody
             );
         }
+    }
+
+    /// <summary>
+    /// Predict medical codes from provided context.<br/>&lt;Note&gt;This is a stateless endpoint, designed to predict ICD-10-CM, ICD-10-PCS, and CPT codes based on input text string or documentId.<br/><br/>More than one code system may be defined in a single request, and the maximum number of codes to return per system can also be defined.<br/><br/>Code prediction requests have two possible values for context:<br/>- `text`: One set of code prediction results will be returned based on all input text defined.<br/>- `documentId`: Code prediction will be based on that defined document only.<br/><br/>The response includes two sets of results:<br/>- `Codes`: Highest confidence bundle of codes, as selected by the code prediction model<br/>- `Candidates`: Full list of candidate codes as predicted by the model, rank sorted by model confidence with maximum possible value of 50.<br/><br/>All predicted code results are based on input context defined in the request only (not other external data or assets associated with an interaction).&lt;/Note&gt;
+    /// </summary>
+    /// <example><code>
+    /// await client.Codes.PredictAsync(
+    ///     new CodesGeneralPredictRequest
+    ///     {
+    ///         System = new List&lt;CommonCodingSystemEnum&gt;()
+    ///         {
+    ///             CommonCodingSystemEnum.Icd10Cm,
+    ///             CommonCodingSystemEnum.Cpt,
+    ///         },
+    ///         Context = new List&lt;CommonAiContext&gt;()
+    ///         {
+    ///             new CommonAiContext(
+    ///                 new Corti.CommonAiContext.Text(
+    ///                     new Corti.Text { Type = CommonTextContextType.Text, Text_ = "text" }
+    ///                 )
+    ///             ),
+    ///         },
+    ///         MaxCandidates = 5,
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<CodesGeneralResponse> PredictAsync(
+        CodesGeneralPredictRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<CodesGeneralResponse>(
+            PredictAsyncCore(request, options, cancellationToken)
+        );
     }
 }

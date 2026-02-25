@@ -16,6 +16,7 @@ The Corti C# library provides convenient access to the Corti APIs from C#.
 - [Advanced](#advanced)
   - [Retries](#retries)
   - [Timeouts](#timeouts)
+  - [Raw Response](#raw-response)
   - [Forward Compatible Enums](#forward-compatible-enums)
 - [Contributing](#contributing)
 
@@ -40,7 +41,7 @@ Instantiate and use the client with the following:
 ```csharp
 using Corti;
 
-var client = new CortiClient("TOKEN");
+var client = new CortiClient("TOKEN", "TENANT_NAME");
 await client.Auth.TokenAsync(
     new AuthTokenRequest
     {
@@ -75,7 +76,7 @@ List endpoints are paginated. The SDK provides an async enumerable so that you c
 ```csharp
 using Corti;
 
-var client = new CortiClient("TOKEN");
+var client = new CortiClient("TOKEN", "TENANT_NAME");
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
 
 await foreach (var item in items)
@@ -120,6 +121,34 @@ var response = await client.Auth.TokenAsync(
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
     }
 );
+```
+
+### Raw Response
+
+Access raw HTTP response data (status code, headers, URL) alongside parsed response data using the `.WithRawResponse()` method.
+
+```csharp
+using Corti;
+
+// Access raw response data (status code, headers, etc.) alongside the parsed response
+var result = await client.Auth.TokenAsync(...).WithRawResponse();
+
+// Access the parsed data
+var data = result.Data;
+
+// Access raw response metadata
+var statusCode = result.RawResponse.StatusCode;
+var headers = result.RawResponse.Headers;
+var url = result.RawResponse.Url;
+
+// Access specific headers (case-insensitive)
+if (headers.TryGetValue("X-Request-Id", out var requestId))
+{
+    System.Console.WriteLine($"Request ID: {requestId}");
+}
+
+// For the default behavior, simply await without .WithRawResponse()
+var data = await client.Auth.TokenAsync(...);
 ```
 
 ### Forward Compatible Enums

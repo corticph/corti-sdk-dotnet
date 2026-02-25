@@ -1,6 +1,6 @@
 # Reference
 ## Auth
-<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">TokenAsync</a>(AuthTokenRequest { ... }) -> AuthTokenResponse</code></summary>
+<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">TokenAsync</a>(AuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -118,7 +118,7 @@ await client.Interactions.ListAsync(new InteractionsListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">CreateAsync</a>(InteractionsCreateRequest { ... }) -> InteractionsCreateResponse</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">CreateAsync</a>(InteractionsCreateRequest { ... }) -> WithRawResponseTask&lt;InteractionsCreateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -182,7 +182,7 @@ await client.Interactions.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">GetAsync</a>(id) -> InteractionsGetResponse</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -290,7 +290,7 @@ await client.Interactions.DeleteAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">UpdateAsync</a>(id, InteractionsUpdateRequest { ... }) -> InteractionsGetResponse</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">UpdateAsync</a>(id, InteractionsUpdateRequest { ... }) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -356,7 +356,7 @@ await client.Interactions.UpdateAsync(
 </details>
 
 ## Recordings
-<details><summary><code>client.Recordings.<a href="/src/Corti/Recordings/RecordingsClient.cs">ListAsync</a>(id) -> RecordingsListResponse</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/Corti/Recordings/RecordingsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;RecordingsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -410,7 +410,7 @@ await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 </dl>
 </details>
 
-<details><summary><code>client.Recordings.<a href="/src/Corti/Recordings/RecordingsClient.cs">GetAsync</a>(id, recordingId) -> Stream</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/Corti/Recordings/RecordingsClient.cs">GetAsync</a>(id, recordingId) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
 <dl>
 <dd>
 
@@ -538,7 +538,7 @@ await client.Recordings.DeleteAsync(
 </details>
 
 ## Transcripts
-<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">ListAsync</a>(id, TranscriptsListRequest { ... }) -> TranscriptsListResponse</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">ListAsync</a>(id, TranscriptsListRequest { ... }) -> WithRawResponseTask&lt;TranscriptsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -603,7 +603,7 @@ await client.Transcripts.ListAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">CreateAsync</a>(id, TranscriptsCreateRequest { ... }) -> TranscriptsResponse</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">CreateAsync</a>(id, TranscriptsCreateRequest { ... }) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -672,7 +672,7 @@ await client.Transcripts.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">GetAsync</a>(id, transcriptId) -> TranscriptsResponse</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">GetAsync</a>(id, transcriptId) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -802,7 +802,7 @@ await client.Transcripts.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">GetStatusAsync</a>(id, transcriptId) -> TranscriptsStatusResponse</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">GetStatusAsync</a>(id, transcriptId) -> WithRawResponseTask&lt;TranscriptsStatusResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -868,7 +868,7 @@ await client.Transcripts.GetStatusAsync(
 </details>
 
 ## Facts
-<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">FactGroupsListAsync</a>() -> FactsFactGroupsListResponse</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">FactGroupsListAsync</a>() -> WithRawResponseTask&lt;FactsFactGroupsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -907,7 +907,7 @@ await client.Facts.FactGroupsListAsync();
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">ListAsync</a>(id) -> FactsListResponse</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;FactsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -961,7 +961,7 @@ await client.Facts.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">CreateAsync</a>(id, FactsCreateRequest { ... }) -> FactsCreateResponse</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">CreateAsync</a>(id, FactsCreateRequest { ... }) -> WithRawResponseTask&lt;FactsCreateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1032,7 +1032,7 @@ await client.Facts.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">BatchUpdateAsync</a>(id, FactsBatchUpdateRequest { ... }) -> FactsBatchUpdateResponse</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">BatchUpdateAsync</a>(id, FactsBatchUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsBatchUpdateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1103,7 +1103,7 @@ await client.Facts.BatchUpdateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">UpdateAsync</a>(id, factId, FactsUpdateRequest { ... }) -> FactsUpdateResponse</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">UpdateAsync</a>(id, factId, FactsUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsUpdateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1177,7 +1177,7 @@ await client.Facts.UpdateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">ExtractAsync</a>(FactsExtractRequest { ... }) -> FactsExtractResponse</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">ExtractAsync</a>(FactsExtractRequest { ... }) -> WithRawResponseTask&lt;FactsExtractResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1241,7 +1241,7 @@ await client.Facts.ExtractAsync(
 </details>
 
 ## Documents
-<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">ListAsync</a>(id) -> DocumentsListResponse</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;DocumentsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1295,7 +1295,7 @@ await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">CreateAsync</a>(id, OneOf&lt;DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate&gt; { ... }) -> DocumentsGetResponse</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">CreateAsync</a>(id, OneOf&lt;DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate&gt; { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1378,7 +1378,7 @@ await client.Documents.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">GetAsync</a>(id, documentId) -> DocumentsGetResponse</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">GetAsync</a>(id, documentId) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1494,7 +1494,7 @@ await client.Documents.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">UpdateAsync</a>(id, documentId, DocumentsUpdateRequest { ... }) -> DocumentsGetResponse</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">UpdateAsync</a>(id, documentId, DocumentsUpdateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1555,7 +1555,7 @@ await client.Documents.UpdateAsync(
 </details>
 
 ## Templates
-<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">SectionListAsync</a>(TemplatesSectionListRequest { ... }) -> TemplatesSectionListResponse</code></summary>
+<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">SectionListAsync</a>(TemplatesSectionListRequest { ... }) -> WithRawResponseTask&lt;TemplatesSectionListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1609,7 +1609,7 @@ await client.Templates.SectionListAsync(new TemplatesSectionListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">ListAsync</a>(TemplatesListRequest { ... }) -> TemplatesListResponse</code></summary>
+<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">ListAsync</a>(TemplatesListRequest { ... }) -> WithRawResponseTask&lt;TemplatesListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1663,7 +1663,7 @@ await client.Templates.ListAsync(new TemplatesListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">GetAsync</a>(key) -> TemplatesItem</code></summary>
+<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">GetAsync</a>(key) -> WithRawResponseTask&lt;TemplatesItem&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1718,7 +1718,7 @@ await client.Templates.GetAsync("key");
 </details>
 
 ## Codes
-<details><summary><code>client.Codes.<a href="/src/Corti/Codes/CodesClient.cs">PredictAsync</a>(CodesGeneralPredictRequest { ... }) -> CodesGeneralResponse</code></summary>
+<details><summary><code>client.Codes.<a href="/src/Corti/Codes/CodesClient.cs">PredictAsync</a>(CodesGeneralPredictRequest { ... }) -> WithRawResponseTask&lt;CodesGeneralResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1791,7 +1791,7 @@ await client.Codes.PredictAsync(
 </details>
 
 ## Agents
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> IEnumerable&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1845,7 +1845,7 @@ await client.Agents.ListAsync(new AgentsListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">CreateAsync</a>(AgentsCreateAgent { ... }) -> AgentsAgent</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">CreateAsync</a>(AgentsCreateAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1901,7 +1901,7 @@ await client.Agents.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetAsync</a>(id) -> OneOf&lt;AgentsAgent, AgentsAgentReference&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2009,7 +2009,7 @@ await client.Agents.DeleteAsync("12345678-90ab-cdef-gh12-34567890abc");
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">UpdateAsync</a>(id, AgentsAgent { ... }) -> AgentsAgent</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">UpdateAsync</a>(id, AgentsAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2080,7 +2080,7 @@ await client.Agents.UpdateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetCardAsync</a>(id) -> AgentsAgentCard</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetCardAsync</a>(id) -> WithRawResponseTask&lt;AgentsAgentCard&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2134,7 +2134,7 @@ await client.Agents.GetCardAsync("12345678-90ab-cdef-gh12-34567890abc");
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">MessageSendAsync</a>(id, AgentsMessageSendParams { ... }) -> AgentsMessageSendResponse</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">MessageSendAsync</a>(id, AgentsMessageSendParams { ... }) -> WithRawResponseTask&lt;AgentsMessageSendResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2211,7 +2211,7 @@ await client.Agents.MessageSendAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetTaskAsync</a>(id, taskId, AgentsGetTaskRequest { ... }) -> AgentsTask</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetTaskAsync</a>(id, taskId, AgentsGetTaskRequest { ... }) -> WithRawResponseTask&lt;AgentsTask&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2285,7 +2285,7 @@ await client.Agents.GetTaskAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetContextAsync</a>(id, contextId, AgentsGetContextRequest { ... }) -> AgentsContext</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetContextAsync</a>(id, contextId, AgentsGetContextRequest { ... }) -> WithRawResponseTask&lt;AgentsContext&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2359,7 +2359,7 @@ await client.Agents.GetContextAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetRegistryExpertsAsync</a>(AgentsGetRegistryExpertsRequest { ... }) -> AgentsRegistryExpertsResponse</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetRegistryExpertsAsync</a>(AgentsGetRegistryExpertsRequest { ... }) -> WithRawResponseTask&lt;AgentsRegistryExpertsResponse&gt;</code></summary>
 <dl>
 <dd>
 

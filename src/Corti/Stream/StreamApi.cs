@@ -1,14 +1,25 @@
-using System.Net.WebSockets;
+using System.ComponentModel;
 using System.Text.Json;
 using Corti.Core;
-using Corti.Core.Async;
-using Corti.Core.Async.Events;
-using Corti.Core.Async.Models;
+using Corti.Core.WebSockets;
 
 namespace Corti;
 
-public partial class StreamApi : AsyncApi<StreamApi.Options>
+public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
+    private readonly StreamApi.Options _options;
+
+    private readonly WebSocketClient _client;
+
+    /// <summary>
+    /// Event that is raised when a property value changes.
+    /// </summary>
+    public event PropertyChangedEventHandler PropertyChanged
+    {
+        add => _client.PropertyChanged += value;
+        remove => _client.PropertyChanged -= value;
+    }
+
     /// <summary>
     /// Event handler for StreamConfigStatusMessage.
     /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
@@ -55,79 +66,58 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// Constructor with options
     /// </summary>
     public StreamApi(StreamApi.Options options)
-        : base(options) { }
-
-    /// <summary>
-    /// Unique identifier for the interaction session.
-    /// </summary>
-    public string Id
     {
-        get => ApiOptions.Id;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.Id),
-                ApiOptions.Id = value
-            );
-    }
-
-    /// <summary>
-    /// Specifies the tenant context.
-    /// </summary>
-    public string TenantName
-    {
-        get => ApiOptions.TenantName;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.TenantName),
-                ApiOptions.TenantName = value
-            );
-    }
-
-    /// <summary>
-    /// Bearer access token for authentication.
-    /// </summary>
-    public string Token
-    {
-        get => ApiOptions.Token;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.Token),
-                ApiOptions.Token = value
-            );
-    }
-
-    /// <summary>
-    /// The Environment for the API connection.
-    /// </summary>
-    public string Environment
-    {
-        get => ApiOptions.Environment;
-        set =>
-            NotifyIfPropertyChanged(
-                EqualityComparer<string>.Default.Equals(ApiOptions.Environment),
-                ApiOptions.Environment = value
-            );
-    }
-
-    /// <summary>
-    /// Creates the Uri for the websocket connection from the BaseUrl and parameters
-    /// </summary>
-    protected override Uri CreateUri()
-    {
-        var uri = new UriBuilder(BaseUrl)
+        _options = options;
+        var uri = new UriBuilder(_options.BaseUrl)
         {
-            Query = new Query() { { "tenant-name", TenantName }, { "token", Token } },
+            Query = new Corti.Core.QueryStringBuilder.Builder(capacity: 2)
+                .Add("tenant-name", _options.TenantName)
+                .Add("token", _options.Token)
+                .Build(),
         };
-        uri.Path = $"{uri.Path.TrimEnd('/')}/interactions/{Uri.EscapeDataString(Id)}/streams";
-        return uri.Uri;
+        uri.Path =
+            $"{uri.Path.TrimEnd('/')}/interactions/{Uri.EscapeDataString(_options.Id)}/streams";
+        _client = new WebSocketClient(uri.Uri, OnTextMessage);
     }
 
-    protected override void SetConnectionOptions(ClientWebSocketOptions options) { }
+    /// <summary>
+    /// Gets the current connection status of the WebSocket.
+    /// </summary>
+    public ConnectionStatus Status => _client.Status;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is established.
+    /// </summary>
+    public Event<Connected> Connected => _client.Connected;
+
+    /// <summary>
+    /// Event that is raised when the WebSocket connection is closed.
+    /// </summary>
+    public Event<Closed> Closed => _client.Closed;
+
+    /// <summary>
+    /// Event that is raised when an exception occurs during WebSocket operations.
+    /// </summary>
+    public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
+
+    /// <summary>
+    /// Disposes of event subscriptions
+    /// </summary>
+    private void DisposeEvents()
+    {
+        StreamConfigStatusMessage.Dispose();
+        StreamTranscriptMessage.Dispose();
+        StreamFactsMessage.Dispose();
+        StreamFlushedMessage.Dispose();
+        StreamEndedMessage.Dispose();
+        StreamUsageMessage.Dispose();
+        StreamErrorMessage.Dispose();
+    }
 
     /// <summary>
     /// Dispatches incoming WebSocket messages
     /// </summary>
-    protected async override Task OnTextMessage(Stream stream)
+    private async Task OnTextMessage(Stream stream)
     {
         var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
         if (json == null)
@@ -201,17 +191,39 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     }
 
     /// <summary>
-    /// Disposes of event subscriptions
+    /// Asynchronously establishes a WebSocket connection.
     /// </summary>
-    protected override void DisposeEvents()
+    public async Task ConnectAsync()
     {
-        StreamConfigStatusMessage.Dispose();
-        StreamTranscriptMessage.Dispose();
-        StreamFactsMessage.Dispose();
-        StreamFlushedMessage.Dispose();
-        StreamEndedMessage.Dispose();
-        StreamUsageMessage.Dispose();
-        StreamErrorMessage.Dispose();
+        await _client.ConnectAsync().ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Asynchronously closes the WebSocket connection.
+    /// </summary>
+    public async Task CloseAsync()
+    {
+        await _client.CloseAsync().ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Asynchronously disposes the WebSocket client, closing any active connections and cleaning up resources.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        await _client.DisposeAsync();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Synchronously disposes the WebSocket client, closing any active connections and cleaning up resources.
+    /// </summary>
+    public void Dispose()
+    {
+        _client.Dispose();
+        DisposeEvents();
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -219,7 +231,7 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// </summary>
     public async Task Send(StreamConfigMessage message)
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -227,7 +239,7 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// </summary>
     public async Task Send(byte[] message)
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -235,7 +247,7 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// </summary>
     public async Task Send(StreamFlushMessage message)
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -243,21 +255,23 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
     /// </summary>
     public async Task Send(StreamEndMessage message)
     {
-        await SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Options for the API client
     /// </summary>
-    public class Options : AsyncApiOptions
+    public class Options
     {
+        private string _baseUrl = "wss://api.eu.corti.app/audio-bridge/v2";
+
         /// <summary>
         /// The Websocket URL for the API connection.
         /// </summary>
-        override public string BaseUrl
+        public string BaseUrl
         {
-            get => StreamApi.Environments.getBaseUrl(base.BaseUrl);
-            set => base.BaseUrl = value;
+            get => StreamApi.Environments.getBaseUrl(_baseUrl);
+            set => _baseUrl = value;
         }
 
         /// <summary>
@@ -265,8 +279,8 @@ public partial class StreamApi : AsyncApi<StreamApi.Options>
         /// </summary>
         public string Environment
         {
-            get => base.BaseUrl;
-            set => base.BaseUrl = value;
+            get => _baseUrl;
+            set => _baseUrl = value;
         }
 
         /// <summary>

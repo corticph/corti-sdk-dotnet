@@ -1,7 +1,7 @@
 {
   "cliVersion": "3.88.0",
   "generatorName": "fernapi/fern-csharp-sdk",
-  "generatorVersion": "2.9.5",
+  "generatorVersion": "2.22.2",
   "generatorConfig": {
     "namespace": "Corti",
     "client-class-name": "CortiClient",
@@ -21,5 +21,6 @@
         }
       }
     }
-  }
+  },
+  "sdkVersion": "0.0.922"
 }

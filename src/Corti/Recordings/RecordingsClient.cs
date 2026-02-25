@@ -3,7 +3,7 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class RecordingsClient
+public partial class RecordingsClient : IRecordingsClient
 {
     private RawClient _client;
 
@@ -12,18 +12,18 @@ public partial class RecordingsClient
         _client = client;
     }
 
-    /// <summary>
-    /// Retrieve a list of recordings for a given interaction.
-    /// </summary>
-    /// <example><code>
-    /// await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
-    /// </code></example>
-    public async Task<RecordingsListResponse> ListAsync(
+    private async Task<WithRawResponse<RecordingsListResponse>> ListAsyncCore(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Corti.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -34,6 +34,7 @@ public partial class RecordingsClient
                         "interactions/{0}/recordings/",
                         ValueConvert.ToPathParameterString(id)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -44,14 +45,28 @@ public partial class RecordingsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<RecordingsListResponse>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<RecordingsListResponse>(responseBody)!;
+                return new WithRawResponse<RecordingsListResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new CortiClientException("Failed to deserialize response", e);
+                throw new CortiClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -86,16 +101,19 @@ public partial class RecordingsClient
         }
     }
 
-    /// <summary>
-    /// Upload a recording for a given interaction. There is a maximum limit of 60 minutes in length and 150MB in size for recordings.
-    /// </summary>
-    public async Task<RecordingsCreateResponse> UploadAsync(
+    private async Task<WithRawResponse<RecordingsCreateResponse>> UploadAsyncCore(
         string id,
         Stream request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Corti.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new StreamRequest
@@ -107,6 +125,7 @@ public partial class RecordingsClient
                         ValueConvert.ToPathParameterString(id)
                     ),
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/octet-stream",
                     Options = options,
                 },
@@ -118,14 +137,28 @@ public partial class RecordingsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<RecordingsCreateResponse>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<RecordingsCreateResponse>(responseBody)!;
+                return new WithRawResponse<RecordingsCreateResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new CortiClientException("Failed to deserialize response", e);
+                throw new CortiClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -160,19 +193,19 @@ public partial class RecordingsClient
         }
     }
 
-    /// <summary>
-    /// Retrieve a specific recording for a given interaction.
-    /// </summary>
-    /// <example><code>
-    /// await client.Recordings.GetAsync("id", "recordingId");
-    /// </code></example>
-    public async Task<System.IO.Stream> GetAsync(
+    private async Task<WithRawResponse<System.IO.Stream>> GetAsyncCore(
         string id,
         string recordingId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Corti.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -184,6 +217,7 @@ public partial class RecordingsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(recordingId)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken
@@ -191,7 +225,17 @@ public partial class RecordingsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return await response.Raw.Content.ReadAsStreamAsync();
+            var stream = await response.Raw.Content.ReadAsStreamAsync();
+            return new WithRawResponse<System.IO.Stream>()
+            {
+                Data = stream,
+                RawResponse = new RawResponse()
+                {
+                    StatusCode = response.Raw.StatusCode,
+                    Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                    Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                },
+            };
         }
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
@@ -230,6 +274,56 @@ public partial class RecordingsClient
     }
 
     /// <summary>
+    /// Retrieve a list of recordings for a given interaction.
+    /// </summary>
+    /// <example><code>
+    /// await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// </code></example>
+    public WithRawResponseTask<RecordingsListResponse> ListAsync(
+        string id,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<RecordingsListResponse>(
+            ListAsyncCore(id, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Upload a recording for a given interaction. There is a maximum limit of 60 minutes in length and 150MB in size for recordings.
+    /// </summary>
+    public WithRawResponseTask<RecordingsCreateResponse> UploadAsync(
+        string id,
+        Stream request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<RecordingsCreateResponse>(
+            UploadAsyncCore(id, request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Retrieve a specific recording for a given interaction.
+    /// </summary>
+    /// <example><code>
+    /// await client.Recordings.GetAsync("id", "recordingId");
+    /// </code></example>
+    public WithRawResponseTask<System.IO.Stream> GetAsync(
+        string id,
+        string recordingId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<System.IO.Stream>(
+            GetAsyncCore(id, recordingId, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
     /// Delete a specific recording for a given interaction.
     /// </summary>
     /// <example><code>
@@ -245,6 +339,12 @@ public partial class RecordingsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Corti.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -256,6 +356,7 @@ public partial class RecordingsClient
                         ValueConvert.ToPathParameterString(id),
                         ValueConvert.ToPathParameterString(recordingId)
                     ),
+                    Headers = _headers,
                     Options = options,
                 },
                 cancellationToken

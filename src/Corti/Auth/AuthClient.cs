@@ -3,7 +3,7 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class AuthClient
+public partial class AuthClient : IAuthClient
 {
     private RawClient _client;
 
@@ -12,27 +12,18 @@ public partial class AuthClient
         _client = client;
     }
 
-    /// <summary>
-    /// Exchange client_id and client_secret for a short-lived access token (OAuth 2.0 client credentials).
-    /// Use the returned access_token in the Authorization header when calling the Corti API.
-    /// </summary>
-    /// <example><code>
-    /// await client.Auth.TokenAsync(
-    ///     new AuthTokenRequest
-    ///     {
-    ///         ClientId = "client_id",
-    ///         ClientSecret = "client_secret",
-    ///         GrantType = "client_credentials",
-    ///         Scope = "openid",
-    ///     }
-    /// );
-    /// </code></example>
-    public async Task<AuthTokenResponse> TokenAsync(
+    private async Task<WithRawResponse<AuthTokenResponse>> TokenAsyncCore(
         AuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new Corti.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
@@ -41,6 +32,7 @@ public partial class AuthClient
                     Method = HttpMethod.Post,
                     Path = "protocol/openid-connect/token",
                     Body = request,
+                    Headers = _headers,
                     ContentType = "application/x-www-form-urlencoded",
                     Options = options,
                 },
@@ -52,14 +44,28 @@ public partial class AuthClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<AuthTokenResponse>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<AuthTokenResponse>(responseBody)!;
+                return new WithRawResponse<AuthTokenResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new CortiClientException("Failed to deserialize response", e);
+                throw new CortiClientApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
@@ -82,5 +88,31 @@ public partial class AuthClient
                 responseBody
             );
         }
+    }
+
+    /// <summary>
+    /// Exchange client_id and client_secret for a short-lived access token (OAuth 2.0 client credentials).
+    /// Use the returned access_token in the Authorization header when calling the Corti API.
+    /// </summary>
+    /// <example><code>
+    /// await client.Auth.TokenAsync(
+    ///     new AuthTokenRequest
+    ///     {
+    ///         ClientId = "client_id",
+    ///         ClientSecret = "client_secret",
+    ///         GrantType = "client_credentials",
+    ///         Scope = "openid",
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<AuthTokenResponse> TokenAsync(
+        AuthTokenRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<AuthTokenResponse>(
+            TokenAsyncCore(request, options, cancellationToken)
+        );
     }
 }
