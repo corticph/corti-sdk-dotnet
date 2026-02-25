@@ -1207,9 +1207,9 @@ Extract facts from provided text, without storing them.
 await client.Facts.ExtractAsync(
     new FactsExtractRequest
     {
-        Context = new List<CommonTextContext>()
+        Context = new List<CortiApi.Text>()
         {
-            new CommonTextContext { Type = CommonTextContextType.Text, Text = "text" },
+            new CortiApi.Text { Type = CommonTextContextType.Text, Text_ = "text" },
         },
         OutputLanguage = "outputLanguage",
     }
@@ -1328,14 +1328,17 @@ await client.Documents.CreateAsync(
     {
         Context = new List<DocumentsContext>()
         {
-            new DocumentsContextWithFacts
-            {
-                Type = DocumentsContextWithFactsType.Facts,
-                Data = new List<FactsContext>()
-                {
-                    new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-                },
-            },
+            new DocumentsContext(
+                new DocumentsContext.Facts(
+                    new DocumentsContextWithFacts
+                    {
+                        Data = new List<FactsContext>()
+                        {
+                            new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
+                        },
+                    }
+                )
+            ),
         },
         TemplateKey = "templateKey",
         OutputLanguage = "outputLanguage",
@@ -1752,11 +1755,11 @@ await client.Codes.PredictAsync(
         },
         Context = new List<CommonAiContext>()
         {
-            new CommonTextContext
-            {
-                Type = CommonTextContextType.Text,
-                Text = "Short arm splint applied in ED for pain control.",
-            },
+            new CommonAiContext(
+                new CortiApi.CommonAiContext.Text(
+                    new CortiApi.Text { Type = CommonTextContextType.Text, Text_ = "text" }
+                )
+            ),
         },
         MaxCandidates = 5,
     }
@@ -2167,7 +2170,7 @@ await client.Agents.MessageSendAsync(
             Role = AgentsMessageRole.User,
             Parts = new List<AgentsPart>()
             {
-                new AgentsTextPart { Kind = AgentsTextPartKind.Text, Text = "text" },
+                new AgentsPart(new CortiApi.AgentsPart.Text(new AgentsTextPart { Text = "text" })),
             },
             MessageId = "messageId",
             Kind = AgentsMessageKind.Message,

@@ -12,12 +12,6 @@ public record DocumentsContextWithTranscript : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of context data that will be used in the request: `Facts`, `Transcript`, or `String`.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public required DocumentsContextWithTranscriptType Type { get; set; }
-
-    /// <summary>
     /// The transcript `data.text` object can accept the full transcript in one string, alternatively pass each transcript segment into a `context` object - [see guide](/textgen/documents-standard#generate-document-from-transcript-as-input).
     /// </summary>
     [JsonPropertyName("data")]

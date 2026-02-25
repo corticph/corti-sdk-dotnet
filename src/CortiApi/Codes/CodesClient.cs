@@ -137,11 +137,11 @@ public partial class CodesClient : ICodesClient
     ///         },
     ///         Context = new List&lt;CommonAiContext&gt;()
     ///         {
-    ///             new CommonTextContext
-    ///             {
-    ///                 Type = CommonTextContextType.Text,
-    ///                 Text = "Short arm splint applied in ED for pain control.",
-    ///             },
+    ///             new CommonAiContext(
+    ///                 new CortiApi.CommonAiContext.Text(
+    ///                     new CortiApi.Text { Type = CommonTextContextType.Text, Text_ = "text" }
+    ///                 )
+    ///             ),
     ///         },
     ///         MaxCandidates = 5,
     ///     }

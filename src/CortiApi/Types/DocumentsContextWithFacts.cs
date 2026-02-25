@@ -12,12 +12,6 @@ public record DocumentsContextWithFacts : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The type of context data that will be used in the request: `Facts`, `Transcript`, or `String`.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public required DocumentsContextWithFactsType Type { get; set; }
-
-    /// <summary>
     /// An array of facts. See [guide](/textgen/documents-standard##generate-document-from-facts-as-input).
     /// </summary>
     [JsonPropertyName("data")]

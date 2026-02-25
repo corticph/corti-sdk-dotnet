@@ -457,14 +457,17 @@ public partial class DocumentsClient : IDocumentsClient
     ///     {
     ///         Context = new List&lt;DocumentsContext&gt;()
     ///         {
-    ///             new DocumentsContextWithFacts
-    ///             {
-    ///                 Type = DocumentsContextWithFactsType.Facts,
-    ///                 Data = new List&lt;FactsContext&gt;()
-    ///                 {
-    ///                     new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-    ///                 },
-    ///             },
+    ///             new DocumentsContext(
+    ///                 new DocumentsContext.Facts(
+    ///                     new DocumentsContextWithFacts
+    ///                     {
+    ///                         Data = new List&lt;FactsContext&gt;()
+    ///                         {
+    ///                             new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
+    ///                         },
+    ///                     }
+    ///                 )
+    ///             ),
     ///         },
     ///         TemplateKey = "templateKey",
     ///         OutputLanguage = "outputLanguage",

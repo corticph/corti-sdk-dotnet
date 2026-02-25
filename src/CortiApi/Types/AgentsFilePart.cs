@@ -11,12 +11,6 @@ public record AgentsFilePart : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// The kind of the part, always "file".
-    /// </summary>
-    [JsonPropertyName("kind")]
-    public required AgentsFilePartKind Kind { get; set; }
-
     [JsonPropertyName("file")]
     public AgentsFilePartFile? File { get; set; }
 

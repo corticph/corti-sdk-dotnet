@@ -669,9 +669,9 @@ public partial class FactsClient : IFactsClient
     /// await client.Facts.ExtractAsync(
     ///     new FactsExtractRequest
     ///     {
-    ///         Context = new List&lt;CommonTextContext&gt;()
+    ///         Context = new List&lt;CortiApi.Text&gt;()
     ///         {
-    ///             new CommonTextContext { Type = CommonTextContextType.Text, Text = "text" },
+    ///             new CortiApi.Text { Type = CommonTextContextType.Text, Text_ = "text" },
     ///         },
     ///         OutputLanguage = "outputLanguage",
     ///     }

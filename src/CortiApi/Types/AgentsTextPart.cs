@@ -12,12 +12,6 @@ public record AgentsTextPart : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The kind of the part, always "text".
-    /// </summary>
-    [JsonPropertyName("kind")]
-    public required AgentsTextPartKind Kind { get; set; }
-
-    /// <summary>
     /// The text content of the part.
     /// </summary>
     [JsonPropertyName("text")]

@@ -2,6 +2,7 @@
 // ReSharper disable InconsistentNaming
 
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using CortiApi.Core;
 
@@ -9,95 +10,140 @@ namespace CortiApi;
 
 [JsonConverter(typeof(DocumentsContext.JsonConverter))]
 [Serializable]
-public class DocumentsContext
+public record DocumentsContext
 {
-    private DocumentsContext(string type, object? value)
+    internal DocumentsContext(string type, object? value)
     {
         Type = type;
         Value = value;
     }
 
     /// <summary>
-    /// Type discriminator
+    /// Create an instance of DocumentsContext with <see cref="DocumentsContext.Facts"/>.
     /// </summary>
-    [JsonIgnore]
+    public DocumentsContext(DocumentsContext.Facts value)
+    {
+        Type = "facts";
+        Value = value.Value;
+    }
+
+    /// <summary>
+    /// Create an instance of DocumentsContext with <see cref="DocumentsContext.Transcript"/>.
+    /// </summary>
+    public DocumentsContext(DocumentsContext.Transcript value)
+    {
+        Type = "transcript";
+        Value = value.Value;
+    }
+
+    /// <summary>
+    /// Create an instance of DocumentsContext with <see cref="DocumentsContext.String"/>.
+    /// </summary>
+    public DocumentsContext(DocumentsContext.String value)
+    {
+        Type = "string";
+        Value = value.Value;
+    }
+
+    /// <summary>
+    /// Discriminant value
+    /// </summary>
+    [JsonPropertyName("type")]
     public string Type { get; internal set; }
 
     /// <summary>
-    /// Union value
+    /// Discriminated union value
     /// </summary>
-    [JsonIgnore]
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a CortiApi.DocumentsContextWithFacts value.
+    /// Returns true if <see cref="Type"/> is "facts"
     /// </summary>
-    public static DocumentsContext FromDocumentsContextWithFacts(
-        CortiApi.DocumentsContextWithFacts value
-    ) => new("documentsContextWithFacts", value);
+    public bool IsFacts => Type == "facts";
 
     /// <summary>
-    /// Factory method to create a union from a CortiApi.DocumentsContextWithTranscript value.
+    /// Returns true if <see cref="Type"/> is "transcript"
     /// </summary>
-    public static DocumentsContext FromDocumentsContextWithTranscript(
-        CortiApi.DocumentsContextWithTranscript value
-    ) => new("documentsContextWithTranscript", value);
+    public bool IsTranscript => Type == "transcript";
 
     /// <summary>
-    /// Factory method to create a union from a CortiApi.DocumentsContextWithString value.
+    /// Returns true if <see cref="Type"/> is "string"
     /// </summary>
-    public static DocumentsContext FromDocumentsContextWithString(
-        CortiApi.DocumentsContextWithString value
-    ) => new("documentsContextWithString", value);
+    public bool IsString => Type == "string";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "documentsContextWithFacts"
+    /// Returns the value as a <see cref="CortiApi.DocumentsContextWithFacts"/> if <see cref="Type"/> is 'facts', otherwise throws an exception.
     /// </summary>
-    public bool IsDocumentsContextWithFacts() => Type == "documentsContextWithFacts";
-
-    /// <summary>
-    /// Returns true if <see cref="Type"/> is "documentsContextWithTranscript"
-    /// </summary>
-    public bool IsDocumentsContextWithTranscript() => Type == "documentsContextWithTranscript";
-
-    /// <summary>
-    /// Returns true if <see cref="Type"/> is "documentsContextWithString"
-    /// </summary>
-    public bool IsDocumentsContextWithString() => Type == "documentsContextWithString";
-
-    /// <summary>
-    /// Returns the value as a <see cref="CortiApi.DocumentsContextWithFacts"/> if <see cref="Type"/> is 'documentsContextWithFacts', otherwise throws an exception.
-    /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsContextWithFacts'.</exception>
-    public CortiApi.DocumentsContextWithFacts AsDocumentsContextWithFacts() =>
-        IsDocumentsContextWithFacts()
+    /// <exception cref="Exception">Thrown when <see cref="Type"/> is not 'facts'.</exception>
+    public CortiApi.DocumentsContextWithFacts AsFacts() =>
+        IsFacts
             ? (CortiApi.DocumentsContextWithFacts)Value!
-            : throw new CortiClientException("Union type is not 'documentsContextWithFacts'");
+            : throw new System.Exception("DocumentsContext.Type is not 'facts'");
 
     /// <summary>
-    /// Returns the value as a <see cref="CortiApi.DocumentsContextWithTranscript"/> if <see cref="Type"/> is 'documentsContextWithTranscript', otherwise throws an exception.
+    /// Returns the value as a <see cref="CortiApi.DocumentsContextWithTranscript"/> if <see cref="Type"/> is 'transcript', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsContextWithTranscript'.</exception>
-    public CortiApi.DocumentsContextWithTranscript AsDocumentsContextWithTranscript() =>
-        IsDocumentsContextWithTranscript()
+    /// <exception cref="Exception">Thrown when <see cref="Type"/> is not 'transcript'.</exception>
+    public CortiApi.DocumentsContextWithTranscript AsTranscript() =>
+        IsTranscript
             ? (CortiApi.DocumentsContextWithTranscript)Value!
-            : throw new CortiClientException("Union type is not 'documentsContextWithTranscript'");
+            : throw new System.Exception("DocumentsContext.Type is not 'transcript'");
 
     /// <summary>
-    /// Returns the value as a <see cref="CortiApi.DocumentsContextWithString"/> if <see cref="Type"/> is 'documentsContextWithString', otherwise throws an exception.
+    /// Returns the value as a <see cref="CortiApi.DocumentsContextWithString"/> if <see cref="Type"/> is 'string', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsContextWithString'.</exception>
-    public CortiApi.DocumentsContextWithString AsDocumentsContextWithString() =>
-        IsDocumentsContextWithString()
+    /// <exception cref="Exception">Thrown when <see cref="Type"/> is not 'string'.</exception>
+    public CortiApi.DocumentsContextWithString AsString() =>
+        IsString
             ? (CortiApi.DocumentsContextWithString)Value!
-            : throw new CortiClientException("Union type is not 'documentsContextWithString'");
+            : throw new System.Exception("DocumentsContext.Type is not 'string'");
+
+    public T Match<T>(
+        Func<CortiApi.DocumentsContextWithFacts, T> onFacts,
+        Func<CortiApi.DocumentsContextWithTranscript, T> onTranscript,
+        Func<CortiApi.DocumentsContextWithString, T> onString,
+        Func<string, object?, T> onUnknown_
+    )
+    {
+        return Type switch
+        {
+            "facts" => onFacts(AsFacts()),
+            "transcript" => onTranscript(AsTranscript()),
+            "string" => onString(AsString()),
+            _ => onUnknown_(Type, Value),
+        };
+    }
+
+    public void Visit(
+        Action<CortiApi.DocumentsContextWithFacts> onFacts,
+        Action<CortiApi.DocumentsContextWithTranscript> onTranscript,
+        Action<CortiApi.DocumentsContextWithString> onString,
+        Action<string, object?> onUnknown_
+    )
+    {
+        switch (Type)
+        {
+            case "facts":
+                onFacts(AsFacts());
+                break;
+            case "transcript":
+                onTranscript(AsTranscript());
+                break;
+            case "string":
+                onString(AsString());
+                break;
+            default:
+                onUnknown_(Type, Value);
+                break;
+        }
+    }
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="CortiApi.DocumentsContextWithFacts"/> and returns true if successful.
     /// </summary>
-    public bool TryGetDocumentsContextWithFacts(out CortiApi.DocumentsContextWithFacts? value)
+    public bool TryAsFacts(out CortiApi.DocumentsContextWithFacts? value)
     {
-        if (Type == "documentsContextWithFacts")
+        if (Type == "facts")
         {
             value = (CortiApi.DocumentsContextWithFacts)Value!;
             return true;
@@ -109,11 +155,9 @@ public class DocumentsContext
     /// <summary>
     /// Attempts to cast the value to a <see cref="CortiApi.DocumentsContextWithTranscript"/> and returns true if successful.
     /// </summary>
-    public bool TryGetDocumentsContextWithTranscript(
-        out CortiApi.DocumentsContextWithTranscript? value
-    )
+    public bool TryAsTranscript(out CortiApi.DocumentsContextWithTranscript? value)
     {
-        if (Type == "documentsContextWithTranscript")
+        if (Type == "transcript")
         {
             value = (CortiApi.DocumentsContextWithTranscript)Value!;
             return true;
@@ -125,9 +169,9 @@ public class DocumentsContext
     /// <summary>
     /// Attempts to cast the value to a <see cref="CortiApi.DocumentsContextWithString"/> and returns true if successful.
     /// </summary>
-    public bool TryGetDocumentsContextWithString(out CortiApi.DocumentsContextWithString? value)
+    public bool TryAsString(out CortiApi.DocumentsContextWithString? value)
     {
-        if (Type == "documentsContextWithString")
+        if (Type == "string")
         {
             value = (CortiApi.DocumentsContextWithString)Value!;
             return true;
@@ -136,143 +180,65 @@ public class DocumentsContext
         return false;
     }
 
-    public T Match<T>(
-        Func<CortiApi.DocumentsContextWithFacts, T> onDocumentsContextWithFacts,
-        Func<CortiApi.DocumentsContextWithTranscript, T> onDocumentsContextWithTranscript,
-        Func<CortiApi.DocumentsContextWithString, T> onDocumentsContextWithString
-    )
-    {
-        return Type switch
-        {
-            "documentsContextWithFacts" => onDocumentsContextWithFacts(
-                AsDocumentsContextWithFacts()
-            ),
-            "documentsContextWithTranscript" => onDocumentsContextWithTranscript(
-                AsDocumentsContextWithTranscript()
-            ),
-            "documentsContextWithString" => onDocumentsContextWithString(
-                AsDocumentsContextWithString()
-            ),
-            _ => throw new CortiClientException($"Unknown union type: {Type}"),
-        };
-    }
-
-    public void Visit(
-        Action<CortiApi.DocumentsContextWithFacts> onDocumentsContextWithFacts,
-        Action<CortiApi.DocumentsContextWithTranscript> onDocumentsContextWithTranscript,
-        Action<CortiApi.DocumentsContextWithString> onDocumentsContextWithString
-    )
-    {
-        switch (Type)
-        {
-            case "documentsContextWithFacts":
-                onDocumentsContextWithFacts(AsDocumentsContextWithFacts());
-                break;
-            case "documentsContextWithTranscript":
-                onDocumentsContextWithTranscript(AsDocumentsContextWithTranscript());
-                break;
-            case "documentsContextWithString":
-                onDocumentsContextWithString(AsDocumentsContextWithString());
-                break;
-            default:
-                throw new CortiClientException($"Unknown union type: {Type}");
-        }
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            var hashCode = Type.GetHashCode();
-            if (Value != null)
-            {
-                hashCode = (hashCode * 397) ^ Value.GetHashCode();
-            }
-            return hashCode;
-        }
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is null)
-            return false;
-        if (ReferenceEquals(this, obj))
-            return true;
-        if (obj is not DocumentsContext other)
-            return false;
-
-        // Compare type discriminators
-        if (Type != other.Type)
-            return false;
-
-        // Compare values using EqualityComparer for deep comparison
-        return System.Collections.Generic.EqualityComparer<object?>.Default.Equals(
-            Value,
-            other.Value
-        );
-    }
-
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator DocumentsContext(CortiApi.DocumentsContextWithFacts value) =>
-        new("documentsContextWithFacts", value);
+    public static implicit operator DocumentsContext(DocumentsContext.Facts value) => new(value);
 
-    public static implicit operator DocumentsContext(
-        CortiApi.DocumentsContextWithTranscript value
-    ) => new("documentsContextWithTranscript", value);
+    public static implicit operator DocumentsContext(DocumentsContext.Transcript value) =>
+        new(value);
 
-    public static implicit operator DocumentsContext(CortiApi.DocumentsContextWithString value) =>
-        new("documentsContextWithString", value);
+    public static implicit operator DocumentsContext(DocumentsContext.String value) => new(value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<DocumentsContext>
     {
-        public override DocumentsContext? Read(
+        public override bool CanConvert(System.Type typeToConvert) =>
+            typeof(DocumentsContext).IsAssignableFrom(typeToConvert);
+
+        public override DocumentsContext Read(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
-            if (reader.TokenType == JsonTokenType.Null)
+            var json = JsonElement.ParseValue(ref reader);
+            if (!json.TryGetProperty("type", out var discriminatorElement))
             {
-                return null;
+                throw new JsonException("Missing discriminator property 'type'");
             }
-
-            if (reader.TokenType == JsonTokenType.StartObject)
+            if (discriminatorElement.ValueKind != JsonValueKind.String)
             {
-                var document = JsonDocument.ParseValue(ref reader);
-
-                var types = new (string Key, System.Type Type)[]
+                if (discriminatorElement.ValueKind == JsonValueKind.Null)
                 {
-                    ("documentsContextWithFacts", typeof(CortiApi.DocumentsContextWithFacts)),
-                    (
-                        "documentsContextWithTranscript",
-                        typeof(CortiApi.DocumentsContextWithTranscript)
-                    ),
-                    ("documentsContextWithString", typeof(CortiApi.DocumentsContextWithString)),
-                };
-
-                foreach (var (key, type) in types)
-                {
-                    try
-                    {
-                        var value = document.Deserialize(type, options);
-                        if (value != null)
-                        {
-                            DocumentsContext result = new(key, value);
-                            return result;
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // Try next type;
-                    }
+                    throw new JsonException("Discriminator property 'type' is null");
                 }
+
+                throw new JsonException(
+                    $"Discriminator property 'type' is not a string, instead is {discriminatorElement.ToString()}"
+                );
             }
 
-            throw new JsonException(
-                $"Cannot deserialize JSON token {reader.TokenType} into DocumentsContext"
-            );
+            var discriminator =
+                discriminatorElement.GetString()
+                ?? throw new JsonException("Discriminator property 'type' is null");
+
+            var value = discriminator switch
+            {
+                "facts" => json.Deserialize<CortiApi.DocumentsContextWithFacts?>(options)
+                    ?? throw new JsonException(
+                        "Failed to deserialize CortiApi.DocumentsContextWithFacts"
+                    ),
+                "transcript" => json.Deserialize<CortiApi.DocumentsContextWithTranscript?>(options)
+                    ?? throw new JsonException(
+                        "Failed to deserialize CortiApi.DocumentsContextWithTranscript"
+                    ),
+                "string" => json.Deserialize<CortiApi.DocumentsContextWithString?>(options)
+                    ?? throw new JsonException(
+                        "Failed to deserialize CortiApi.DocumentsContextWithString"
+                    ),
+                _ => json.Deserialize<object?>(options),
+            };
+            return new DocumentsContext(discriminator, value);
         }
 
         public override void Write(
@@ -281,37 +247,76 @@ public class DocumentsContext
             JsonSerializerOptions options
         )
         {
-            if (value == null)
-            {
-                writer.WriteNullValue();
-                return;
-            }
-
-            value.Visit(
-                obj => JsonSerializer.Serialize(writer, obj, options),
-                obj => JsonSerializer.Serialize(writer, obj, options),
-                obj => JsonSerializer.Serialize(writer, obj, options)
-            );
+            JsonNode json =
+                value.Type switch
+                {
+                    "facts" => JsonSerializer.SerializeToNode(value.Value, options),
+                    "transcript" => JsonSerializer.SerializeToNode(value.Value, options),
+                    "string" => JsonSerializer.SerializeToNode(value.Value, options),
+                    _ => JsonSerializer.SerializeToNode(value.Value, options),
+                } ?? new JsonObject();
+            json["type"] = value.Type;
+            json.WriteTo(writer, options);
         }
+    }
 
-        public override DocumentsContext ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            System.Type typeToConvert,
-            JsonSerializerOptions options
-        )
+    /// <summary>
+    /// Discriminated union type for facts
+    /// </summary>
+    [Serializable]
+    public struct Facts
+    {
+        public Facts(CortiApi.DocumentsContextWithFacts value)
         {
-            var stringValue = reader.GetString()!;
-            DocumentsContext result = new("string", stringValue);
-            return result;
+            Value = value;
         }
 
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            DocumentsContext value,
-            JsonSerializerOptions options
-        )
+        internal CortiApi.DocumentsContextWithFacts Value { get; set; }
+
+        public override string ToString() => Value.ToString() ?? "null";
+
+        public static implicit operator DocumentsContext.Facts(
+            CortiApi.DocumentsContextWithFacts value
+        ) => new(value);
+    }
+
+    /// <summary>
+    /// Discriminated union type for transcript
+    /// </summary>
+    [Serializable]
+    public struct Transcript
+    {
+        public Transcript(CortiApi.DocumentsContextWithTranscript value)
         {
-            writer.WritePropertyName(value.Value?.ToString() ?? "null");
+            Value = value;
         }
+
+        internal CortiApi.DocumentsContextWithTranscript Value { get; set; }
+
+        public override string ToString() => Value.ToString() ?? "null";
+
+        public static implicit operator DocumentsContext.Transcript(
+            CortiApi.DocumentsContextWithTranscript value
+        ) => new(value);
+    }
+
+    /// <summary>
+    /// Discriminated union type for string
+    /// </summary>
+    [Serializable]
+    public struct String
+    {
+        public String(CortiApi.DocumentsContextWithString value)
+        {
+            Value = value;
+        }
+
+        internal CortiApi.DocumentsContextWithString Value { get; set; }
+
+        public override string ToString() => Value.ToString() ?? "null";
+
+        public static implicit operator DocumentsContext.String(
+            CortiApi.DocumentsContextWithString value
+        ) => new(value);
     }
 }

@@ -1081,7 +1081,7 @@ public partial class AgentsClient : IAgentsClient
     ///             Role = AgentsMessageRole.User,
     ///             Parts = new List&lt;AgentsPart&gt;()
     ///             {
-    ///                 new AgentsTextPart { Kind = AgentsTextPartKind.Text, Text = "text" },
+    ///                 new AgentsPart(new CortiApi.AgentsPart.Text(new AgentsTextPart { Text = "text" })),
     ///             },
     ///             MessageId = "messageId",
     ///             Kind = AgentsMessageKind.Message,

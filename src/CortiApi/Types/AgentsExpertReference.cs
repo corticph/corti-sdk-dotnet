@@ -14,9 +14,6 @@ public record AgentsExpertReference : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("type")]
-    public required AgentsExpertReferenceType Type { get; set; }
-
     /// <summary>
     /// The unique identifier of the expert.
     /// </summary>
