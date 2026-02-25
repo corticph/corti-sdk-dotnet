@@ -3,5 +3,5 @@ namespace Corti;
 [Serializable]
 internal class Version
 {
-    public const string Current = "0.0.925";
+    public const string Current = "0.0.926";
 }
