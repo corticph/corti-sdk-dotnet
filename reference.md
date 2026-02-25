@@ -29,12 +29,13 @@ Use the returned access_token in the Authorization header when calling the Corti
 
 ```csharp
 await client.Auth.TokenAsync(
-    "base",
+    "tenantName",
     new AuthTokenRequest
     {
         ClientId = "client_id",
         ClientSecret = "client_secret",
-        GrantType = AuthTokenRequestGrantType.ClientCredentials,
+        GrantType = "client_credentials",
+        Scope = "openid",
     }
 );
 ```
@@ -51,7 +52,7 @@ await client.Auth.TokenAsync(
 <dl>
 <dd>
 
-**tenantName:** `string` — Tenant identifier (e.g. base or custom tenant name).
+**tenantName:** `string` 
     
 </dd>
 </dl>

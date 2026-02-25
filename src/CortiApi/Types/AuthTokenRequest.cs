@@ -26,17 +26,23 @@ public record AuthTokenRequest : IJsonOnDeserialized
     [JsonPropertyName("client_secret")]
     public required string ClientSecret { get; set; }
 
-    /// <summary>
-    /// Must be client_credentials.
-    /// </summary>
     [JsonPropertyName("grant_type")]
-    public required AuthTokenRequestGrantType GrantType { get; set; }
+    public string GrantType
+    {
+        get => "client_credentials";
+        set =>
+            value.Assert(
+                value == "client_credentials",
+                string.Format("'GrantType' must be {0}", "client_credentials")
+            );
+    }
 
-    /// <summary>
-    /// OAuth scope(s). Default openid.
-    /// </summary>
     [JsonPropertyName("scope")]
-    public string? Scope { get; set; }
+    public string Scope
+    {
+        get => "openid";
+        set => value.Assert(value == "openid", string.Format("'Scope' must be {0}", "openid"));
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

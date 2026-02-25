@@ -18,16 +18,16 @@ public record AuthTokenResponse : IJsonOnDeserialized
     /// Short-lived JWT access token (e.g. 5 minutes).
     /// </summary>
     [JsonPropertyName("access_token")]
-    public string? AccessToken { get; set; }
+    public required string AccessToken { get; set; }
 
     /// <summary>
     /// Token lifetime in seconds.
     /// </summary>
     [JsonPropertyName("expires_in")]
-    public int? ExpiresIn { get; set; }
+    public required int ExpiresIn { get; set; }
 
     [JsonPropertyName("token_type")]
-    public string? TokenType { get; set; }
+    public required string TokenType { get; set; }
 
     /// <summary>
     /// Granted scope(s).

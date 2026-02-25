@@ -6,7 +6,11 @@ public partial class CortiClient : ICortiClient
 {
     private readonly RawClient _client;
 
-    public CortiClient(string token, string? tenantName = null, ClientOptions? clientOptions = null)
+    public CortiClient(
+        string? token = null,
+        string? tenantName = null,
+        ClientOptions? clientOptions = null
+    )
     {
         try
         {
@@ -33,7 +37,7 @@ public partial class CortiClient : ICortiClient
             var authHeaders = new Headers(
                 new Dictionary<string, string>()
                 {
-                    { "Authorization", $"Bearer {token}" },
+                    { "Authorization", $"Bearer {token ?? ""}" },
                     { "Tenant-Name", tenantName ?? "" },
                 }
             );
