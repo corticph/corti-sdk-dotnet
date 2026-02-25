@@ -1,5 +1,10 @@
 using Corti.Core;
 using NUnit.Framework;
+using WireMock.Matchers;
+using WireMock.Server;
+using SystemTask = global::System.Threading.Tasks.Task;
+using WireMockRequest = WireMock.RequestBuilders.Request;
+using WireMockResponse = WireMock.ResponseBuilders.Response;
 
 namespace Corti.Test.Core.RawClientTests;
 
@@ -7,102 +12,52 @@ namespace Corti.Test.Core.RawClientTests;
 [Parallelizable(ParallelScope.Self)]
 public class QueryParameterTests
 {
-    [Test]
-    public void QueryParameters_BasicParameters()
-    {
-        var queryString = new QueryStringBuilder.Builder()
-            .Add("foo", "bar")
-            .Add("baz", "qux")
-            .Build();
+    private WireMockServer _server;
+    private HttpClient _httpClient;
+    private RawClient _rawClient;
+    private string _baseUrl;
 
-        Assert.That(queryString, Is.EqualTo("?foo=bar&baz=qux"));
+    [SetUp]
+    public void SetUp()
+    {
+        _server = WireMockServer.Start();
+        _baseUrl = _server.Url ?? "";
+        _httpClient = new HttpClient { BaseAddress = new Uri(_baseUrl) };
+        _rawClient = new RawClient(new ClientOptions { HttpClient = _httpClient });
     }
 
     [Test]
-    public void QueryParameters_SpecialCharacterEscaping()
+    public void CreateRequest_QueryParametersEscaping()
     {
-        var queryString = new QueryStringBuilder.Builder()
-            .Add("email", "bob+test@example.com")
-            .Add("%Complete", "100")
-            .Add("space test", "hello world")
-            .Build();
+        _server
+            .Given(WireMockRequest.Create().WithPath("/test").WithParam("foo", "bar").UsingGet())
+            .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        Assert.That(queryString, Does.Contain("email=bob%2Btest%40example.com"));
-        Assert.That(queryString, Does.Contain("%25Complete=100"));
-        Assert.That(queryString, Does.Contain("space%20test=hello%20world"));
+        var request = new JsonRequest()
+        {
+            BaseUrl = _baseUrl,
+            Method = HttpMethod.Get,
+            Path = "/test",
+            Query = new Dictionary<string, object>
+            {
+                { "sample", "value" },
+                { "email", "bob+test@example.com" },
+                { "%Complete", "100" },
+            },
+            Options = new RequestOptions(),
+        };
+
+        var url = _rawClient.CreateHttpRequest(request).RequestUri!.AbsoluteUri;
+
+        Assert.That(url, Does.Contain("sample=value"));
+        Assert.That(url, Does.Contain("email=bob%2Btest%40example.com"));
+        Assert.That(url, Does.Contain("%25Complete=100"));
     }
 
-    [Test]
-    public void QueryParameters_MergeAdditionalParameters()
+    [TearDown]
+    public void TearDown()
     {
-        var queryString = new QueryStringBuilder.Builder()
-            .Add("sdk", "param")
-            .MergeAdditional(new List<KeyValuePair<string, string>> { new("user", "value") })
-            .Build();
-
-        Assert.That(queryString, Does.Contain("sdk=param"));
-        Assert.That(queryString, Does.Contain("user=value"));
-    }
-
-    [Test]
-    public void QueryParameters_AdditionalOverridesSdk()
-    {
-        var queryString = new QueryStringBuilder.Builder()
-            .Add("foo", "sdk_value")
-            .MergeAdditional(new List<KeyValuePair<string, string>> { new("foo", "user_override") })
-            .Build();
-
-        Assert.That(queryString, Does.Contain("foo=user_override"));
-        Assert.That(queryString, Does.Not.Contain("sdk_value"));
-    }
-
-    [Test]
-    public void QueryParameters_AdditionalMultipleValues()
-    {
-        var queryString = new QueryStringBuilder.Builder()
-            .Add("foo", "sdk_value")
-            .MergeAdditional(
-                new List<KeyValuePair<string, string>> { new("foo", "user1"), new("foo", "user2") }
-            )
-            .Build();
-
-        Assert.That(queryString, Does.Contain("foo=user1"));
-        Assert.That(queryString, Does.Contain("foo=user2"));
-        Assert.That(queryString, Does.Not.Contain("sdk_value"));
-    }
-
-    [Test]
-    public void QueryParameters_OnlyAdditionalParameters()
-    {
-        var queryString = new QueryStringBuilder.Builder()
-            .MergeAdditional(
-                new List<KeyValuePair<string, string>> { new("foo", "bar"), new("baz", "qux") }
-            )
-            .Build();
-
-        Assert.That(queryString, Does.Contain("foo=bar"));
-        Assert.That(queryString, Does.Contain("baz=qux"));
-    }
-
-    [Test]
-    public void QueryParameters_EmptyAdditionalParameters()
-    {
-        var queryString = new QueryStringBuilder.Builder()
-            .Add("foo", "bar")
-            .MergeAdditional(new List<KeyValuePair<string, string>>())
-            .Build();
-
-        Assert.That(queryString, Is.EqualTo("?foo=bar"));
-    }
-
-    [Test]
-    public void QueryParameters_NullAdditionalParameters()
-    {
-        var queryString = new QueryStringBuilder.Builder()
-            .Add("foo", "bar")
-            .MergeAdditional(null)
-            .Build();
-
-        Assert.That(queryString, Is.EqualTo("?foo=bar"));
+        _server.Dispose();
+        _httpClient.Dispose();
     }
 }

@@ -28,10 +28,10 @@ jobs:
         run: dotnet tool restore
 
       - name: Restore dependencies
-        run: dotnet restore src/Corti/Corti.csproj
+        run: dotnet restore src/Corti
 
       - name: Build Release
-        run: dotnet build src/Corti/Corti.csproj -c Release --no-restore
+        run: dotnet build src/Corti -c Release --no-restore
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -53,12 +53,12 @@ jobs:
           dotnet tool restore
 
       - name: Restore dependencies
-        run: dotnet restore src/Corti.Test/Corti.Test.csproj
+        run: dotnet restore src
 
       - name: Build Release
-        run: dotnet build src/Corti.Test/Corti.Test.csproj -c Release --no-restore
+        run: dotnet build src -c Release --no-restore
 
       - name: Run Tests
-        run: dotnet test src/Corti.Test/Corti.Test.csproj -c Release --no-build --no-restore
+        run: dotnet test src -c Release --no-build --no-restore
 
 

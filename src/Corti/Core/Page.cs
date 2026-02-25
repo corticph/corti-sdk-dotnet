@@ -1,5 +1,5 @@
-using global::System.Collections;
-using global::System.Collections.ObjectModel;
+using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace Corti.Core;
 

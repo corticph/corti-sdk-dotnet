@@ -82,7 +82,8 @@ public static class ValueConvert
             ulong u => ToString(u),
             char c => ToString(c),
             Guid guid => ToString(guid),
-            _ => JsonUtils.SerializeRelaxedEscaping(value, value.GetType()).Trim('"'),
+            Enum e => JsonUtils.Serialize(e).Trim('"'),
+            _ => JsonUtils.Serialize(value).Trim('"'),
         };
     }
 

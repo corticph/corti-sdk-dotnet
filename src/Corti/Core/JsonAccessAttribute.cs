@@ -1,9 +1,7 @@
 namespace Corti.Core;
 
-[global::System.AttributeUsage(
-    global::System.AttributeTargets.Property | global::System.AttributeTargets.Field
-)]
-internal class JsonAccessAttribute(JsonAccessType accessType) : global::System.Attribute
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+internal class JsonAccessAttribute(JsonAccessType accessType) : Attribute
 {
     internal JsonAccessType AccessType { get; init; } = accessType;
 }

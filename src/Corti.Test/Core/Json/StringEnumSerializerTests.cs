@@ -1,6 +1,6 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Corti.Core;
-using global::System.Text.Json;
-using global::System.Text.Json.Serialization;
 using NUnit.Framework;
 
 namespace Corti.Test.Core.Json;

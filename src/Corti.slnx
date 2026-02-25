@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Corti.Test/Corti.Test.csproj" />
+  <Project Path="Corti/Corti.csproj" />
+</Solution>

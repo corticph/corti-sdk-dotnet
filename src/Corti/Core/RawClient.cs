@@ -11,13 +11,6 @@ namespace Corti.Core;
 internal partial class RawClient(ClientOptions clientOptions)
 {
     private const int MaxRetryDelayMs = 60000;
-    private const double JitterFactor = 0.2;
-#if NET6_0_OR_GREATER
-    // Use Random.Shared for thread-safe random number generation on .NET 6+
-#else
-    private static readonly object JitterLock = new();
-    private static readonly Random JitterRandom = new();
-#endif
     internal int BaseRetryDelay { get; set; } = 1000;
 
     /// <summary>
@@ -25,30 +18,39 @@ internal partial class RawClient(ClientOptions clientOptions)
     /// </summary>
     internal readonly ClientOptions Options = clientOptions;
 
-    internal async global::System.Threading.Tasks.Task<global::Corti.Core.ApiResponse> SendRequestAsync(
+    [Obsolete("Use SendRequestAsync instead.")]
+    internal Task<global::Corti.Core.ApiResponse> MakeRequestAsync(
+        global::Corti.Core.BaseRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return SendRequestAsync(request, cancellationToken);
+    }
+
+    internal async Task<global::Corti.Core.ApiResponse> SendRequestAsync(
         global::Corti.Core.BaseRequest request,
         CancellationToken cancellationToken = default
     )
     {
         // Apply the request timeout.
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var timeout = request.Options?.Timeout ?? Options.Timeout;
         cts.CancelAfter(timeout);
 
-        var httpRequest = await CreateHttpRequestAsync(request).ConfigureAwait(false);
+        var httpRequest = CreateHttpRequest(request);
         // Send the request.
         return await SendWithRetriesAsync(httpRequest, request.Options, cts.Token)
             .ConfigureAwait(false);
     }
 
-    internal async global::System.Threading.Tasks.Task<global::Corti.Core.ApiResponse> SendRequestAsync(
+    internal async Task<global::Corti.Core.ApiResponse> SendRequestAsync(
         HttpRequestMessage request,
         IRequestOptions? options,
         CancellationToken cancellationToken = default
     )
     {
         // Apply the request timeout.
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var timeout = options?.Timeout ?? Options.Timeout;
         cts.CancelAfter(timeout);
 
@@ -56,9 +58,7 @@ internal partial class RawClient(ClientOptions clientOptions)
         return await SendWithRetriesAsync(request, options, cts.Token).ConfigureAwait(false);
     }
 
-    private static async global::System.Threading.Tasks.Task<HttpRequestMessage> CloneRequestAsync(
-        HttpRequestMessage request
-    )
+    private static async Task<HttpRequestMessage> CloneRequestAsync(HttpRequestMessage request)
     {
         var clonedRequest = new HttpRequestMessage(request.Method, request.RequestUri);
         clonedRequest.Version = request.Version;
@@ -70,8 +70,7 @@ internal partial class RawClient(ClientOptions clientOptions)
                         .Headers.ContentType?.Parameters.First(p =>
                             p.Name.Equals("boundary", StringComparison.OrdinalIgnoreCase)
                         )
-                        .Value?.Trim('"')
-                    ?? Guid.NewGuid().ToString();
+                        .Value?.Trim('"') ?? Guid.NewGuid().ToString();
                 var newMultipartContent = oldMultipartFormContent switch
                 {
                     MultipartFormDataContent => new MultipartFormDataContent(originalBoundary),
@@ -110,7 +109,7 @@ internal partial class RawClient(ClientOptions clientOptions)
     /// Sends the request with retries, unless the request content is not retryable,
     /// such as stream requests and multipart form data with stream content.
     /// </summary>
-    private async global::System.Threading.Tasks.Task<global::Corti.Core.ApiResponse> SendWithRetriesAsync(
+    private async Task<global::Corti.Core.ApiResponse> SendWithRetriesAsync(
         HttpRequestMessage request,
         IRequestOptions? options,
         CancellationToken cancellationToken
@@ -139,7 +138,7 @@ internal partial class RawClient(ClientOptions clientOptions)
                 break;
             }
 
-            var delayMs = GetRetryDelayFromHeaders(response, i);
+            var delayMs = Math.Min(BaseRetryDelay * (int)Math.Pow(2, i), MaxRetryDelayMs);
             await SystemTask.Delay(delayMs, cancellationToken).ConfigureAwait(false);
             using var retryRequest = await CloneRequestAsync(request).ConfigureAwait(false);
             response = await httpClient
@@ -164,80 +163,6 @@ internal partial class RawClient(ClientOptions clientOptions)
         return statusCode is 408 or 429 or >= 500;
     }
 
-    private static int AddPositiveJitter(int delayMs)
-    {
-#if NET6_0_OR_GREATER
-        var random = Random.Shared.NextDouble();
-#else
-        double random;
-        lock (JitterLock)
-        {
-            random = JitterRandom.NextDouble();
-        }
-#endif
-        var jitterMultiplier = 1 + random * JitterFactor;
-        return (int)(delayMs * jitterMultiplier);
-    }
-
-    private static int AddSymmetricJitter(int delayMs)
-    {
-#if NET6_0_OR_GREATER
-        var random = Random.Shared.NextDouble();
-#else
-        double random;
-        lock (JitterLock)
-        {
-            random = JitterRandom.NextDouble();
-        }
-#endif
-        var jitterMultiplier = 1 + (random - 0.5) * JitterFactor;
-        return (int)(delayMs * jitterMultiplier);
-    }
-
-    private int GetRetryDelayFromHeaders(HttpResponseMessage response, int retryAttempt)
-    {
-        if (response.Headers.TryGetValues("Retry-After", out var retryAfterValues))
-        {
-            var retryAfter = retryAfterValues.FirstOrDefault();
-            if (!string.IsNullOrEmpty(retryAfter))
-            {
-                if (int.TryParse(retryAfter, out var retryAfterSeconds) && retryAfterSeconds > 0)
-                {
-                    return Math.Min(retryAfterSeconds * 1000, MaxRetryDelayMs);
-                }
-
-                if (DateTimeOffset.TryParse(retryAfter, out var retryAfterDate))
-                {
-                    var delay = (int)(retryAfterDate - DateTimeOffset.UtcNow).TotalMilliseconds;
-                    if (delay > 0)
-                    {
-                        return Math.Min(delay, MaxRetryDelayMs);
-                    }
-                }
-            }
-        }
-
-        if (response.Headers.TryGetValues("X-RateLimit-Reset", out var rateLimitResetValues))
-        {
-            var rateLimitReset = rateLimitResetValues.FirstOrDefault();
-            if (
-                !string.IsNullOrEmpty(rateLimitReset)
-                && long.TryParse(rateLimitReset, out var resetTime)
-            )
-            {
-                var resetDateTime = DateTimeOffset.FromUnixTimeSeconds(resetTime);
-                var delay = (int)(resetDateTime - DateTimeOffset.UtcNow).TotalMilliseconds;
-                if (delay > 0)
-                {
-                    return AddPositiveJitter(Math.Min(delay, MaxRetryDelayMs));
-                }
-            }
-        }
-
-        var exponentialDelay = Math.Min(BaseRetryDelay * (1 << retryAttempt), MaxRetryDelayMs);
-        return AddSymmetricJitter(exponentialDelay);
-    }
-
     private static bool IsRetryableContent(HttpRequestMessage request)
     {
         return request.Content switch
@@ -249,15 +174,19 @@ internal partial class RawClient(ClientOptions clientOptions)
         };
     }
 
-    internal async global::System.Threading.Tasks.Task<HttpRequestMessage> CreateHttpRequestAsync(
-        global::Corti.Core.BaseRequest request
-    )
+    internal HttpRequestMessage CreateHttpRequest(global::Corti.Core.BaseRequest request)
     {
         var url = BuildUrl(request);
         var httpRequest = new HttpRequestMessage(request.Method, url);
         httpRequest.Content = request.CreateContent();
-        SetHeaders(httpRequest, request.Headers);
+        var mergedHeaders = new Dictionary<string, List<string>>();
+        MergeHeaders(mergedHeaders, Options.Headers);
+        MergeAdditionalHeaders(mergedHeaders, Options.AdditionalHeaders);
+        MergeHeaders(mergedHeaders, request.Headers);
+        MergeHeaders(mergedHeaders, request.Options?.Headers);
 
+        MergeAdditionalHeaders(mergedHeaders, request.Options?.AdditionalHeaders ?? []);
+        SetHeaders(httpRequest, mergedHeaders);
         return httpRequest;
     }
 
@@ -268,30 +197,165 @@ internal partial class RawClient(ClientOptions clientOptions)
         var trimmedBasePath = request.Path.TrimStart('/');
         var url = $"{trimmedBaseUrl}/{trimmedBasePath}";
 
-        // Append query string if present
-        if (!string.IsNullOrEmpty(request.QueryString))
-        {
-            return url + request.QueryString;
-        }
+        var queryParameters = GetQueryParameters(request);
+        if (!queryParameters.Any())
+            return url;
 
+        url += "?";
+        url = queryParameters.Aggregate(
+            url,
+            (current, queryItem) =>
+            {
+                if (
+                    queryItem.Value
+                    is global::System.Collections.IEnumerable collection
+                        and not string
+                )
+                {
+                    var items = collection
+                        .Cast<object>()
+                        .Select(value =>
+                            $"{Uri.EscapeDataString(queryItem.Key)}={Uri.EscapeDataString(value?.ToString() ?? "")}"
+                        )
+                        .ToList();
+                    if (items.Any())
+                    {
+                        current += string.Join("&", items) + "&";
+                    }
+                }
+                else
+                {
+                    current +=
+                        $"{Uri.EscapeDataString(queryItem.Key)}={Uri.EscapeDataString(queryItem.Value)}&";
+                }
+
+                return current;
+            }
+        );
+        url = url[..^1];
         return url;
     }
 
-    private void SetHeaders(HttpRequestMessage httpRequest, Dictionary<string, string>? headers)
+    private static List<KeyValuePair<string, string>> GetQueryParameters(
+        global::Corti.Core.BaseRequest request
+    )
+    {
+        var result = TransformToKeyValuePairs(request.Query);
+        if (
+            request.Options?.AdditionalQueryParameters is null
+            || !request.Options.AdditionalQueryParameters.Any()
+        )
+        {
+            return result;
+        }
+
+        var additionalKeys = request
+            .Options.AdditionalQueryParameters.Select(p => p.Key)
+            .Distinct();
+        foreach (var key in additionalKeys)
+        {
+            result.RemoveAll(kv => kv.Key == key);
+        }
+
+        result.AddRange(request.Options.AdditionalQueryParameters);
+        return result;
+    }
+
+    private static List<KeyValuePair<string, string>> TransformToKeyValuePairs(
+        Dictionary<string, object> inputDict
+    )
+    {
+        var result = new List<KeyValuePair<string, string>>();
+        foreach (var kvp in inputDict)
+        {
+            switch (kvp.Value)
+            {
+                case string str:
+                    result.Add(new KeyValuePair<string, string>(kvp.Key, str));
+                    break;
+                case IEnumerable<string> strList:
+                {
+                    foreach (var value in strList)
+                    {
+                        result.Add(new KeyValuePair<string, string>(kvp.Key, value));
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private static void MergeHeaders(
+        Dictionary<string, List<string>> mergedHeaders,
+        Headers? headers
+    )
     {
         if (headers is null)
         {
             return;
         }
 
-        foreach (var kv in headers)
+        foreach (var header in headers)
         {
-            if (kv.Value is null)
+            var value = header.Value?.Match(str => str, func => func.Invoke());
+            if (value != null)
             {
+                mergedHeaders[header.Key] = [value];
+            }
+        }
+    }
+
+    private static void MergeAdditionalHeaders(
+        Dictionary<string, List<string>> mergedHeaders,
+        IEnumerable<KeyValuePair<string, string?>>? headers
+    )
+    {
+        if (headers is null)
+        {
+            return;
+        }
+
+        var usedKeys = new HashSet<string>();
+        foreach (var header in headers)
+        {
+            if (header.Value is null)
+            {
+                mergedHeaders.Remove(header.Key);
+                usedKeys.Remove(header.Key);
                 continue;
             }
 
-            httpRequest.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
+            if (usedKeys.Contains(header.Key))
+            {
+                mergedHeaders[header.Key].Add(header.Value);
+            }
+            else
+            {
+                mergedHeaders[header.Key] = [header.Value];
+                usedKeys.Add(header.Key);
+            }
+        }
+    }
+
+    private void SetHeaders(
+        HttpRequestMessage httpRequest,
+        Dictionary<string, List<string>> mergedHeaders
+    )
+    {
+        foreach (var kv in mergedHeaders)
+        {
+            foreach (var header in kv.Value)
+            {
+                if (header is null)
+                {
+                    continue;
+                }
+
+                httpRequest.Headers.TryAddWithoutValidation(kv.Key, header);
+            }
         }
     }
 
@@ -327,4 +391,28 @@ internal partial class RawClient(ClientOptions clientOptions)
 
         return (encoding, charset, mediaType);
     }
+
+    /// <inheritdoc />
+    [Obsolete("Use global::Corti.Core.ApiResponse instead.")]
+    internal record ApiResponse : global::Corti.Core.ApiResponse;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::Corti.Core.BaseRequest instead.")]
+    internal abstract record BaseApiRequest : global::Corti.Core.BaseRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::Corti.Core.EmptyRequest instead.")]
+    internal abstract record EmptyApiRequest : global::Corti.Core.EmptyRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::Corti.Core.JsonRequest instead.")]
+    internal abstract record JsonApiRequest : global::Corti.Core.JsonRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::Corti.Core.MultipartFormRequest instead.")]
+    internal abstract record MultipartFormRequest : global::Corti.Core.MultipartFormRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::Corti.Core.StreamRequest instead.")]
+    internal abstract record StreamApiRequest : global::Corti.Core.StreamRequest;
 }

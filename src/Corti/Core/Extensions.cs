@@ -1,5 +1,5 @@
-using global::System.Diagnostics.CodeAnalysis;
-using global::System.Runtime.Serialization;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Corti.Core;
 
@@ -8,10 +8,10 @@ internal static class Extensions
     public static string Stringify(this Enum value)
     {
         var field = value.GetType().GetField(value.ToString());
-        if (field is not null)
+        if (field != null)
         {
             var attribute = (EnumMemberAttribute?)
-                global::System.Attribute.GetCustomAttribute(field, typeof(EnumMemberAttribute));
+                Attribute.GetCustomAttribute(field, typeof(EnumMemberAttribute));
             return attribute?.Value ?? value.ToString();
         }
         return value.ToString();
@@ -46,7 +46,7 @@ internal static class Extensions
     )
         where TValue : class
     {
-        if (value is null)
+        if (value == null)
         {
             throw new global::System.Exception(message);
         }

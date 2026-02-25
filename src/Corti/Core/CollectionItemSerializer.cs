@@ -1,5 +1,5 @@
-using global::System.Text.Json;
-using global::System.Text.Json.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Corti.Core;
 
@@ -67,7 +67,7 @@ internal class CollectionItemSerializer<TDatatype, TConverterType>
         JsonSerializerOptions options
     )
     {
-        if (value is null)
+        if (value == null)
         {
             writer.WriteNullValue();
             return;

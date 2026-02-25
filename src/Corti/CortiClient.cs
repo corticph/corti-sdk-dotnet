@@ -2,7 +2,7 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class CortiClient : ICortiClient
+public partial class CortiClient
 {
     private readonly RawClient _client;
 
@@ -12,35 +12,25 @@ public partial class CortiClient : ICortiClient
         ClientOptions? clientOptions = null
     )
     {
-        clientOptions ??= new ClientOptions();
-        var platformHeaders = new Headers(
+        var defaultHeaders = new Headers(
             new Dictionary<string, string>()
             {
+                { "Authorization", $"Bearer {token ?? ""}" },
+                { "Tenant-Name", tenantName ?? "" },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "Corti" },
                 { "X-Fern-SDK-Version", Version.Current },
             }
         );
-        foreach (var header in platformHeaders)
+        clientOptions ??= new ClientOptions();
+        foreach (var header in defaultHeaders)
         {
             if (!clientOptions.Headers.ContainsKey(header.Key))
             {
                 clientOptions.Headers[header.Key] = header.Value;
             }
         }
-        var clientOptionsWithAuth = clientOptions.Clone();
-        var authHeaders = new Headers(
-            new Dictionary<string, string>()
-            {
-                { "Authorization", $"Bearer {token ?? ""}" },
-                { "Tenant-Name", tenantName ?? "" },
-            }
-        );
-        foreach (var header in authHeaders)
-        {
-            clientOptionsWithAuth.Headers[header.Key] = header.Value;
-        }
-        _client = new RawClient(clientOptionsWithAuth);
+        _client = new RawClient(clientOptions);
         Auth = new AuthClient(_client);
         Interactions = new InteractionsClient(_client);
         Recordings = new RecordingsClient(_client);
@@ -52,23 +42,23 @@ public partial class CortiClient : ICortiClient
         Agents = new AgentsClient(_client);
     }
 
-    public IAuthClient Auth { get; }
+    public AuthClient Auth { get; }
 
-    public IInteractionsClient Interactions { get; }
+    public InteractionsClient Interactions { get; }
 
-    public IRecordingsClient Recordings { get; }
+    public RecordingsClient Recordings { get; }
 
-    public ITranscriptsClient Transcripts { get; }
+    public TranscriptsClient Transcripts { get; }
 
-    public IFactsClient Facts { get; }
+    public FactsClient Facts { get; }
 
-    public IDocumentsClient Documents { get; }
+    public DocumentsClient Documents { get; }
 
-    public ITemplatesClient Templates { get; }
+    public TemplatesClient Templates { get; }
 
-    public ICodesClient Codes { get; }
+    public CodesClient Codes { get; }
 
-    public IAgentsClient Agents { get; }
+    public AgentsClient Agents { get; }
 
     public StreamApi CreateStreamApi(StreamApi.Options options)
     {
