@@ -6,7 +6,7 @@ public partial class CortiClient : ICortiClient
 {
     private readonly RawClient _client;
 
-    public CortiClient(string tenantName, string? token = null, ClientOptions? clientOptions = null)
+    public CortiClient(string token, string? tenantName = null, ClientOptions? clientOptions = null)
     {
         try
         {
@@ -33,8 +33,8 @@ public partial class CortiClient : ICortiClient
             var authHeaders = new Headers(
                 new Dictionary<string, string>()
                 {
-                    { "Tenant-Name", tenantName },
-                    { "Authorization", $"Bearer {token ?? ""}" },
+                    { "Authorization", $"Bearer {token}" },
+                    { "Tenant-Name", tenantName ?? "" },
                 }
             );
             foreach (var header in authHeaders)
@@ -42,6 +42,7 @@ public partial class CortiClient : ICortiClient
                 clientOptionsWithAuth.Headers[header.Key] = header.Value;
             }
             _client = new RawClient(clientOptionsWithAuth);
+            Auth = new AuthClient(_client);
             Interactions = new InteractionsClient(_client);
             Recordings = new RecordingsClient(_client);
             Transcripts = new TranscriptsClient(_client);
@@ -58,6 +59,8 @@ public partial class CortiClient : ICortiClient
             throw;
         }
     }
+
+    public IAuthClient Auth { get; }
 
     public IInteractionsClient Interactions { get; }
 

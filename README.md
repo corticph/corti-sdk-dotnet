@@ -41,16 +41,14 @@ Instantiate and use the client with the following:
 ```csharp
 using CortiApi;
 
-var client = new CortiClient("TENANT_NAME", "TOKEN");
-await client.Interactions.CreateAsync(
-    new InteractionsCreateRequest
+var client = new CortiClient("TOKEN", "TENANT_NAME");
+await client.Auth.TokenAsync(
+    "base",
+    new AuthTokenRequest
     {
-        Encounter = new InteractionsEncounterCreateRequest
-        {
-            Identifier = "identifier",
-            Status = InteractionsEncounterStatusEnum.Planned,
-            Type = InteractionsEncounterTypeEnum.FirstConsultation,
-        },
+        ClientId = "client_id",
+        ClientSecret = "client_secret",
+        GrantType = AuthTokenRequestGrantType.ClientCredentials,
     }
 );
 ```
@@ -64,7 +62,7 @@ will be thrown.
 using CortiApi;
 
 try {
-    var response = await client.Interactions.CreateAsync(...);
+    var response = await client.Auth.TokenAsync(...);
 } catch (CortiClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -78,7 +76,7 @@ List endpoints are paginated. The SDK provides an async enumerable so that you c
 ```csharp
 using CortiApi;
 
-var client = new CortiClient("TENANT_NAME", "TOKEN");
+var client = new CortiClient("TOKEN", "TENANT_NAME");
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
 
 await foreach (var item in items)
@@ -104,7 +102,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.Interactions.CreateAsync(
+var response = await client.Auth.TokenAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -117,7 +115,7 @@ var response = await client.Interactions.CreateAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.Interactions.CreateAsync(
+var response = await client.Auth.TokenAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
@@ -133,7 +131,7 @@ Access raw HTTP response data (status code, headers, URL) alongside parsed respo
 using CortiApi;
 
 // Access raw response data (status code, headers, etc.) alongside the parsed response
-var result = await client.Interactions.CreateAsync(...).WithRawResponse();
+var result = await client.Auth.TokenAsync(...).WithRawResponse();
 
 // Access the parsed data
 var data = result.Data;
@@ -150,7 +148,7 @@ if (headers.TryGetValue("X-Request-Id", out var requestId))
 }
 
 // For the default behavior, simply await without .WithRawResponse()
-var data = await client.Interactions.CreateAsync(...);
+var data = await client.Auth.TokenAsync(...);
 ```
 
 ### Forward Compatible Enums

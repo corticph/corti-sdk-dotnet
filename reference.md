@@ -1,4 +1,76 @@
 # Reference
+## Auth
+<details><summary><code>client.Auth.<a href="/src/CortiApi/Auth/AuthClient.cs">TokenAsync</a>(tenantName, AuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Exchange client_id and client_secret for a short-lived access token (OAuth 2.0 client credentials).
+Use the returned access_token in the Authorization header when calling the Corti API.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Auth.TokenAsync(
+    "base",
+    new AuthTokenRequest
+    {
+        ClientId = "client_id",
+        ClientSecret = "client_secret",
+        GrantType = AuthTokenRequestGrantType.ClientCredentials,
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**tenantName:** `string` — Tenant identifier (e.g. base or custom tenant name).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `AuthTokenRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Interactions
 <details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">ListAsync</a>(InteractionsListRequest { ... }) -> Pager&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
