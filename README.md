@@ -43,6 +43,7 @@ using Corti;
 
 var client = new CortiClient("TOKEN", "TENANT_NAME");
 await client.Auth.TokenAsync(
+    "tenantName",
     new AuthTokenRequest
     {
         ClientId = "client_id",

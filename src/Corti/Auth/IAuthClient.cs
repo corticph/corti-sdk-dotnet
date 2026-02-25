@@ -7,6 +7,7 @@ public partial interface IAuthClient
     /// Use the returned access_token in the Authorization header when calling the Corti API.
     /// </summary>
     WithRawResponseTask<AuthTokenResponse> TokenAsync(
+        string tenantName,
         AuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
