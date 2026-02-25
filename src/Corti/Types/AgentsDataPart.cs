@@ -12,6 +12,12 @@ public record AgentsDataPart : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// The kind of the part, always "data".
+    /// </summary>
+    [JsonPropertyName("kind")]
+    public required AgentsDataPartKind Kind { get; set; }
+
+    /// <summary>
     /// JSON data payload.
     /// </summary>
     [JsonPropertyName("data")]

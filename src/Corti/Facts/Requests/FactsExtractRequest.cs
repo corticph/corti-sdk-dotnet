@@ -7,7 +7,7 @@ namespace Corti;
 public record FactsExtractRequest
 {
     [JsonPropertyName("context")]
-    public IEnumerable<Text> Context { get; set; } = new List<Text>();
+    public IEnumerable<CommonTextContext> Context { get; set; } = new List<CommonTextContext>();
 
     /// <summary>
     /// The desired output language code for extracted facts. Check [languages page](/about/languages) for more.

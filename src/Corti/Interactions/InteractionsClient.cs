@@ -9,7 +9,15 @@ public partial class InteractionsClient : IInteractionsClient
 
     internal InteractionsClient(RawClient client)
     {
-        _client = client;
+        try
+        {
+            _client = client;
+        }
+        catch (Exception ex)
+        {
+            client.Options.ExceptionHandler?.CaptureException(ex);
+            throw;
+        }
     }
 
     /// <summary>
@@ -32,88 +40,97 @@ public partial class InteractionsClient : IInteractionsClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 6)
-            .Add("sort", request.Sort)
-            .Add("direction", request.Direction)
-            .Add("pageSize", request.PageSize)
-            .Add("index", request.Index)
-            .Add("encounterStatus", request.EncounterStatus)
-            .Add("patient", request.Patient)
-            .MergeAdditional(options?.AdditionalQueryParameters)
-            .Build();
-        var _headers = await new Corti.Core.HeadersBuilder.Builder()
-            .Add(_client.Options.Headers)
-            .Add(_client.Options.AdditionalHeaders)
-            .Add(options?.AdditionalHeaders)
-            .BuildAsync()
-            .ConfigureAwait(false);
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = "interactions/",
-                    QueryString = _queryString,
-                    Headers = _headers,
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var responseData = JsonUtils.Deserialize<InteractionsListResponse>(responseBody)!;
-                return new WithRawResponse<InteractionsListResponse>()
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 6)
+                    .Add("sort", request.Sort)
+                    .Add("direction", request.Direction)
+                    .Add("pageSize", request.PageSize)
+                    .Add("index", request.Index)
+                    .Add("encounterStatus", request.EncounterStatus)
+                    .Add("patient", request.Patient)
+                    .MergeAdditional(options?.AdditionalQueryParameters)
+                    .Build();
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Get,
+                            Path = "interactions/",
+                            QueryString = _queryString,
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
                 {
-                    Data = responseData,
-                    RawResponse = new RawResponse()
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
                     {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                    },
-                };
-            }
-            catch (JsonException e)
-            {
-                throw new CortiClientApiException(
-                    "Failed to deserialize response",
-                    response.StatusCode,
-                    responseBody,
-                    e
-                );
-            }
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 403:
-                        throw new ForbiddenError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        var responseData = JsonUtils.Deserialize<InteractionsListResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<InteractionsListResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e
                         );
-                    case 504:
-                        throw new GatewayTimeoutError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                    }
                 }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new CortiClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+                {
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 403:
+                                throw new ForbiddenError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                            case 504:
+                                throw new GatewayTimeoutError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
     private async Task<WithRawResponse<InteractionsCreateResponse>> CreateAsyncCore(
@@ -122,86 +139,97 @@ public partial class InteractionsClient : IInteractionsClient
         CancellationToken cancellationToken = default
     )
     {
-        var _headers = await new Corti.Core.HeadersBuilder.Builder()
-            .Add(_client.Options.Headers)
-            .Add(_client.Options.AdditionalHeaders)
-            .Add(options?.AdditionalHeaders)
-            .BuildAsync()
-            .ConfigureAwait(false);
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Post,
-                    Path = "interactions/",
-                    Body = request,
-                    Headers = _headers,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var responseData = JsonUtils.Deserialize<InteractionsCreateResponse>(responseBody)!;
-                return new WithRawResponse<InteractionsCreateResponse>()
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Post,
+                            Path = "interactions/",
+                            Body = request,
+                            Headers = _headers,
+                            ContentType = "application/json",
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
                 {
-                    Data = responseData,
-                    RawResponse = new RawResponse()
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
                     {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                    },
-                };
-            }
-            catch (JsonException e)
-            {
-                throw new CortiClientApiException(
-                    "Failed to deserialize response",
-                    response.StatusCode,
-                    responseBody,
-                    e
-                );
-            }
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
-                    case 403:
-                        throw new ForbiddenError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        var responseData = JsonUtils.Deserialize<InteractionsCreateResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<InteractionsCreateResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e
                         );
-                    case 500:
-                        throw new InternalServerError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                    case 504:
-                        throw new GatewayTimeoutError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                    }
                 }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new CortiClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+                {
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 403:
+                                throw new ForbiddenError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                            case 500:
+                                throw new InternalServerError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                            case 504:
+                                throw new GatewayTimeoutError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
     private async Task<WithRawResponse<InteractionsGetResponse>> GetAsyncCore(
@@ -210,81 +238,90 @@ public partial class InteractionsClient : IInteractionsClient
         CancellationToken cancellationToken = default
     )
     {
-        var _headers = await new Corti.Core.HeadersBuilder.Builder()
-            .Add(_client.Options.Headers)
-            .Add(_client.Options.AdditionalHeaders)
-            .Add(options?.AdditionalHeaders)
-            .BuildAsync()
-            .ConfigureAwait(false);
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Get,
-                    Path = string.Format(
-                        "interactions/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Headers = _headers,
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var responseData = JsonUtils.Deserialize<InteractionsGetResponse>(responseBody)!;
-                return new WithRawResponse<InteractionsGetResponse>()
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Get,
+                            Path = string.Format(
+                                "interactions/{0}",
+                                ValueConvert.ToPathParameterString(id)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
                 {
-                    Data = responseData,
-                    RawResponse = new RawResponse()
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
                     {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                    },
-                };
-            }
-            catch (JsonException e)
-            {
-                throw new CortiClientApiException(
-                    "Failed to deserialize response",
-                    response.StatusCode,
-                    responseBody,
-                    e
-                );
-            }
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 403:
-                        throw new ForbiddenError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        var responseData = JsonUtils.Deserialize<InteractionsGetResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<InteractionsGetResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e
                         );
-                    case 504:
-                        throw new GatewayTimeoutError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                    }
                 }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new CortiClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+                {
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 403:
+                                throw new ForbiddenError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                            case 504:
+                                throw new GatewayTimeoutError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
     private async Task<WithRawResponse<InteractionsGetResponse>> UpdateAsyncCore(
@@ -294,83 +331,92 @@ public partial class InteractionsClient : IInteractionsClient
         CancellationToken cancellationToken = default
     )
     {
-        var _headers = await new Corti.Core.HeadersBuilder.Builder()
-            .Add(_client.Options.Headers)
-            .Add(_client.Options.AdditionalHeaders)
-            .Add(options?.AdditionalHeaders)
-            .BuildAsync()
-            .ConfigureAwait(false);
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethodExtensions.Patch,
-                    Path = string.Format(
-                        "interactions/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Body = request,
-                    Headers = _headers,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var responseData = JsonUtils.Deserialize<InteractionsGetResponse>(responseBody)!;
-                return new WithRawResponse<InteractionsGetResponse>()
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethodExtensions.Patch,
+                            Path = string.Format(
+                                "interactions/{0}",
+                                ValueConvert.ToPathParameterString(id)
+                            ),
+                            Body = request,
+                            Headers = _headers,
+                            ContentType = "application/json",
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
                 {
-                    Data = responseData,
-                    RawResponse = new RawResponse()
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
                     {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                    },
-                };
-            }
-            catch (JsonException e)
-            {
-                throw new CortiClientApiException(
-                    "Failed to deserialize response",
-                    response.StatusCode,
-                    responseBody,
-                    e
-                );
-            }
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 403:
-                        throw new ForbiddenError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                        var responseData = JsonUtils.Deserialize<InteractionsGetResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<InteractionsGetResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e
                         );
-                    case 504:
-                        throw new GatewayTimeoutError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                    }
                 }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new CortiClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+                {
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 403:
+                                throw new ForbiddenError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                            case 504:
+                                throw new GatewayTimeoutError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -385,32 +431,37 @@ public partial class InteractionsClient : IInteractionsClient
         CancellationToken cancellationToken = default
     )
     {
-        request = request with { };
-        var pager = await OffsetPager<
-            InteractionsListRequest,
-            RequestOptions?,
-            InteractionsListResponse,
-            long,
-            object,
-            InteractionsGetResponse
-        >
-            .CreateInstanceAsync(
-                request,
-                options,
-                async (request, options, cancellationToken) =>
-                    await ListInternalAsync(request, options, cancellationToken),
-                request => request.Index ?? 0,
-                (request, offset) =>
-                {
-                    request.Index = offset;
-                },
-                null,
-                response => response.Interactions?.ToList(),
-                null,
-                cancellationToken
-            )
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                request = request with { };
+                var pager = await OffsetPager<
+                    InteractionsListRequest,
+                    RequestOptions?,
+                    InteractionsListResponse,
+                    long,
+                    object,
+                    InteractionsGetResponse
+                >
+                    .CreateInstanceAsync(
+                        request,
+                        options,
+                        async (request, options, cancellationToken) =>
+                            await ListInternalAsync(request, options, cancellationToken),
+                        request => request.Index ?? 0,
+                        (request, offset) =>
+                        {
+                            request.Index = offset;
+                        },
+                        null,
+                        response => response.Interactions?.ToList(),
+                        null,
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                return pager;
+            })
             .ConfigureAwait(false);
-        return pager;
     }
 
     /// <summary>
@@ -469,58 +520,63 @@ public partial class InteractionsClient : IInteractionsClient
         CancellationToken cancellationToken = default
     )
     {
-        var _headers = await new Corti.Core.HeadersBuilder.Builder()
-            .Add(_client.Options.Headers)
-            .Add(_client.Options.AdditionalHeaders)
-            .Add(options?.AdditionalHeaders)
-            .BuildAsync()
-            .ConfigureAwait(false);
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.Environment.Base,
-                    Method = HttpMethod.Delete,
-                    Path = string.Format(
-                        "interactions/{0}",
-                        ValueConvert.ToPathParameterString(id)
-                    ),
-                    Headers = _headers,
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            return;
-        }
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
+        await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                switch (response.StatusCode)
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Delete,
+                            Path = string.Format(
+                                "interactions/{0}",
+                                ValueConvert.ToPathParameterString(id)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
                 {
-                    case 403:
-                        throw new ForbiddenError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
-                    case 504:
-                        throw new GatewayTimeoutError(
-                            JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                        );
+                    return;
                 }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new CortiClientApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+                {
+                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 403:
+                                throw new ForbiddenError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                            case 504:
+                                throw new GatewayTimeoutError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
     /// <summary>

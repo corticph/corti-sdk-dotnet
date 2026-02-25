@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
-using OneOf;
 
 namespace Corti;
 
@@ -22,10 +21,7 @@ public record DocumentsCreateRequestWithTemplate : IJsonOnDeserialized
     /// Template details if the template should be generated during the request.
     /// </summary>
     [JsonPropertyName("template")]
-    public required OneOf<
-        DocumentsTemplateWithSections,
-        DocumentsTemplateWithSectionKeys
-    > Template { get; set; }
+    public required DocumentsTemplate Template { get; set; }
 
     /// <summary>
     /// An optional name for the document.

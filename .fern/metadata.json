@@ -5,6 +5,10 @@
   "generatorConfig": {
     "namespace": "Corti",
     "client-class-name": "CortiClient",
+    "use-undiscriminated-unions": true,
+    "generate-error-types": true,
+    "include-exception-handler": true,
+    "inline-path-parameters": true,
     "experimental-readonly-constants": true,
     "experimental-enable-websockets": true,
     "temporary-websocket-environments": {
@@ -22,5 +26,5 @@
       }
     }
   },
-  "sdkVersion": "0.0.922"
+  "sdkVersion": "0.0.923"
 }

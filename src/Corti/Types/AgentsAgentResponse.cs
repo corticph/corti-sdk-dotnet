@@ -7,11 +7,11 @@ using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgentsAgentExpertsItem.JsonConverter))]
+[JsonConverter(typeof(AgentsAgentResponse.JsonConverter))]
 [Serializable]
-public class AgentsAgentExpertsItem
+public class AgentsAgentResponse
 {
-    private AgentsAgentExpertsItem(string type, object? value)
+    private AgentsAgentResponse(string type, object? value)
     {
         Type = type;
         Value = value;
@@ -30,54 +30,53 @@ public class AgentsAgentExpertsItem
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a Corti.AgentsExpert value.
+    /// Factory method to create a union from a Corti.AgentsAgent value.
     /// </summary>
-    public static AgentsAgentExpertsItem FromAgentsExpert(Corti.AgentsExpert value) =>
-        new("agentsExpert", value);
+    public static AgentsAgentResponse FromAgentsAgent(Corti.AgentsAgent value) =>
+        new("agentsAgent", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.AgentsExpertReference value.
+    /// Factory method to create a union from a Corti.AgentsAgentReference value.
     /// </summary>
-    public static AgentsAgentExpertsItem FromAgentsExpertReference(
-        Corti.AgentsExpertReference value
-    ) => new("agentsExpertReference", value);
+    public static AgentsAgentResponse FromAgentsAgentReference(Corti.AgentsAgentReference value) =>
+        new("agentsAgentReference", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "agentsExpert"
+    /// Returns true if <see cref="Type"/> is "agentsAgent"
     /// </summary>
-    public bool IsAgentsExpert() => Type == "agentsExpert";
+    public bool IsAgentsAgent() => Type == "agentsAgent";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "agentsExpertReference"
+    /// Returns true if <see cref="Type"/> is "agentsAgentReference"
     /// </summary>
-    public bool IsAgentsExpertReference() => Type == "agentsExpertReference";
+    public bool IsAgentsAgentReference() => Type == "agentsAgentReference";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsExpert"/> if <see cref="Type"/> is 'agentsExpert', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.AgentsAgent"/> if <see cref="Type"/> is 'agentsAgent', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsExpert'.</exception>
-    public Corti.AgentsExpert AsAgentsExpert() =>
-        IsAgentsExpert()
-            ? (Corti.AgentsExpert)Value!
-            : throw new CortiClientException("Union type is not 'agentsExpert'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsAgent'.</exception>
+    public Corti.AgentsAgent AsAgentsAgent() =>
+        IsAgentsAgent()
+            ? (Corti.AgentsAgent)Value!
+            : throw new CortiClientException("Union type is not 'agentsAgent'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsExpertReference"/> if <see cref="Type"/> is 'agentsExpertReference', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.AgentsAgentReference"/> if <see cref="Type"/> is 'agentsAgentReference', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsExpertReference'.</exception>
-    public Corti.AgentsExpertReference AsAgentsExpertReference() =>
-        IsAgentsExpertReference()
-            ? (Corti.AgentsExpertReference)Value!
-            : throw new CortiClientException("Union type is not 'agentsExpertReference'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsAgentReference'.</exception>
+    public Corti.AgentsAgentReference AsAgentsAgentReference() =>
+        IsAgentsAgentReference()
+            ? (Corti.AgentsAgentReference)Value!
+            : throw new CortiClientException("Union type is not 'agentsAgentReference'");
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.AgentsExpert"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.AgentsAgent"/> and returns true if successful.
     /// </summary>
-    public bool TryGetAgentsExpert(out Corti.AgentsExpert? value)
+    public bool TryGetAgentsAgent(out Corti.AgentsAgent? value)
     {
-        if (Type == "agentsExpert")
+        if (Type == "agentsAgent")
         {
-            value = (Corti.AgentsExpert)Value!;
+            value = (Corti.AgentsAgent)Value!;
             return true;
         }
         value = null;
@@ -85,13 +84,13 @@ public class AgentsAgentExpertsItem
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.AgentsExpertReference"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.AgentsAgentReference"/> and returns true if successful.
     /// </summary>
-    public bool TryGetAgentsExpertReference(out Corti.AgentsExpertReference? value)
+    public bool TryGetAgentsAgentReference(out Corti.AgentsAgentReference? value)
     {
-        if (Type == "agentsExpertReference")
+        if (Type == "agentsAgentReference")
         {
-            value = (Corti.AgentsExpertReference)Value!;
+            value = (Corti.AgentsAgentReference)Value!;
             return true;
         }
         value = null;
@@ -99,30 +98,30 @@ public class AgentsAgentExpertsItem
     }
 
     public T Match<T>(
-        Func<Corti.AgentsExpert, T> onAgentsExpert,
-        Func<Corti.AgentsExpertReference, T> onAgentsExpertReference
+        Func<Corti.AgentsAgent, T> onAgentsAgent,
+        Func<Corti.AgentsAgentReference, T> onAgentsAgentReference
     )
     {
         return Type switch
         {
-            "agentsExpert" => onAgentsExpert(AsAgentsExpert()),
-            "agentsExpertReference" => onAgentsExpertReference(AsAgentsExpertReference()),
+            "agentsAgent" => onAgentsAgent(AsAgentsAgent()),
+            "agentsAgentReference" => onAgentsAgentReference(AsAgentsAgentReference()),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
     public void Visit(
-        Action<Corti.AgentsExpert> onAgentsExpert,
-        Action<Corti.AgentsExpertReference> onAgentsExpertReference
+        Action<Corti.AgentsAgent> onAgentsAgent,
+        Action<Corti.AgentsAgentReference> onAgentsAgentReference
     )
     {
         switch (Type)
         {
-            case "agentsExpert":
-                onAgentsExpert(AsAgentsExpert());
+            case "agentsAgent":
+                onAgentsAgent(AsAgentsAgent());
                 break;
-            case "agentsExpertReference":
-                onAgentsExpertReference(AsAgentsExpertReference());
+            case "agentsAgentReference":
+                onAgentsAgentReference(AsAgentsAgentReference());
                 break;
             default:
                 throw new CortiClientException($"Unknown union type: {Type}");
@@ -148,7 +147,7 @@ public class AgentsAgentExpertsItem
             return false;
         if (ReferenceEquals(this, obj))
             return true;
-        if (obj is not AgentsAgentExpertsItem other)
+        if (obj is not AgentsAgentResponse other)
             return false;
 
         // Compare type discriminators
@@ -164,16 +163,16 @@ public class AgentsAgentExpertsItem
 
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator AgentsAgentExpertsItem(Corti.AgentsExpert value) =>
-        new("agentsExpert", value);
+    public static implicit operator AgentsAgentResponse(Corti.AgentsAgent value) =>
+        new("agentsAgent", value);
 
-    public static implicit operator AgentsAgentExpertsItem(Corti.AgentsExpertReference value) =>
-        new("agentsExpertReference", value);
+    public static implicit operator AgentsAgentResponse(Corti.AgentsAgentReference value) =>
+        new("agentsAgentReference", value);
 
     [Serializable]
-    internal sealed class JsonConverter : JsonConverter<AgentsAgentExpertsItem>
+    internal sealed class JsonConverter : JsonConverter<AgentsAgentResponse>
     {
-        public override AgentsAgentExpertsItem? Read(
+        public override AgentsAgentResponse? Read(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
@@ -190,8 +189,8 @@ public class AgentsAgentExpertsItem
 
                 var types = new (string Key, System.Type Type)[]
                 {
-                    ("agentsExpert", typeof(Corti.AgentsExpert)),
-                    ("agentsExpertReference", typeof(Corti.AgentsExpertReference)),
+                    ("agentsAgent", typeof(Corti.AgentsAgent)),
+                    ("agentsAgentReference", typeof(Corti.AgentsAgentReference)),
                 };
 
                 foreach (var (key, type) in types)
@@ -201,7 +200,7 @@ public class AgentsAgentExpertsItem
                         var value = document.Deserialize(type, options);
                         if (value != null)
                         {
-                            AgentsAgentExpertsItem result = new(key, value);
+                            AgentsAgentResponse result = new(key, value);
                             return result;
                         }
                     }
@@ -213,13 +212,13 @@ public class AgentsAgentExpertsItem
             }
 
             throw new JsonException(
-                $"Cannot deserialize JSON token {reader.TokenType} into AgentsAgentExpertsItem"
+                $"Cannot deserialize JSON token {reader.TokenType} into AgentsAgentResponse"
             );
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            AgentsAgentExpertsItem value,
+            AgentsAgentResponse value,
             JsonSerializerOptions options
         )
         {
@@ -235,20 +234,20 @@ public class AgentsAgentExpertsItem
             );
         }
 
-        public override AgentsAgentExpertsItem ReadAsPropertyName(
+        public override AgentsAgentResponse ReadAsPropertyName(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
             var stringValue = reader.GetString()!;
-            AgentsAgentExpertsItem result = new("string", stringValue);
+            AgentsAgentResponse result = new("string", stringValue);
             return result;
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            AgentsAgentExpertsItem value,
+            AgentsAgentResponse value,
             JsonSerializerOptions options
         )
         {

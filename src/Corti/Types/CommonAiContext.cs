@@ -2,7 +2,6 @@
 // ReSharper disable InconsistentNaming
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
@@ -10,181 +9,212 @@ namespace Corti;
 
 [JsonConverter(typeof(CommonAiContext.JsonConverter))]
 [Serializable]
-public record CommonAiContext
+public class CommonAiContext
 {
-    internal CommonAiContext(string type, object? value)
+    private CommonAiContext(string type, object? value)
     {
         Type = type;
         Value = value;
     }
 
     /// <summary>
-    /// Create an instance of CommonAiContext with <see cref="CommonAiContext.Text"/>.
+    /// Type discriminator
     /// </summary>
-    public CommonAiContext(CommonAiContext.Text value)
-    {
-        Type = "text";
-        Value = value.Value;
-    }
-
-    /// <summary>
-    /// Create an instance of CommonAiContext with <see cref="CommonAiContext.DocumentId"/>.
-    /// </summary>
-    public CommonAiContext(CommonAiContext.DocumentId value)
-    {
-        Type = "documentId";
-        Value = value.Value;
-    }
-
-    /// <summary>
-    /// Discriminant value
-    /// </summary>
-    [JsonPropertyName("type")]
+    [JsonIgnore]
     public string Type { get; internal set; }
 
     /// <summary>
-    /// Discriminated union value
+    /// Union value
     /// </summary>
+    [JsonIgnore]
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "text"
+    /// Factory method to create a union from a Corti.CommonTextContext value.
     /// </summary>
-    public bool IsText => Type == "text";
+    public static CommonAiContext FromCommonTextContext(Corti.CommonTextContext value) =>
+        new("commonTextContext", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "documentId"
+    /// Factory method to create a union from a Corti.CommonDocumentIdContext value.
     /// </summary>
-    public bool IsDocumentId => Type == "documentId";
+    public static CommonAiContext FromCommonDocumentIdContext(
+        Corti.CommonDocumentIdContext value
+    ) => new("commonDocumentIdContext", value);
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.Text"/> if <see cref="Type"/> is 'text', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "commonTextContext"
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Type"/> is not 'text'.</exception>
-    public Corti.Text AsText() =>
-        IsText
-            ? (Corti.Text)Value!
-            : throw new System.Exception("CommonAiContext.Type is not 'text'");
+    public bool IsCommonTextContext() => Type == "commonTextContext";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.DocumentId"/> if <see cref="Type"/> is 'documentId', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "commonDocumentIdContext"
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Type"/> is not 'documentId'.</exception>
-    public Corti.DocumentId AsDocumentId() =>
-        IsDocumentId
-            ? (Corti.DocumentId)Value!
-            : throw new System.Exception("CommonAiContext.Type is not 'documentId'");
+    public bool IsCommonDocumentIdContext() => Type == "commonDocumentIdContext";
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.CommonTextContext"/> if <see cref="Type"/> is 'commonTextContext', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'commonTextContext'.</exception>
+    public Corti.CommonTextContext AsCommonTextContext() =>
+        IsCommonTextContext()
+            ? (Corti.CommonTextContext)Value!
+            : throw new CortiClientException("Union type is not 'commonTextContext'");
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.CommonDocumentIdContext"/> if <see cref="Type"/> is 'commonDocumentIdContext', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'commonDocumentIdContext'.</exception>
+    public Corti.CommonDocumentIdContext AsCommonDocumentIdContext() =>
+        IsCommonDocumentIdContext()
+            ? (Corti.CommonDocumentIdContext)Value!
+            : throw new CortiClientException("Union type is not 'commonDocumentIdContext'");
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.CommonTextContext"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetCommonTextContext(out Corti.CommonTextContext? value)
+    {
+        if (Type == "commonTextContext")
+        {
+            value = (Corti.CommonTextContext)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.CommonDocumentIdContext"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetCommonDocumentIdContext(out Corti.CommonDocumentIdContext? value)
+    {
+        if (Type == "commonDocumentIdContext")
+        {
+            value = (Corti.CommonDocumentIdContext)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
 
     public T Match<T>(
-        Func<Corti.Text, T> onText,
-        Func<Corti.DocumentId, T> onDocumentId,
-        Func<string, object?, T> onUnknown_
+        Func<Corti.CommonTextContext, T> onCommonTextContext,
+        Func<Corti.CommonDocumentIdContext, T> onCommonDocumentIdContext
     )
     {
         return Type switch
         {
-            "text" => onText(AsText()),
-            "documentId" => onDocumentId(AsDocumentId()),
-            _ => onUnknown_(Type, Value),
+            "commonTextContext" => onCommonTextContext(AsCommonTextContext()),
+            "commonDocumentIdContext" => onCommonDocumentIdContext(AsCommonDocumentIdContext()),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
     public void Visit(
-        Action<Corti.Text> onText,
-        Action<Corti.DocumentId> onDocumentId,
-        Action<string, object?> onUnknown_
+        Action<Corti.CommonTextContext> onCommonTextContext,
+        Action<Corti.CommonDocumentIdContext> onCommonDocumentIdContext
     )
     {
         switch (Type)
         {
-            case "text":
-                onText(AsText());
+            case "commonTextContext":
+                onCommonTextContext(AsCommonTextContext());
                 break;
-            case "documentId":
-                onDocumentId(AsDocumentId());
+            case "commonDocumentIdContext":
+                onCommonDocumentIdContext(AsCommonDocumentIdContext());
                 break;
             default:
-                onUnknown_(Type, Value);
-                break;
+                throw new CortiClientException($"Unknown union type: {Type}");
         }
     }
 
-    /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.Text"/> and returns true if successful.
-    /// </summary>
-    public bool TryAsText(out Corti.Text? value)
+    public override int GetHashCode()
     {
-        if (Type == "text")
+        unchecked
         {
-            value = (Corti.Text)Value!;
-            return true;
+            var hashCode = Type.GetHashCode();
+            if (Value != null)
+            {
+                hashCode = (hashCode * 397) ^ Value.GetHashCode();
+            }
+            return hashCode;
         }
-        value = null;
-        return false;
     }
 
-    /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.DocumentId"/> and returns true if successful.
-    /// </summary>
-    public bool TryAsDocumentId(out Corti.DocumentId? value)
+    public override bool Equals(object? obj)
     {
-        if (Type == "documentId")
-        {
-            value = (Corti.DocumentId)Value!;
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
             return true;
-        }
-        value = null;
-        return false;
+        if (obj is not CommonAiContext other)
+            return false;
+
+        // Compare type discriminators
+        if (Type != other.Type)
+            return false;
+
+        // Compare values using EqualityComparer for deep comparison
+        return System.Collections.Generic.EqualityComparer<object?>.Default.Equals(
+            Value,
+            other.Value
+        );
     }
 
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator CommonAiContext(CommonAiContext.Text value) => new(value);
+    public static implicit operator CommonAiContext(Corti.CommonTextContext value) =>
+        new("commonTextContext", value);
 
-    public static implicit operator CommonAiContext(CommonAiContext.DocumentId value) => new(value);
+    public static implicit operator CommonAiContext(Corti.CommonDocumentIdContext value) =>
+        new("commonDocumentIdContext", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<CommonAiContext>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
-            typeof(CommonAiContext).IsAssignableFrom(typeToConvert);
-
-        public override CommonAiContext Read(
+        public override CommonAiContext? Read(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
-            var json = JsonElement.ParseValue(ref reader);
-            if (!json.TryGetProperty("type", out var discriminatorElement))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                throw new JsonException("Missing discriminator property 'type'");
+                return null;
             }
-            if (discriminatorElement.ValueKind != JsonValueKind.String)
+
+            if (reader.TokenType == JsonTokenType.StartObject)
             {
-                if (discriminatorElement.ValueKind == JsonValueKind.Null)
+                var document = JsonDocument.ParseValue(ref reader);
+
+                var types = new (string Key, System.Type Type)[]
                 {
-                    throw new JsonException("Discriminator property 'type' is null");
-                }
+                    ("commonTextContext", typeof(Corti.CommonTextContext)),
+                    ("commonDocumentIdContext", typeof(Corti.CommonDocumentIdContext)),
+                };
 
-                throw new JsonException(
-                    $"Discriminator property 'type' is not a string, instead is {discriminatorElement.ToString()}"
-                );
+                foreach (var (key, type) in types)
+                {
+                    try
+                    {
+                        var value = document.Deserialize(type, options);
+                        if (value != null)
+                        {
+                            CommonAiContext result = new(key, value);
+                            return result;
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // Try next type;
+                    }
+                }
             }
 
-            var discriminator =
-                discriminatorElement.GetString()
-                ?? throw new JsonException("Discriminator property 'type' is null");
-
-            var value = discriminator switch
-            {
-                "text" => json.Deserialize<Corti.Text?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.Text"),
-                "documentId" => json.Deserialize<Corti.DocumentId?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.DocumentId"),
-                _ => json.Deserialize<object?>(options),
-            };
-            return new CommonAiContext(discriminator, value);
+            throw new JsonException(
+                $"Cannot deserialize JSON token {reader.TokenType} into CommonAiContext"
+            );
         }
 
         public override void Write(
@@ -193,52 +223,36 @@ public record CommonAiContext
             JsonSerializerOptions options
         )
         {
-            JsonNode json =
-                value.Type switch
-                {
-                    "text" => JsonSerializer.SerializeToNode(value.Value, options),
-                    "documentId" => JsonSerializer.SerializeToNode(value.Value, options),
-                    _ => JsonSerializer.SerializeToNode(value.Value, options),
-                } ?? new JsonObject();
-            json["type"] = value.Type;
-            json.WriteTo(writer, options);
-        }
-    }
+            if (value == null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
 
-    /// <summary>
-    /// Discriminated union type for text
-    /// </summary>
-    [Serializable]
-    public struct Text
-    {
-        public Text(Corti.Text value)
+            value.Visit(
+                obj => JsonSerializer.Serialize(writer, obj, options),
+                obj => JsonSerializer.Serialize(writer, obj, options)
+            );
+        }
+
+        public override CommonAiContext ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            var stringValue = reader.GetString()!;
+            CommonAiContext result = new("string", stringValue);
+            return result;
         }
 
-        internal Corti.Text Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator CommonAiContext.Text(Corti.Text value) => new(value);
-    }
-
-    /// <summary>
-    /// Discriminated union type for documentId
-    /// </summary>
-    [Serializable]
-    public struct DocumentId
-    {
-        public DocumentId(Corti.DocumentId value)
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            CommonAiContext value,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            writer.WritePropertyName(value.Value?.ToString() ?? "null");
         }
-
-        internal Corti.DocumentId Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator CommonAiContext.DocumentId(Corti.DocumentId value) =>
-            new(value);
     }
 }

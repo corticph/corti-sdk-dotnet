@@ -5,17 +5,23 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record DocumentId : IJsonOnDeserialized
+public record CommonDocumentIdContext : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// The type of context, always "documentId" in this context.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public required CommonDocumentIdContextType Type { get; set; }
+
+    /// <summary>
     /// A referenced document ID to be used as input to the model.
     /// </summary>
     [JsonPropertyName("documentId")]
-    public required string DocumentId_ { get; set; }
+    public required string DocumentId { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

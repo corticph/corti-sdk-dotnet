@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record Text : IJsonOnDeserialized
+public record CommonTextContext : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -21,7 +21,7 @@ public record Text : IJsonOnDeserialized
     /// A text string to be used as input to the model.
     /// </summary>
     [JsonPropertyName("text")]
-    public required string Text_ { get; set; }
+    public required string Text { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

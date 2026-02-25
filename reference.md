@@ -1207,9 +1207,9 @@ Extract facts from provided text, without storing them.
 await client.Facts.ExtractAsync(
     new FactsExtractRequest
     {
-        Context = new List<Corti.Text>()
+        Context = new List<CommonTextContext>()
         {
-            new Corti.Text { Type = CommonTextContextType.Text, Text_ = "text" },
+            new CommonTextContext { Type = CommonTextContextType.Text, Text = "text" },
         },
         OutputLanguage = "outputLanguage",
     }
@@ -1295,7 +1295,7 @@ await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">CreateAsync</a>(id, OneOf&lt;DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate&gt; { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">CreateAsync</a>(id, DocumentsCreateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1328,17 +1328,14 @@ await client.Documents.CreateAsync(
     {
         Context = new List<DocumentsContext>()
         {
-            new DocumentsContext(
-                new DocumentsContext.Facts(
-                    new DocumentsContextWithFacts
-                    {
-                        Data = new List<FactsContext>()
-                        {
-                            new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-                        },
-                    }
-                )
-            ),
+            new DocumentsContextWithFacts
+            {
+                Type = DocumentsContextWithFactsType.Facts,
+                Data = new List<FactsContext>()
+                {
+                    new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
+                },
+            },
         },
         TemplateKey = "templateKey",
         OutputLanguage = "outputLanguage",
@@ -1366,7 +1363,7 @@ await client.Documents.CreateAsync(
 <dl>
 <dd>
 
-**request:** `OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate>` 
+**request:** `DocumentsCreateRequest` 
     
 </dd>
 </dl>
@@ -1755,11 +1752,11 @@ await client.Codes.PredictAsync(
         },
         Context = new List<CommonAiContext>()
         {
-            new CommonAiContext(
-                new Corti.CommonAiContext.Text(
-                    new Corti.Text { Type = CommonTextContextType.Text, Text_ = "text" }
-                )
-            ),
+            new CommonTextContext
+            {
+                Type = CommonTextContextType.Text,
+                Text = "Short arm splint applied in ED for pain control.",
+            },
         },
         MaxCandidates = 5,
     }
@@ -1791,7 +1788,7 @@ await client.Codes.PredictAsync(
 </details>
 
 ## Agents
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;AgentsAgentResponse&gt;&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1901,7 +1898,7 @@ await client.Agents.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;AgentsAgentResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2170,7 +2167,7 @@ await client.Agents.MessageSendAsync(
             Role = AgentsMessageRole.User,
             Parts = new List<AgentsPart>()
             {
-                new AgentsPart(new Corti.AgentsPart.Text(new AgentsTextPart { Text = "text" })),
+                new AgentsTextPart { Kind = AgentsTextPartKind.Text, Text = "text" },
             },
             MessageId = "messageId",
             Kind = AgentsMessageKind.Message,

@@ -12,6 +12,12 @@ public record DocumentsContextWithString : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// The type of context data that will be used in the request: `Facts`, `Transcript`, or `String`.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public required DocumentsContextWithStringType Type { get; set; }
+
+    /// <summary>
     /// String data can include any text to be reasoned over for document generation: Transcript text, facts, or other narrative information.
     /// </summary>
     [JsonPropertyName("data")]

@@ -12,44 +12,56 @@ public partial class CortiClient : ICortiClient
         ClientOptions? clientOptions = null
     )
     {
-        clientOptions ??= new ClientOptions();
-        var platformHeaders = new Headers(
-            new Dictionary<string, string>()
-            {
-                { "X-Fern-Language", "C#" },
-                { "X-Fern-SDK-Name", "Corti" },
-                { "X-Fern-SDK-Version", Version.Current },
-            }
-        );
-        foreach (var header in platformHeaders)
+        try
         {
-            if (!clientOptions.Headers.ContainsKey(header.Key))
+            clientOptions ??= new ClientOptions();
+            clientOptions.ExceptionHandler = new ExceptionHandler(
+                new CortiExceptionInterceptor(clientOptions)
+            );
+            var platformHeaders = new Headers(
+                new Dictionary<string, string>()
+                {
+                    { "X-Fern-Language", "C#" },
+                    { "X-Fern-SDK-Name", "Corti" },
+                    { "X-Fern-SDK-Version", Version.Current },
+                }
+            );
+            foreach (var header in platformHeaders)
             {
-                clientOptions.Headers[header.Key] = header.Value;
+                if (!clientOptions.Headers.ContainsKey(header.Key))
+                {
+                    clientOptions.Headers[header.Key] = header.Value;
+                }
             }
+            var clientOptionsWithAuth = clientOptions.Clone();
+            var authHeaders = new Headers(
+                new Dictionary<string, string>()
+                {
+                    { "Authorization", $"Bearer {token ?? ""}" },
+                    { "Tenant-Name", tenantName ?? "" },
+                }
+            );
+            foreach (var header in authHeaders)
+            {
+                clientOptionsWithAuth.Headers[header.Key] = header.Value;
+            }
+            _client = new RawClient(clientOptionsWithAuth);
+            Auth = new AuthClient(_client);
+            Interactions = new InteractionsClient(_client);
+            Recordings = new RecordingsClient(_client);
+            Transcripts = new TranscriptsClient(_client);
+            Facts = new FactsClient(_client);
+            Documents = new DocumentsClient(_client);
+            Templates = new TemplatesClient(_client);
+            Codes = new CodesClient(_client);
+            Agents = new AgentsClient(_client);
         }
-        var clientOptionsWithAuth = clientOptions.Clone();
-        var authHeaders = new Headers(
-            new Dictionary<string, string>()
-            {
-                { "Authorization", $"Bearer {token ?? ""}" },
-                { "Tenant-Name", tenantName ?? "" },
-            }
-        );
-        foreach (var header in authHeaders)
+        catch (Exception ex)
         {
-            clientOptionsWithAuth.Headers[header.Key] = header.Value;
+            var interceptor = new CortiExceptionInterceptor(clientOptions);
+            interceptor.Intercept(ex);
+            throw;
         }
-        _client = new RawClient(clientOptionsWithAuth);
-        Auth = new AuthClient(_client);
-        Interactions = new InteractionsClient(_client);
-        Recordings = new RecordingsClient(_client);
-        Transcripts = new TranscriptsClient(_client);
-        Facts = new FactsClient(_client);
-        Documents = new DocumentsClient(_client);
-        Templates = new TemplatesClient(_client);
-        Codes = new CodesClient(_client);
-        Agents = new AgentsClient(_client);
     }
 
     public IAuthClient Auth { get; }

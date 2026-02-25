@@ -11,6 +11,9 @@ public record AgentsCreateExpert : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    [JsonPropertyName("type")]
+    public required AgentsCreateExpertType Type { get; set; }
+
     /// <summary>
     /// The name of the expert. Must be unique.
     /// </summary>

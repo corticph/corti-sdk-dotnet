@@ -2,7 +2,6 @@
 // ReSharper disable InconsistentNaming
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
@@ -10,111 +9,74 @@ namespace Corti;
 
 [JsonConverter(typeof(AgentsCreateAgentExpertsItem.JsonConverter))]
 [Serializable]
-public record AgentsCreateAgentExpertsItem
+public class AgentsCreateAgentExpertsItem
 {
-    internal AgentsCreateAgentExpertsItem(string type, object? value)
+    private AgentsCreateAgentExpertsItem(string type, object? value)
     {
         Type = type;
         Value = value;
     }
 
     /// <summary>
-    /// Create an instance of AgentsCreateAgentExpertsItem with <see cref="AgentsCreateAgentExpertsItem.New"/>.
+    /// Type discriminator
     /// </summary>
-    public AgentsCreateAgentExpertsItem(AgentsCreateAgentExpertsItem.New value)
-    {
-        Type = "new";
-        Value = value.Value;
-    }
-
-    /// <summary>
-    /// Create an instance of AgentsCreateAgentExpertsItem with <see cref="AgentsCreateAgentExpertsItem.Reference"/>.
-    /// </summary>
-    public AgentsCreateAgentExpertsItem(AgentsCreateAgentExpertsItem.Reference value)
-    {
-        Type = "reference";
-        Value = value.Value;
-    }
-
-    /// <summary>
-    /// Discriminant value
-    /// </summary>
-    [JsonPropertyName("type")]
+    [JsonIgnore]
     public string Type { get; internal set; }
 
     /// <summary>
-    /// Discriminated union value
+    /// Union value
     /// </summary>
+    [JsonIgnore]
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "new"
+    /// Factory method to create a union from a Corti.AgentsCreateExpert value.
     /// </summary>
-    public bool IsNew => Type == "new";
+    public static AgentsCreateAgentExpertsItem FromAgentsCreateExpert(
+        Corti.AgentsCreateExpert value
+    ) => new("agentsCreateExpert", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "reference"
+    /// Factory method to create a union from a Corti.AgentsCreateExpertReference value.
     /// </summary>
-    public bool IsReference => Type == "reference";
+    public static AgentsCreateAgentExpertsItem FromAgentsCreateExpertReference(
+        Corti.AgentsCreateExpertReference value
+    ) => new("agentsCreateExpertReference", value);
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsCreateExpert"/> if <see cref="Type"/> is 'new', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "agentsCreateExpert"
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Type"/> is not 'new'.</exception>
-    public Corti.AgentsCreateExpert AsNew() =>
-        IsNew
+    public bool IsAgentsCreateExpert() => Type == "agentsCreateExpert";
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "agentsCreateExpertReference"
+    /// </summary>
+    public bool IsAgentsCreateExpertReference() => Type == "agentsCreateExpertReference";
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.AgentsCreateExpert"/> if <see cref="Type"/> is 'agentsCreateExpert', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsCreateExpert'.</exception>
+    public Corti.AgentsCreateExpert AsAgentsCreateExpert() =>
+        IsAgentsCreateExpert()
             ? (Corti.AgentsCreateExpert)Value!
-            : throw new System.Exception("AgentsCreateAgentExpertsItem.Type is not 'new'");
+            : throw new CortiClientException("Union type is not 'agentsCreateExpert'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsCreateExpertReference"/> if <see cref="Type"/> is 'reference', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.AgentsCreateExpertReference"/> if <see cref="Type"/> is 'agentsCreateExpertReference', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Type"/> is not 'reference'.</exception>
-    public Corti.AgentsCreateExpertReference AsReference() =>
-        IsReference
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsCreateExpertReference'.</exception>
+    public Corti.AgentsCreateExpertReference AsAgentsCreateExpertReference() =>
+        IsAgentsCreateExpertReference()
             ? (Corti.AgentsCreateExpertReference)Value!
-            : throw new System.Exception("AgentsCreateAgentExpertsItem.Type is not 'reference'");
-
-    public T Match<T>(
-        Func<Corti.AgentsCreateExpert, T> onNew,
-        Func<Corti.AgentsCreateExpertReference, T> onReference,
-        Func<string, object?, T> onUnknown_
-    )
-    {
-        return Type switch
-        {
-            "new" => onNew(AsNew()),
-            "reference" => onReference(AsReference()),
-            _ => onUnknown_(Type, Value),
-        };
-    }
-
-    public void Visit(
-        Action<Corti.AgentsCreateExpert> onNew,
-        Action<Corti.AgentsCreateExpertReference> onReference,
-        Action<string, object?> onUnknown_
-    )
-    {
-        switch (Type)
-        {
-            case "new":
-                onNew(AsNew());
-                break;
-            case "reference":
-                onReference(AsReference());
-                break;
-            default:
-                onUnknown_(Type, Value);
-                break;
-        }
-    }
+            : throw new CortiClientException("Union type is not 'agentsCreateExpertReference'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsCreateExpert"/> and returns true if successful.
     /// </summary>
-    public bool TryAsNew(out Corti.AgentsCreateExpert? value)
+    public bool TryGetAgentsCreateExpert(out Corti.AgentsCreateExpert? value)
     {
-        if (Type == "new")
+        if (Type == "agentsCreateExpert")
         {
             value = (Corti.AgentsCreateExpert)Value!;
             return true;
@@ -126,9 +88,9 @@ public record AgentsCreateAgentExpertsItem
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsCreateExpertReference"/> and returns true if successful.
     /// </summary>
-    public bool TryAsReference(out Corti.AgentsCreateExpertReference? value)
+    public bool TryGetAgentsCreateExpertReference(out Corti.AgentsCreateExpertReference? value)
     {
-        if (Type == "reference")
+        if (Type == "agentsCreateExpertReference")
         {
             value = (Corti.AgentsCreateExpertReference)Value!;
             return true;
@@ -137,60 +99,126 @@ public record AgentsCreateAgentExpertsItem
         return false;
     }
 
+    public T Match<T>(
+        Func<Corti.AgentsCreateExpert, T> onAgentsCreateExpert,
+        Func<Corti.AgentsCreateExpertReference, T> onAgentsCreateExpertReference
+    )
+    {
+        return Type switch
+        {
+            "agentsCreateExpert" => onAgentsCreateExpert(AsAgentsCreateExpert()),
+            "agentsCreateExpertReference" => onAgentsCreateExpertReference(
+                AsAgentsCreateExpertReference()
+            ),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+        };
+    }
+
+    public void Visit(
+        Action<Corti.AgentsCreateExpert> onAgentsCreateExpert,
+        Action<Corti.AgentsCreateExpertReference> onAgentsCreateExpertReference
+    )
+    {
+        switch (Type)
+        {
+            case "agentsCreateExpert":
+                onAgentsCreateExpert(AsAgentsCreateExpert());
+                break;
+            case "agentsCreateExpertReference":
+                onAgentsCreateExpertReference(AsAgentsCreateExpertReference());
+                break;
+            default:
+                throw new CortiClientException($"Unknown union type: {Type}");
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = Type.GetHashCode();
+            if (Value != null)
+            {
+                hashCode = (hashCode * 397) ^ Value.GetHashCode();
+            }
+            return hashCode;
+        }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj is not AgentsCreateAgentExpertsItem other)
+            return false;
+
+        // Compare type discriminators
+        if (Type != other.Type)
+            return false;
+
+        // Compare values using EqualityComparer for deep comparison
+        return System.Collections.Generic.EqualityComparer<object?>.Default.Equals(
+            Value,
+            other.Value
+        );
+    }
+
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator AgentsCreateAgentExpertsItem(
-        AgentsCreateAgentExpertsItem.New value
-    ) => new(value);
+    public static implicit operator AgentsCreateAgentExpertsItem(Corti.AgentsCreateExpert value) =>
+        new("agentsCreateExpert", value);
 
     public static implicit operator AgentsCreateAgentExpertsItem(
-        AgentsCreateAgentExpertsItem.Reference value
-    ) => new(value);
+        Corti.AgentsCreateExpertReference value
+    ) => new("agentsCreateExpertReference", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<AgentsCreateAgentExpertsItem>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
-            typeof(AgentsCreateAgentExpertsItem).IsAssignableFrom(typeToConvert);
-
-        public override AgentsCreateAgentExpertsItem Read(
+        public override AgentsCreateAgentExpertsItem? Read(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
-            var json = JsonElement.ParseValue(ref reader);
-            if (!json.TryGetProperty("type", out var discriminatorElement))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                throw new JsonException("Missing discriminator property 'type'");
+                return null;
             }
-            if (discriminatorElement.ValueKind != JsonValueKind.String)
+
+            if (reader.TokenType == JsonTokenType.StartObject)
             {
-                if (discriminatorElement.ValueKind == JsonValueKind.Null)
+                var document = JsonDocument.ParseValue(ref reader);
+
+                var types = new (string Key, System.Type Type)[]
                 {
-                    throw new JsonException("Discriminator property 'type' is null");
-                }
+                    ("agentsCreateExpert", typeof(Corti.AgentsCreateExpert)),
+                    ("agentsCreateExpertReference", typeof(Corti.AgentsCreateExpertReference)),
+                };
 
-                throw new JsonException(
-                    $"Discriminator property 'type' is not a string, instead is {discriminatorElement.ToString()}"
-                );
+                foreach (var (key, type) in types)
+                {
+                    try
+                    {
+                        var value = document.Deserialize(type, options);
+                        if (value != null)
+                        {
+                            AgentsCreateAgentExpertsItem result = new(key, value);
+                            return result;
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // Try next type;
+                    }
+                }
             }
 
-            var discriminator =
-                discriminatorElement.GetString()
-                ?? throw new JsonException("Discriminator property 'type' is null");
-
-            var value = discriminator switch
-            {
-                "new" => json.Deserialize<Corti.AgentsCreateExpert?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.AgentsCreateExpert"),
-                "reference" => json.Deserialize<Corti.AgentsCreateExpertReference?>(options)
-                    ?? throw new JsonException(
-                        "Failed to deserialize Corti.AgentsCreateExpertReference"
-                    ),
-                _ => json.Deserialize<object?>(options),
-            };
-            return new AgentsCreateAgentExpertsItem(discriminator, value);
+            throw new JsonException(
+                $"Cannot deserialize JSON token {reader.TokenType} into AgentsCreateAgentExpertsItem"
+            );
         }
 
         public override void Write(
@@ -199,55 +227,36 @@ public record AgentsCreateAgentExpertsItem
             JsonSerializerOptions options
         )
         {
-            JsonNode json =
-                value.Type switch
-                {
-                    "new" => JsonSerializer.SerializeToNode(value.Value, options),
-                    "reference" => JsonSerializer.SerializeToNode(value.Value, options),
-                    _ => JsonSerializer.SerializeToNode(value.Value, options),
-                } ?? new JsonObject();
-            json["type"] = value.Type;
-            json.WriteTo(writer, options);
-        }
-    }
+            if (value == null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
 
-    /// <summary>
-    /// Discriminated union type for new
-    /// </summary>
-    [Serializable]
-    public struct New
-    {
-        public New(Corti.AgentsCreateExpert value)
+            value.Visit(
+                obj => JsonSerializer.Serialize(writer, obj, options),
+                obj => JsonSerializer.Serialize(writer, obj, options)
+            );
+        }
+
+        public override AgentsCreateAgentExpertsItem ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            var stringValue = reader.GetString()!;
+            AgentsCreateAgentExpertsItem result = new("string", stringValue);
+            return result;
         }
 
-        internal Corti.AgentsCreateExpert Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator AgentsCreateAgentExpertsItem.New(
-            Corti.AgentsCreateExpert value
-        ) => new(value);
-    }
-
-    /// <summary>
-    /// Discriminated union type for reference
-    /// </summary>
-    [Serializable]
-    public struct Reference
-    {
-        public Reference(Corti.AgentsCreateExpertReference value)
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            AgentsCreateAgentExpertsItem value,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            writer.WritePropertyName(value.Value?.ToString() ?? "null");
         }
-
-        internal Corti.AgentsCreateExpertReference Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator AgentsCreateAgentExpertsItem.Reference(
-            Corti.AgentsCreateExpertReference value
-        ) => new(value);
     }
 }

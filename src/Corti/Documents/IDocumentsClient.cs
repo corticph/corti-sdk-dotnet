@@ -1,5 +1,3 @@
-using OneOf;
-
 namespace Corti;
 
 public partial interface IDocumentsClient
@@ -18,7 +16,7 @@ public partial interface IDocumentsClient
     /// </summary>
     WithRawResponseTask<DocumentsGetResponse> CreateAsync(
         string id,
-        OneOf<DocumentsCreateRequestWithTemplateKey, DocumentsCreateRequestWithTemplate> request,
+        DocumentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

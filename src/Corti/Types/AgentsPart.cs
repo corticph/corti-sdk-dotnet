@@ -2,7 +2,6 @@
 // ReSharper disable InconsistentNaming
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
@@ -10,140 +9,92 @@ namespace Corti;
 
 [JsonConverter(typeof(AgentsPart.JsonConverter))]
 [Serializable]
-public record AgentsPart
+public class AgentsPart
 {
-    internal AgentsPart(string type, object? value)
+    private AgentsPart(string type, object? value)
     {
-        Kind = type;
+        Type = type;
         Value = value;
     }
 
     /// <summary>
-    /// Create an instance of AgentsPart with <see cref="AgentsPart.Text"/>.
+    /// Type discriminator
     /// </summary>
-    public AgentsPart(AgentsPart.Text value)
-    {
-        Kind = "text";
-        Value = value.Value;
-    }
+    [JsonIgnore]
+    public string Type { get; internal set; }
 
     /// <summary>
-    /// Create an instance of AgentsPart with <see cref="AgentsPart.File"/>.
+    /// Union value
     /// </summary>
-    public AgentsPart(AgentsPart.File value)
-    {
-        Kind = "file";
-        Value = value.Value;
-    }
-
-    /// <summary>
-    /// Create an instance of AgentsPart with <see cref="AgentsPart.Data"/>.
-    /// </summary>
-    public AgentsPart(AgentsPart.Data value)
-    {
-        Kind = "data";
-        Value = value.Value;
-    }
-
-    /// <summary>
-    /// Discriminant value
-    /// </summary>
-    [JsonPropertyName("kind")]
-    public string Kind { get; internal set; }
-
-    /// <summary>
-    /// Discriminated union value
-    /// </summary>
+    [JsonIgnore]
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Returns true if <see cref="Kind"/> is "text"
+    /// Factory method to create a union from a Corti.AgentsTextPart value.
     /// </summary>
-    public bool IsText => Kind == "text";
+    public static AgentsPart FromAgentsTextPart(Corti.AgentsTextPart value) =>
+        new("agentsTextPart", value);
 
     /// <summary>
-    /// Returns true if <see cref="Kind"/> is "file"
+    /// Factory method to create a union from a Corti.AgentsFilePart value.
     /// </summary>
-    public bool IsFile => Kind == "file";
+    public static AgentsPart FromAgentsFilePart(Corti.AgentsFilePart value) =>
+        new("agentsFilePart", value);
 
     /// <summary>
-    /// Returns true if <see cref="Kind"/> is "data"
+    /// Factory method to create a union from a Corti.AgentsDataPart value.
     /// </summary>
-    public bool IsData => Kind == "data";
+    public static AgentsPart FromAgentsDataPart(Corti.AgentsDataPart value) =>
+        new("agentsDataPart", value);
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsTextPart"/> if <see cref="Kind"/> is 'text', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "agentsTextPart"
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Kind"/> is not 'text'.</exception>
-    public Corti.AgentsTextPart AsText() =>
-        IsText
+    public bool IsAgentsTextPart() => Type == "agentsTextPart";
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "agentsFilePart"
+    /// </summary>
+    public bool IsAgentsFilePart() => Type == "agentsFilePart";
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "agentsDataPart"
+    /// </summary>
+    public bool IsAgentsDataPart() => Type == "agentsDataPart";
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.AgentsTextPart"/> if <see cref="Type"/> is 'agentsTextPart', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsTextPart'.</exception>
+    public Corti.AgentsTextPart AsAgentsTextPart() =>
+        IsAgentsTextPart()
             ? (Corti.AgentsTextPart)Value!
-            : throw new System.Exception("AgentsPart.Kind is not 'text'");
+            : throw new CortiClientException("Union type is not 'agentsTextPart'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsFilePart"/> if <see cref="Kind"/> is 'file', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.AgentsFilePart"/> if <see cref="Type"/> is 'agentsFilePart', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Kind"/> is not 'file'.</exception>
-    public Corti.AgentsFilePart AsFile() =>
-        IsFile
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsFilePart'.</exception>
+    public Corti.AgentsFilePart AsAgentsFilePart() =>
+        IsAgentsFilePart()
             ? (Corti.AgentsFilePart)Value!
-            : throw new System.Exception("AgentsPart.Kind is not 'file'");
+            : throw new CortiClientException("Union type is not 'agentsFilePart'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsDataPart"/> if <see cref="Kind"/> is 'data', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.AgentsDataPart"/> if <see cref="Type"/> is 'agentsDataPart', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Kind"/> is not 'data'.</exception>
-    public Corti.AgentsDataPart AsData() =>
-        IsData
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsDataPart'.</exception>
+    public Corti.AgentsDataPart AsAgentsDataPart() =>
+        IsAgentsDataPart()
             ? (Corti.AgentsDataPart)Value!
-            : throw new System.Exception("AgentsPart.Kind is not 'data'");
-
-    public T Match<T>(
-        Func<Corti.AgentsTextPart, T> onText,
-        Func<Corti.AgentsFilePart, T> onFile,
-        Func<Corti.AgentsDataPart, T> onData,
-        Func<string, object?, T> onUnknown_
-    )
-    {
-        return Kind switch
-        {
-            "text" => onText(AsText()),
-            "file" => onFile(AsFile()),
-            "data" => onData(AsData()),
-            _ => onUnknown_(Kind, Value),
-        };
-    }
-
-    public void Visit(
-        Action<Corti.AgentsTextPart> onText,
-        Action<Corti.AgentsFilePart> onFile,
-        Action<Corti.AgentsDataPart> onData,
-        Action<string, object?> onUnknown_
-    )
-    {
-        switch (Kind)
-        {
-            case "text":
-                onText(AsText());
-                break;
-            case "file":
-                onFile(AsFile());
-                break;
-            case "data":
-                onData(AsData());
-                break;
-            default:
-                onUnknown_(Kind, Value);
-                break;
-        }
-    }
+            : throw new CortiClientException("Union type is not 'agentsDataPart'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsTextPart"/> and returns true if successful.
     /// </summary>
-    public bool TryAsText(out Corti.AgentsTextPart? value)
+    public bool TryGetAgentsTextPart(out Corti.AgentsTextPart? value)
     {
-        if (Kind == "text")
+        if (Type == "agentsTextPart")
         {
             value = (Corti.AgentsTextPart)Value!;
             return true;
@@ -155,9 +106,9 @@ public record AgentsPart
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsFilePart"/> and returns true if successful.
     /// </summary>
-    public bool TryAsFile(out Corti.AgentsFilePart? value)
+    public bool TryGetAgentsFilePart(out Corti.AgentsFilePart? value)
     {
-        if (Kind == "file")
+        if (Type == "agentsFilePart")
         {
             value = (Corti.AgentsFilePart)Value!;
             return true;
@@ -169,9 +120,9 @@ public record AgentsPart
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsDataPart"/> and returns true if successful.
     /// </summary>
-    public bool TryAsData(out Corti.AgentsDataPart? value)
+    public bool TryGetAgentsDataPart(out Corti.AgentsDataPart? value)
     {
-        if (Kind == "data")
+        if (Type == "agentsDataPart")
         {
             value = (Corti.AgentsDataPart)Value!;
             return true;
@@ -180,58 +131,133 @@ public record AgentsPart
         return false;
     }
 
+    public T Match<T>(
+        Func<Corti.AgentsTextPart, T> onAgentsTextPart,
+        Func<Corti.AgentsFilePart, T> onAgentsFilePart,
+        Func<Corti.AgentsDataPart, T> onAgentsDataPart
+    )
+    {
+        return Type switch
+        {
+            "agentsTextPart" => onAgentsTextPart(AsAgentsTextPart()),
+            "agentsFilePart" => onAgentsFilePart(AsAgentsFilePart()),
+            "agentsDataPart" => onAgentsDataPart(AsAgentsDataPart()),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+        };
+    }
+
+    public void Visit(
+        Action<Corti.AgentsTextPart> onAgentsTextPart,
+        Action<Corti.AgentsFilePart> onAgentsFilePart,
+        Action<Corti.AgentsDataPart> onAgentsDataPart
+    )
+    {
+        switch (Type)
+        {
+            case "agentsTextPart":
+                onAgentsTextPart(AsAgentsTextPart());
+                break;
+            case "agentsFilePart":
+                onAgentsFilePart(AsAgentsFilePart());
+                break;
+            case "agentsDataPart":
+                onAgentsDataPart(AsAgentsDataPart());
+                break;
+            default:
+                throw new CortiClientException($"Unknown union type: {Type}");
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = Type.GetHashCode();
+            if (Value != null)
+            {
+                hashCode = (hashCode * 397) ^ Value.GetHashCode();
+            }
+            return hashCode;
+        }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj is not AgentsPart other)
+            return false;
+
+        // Compare type discriminators
+        if (Type != other.Type)
+            return false;
+
+        // Compare values using EqualityComparer for deep comparison
+        return System.Collections.Generic.EqualityComparer<object?>.Default.Equals(
+            Value,
+            other.Value
+        );
+    }
+
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator AgentsPart(AgentsPart.Text value) => new(value);
+    public static implicit operator AgentsPart(Corti.AgentsTextPart value) =>
+        new("agentsTextPart", value);
 
-    public static implicit operator AgentsPart(AgentsPart.File value) => new(value);
+    public static implicit operator AgentsPart(Corti.AgentsFilePart value) =>
+        new("agentsFilePart", value);
 
-    public static implicit operator AgentsPart(AgentsPart.Data value) => new(value);
+    public static implicit operator AgentsPart(Corti.AgentsDataPart value) =>
+        new("agentsDataPart", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<AgentsPart>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
-            typeof(AgentsPart).IsAssignableFrom(typeToConvert);
-
-        public override AgentsPart Read(
+        public override AgentsPart? Read(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
-            var json = JsonElement.ParseValue(ref reader);
-            if (!json.TryGetProperty("kind", out var discriminatorElement))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                throw new JsonException("Missing discriminator property 'kind'");
+                return null;
             }
-            if (discriminatorElement.ValueKind != JsonValueKind.String)
+
+            if (reader.TokenType == JsonTokenType.StartObject)
             {
-                if (discriminatorElement.ValueKind == JsonValueKind.Null)
+                var document = JsonDocument.ParseValue(ref reader);
+
+                var types = new (string Key, System.Type Type)[]
                 {
-                    throw new JsonException("Discriminator property 'kind' is null");
-                }
+                    ("agentsTextPart", typeof(Corti.AgentsTextPart)),
+                    ("agentsFilePart", typeof(Corti.AgentsFilePart)),
+                    ("agentsDataPart", typeof(Corti.AgentsDataPart)),
+                };
 
-                throw new JsonException(
-                    $"Discriminator property 'kind' is not a string, instead is {discriminatorElement.ToString()}"
-                );
+                foreach (var (key, type) in types)
+                {
+                    try
+                    {
+                        var value = document.Deserialize(type, options);
+                        if (value != null)
+                        {
+                            AgentsPart result = new(key, value);
+                            return result;
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // Try next type;
+                    }
+                }
             }
 
-            var discriminator =
-                discriminatorElement.GetString()
-                ?? throw new JsonException("Discriminator property 'kind' is null");
-
-            var value = discriminator switch
-            {
-                "text" => json.Deserialize<Corti.AgentsTextPart?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.AgentsTextPart"),
-                "file" => json.Deserialize<Corti.AgentsFilePart?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.AgentsFilePart"),
-                "data" => json.Deserialize<Corti.AgentsDataPart?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.AgentsDataPart"),
-                _ => json.Deserialize<object?>(options),
-            };
-            return new AgentsPart(discriminator, value);
+            throw new JsonException(
+                $"Cannot deserialize JSON token {reader.TokenType} into AgentsPart"
+            );
         }
 
         public override void Write(
@@ -240,70 +266,37 @@ public record AgentsPart
             JsonSerializerOptions options
         )
         {
-            JsonNode json =
-                value.Kind switch
-                {
-                    "text" => JsonSerializer.SerializeToNode(value.Value, options),
-                    "file" => JsonSerializer.SerializeToNode(value.Value, options),
-                    "data" => JsonSerializer.SerializeToNode(value.Value, options),
-                    _ => JsonSerializer.SerializeToNode(value.Value, options),
-                } ?? new JsonObject();
-            json["kind"] = value.Kind;
-            json.WriteTo(writer, options);
-        }
-    }
+            if (value == null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
 
-    /// <summary>
-    /// Discriminated union type for text
-    /// </summary>
-    [Serializable]
-    public struct Text
-    {
-        public Text(Corti.AgentsTextPart value)
+            value.Visit(
+                obj => JsonSerializer.Serialize(writer, obj, options),
+                obj => JsonSerializer.Serialize(writer, obj, options),
+                obj => JsonSerializer.Serialize(writer, obj, options)
+            );
+        }
+
+        public override AgentsPart ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            var stringValue = reader.GetString()!;
+            AgentsPart result = new("string", stringValue);
+            return result;
         }
 
-        internal Corti.AgentsTextPart Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator AgentsPart.Text(Corti.AgentsTextPart value) => new(value);
-    }
-
-    /// <summary>
-    /// Discriminated union type for file
-    /// </summary>
-    [Serializable]
-    public struct File
-    {
-        public File(Corti.AgentsFilePart value)
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            AgentsPart value,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            writer.WritePropertyName(value.Value?.ToString() ?? "null");
         }
-
-        internal Corti.AgentsFilePart Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator AgentsPart.File(Corti.AgentsFilePart value) => new(value);
-    }
-
-    /// <summary>
-    /// Discriminated union type for data
-    /// </summary>
-    [Serializable]
-    public struct Data
-    {
-        public Data(Corti.AgentsDataPart value)
-        {
-            Value = value;
-        }
-
-        internal Corti.AgentsDataPart Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator AgentsPart.Data(Corti.AgentsDataPart value) => new(value);
     }
 }

@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
-using OneOf;
 
 namespace Corti;
 
@@ -12,8 +11,14 @@ public record AgentsFilePart : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The kind of the part, always "file".
+    /// </summary>
+    [JsonPropertyName("kind")]
+    public required AgentsFilePartKind Kind { get; set; }
+
     [JsonPropertyName("file")]
-    public OneOf<AgentsFileWithUri, AgentsFileWithBytes>? File { get; set; }
+    public AgentsFilePartFile? File { get; set; }
 
     /// <summary>
     /// Additional metadata for the file part.

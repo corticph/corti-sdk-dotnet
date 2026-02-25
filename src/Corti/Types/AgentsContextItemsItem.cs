@@ -2,7 +2,6 @@
 // ReSharper disable InconsistentNaming
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
@@ -10,111 +9,72 @@ namespace Corti;
 
 [JsonConverter(typeof(AgentsContextItemsItem.JsonConverter))]
 [Serializable]
-public record AgentsContextItemsItem
+public class AgentsContextItemsItem
 {
-    internal AgentsContextItemsItem(string type, object? value)
+    private AgentsContextItemsItem(string type, object? value)
     {
-        Kind = type;
+        Type = type;
         Value = value;
     }
 
     /// <summary>
-    /// Create an instance of AgentsContextItemsItem with <see cref="AgentsContextItemsItem.Task"/>.
+    /// Type discriminator
     /// </summary>
-    public AgentsContextItemsItem(AgentsContextItemsItem.Task value)
-    {
-        Kind = "task";
-        Value = value.Value;
-    }
+    [JsonIgnore]
+    public string Type { get; internal set; }
 
     /// <summary>
-    /// Create an instance of AgentsContextItemsItem with <see cref="AgentsContextItemsItem.Message"/>.
+    /// Union value
     /// </summary>
-    public AgentsContextItemsItem(AgentsContextItemsItem.Message value)
-    {
-        Kind = "message";
-        Value = value.Value;
-    }
-
-    /// <summary>
-    /// Discriminant value
-    /// </summary>
-    [JsonPropertyName("kind")]
-    public string Kind { get; internal set; }
-
-    /// <summary>
-    /// Discriminated union value
-    /// </summary>
+    [JsonIgnore]
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Returns true if <see cref="Kind"/> is "task"
+    /// Factory method to create a union from a Corti.AgentsTask value.
     /// </summary>
-    public bool IsTask => Kind == "task";
+    public static AgentsContextItemsItem FromAgentsTask(Corti.AgentsTask value) =>
+        new("agentsTask", value);
 
     /// <summary>
-    /// Returns true if <see cref="Kind"/> is "message"
+    /// Factory method to create a union from a Corti.AgentsMessage value.
     /// </summary>
-    public bool IsMessage => Kind == "message";
+    public static AgentsContextItemsItem FromAgentsMessage(Corti.AgentsMessage value) =>
+        new("agentsMessage", value);
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsTask"/> if <see cref="Kind"/> is 'task', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "agentsTask"
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Kind"/> is not 'task'.</exception>
-    public Corti.AgentsTask AsTask() =>
-        IsTask
+    public bool IsAgentsTask() => Type == "agentsTask";
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "agentsMessage"
+    /// </summary>
+    public bool IsAgentsMessage() => Type == "agentsMessage";
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.AgentsTask"/> if <see cref="Type"/> is 'agentsTask', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsTask'.</exception>
+    public Corti.AgentsTask AsAgentsTask() =>
+        IsAgentsTask()
             ? (Corti.AgentsTask)Value!
-            : throw new System.Exception("AgentsContextItemsItem.Kind is not 'task'");
+            : throw new CortiClientException("Union type is not 'agentsTask'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.AgentsMessage"/> if <see cref="Kind"/> is 'message', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.AgentsMessage"/> if <see cref="Type"/> is 'agentsMessage', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="Exception">Thrown when <see cref="Kind"/> is not 'message'.</exception>
-    public Corti.AgentsMessage AsMessage() =>
-        IsMessage
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsMessage'.</exception>
+    public Corti.AgentsMessage AsAgentsMessage() =>
+        IsAgentsMessage()
             ? (Corti.AgentsMessage)Value!
-            : throw new System.Exception("AgentsContextItemsItem.Kind is not 'message'");
-
-    public T Match<T>(
-        Func<Corti.AgentsTask, T> onTask,
-        Func<Corti.AgentsMessage, T> onMessage,
-        Func<string, object?, T> onUnknown_
-    )
-    {
-        return Kind switch
-        {
-            "task" => onTask(AsTask()),
-            "message" => onMessage(AsMessage()),
-            _ => onUnknown_(Kind, Value),
-        };
-    }
-
-    public void Visit(
-        Action<Corti.AgentsTask> onTask,
-        Action<Corti.AgentsMessage> onMessage,
-        Action<string, object?> onUnknown_
-    )
-    {
-        switch (Kind)
-        {
-            case "task":
-                onTask(AsTask());
-                break;
-            case "message":
-                onMessage(AsMessage());
-                break;
-            default:
-                onUnknown_(Kind, Value);
-                break;
-        }
-    }
+            : throw new CortiClientException("Union type is not 'agentsMessage'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsTask"/> and returns true if successful.
     /// </summary>
-    public bool TryAsTask(out Corti.AgentsTask? value)
+    public bool TryGetAgentsTask(out Corti.AgentsTask? value)
     {
-        if (Kind == "task")
+        if (Type == "agentsTask")
         {
             value = (Corti.AgentsTask)Value!;
             return true;
@@ -126,9 +86,9 @@ public record AgentsContextItemsItem
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsMessage"/> and returns true if successful.
     /// </summary>
-    public bool TryAsMessage(out Corti.AgentsMessage? value)
+    public bool TryGetAgentsMessage(out Corti.AgentsMessage? value)
     {
-        if (Kind == "message")
+        if (Type == "agentsMessage")
         {
             value = (Corti.AgentsMessage)Value!;
             return true;
@@ -137,56 +97,123 @@ public record AgentsContextItemsItem
         return false;
     }
 
+    public T Match<T>(
+        Func<Corti.AgentsTask, T> onAgentsTask,
+        Func<Corti.AgentsMessage, T> onAgentsMessage
+    )
+    {
+        return Type switch
+        {
+            "agentsTask" => onAgentsTask(AsAgentsTask()),
+            "agentsMessage" => onAgentsMessage(AsAgentsMessage()),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+        };
+    }
+
+    public void Visit(
+        Action<Corti.AgentsTask> onAgentsTask,
+        Action<Corti.AgentsMessage> onAgentsMessage
+    )
+    {
+        switch (Type)
+        {
+            case "agentsTask":
+                onAgentsTask(AsAgentsTask());
+                break;
+            case "agentsMessage":
+                onAgentsMessage(AsAgentsMessage());
+                break;
+            default:
+                throw new CortiClientException($"Unknown union type: {Type}");
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = Type.GetHashCode();
+            if (Value != null)
+            {
+                hashCode = (hashCode * 397) ^ Value.GetHashCode();
+            }
+            return hashCode;
+        }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj is not AgentsContextItemsItem other)
+            return false;
+
+        // Compare type discriminators
+        if (Type != other.Type)
+            return false;
+
+        // Compare values using EqualityComparer for deep comparison
+        return System.Collections.Generic.EqualityComparer<object?>.Default.Equals(
+            Value,
+            other.Value
+        );
+    }
+
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator AgentsContextItemsItem(AgentsContextItemsItem.Task value) =>
-        new(value);
+    public static implicit operator AgentsContextItemsItem(Corti.AgentsTask value) =>
+        new("agentsTask", value);
 
-    public static implicit operator AgentsContextItemsItem(AgentsContextItemsItem.Message value) =>
-        new(value);
+    public static implicit operator AgentsContextItemsItem(Corti.AgentsMessage value) =>
+        new("agentsMessage", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<AgentsContextItemsItem>
     {
-        public override bool CanConvert(System.Type typeToConvert) =>
-            typeof(AgentsContextItemsItem).IsAssignableFrom(typeToConvert);
-
-        public override AgentsContextItemsItem Read(
+        public override AgentsContextItemsItem? Read(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
-            var json = JsonElement.ParseValue(ref reader);
-            if (!json.TryGetProperty("kind", out var discriminatorElement))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                throw new JsonException("Missing discriminator property 'kind'");
+                return null;
             }
-            if (discriminatorElement.ValueKind != JsonValueKind.String)
+
+            if (reader.TokenType == JsonTokenType.StartObject)
             {
-                if (discriminatorElement.ValueKind == JsonValueKind.Null)
+                var document = JsonDocument.ParseValue(ref reader);
+
+                var types = new (string Key, System.Type Type)[]
                 {
-                    throw new JsonException("Discriminator property 'kind' is null");
-                }
+                    ("agentsTask", typeof(Corti.AgentsTask)),
+                    ("agentsMessage", typeof(Corti.AgentsMessage)),
+                };
 
-                throw new JsonException(
-                    $"Discriminator property 'kind' is not a string, instead is {discriminatorElement.ToString()}"
-                );
+                foreach (var (key, type) in types)
+                {
+                    try
+                    {
+                        var value = document.Deserialize(type, options);
+                        if (value != null)
+                        {
+                            AgentsContextItemsItem result = new(key, value);
+                            return result;
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // Try next type;
+                    }
+                }
             }
 
-            var discriminator =
-                discriminatorElement.GetString()
-                ?? throw new JsonException("Discriminator property 'kind' is null");
-
-            var value = discriminator switch
-            {
-                "task" => json.Deserialize<Corti.AgentsTask?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.AgentsTask"),
-                "message" => json.Deserialize<Corti.AgentsMessage?>(options)
-                    ?? throw new JsonException("Failed to deserialize Corti.AgentsMessage"),
-                _ => json.Deserialize<object?>(options),
-            };
-            return new AgentsContextItemsItem(discriminator, value);
+            throw new JsonException(
+                $"Cannot deserialize JSON token {reader.TokenType} into AgentsContextItemsItem"
+            );
         }
 
         public override void Write(
@@ -195,53 +222,36 @@ public record AgentsContextItemsItem
             JsonSerializerOptions options
         )
         {
-            JsonNode json =
-                value.Kind switch
-                {
-                    "task" => JsonSerializer.SerializeToNode(value.Value, options),
-                    "message" => JsonSerializer.SerializeToNode(value.Value, options),
-                    _ => JsonSerializer.SerializeToNode(value.Value, options),
-                } ?? new JsonObject();
-            json["kind"] = value.Kind;
-            json.WriteTo(writer, options);
-        }
-    }
+            if (value == null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
 
-    /// <summary>
-    /// Discriminated union type for task
-    /// </summary>
-    [Serializable]
-    public struct Task
-    {
-        public Task(Corti.AgentsTask value)
+            value.Visit(
+                obj => JsonSerializer.Serialize(writer, obj, options),
+                obj => JsonSerializer.Serialize(writer, obj, options)
+            );
+        }
+
+        public override AgentsContextItemsItem ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            var stringValue = reader.GetString()!;
+            AgentsContextItemsItem result = new("string", stringValue);
+            return result;
         }
 
-        internal Corti.AgentsTask Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator AgentsContextItemsItem.Task(Corti.AgentsTask value) =>
-            new(value);
-    }
-
-    /// <summary>
-    /// Discriminated union type for message
-    /// </summary>
-    [Serializable]
-    public struct Message
-    {
-        public Message(Corti.AgentsMessage value)
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            AgentsContextItemsItem value,
+            JsonSerializerOptions options
+        )
         {
-            Value = value;
+            writer.WritePropertyName(value.Value?.ToString() ?? "null");
         }
-
-        internal Corti.AgentsMessage Value { get; set; }
-
-        public override string ToString() => Value.ToString() ?? "null";
-
-        public static implicit operator AgentsContextItemsItem.Message(Corti.AgentsMessage value) =>
-            new(value);
     }
 }

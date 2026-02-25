@@ -11,6 +11,11 @@ public partial class ClientOptions
     internal Headers Headers { get; init; } = new();
 
     /// <summary>
+    /// A handler that will handle exceptions thrown by the client.
+    /// </summary>
+    internal ExceptionHandler ExceptionHandler { get; set; } = new ExceptionHandler(null);
+
+    /// <summary>
     /// The Environment for the API.
     /// </summary>
     public CortiClientEnvironment Environment { get;
@@ -79,6 +84,7 @@ public partial class ClientOptions
             Timeout = Timeout,
             Headers = new Headers(new Dictionary<string, HeaderValue>(Headers)),
             AdditionalHeaders = AdditionalHeaders,
+            ExceptionHandler = ExceptionHandler.Clone(),
         };
     }
 }
