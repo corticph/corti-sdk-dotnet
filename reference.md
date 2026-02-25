@@ -12,8 +12,8 @@
 <dl>
 <dd>
 
-Exchange client_id and client_secret for a short-lived access token (OAuth 2.0 client credentials).
-Use the returned access_token in the Authorization header when calling the Corti API.
+Exchange credentials for a short-lived access token. Supports grant_type client_credentials (server-to-server)
+or authorization_code (after user redirect). Use the returned access_token in the Authorization header when calling the Corti API.
 </dd>
 </dl>
 </dd>
@@ -30,12 +30,11 @@ Use the returned access_token in the Authorization header when calling the Corti
 ```csharp
 await client.Auth.TokenAsync(
     "tenantName",
-    new AuthTokenRequest
+    new AuthTokenRequestClientCredentials
     {
         ClientId = "client_id",
         ClientSecret = "client_secret",
         GrantType = "client_credentials",
-        Scope = "openid",
     }
 );
 ```

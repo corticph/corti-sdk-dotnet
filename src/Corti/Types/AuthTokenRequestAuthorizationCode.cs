@@ -5,10 +5,10 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// OAuth 2.0 client credentials token request (form body).
+/// OAuth 2.0 authorization code grant (after user redirect).
 /// </summary>
 [Serializable]
-public record AuthTokenRequest : IJsonOnDeserialized
+public record AuthTokenRequestAuthorizationCode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -29,20 +29,31 @@ public record AuthTokenRequest : IJsonOnDeserialized
     [JsonPropertyName("grant_type")]
     public string GrantType
     {
-        get => "client_credentials";
+        get => "authorization_code";
         set =>
             value.Assert(
-                value == "client_credentials",
-                string.Format("'GrantType' must be {0}", "client_credentials")
+                value == "authorization_code",
+                string.Format("'GrantType' must be {0}", "authorization_code")
             );
     }
 
+    /// <summary>
+    /// Redirect URI used in the authorization request (must match exactly).
+    /// </summary>
+    [JsonPropertyName("redirect_uri")]
+    public required string RedirectUri { get; set; }
+
+    /// <summary>
+    /// Authorization code received from the redirect.
+    /// </summary>
+    [JsonPropertyName("code")]
+    public required string Code { get; set; }
+
+    /// <summary>
+    /// Space-separated scopes. Optional.
+    /// </summary>
     [JsonPropertyName("scope")]
-    public string Scope
-    {
-        get => "openid";
-        set => value.Assert(value == "openid", string.Format("'Scope' must be {0}", "openid"));
-    }
+    public string? Scope { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

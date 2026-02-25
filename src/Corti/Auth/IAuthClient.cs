@@ -3,8 +3,8 @@ namespace Corti;
 public partial interface IAuthClient
 {
     /// <summary>
-    /// Exchange client_id and client_secret for a short-lived access token (OAuth 2.0 client credentials).
-    /// Use the returned access_token in the Authorization header when calling the Corti API.
+    /// Exchange credentials for a short-lived access token. Supports grant_type client_credentials (server-to-server)
+    /// or authorization_code (after user redirect). Use the returned access_token in the Authorization header when calling the Corti API.
     /// </summary>
     WithRawResponseTask<AuthTokenResponse> TokenAsync(
         string tenantName,
