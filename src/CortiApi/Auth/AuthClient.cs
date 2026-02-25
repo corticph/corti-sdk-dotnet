@@ -21,7 +21,6 @@ public partial class AuthClient : IAuthClient
     }
 
     private async Task<WithRawResponse<AuthTokenResponse>> TokenAsyncCore(
-        string tenantName,
         AuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -42,10 +41,7 @@ public partial class AuthClient : IAuthClient
                         {
                             BaseUrl = _client.Options.Environment.Login,
                             Method = HttpMethod.Post,
-                            Path = string.Format(
-                                "{0}/protocol/openid-connect/token",
-                                ValueConvert.ToPathParameterString(tenantName)
-                            ),
+                            Path = "protocol/openid-connect/token",
                             Body = request,
                             Headers = _headers,
                             ContentType = "application/x-www-form-urlencoded",
@@ -119,7 +115,6 @@ public partial class AuthClient : IAuthClient
     /// </summary>
     /// <example><code>
     /// await client.Auth.TokenAsync(
-    ///     "tenantName",
     ///     new AuthTokenRequest
     ///     {
     ///         ClientId = "client_id",
@@ -130,14 +125,13 @@ public partial class AuthClient : IAuthClient
     /// );
     /// </code></example>
     public WithRawResponseTask<AuthTokenResponse> TokenAsync(
-        string tenantName,
         AuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<AuthTokenResponse>(
-            TokenAsyncCore(tenantName, request, options, cancellationToken)
+            TokenAsyncCore(request, options, cancellationToken)
         );
     }
 }

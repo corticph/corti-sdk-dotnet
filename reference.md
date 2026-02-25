@@ -1,6 +1,6 @@
 # Reference
 ## Auth
-<details><summary><code>client.Auth.<a href="/src/CortiApi/Auth/AuthClient.cs">TokenAsync</a>(tenantName, AuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
+<details><summary><code>client.Auth.<a href="/src/CortiApi/Auth/AuthClient.cs">TokenAsync</a>(AuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -29,7 +29,6 @@ Use the returned access_token in the Authorization header when calling the Corti
 
 ```csharp
 await client.Auth.TokenAsync(
-    "tenantName",
     new AuthTokenRequest
     {
         ClientId = "client_id",
@@ -48,14 +47,6 @@ await client.Auth.TokenAsync(
 
 <dl>
 <dd>
-
-<dl>
-<dd>
-
-**tenantName:** `string` 
-    
-</dd>
-</dl>
 
 <dl>
 <dd>
