@@ -43,7 +43,7 @@ public partial interface IAgentsClient
     /// </summary>
     WithRawResponseTask<AgentsAgent> UpdateAsync(
         string id,
-        AgentsAgent request,
+        AgentsUpdateAgent request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

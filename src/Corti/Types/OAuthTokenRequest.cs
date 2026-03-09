@@ -5,21 +5,20 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TranscribeCommandMessage : IJsonOnDeserialized
+public record OAuthTokenRequest : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("type")]
-    public string Type
-    {
-        get => "command";
-        set => value.Assert(value == "command", string.Format("'Type' must be {0}", "command"));
-    }
+    [JsonPropertyName("client_id")]
+    public required string ClientId { get; set; }
 
-    [JsonPropertyName("data")]
-    public required TranscribeCommandData Data { get; set; }
+    [JsonPropertyName("client_secret")]
+    public required string ClientSecret { get; set; }
+
+    [JsonPropertyName("refresh_token")]
+    public string? RefreshToken { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

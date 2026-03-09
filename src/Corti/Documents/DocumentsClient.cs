@@ -5,7 +5,7 @@ namespace Corti;
 
 public partial class DocumentsClient : IDocumentsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal DocumentsClient(RawClient client)
     {
@@ -53,7 +53,9 @@ public partial class DocumentsClient : IDocumentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<DocumentsListResponse>(
@@ -83,7 +85,9 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -156,7 +160,9 @@ public partial class DocumentsClient : IDocumentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
@@ -186,7 +192,9 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -258,7 +266,9 @@ public partial class DocumentsClient : IDocumentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
@@ -288,7 +298,9 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -363,7 +375,9 @@ public partial class DocumentsClient : IDocumentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
@@ -393,7 +407,9 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -460,10 +476,7 @@ public partial class DocumentsClient : IDocumentsClient
     ///             new DocumentsContextWithFacts
     ///             {
     ///                 Type = DocumentsContextWithFactsType.Facts,
-    ///                 Data = new List&lt;FactsContext&gt;()
-    ///                 {
-    ///                     new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-    ///                 },
+    ///                 Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
     ///             },
     ///         },
     ///         TemplateKey = "templateKey",
@@ -548,7 +561,9 @@ public partial class DocumentsClient : IDocumentsClient
                     return;
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)

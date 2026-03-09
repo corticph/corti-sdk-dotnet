@@ -12,7 +12,12 @@ public record StreamTranscriptMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("type")]
-    public required StreamTranscriptMessageType Type { get; set; }
+    public string Type
+    {
+        get => "transcript";
+        set =>
+            value.Assert(value == "transcript", string.Format("'Type' must be {0}", "transcript"));
+    }
 
     [JsonPropertyName("data")]
     public IEnumerable<StreamTranscript> Data { get; set; } = new List<StreamTranscript>();

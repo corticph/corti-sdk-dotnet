@@ -5,7 +5,7 @@ namespace Corti;
 
 public partial class AgentsClient : IAgentsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal AgentsClient(RawClient client)
     {
@@ -57,7 +57,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<IEnumerable<AgentsAgentResponse>>(
@@ -87,7 +89,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -153,7 +157,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsAgent>(responseBody)!;
@@ -181,7 +187,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -243,7 +251,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsAgentResponse>(
@@ -273,7 +283,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -308,7 +320,7 @@ public partial class AgentsClient : IAgentsClient
 
     private async Task<WithRawResponse<AgentsAgent>> UpdateAsyncCore(
         string id,
-        AgentsAgent request,
+        AgentsUpdateAgent request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -342,7 +354,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsAgent>(responseBody)!;
@@ -370,7 +384,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -436,7 +452,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsAgentCard>(responseBody)!;
@@ -464,7 +482,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -533,7 +553,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsMessageSendResponse>(
@@ -563,7 +585,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -637,7 +661,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsTask>(responseBody)!;
@@ -665,7 +691,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -740,7 +768,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsContext>(responseBody)!;
@@ -768,7 +798,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -837,7 +869,9 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<AgentsRegistryExpertsResponse>(
@@ -867,7 +901,9 @@ public partial class AgentsClient : IAgentsClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -991,7 +1027,9 @@ public partial class AgentsClient : IAgentsClient
                     return;
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
@@ -1028,20 +1066,11 @@ public partial class AgentsClient : IAgentsClient
     /// This endpoint updates an existing agent. Only the fields provided in the request body will be updated; other fields will remain unchanged.
     /// </summary>
     /// <example><code>
-    /// await client.Agents.UpdateAsync(
-    ///     "12345678-90ab-cdef-gh12-34567890abc",
-    ///     new AgentsAgent
-    ///     {
-    ///         Id = "id",
-    ///         Name = "name",
-    ///         Description = "description",
-    ///         SystemPrompt = "systemPrompt",
-    ///     }
-    /// );
+    /// await client.Agents.UpdateAsync("12345678-90ab-cdef-gh12-34567890abc", new AgentsUpdateAgent());
     /// </code></example>
     public WithRawResponseTask<AgentsAgent> UpdateAsync(
         string id,
-        AgentsAgent request,
+        AgentsUpdateAgent request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

@@ -12,7 +12,11 @@ public record TranscribeErrorMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("type")]
-    public required TranscribeErrorMessageType Type { get; set; }
+    public string Type
+    {
+        get => "error";
+        set => value.Assert(value == "error", string.Format("'Type' must be {0}", "error"));
+    }
 
     [JsonPropertyName("error")]
     public required TranscribeErrorMessageError Error { get; set; }

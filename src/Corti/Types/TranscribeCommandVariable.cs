@@ -21,7 +21,11 @@ public record TranscribeCommandVariable : IJsonOnDeserialized
     /// Variable type
     /// </summary>
     [JsonPropertyName("type")]
-    public required TranscribeCommandVariableType Type { get; set; }
+    public string Type
+    {
+        get => "enum";
+        set => value.Assert(value == "enum", string.Format("'Type' must be {0}", "enum"));
+    }
 
     /// <summary>
     /// Enum values for the variable

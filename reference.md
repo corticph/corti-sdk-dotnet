@@ -1,5 +1,47 @@
 # Reference
 ## Auth
+<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">FakeTokenAsync</a>(OAuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Auth.FakeTokenAsync(
+    new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `OAuthTokenRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">TokenAsync</a>(tenantName, AuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
 <dl>
 <dd>
@@ -1339,10 +1381,7 @@ await client.Documents.CreateAsync(
             new DocumentsContextWithFacts
             {
                 Type = DocumentsContextWithFactsType.Facts,
-                Data = new List<FactsContext>()
-                {
-                    new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-                },
+                Data = new List<FactsContext>() { new FactsContext { Text = "text" } },
             },
         },
         TemplateKey = "templateKey",
@@ -2014,7 +2053,7 @@ await client.Agents.DeleteAsync("12345678-90ab-cdef-gh12-34567890abc");
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">UpdateAsync</a>(id, AgentsAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">UpdateAsync</a>(id, AgentsUpdateAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2041,16 +2080,7 @@ This endpoint updates an existing agent. Only the fields provided in the request
 <dd>
 
 ```csharp
-await client.Agents.UpdateAsync(
-    "12345678-90ab-cdef-gh12-34567890abc",
-    new AgentsAgent
-    {
-        Id = "id",
-        Name = "name",
-        Description = "description",
-        SystemPrompt = "systemPrompt",
-    }
-);
+await client.Agents.UpdateAsync("12345678-90ab-cdef-gh12-34567890abc", new AgentsUpdateAgent());
 ```
 </dd>
 </dl>
@@ -2073,7 +2103,7 @@ await client.Agents.UpdateAsync(
 <dl>
 <dd>
 
-**request:** `AgentsAgent` 
+**request:** `AgentsUpdateAgent` 
     
 </dd>
 </dl>
@@ -2419,3 +2449,4 @@ await client.Agents.GetRegistryExpertsAsync(
 </dd>
 </dl>
 </details>
+

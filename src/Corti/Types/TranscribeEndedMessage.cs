@@ -12,7 +12,11 @@ public record TranscribeEndedMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("type")]
-    public required TranscribeEndedMessageType Type { get; set; }
+    public string Type
+    {
+        get => "ended";
+        set => value.Assert(value == "ended", string.Format("'Type' must be {0}", "ended"));
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

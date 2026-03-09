@@ -12,7 +12,11 @@ public record StreamUsageMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("type")]
-    public required StreamUsageMessageType Type { get; set; }
+    public string Type
+    {
+        get => "usage";
+        set => value.Assert(value == "usage", string.Format("'Type' must be {0}", "usage"));
+    }
 
     /// <summary>
     /// The amount of credits used for this stream.

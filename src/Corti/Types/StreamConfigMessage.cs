@@ -12,7 +12,11 @@ public record StreamConfigMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("type")]
-    public required StreamConfigMessageType Type { get; set; }
+    public string Type
+    {
+        get => "config";
+        set => value.Assert(value == "config", string.Format("'Type' must be {0}", "config"));
+    }
 
     [JsonPropertyName("configuration")]
     public required StreamConfig Configuration { get; set; }

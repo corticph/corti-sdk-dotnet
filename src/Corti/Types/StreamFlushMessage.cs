@@ -12,7 +12,11 @@ public record StreamFlushMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("type")]
-    public required StreamFlushMessageType Type { get; set; }
+    public string Type
+    {
+        get => "flush";
+        set => value.Assert(value == "flush", string.Format("'Type' must be {0}", "flush"));
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

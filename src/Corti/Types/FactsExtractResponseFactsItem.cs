@@ -18,10 +18,16 @@ public record FactsExtractResponseFactsItem : IJsonOnDeserialized
     public required string Group { get; set; }
 
     /// <summary>
-    /// An individual, atomic fact.
+    /// (deprecated) An individual, atomic fact.
     /// </summary>
     [JsonPropertyName("value")]
     public required string Value { get; set; }
+
+    /// <summary>
+    /// An individual, atomic fact.
+    /// </summary>
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

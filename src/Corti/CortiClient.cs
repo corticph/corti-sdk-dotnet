@@ -7,7 +7,8 @@ public partial class CortiClient : ICortiClient
     private readonly RawClient _client;
 
     public CortiClient(
-        string? token = null,
+        string? clientId = null,
+        string? clientSecret = null,
         string? tenantName = null,
         ClientOptions? clientOptions = null
     )
@@ -35,16 +36,21 @@ public partial class CortiClient : ICortiClient
             }
             var clientOptionsWithAuth = clientOptions.Clone();
             var authHeaders = new Headers(
-                new Dictionary<string, string>()
-                {
-                    { "Authorization", $"Bearer {token ?? ""}" },
-                    { "Tenant-Name", tenantName ?? "" },
-                }
+                new Dictionary<string, string>() { { "Tenant-Name", tenantName ?? "" } }
             );
             foreach (var header in authHeaders)
             {
                 clientOptionsWithAuth.Headers[header.Key] = header.Value;
             }
+            var tokenProvider = new OAuthTokenProvider(
+                clientId,
+                clientSecret,
+                new AuthClient(new RawClient(clientOptions))
+            );
+            clientOptionsWithAuth.Headers["Authorization"] =
+                new Func<global::System.Threading.Tasks.ValueTask<string>>(async () =>
+                    await tokenProvider.GetAccessTokenAsync().ConfigureAwait(false)
+                );
             _client = new RawClient(clientOptionsWithAuth);
             Auth = new AuthClient(_client);
             Interactions = new InteractionsClient(_client);

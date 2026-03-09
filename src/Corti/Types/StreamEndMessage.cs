@@ -12,7 +12,11 @@ public record StreamEndMessage : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("type")]
-    public required StreamEndMessageType Type { get; set; }
+    public string Type
+    {
+        get => "end";
+        set => value.Assert(value == "end", string.Format("'Type' must be {0}", "end"));
+    }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

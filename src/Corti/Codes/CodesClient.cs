@@ -5,7 +5,7 @@ namespace Corti;
 
 public partial class CodesClient : ICodesClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal CodesClient(RawClient client)
     {
@@ -52,7 +52,9 @@ public partial class CodesClient : ICodesClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         var responseData = JsonUtils.Deserialize<CodesGeneralResponse>(
@@ -82,7 +84,9 @@ public partial class CodesClient : ICodesClient
                     }
                 }
                 {
-                    var responseBody = await response.Raw.Content.ReadAsStringAsync();
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
                     try
                     {
                         switch (response.StatusCode)
