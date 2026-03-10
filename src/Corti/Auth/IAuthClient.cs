@@ -2,7 +2,7 @@ namespace Corti;
 
 public partial interface IAuthClient
 {
-    WithRawResponseTask<AuthTokenResponse> FakeTokenAsync(
+    WithRawResponseTask<AuthTokenResponse> GetTokenAsync(
         OAuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -14,7 +14,7 @@ public partial interface IAuthClient
     /// </summary>
     WithRawResponseTask<AuthTokenResponse> TokenAsync(
         string tenantName,
-        AuthTokenRequest request,
+        AuthTokenRequestBody request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

@@ -28,7 +28,7 @@ public partial class OAuthTokenProvider
         if (_accessToken == null || DateTime.UtcNow >= _expiresAt)
         {
             var tokenResponse = await _client
-                .FakeTokenAsync(
+                .GetTokenAsync(
                     new OAuthTokenRequest { ClientId = _clientId, ClientSecret = _clientSecret }
                 )
                 .ConfigureAwait(false);

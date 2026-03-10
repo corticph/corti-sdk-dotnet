@@ -1,6 +1,6 @@
 # Reference
 ## Auth
-<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">FakeTokenAsync</a>(OAuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
+<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">GetTokenAsync</a>(OAuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -13,7 +13,7 @@
 <dd>
 
 ```csharp
-await client.Auth.FakeTokenAsync(
+await client.Auth.GetTokenAsync(
     new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
 );
 ```
@@ -42,7 +42,7 @@ await client.Auth.FakeTokenAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">TokenAsync</a>(tenantName, AuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
+<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">TokenAsync</a>(tenantName, AuthTokenRequestBody { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -101,7 +101,7 @@ await client.Auth.TokenAsync(
 <dl>
 <dd>
 
-**request:** `AuthTokenRequest` 
+**request:** `AuthTokenRequestBody` 
     
 </dd>
 </dl>

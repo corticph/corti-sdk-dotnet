@@ -7,9 +7,9 @@ public partial class CortiClient : ICortiClient
     private readonly RawClient _client;
 
     public CortiClient(
+        string tenantName,
         string? clientId = null,
         string? clientSecret = null,
-        string? tenantName = null,
         ClientOptions? clientOptions = null
     )
     {
@@ -36,7 +36,7 @@ public partial class CortiClient : ICortiClient
             }
             var clientOptionsWithAuth = clientOptions.Clone();
             var authHeaders = new Headers(
-                new Dictionary<string, string>() { { "Tenant-Name", tenantName ?? "" } }
+                new Dictionary<string, string>() { { "Tenant-Name", tenantName } }
             );
             foreach (var header in authHeaders)
             {

@@ -20,7 +20,7 @@ public partial class AuthClient : IAuthClient
         }
     }
 
-    private async Task<WithRawResponse<AuthTokenResponse>> FakeTokenAsyncCore(
+    private async Task<WithRawResponse<AuthTokenResponse>> GetTokenAsyncCore(
         OAuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -97,7 +97,7 @@ public partial class AuthClient : IAuthClient
 
     private async Task<WithRawResponse<AuthTokenResponse>> TokenAsyncCore(
         string tenantName,
-        AuthTokenRequest request,
+        AuthTokenRequestBody request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -193,18 +193,18 @@ public partial class AuthClient : IAuthClient
     }
 
     /// <example><code>
-    /// await client.Auth.FakeTokenAsync(
+    /// await client.Auth.GetTokenAsync(
     ///     new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
     /// );
     /// </code></example>
-    public WithRawResponseTask<AuthTokenResponse> FakeTokenAsync(
+    public WithRawResponseTask<AuthTokenResponse> GetTokenAsync(
         OAuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<AuthTokenResponse>(
-            FakeTokenAsyncCore(request, options, cancellationToken)
+            GetTokenAsyncCore(request, options, cancellationToken)
         );
     }
 
@@ -225,7 +225,7 @@ public partial class AuthClient : IAuthClient
     /// </code></example>
     public WithRawResponseTask<AuthTokenResponse> TokenAsync(
         string tenantName,
-        AuthTokenRequest request,
+        AuthTokenRequestBody request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

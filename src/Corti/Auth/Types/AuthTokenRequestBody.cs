@@ -7,11 +7,11 @@ using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(AuthTokenRequest.JsonConverter))]
+[JsonConverter(typeof(AuthTokenRequestBody.JsonConverter))]
 [Serializable]
-public class AuthTokenRequest
+public class AuthTokenRequestBody
 {
-    private AuthTokenRequest(string type, object? value)
+    private AuthTokenRequestBody(string type, object? value)
     {
         Type = type;
         Value = value;
@@ -32,34 +32,34 @@ public class AuthTokenRequest
     /// <summary>
     /// Factory method to create a union from a Corti.AuthTokenRequestClientCredentials value.
     /// </summary>
-    public static AuthTokenRequest FromAuthTokenRequestClientCredentials(
+    public static AuthTokenRequestBody FromAuthTokenRequestClientCredentials(
         Corti.AuthTokenRequestClientCredentials value
     ) => new("authTokenRequestClientCredentials", value);
 
     /// <summary>
     /// Factory method to create a union from a Corti.AuthTokenRequestAuthorizationCode value.
     /// </summary>
-    public static AuthTokenRequest FromAuthTokenRequestAuthorizationCode(
+    public static AuthTokenRequestBody FromAuthTokenRequestAuthorizationCode(
         Corti.AuthTokenRequestAuthorizationCode value
     ) => new("authTokenRequestAuthorizationCode", value);
 
     /// <summary>
     /// Factory method to create a union from a Corti.AuthTokenRequestAuthorizationPkce value.
     /// </summary>
-    public static AuthTokenRequest FromAuthTokenRequestAuthorizationPkce(
+    public static AuthTokenRequestBody FromAuthTokenRequestAuthorizationPkce(
         Corti.AuthTokenRequestAuthorizationPkce value
     ) => new("authTokenRequestAuthorizationPkce", value);
 
     /// <summary>
     /// Factory method to create a union from a Corti.AuthTokenRequestRopc value.
     /// </summary>
-    public static AuthTokenRequest FromAuthTokenRequestRopc(Corti.AuthTokenRequestRopc value) =>
+    public static AuthTokenRequestBody FromAuthTokenRequestRopc(Corti.AuthTokenRequestRopc value) =>
         new("authTokenRequestRopc", value);
 
     /// <summary>
     /// Factory method to create a union from a Corti.AuthTokenRequestRefresh value.
     /// </summary>
-    public static AuthTokenRequest FromAuthTokenRequestRefresh(
+    public static AuthTokenRequestBody FromAuthTokenRequestRefresh(
         Corti.AuthTokenRequestRefresh value
     ) => new("authTokenRequestRefresh", value);
 
@@ -292,7 +292,7 @@ public class AuthTokenRequest
             return false;
         if (ReferenceEquals(this, obj))
             return true;
-        if (obj is not AuthTokenRequest other)
+        if (obj is not AuthTokenRequestBody other)
             return false;
 
         // Compare type discriminators
@@ -308,28 +308,28 @@ public class AuthTokenRequest
 
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator AuthTokenRequest(
+    public static implicit operator AuthTokenRequestBody(
         Corti.AuthTokenRequestClientCredentials value
     ) => new("authTokenRequestClientCredentials", value);
 
-    public static implicit operator AuthTokenRequest(
+    public static implicit operator AuthTokenRequestBody(
         Corti.AuthTokenRequestAuthorizationCode value
     ) => new("authTokenRequestAuthorizationCode", value);
 
-    public static implicit operator AuthTokenRequest(
+    public static implicit operator AuthTokenRequestBody(
         Corti.AuthTokenRequestAuthorizationPkce value
     ) => new("authTokenRequestAuthorizationPkce", value);
 
-    public static implicit operator AuthTokenRequest(Corti.AuthTokenRequestRopc value) =>
+    public static implicit operator AuthTokenRequestBody(Corti.AuthTokenRequestRopc value) =>
         new("authTokenRequestRopc", value);
 
-    public static implicit operator AuthTokenRequest(Corti.AuthTokenRequestRefresh value) =>
+    public static implicit operator AuthTokenRequestBody(Corti.AuthTokenRequestRefresh value) =>
         new("authTokenRequestRefresh", value);
 
     [Serializable]
-    internal sealed class JsonConverter : JsonConverter<AuthTokenRequest>
+    internal sealed class JsonConverter : JsonConverter<AuthTokenRequestBody>
     {
-        public override AuthTokenRequest? Read(
+        public override AuthTokenRequestBody? Read(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
@@ -369,7 +369,7 @@ public class AuthTokenRequest
                         var value = document.Deserialize(type, options);
                         if (value != null)
                         {
-                            AuthTokenRequest result = new(key, value);
+                            AuthTokenRequestBody result = new(key, value);
                             return result;
                         }
                     }
@@ -381,13 +381,13 @@ public class AuthTokenRequest
             }
 
             throw new JsonException(
-                $"Cannot deserialize JSON token {reader.TokenType} into AuthTokenRequest"
+                $"Cannot deserialize JSON token {reader.TokenType} into AuthTokenRequestBody"
             );
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            AuthTokenRequest value,
+            AuthTokenRequestBody value,
             JsonSerializerOptions options
         )
         {
@@ -406,20 +406,20 @@ public class AuthTokenRequest
             );
         }
 
-        public override AuthTokenRequest ReadAsPropertyName(
+        public override AuthTokenRequestBody ReadAsPropertyName(
             ref Utf8JsonReader reader,
             System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
             var stringValue = reader.GetString()!;
-            AuthTokenRequest result = new("string", stringValue);
+            AuthTokenRequestBody result = new("string", stringValue);
             return result;
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            AuthTokenRequest value,
+            AuthTokenRequestBody value,
             JsonSerializerOptions options
         )
         {

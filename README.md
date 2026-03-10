@@ -43,8 +43,8 @@ Instantiate and use the client with the following:
 ```csharp
 using Corti;
 
-var client = new CortiClient("client_id", "client_secret", "TENANT_NAME");
-await client.Auth.FakeTokenAsync(
+var client = new CortiClient("TENANT_NAME", "client_id", "client_secret");
+await client.Auth.GetTokenAsync(
     new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
 );
 ```
@@ -58,7 +58,7 @@ will be thrown.
 using Corti;
 
 try {
-    var response = await client.Auth.FakeTokenAsync(...);
+    var response = await client.Auth.GetTokenAsync(...);
 } catch (CortiClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -72,7 +72,7 @@ List endpoints are paginated. The SDK provides an async enumerable so that you c
 ```csharp
 using Corti;
 
-var client = new CortiClient("client_id", "client_secret", "TENANT_NAME");
+var client = new CortiClient("TENANT_NAME", "client_id", "client_secret");
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
 
 await foreach (var item in items)
@@ -98,7 +98,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.Auth.FakeTokenAsync(
+var response = await client.Auth.GetTokenAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -111,7 +111,7 @@ var response = await client.Auth.FakeTokenAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.Auth.FakeTokenAsync(
+var response = await client.Auth.GetTokenAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
@@ -127,7 +127,7 @@ Access raw HTTP response data (status code, headers, URL) alongside parsed respo
 using Corti;
 
 // Access raw response data (status code, headers, etc.) alongside the parsed response
-var result = await client.Auth.FakeTokenAsync(...).WithRawResponse();
+var result = await client.Auth.GetTokenAsync(...).WithRawResponse();
 
 // Access the parsed data
 var data = result.Data;
@@ -144,7 +144,7 @@ if (headers.TryGetValue("X-Request-Id", out var requestId))
 }
 
 // For the default behavior, simply await without .WithRawResponse()
-var data = await client.Auth.FakeTokenAsync(...);
+var data = await client.Auth.GetTokenAsync(...);
 ```
 
 ### Additional Headers
@@ -152,7 +152,7 @@ var data = await client.Auth.FakeTokenAsync(...);
 If you would like to send additional headers as part of the request, use the `AdditionalHeaders` request option.
 
 ```csharp
-var response = await client.Auth.FakeTokenAsync(
+var response = await client.Auth.GetTokenAsync(
     ...,
     new RequestOptions {
         AdditionalHeaders = new Dictionary<string, string?>
@@ -168,7 +168,7 @@ var response = await client.Auth.FakeTokenAsync(
 If you would like to send additional query parameters as part of the request, use the `AdditionalQueryParameters` request option.
 
 ```csharp
-var response = await client.Auth.FakeTokenAsync(
+var response = await client.Auth.GetTokenAsync(
     ...,
     new RequestOptions {
         AdditionalQueryParameters = new Dictionary<string, string>
