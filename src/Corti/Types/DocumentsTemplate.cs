@@ -56,20 +56,22 @@ public class DocumentsTemplate
     /// <summary>
     /// Returns the value as a <see cref="Corti.DocumentsTemplateWithSections"/> if <see cref="Type"/> is 'documentsTemplateWithSections', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsTemplateWithSections'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'documentsTemplateWithSections'.</exception>
     public Corti.DocumentsTemplateWithSections AsDocumentsTemplateWithSections() =>
         IsDocumentsTemplateWithSections()
             ? (Corti.DocumentsTemplateWithSections)Value!
-            : throw new CortiClientException("Union type is not 'documentsTemplateWithSections'");
+            : throw new CortiClientBaseException(
+                "Union type is not 'documentsTemplateWithSections'"
+            );
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.DocumentsTemplateWithSectionKeys"/> if <see cref="Type"/> is 'documentsTemplateWithSectionKeys', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsTemplateWithSectionKeys'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'documentsTemplateWithSectionKeys'.</exception>
     public Corti.DocumentsTemplateWithSectionKeys AsDocumentsTemplateWithSectionKeys() =>
         IsDocumentsTemplateWithSectionKeys()
             ? (Corti.DocumentsTemplateWithSectionKeys)Value!
-            : throw new CortiClientException(
+            : throw new CortiClientBaseException(
                 "Union type is not 'documentsTemplateWithSectionKeys'"
             );
 
@@ -116,7 +118,7 @@ public class DocumentsTemplate
             "documentsTemplateWithSectionKeys" => onDocumentsTemplateWithSectionKeys(
                 AsDocumentsTemplateWithSectionKeys()
             ),
-            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
         };
     }
 
@@ -134,7 +136,7 @@ public class DocumentsTemplate
                 onDocumentsTemplateWithSectionKeys(AsDocumentsTemplateWithSectionKeys());
                 break;
             default:
-                throw new CortiClientException($"Unknown union type: {Type}");
+                throw new CortiClientBaseException($"Unknown union type: {Type}");
         }
     }
 

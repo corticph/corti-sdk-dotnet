@@ -5,4 +5,4 @@ namespace Corti;
 /// </summary>
 [Serializable]
 public class UnauthorizedError(object body)
-    : CortiClientApiException("UnauthorizedError", 401, body);
+    : CortiClientBaseApiException("UnauthorizedError", 401, body);

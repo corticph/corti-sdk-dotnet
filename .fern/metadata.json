@@ -4,7 +4,7 @@
   "generatorVersion": "2.24.0",
   "generatorConfig": {
     "namespace": "Corti",
-    "client-class-name": "CortiClient",
+    "client-class-name": "CortiClientBase",
     "use-undiscriminated-unions": true,
     "generate-error-types": true,
     "include-exception-handler": true,

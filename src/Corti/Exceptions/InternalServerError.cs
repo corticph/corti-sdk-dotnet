@@ -5,7 +5,7 @@ namespace Corti;
 /// </summary>
 [Serializable]
 public class InternalServerError(ErrorResponse body)
-    : CortiClientApiException("InternalServerError", 500, body)
+    : CortiClientBaseApiException("InternalServerError", 500, body)
 {
     /// <summary>
     /// The body of the response that triggered the exception.

@@ -2,11 +2,11 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class CortiClient : ICortiClient
+public partial class CortiClientBase : ICortiClientBase
 {
     private readonly RawClient _client;
 
-    public CortiClient(
+    public CortiClientBase(
         string tenantName,
         string? clientId = null,
         string? clientSecret = null,

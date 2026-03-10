@@ -79,7 +79,7 @@ public partial class TemplatesClient : ITemplatesClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientApiException(
+                        throw new CortiClientBaseApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -109,7 +109,7 @@ public partial class TemplatesClient : ITemplatesClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -179,7 +179,7 @@ public partial class TemplatesClient : ITemplatesClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientApiException(
+                        throw new CortiClientBaseApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -209,7 +209,7 @@ public partial class TemplatesClient : ITemplatesClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -273,7 +273,7 @@ public partial class TemplatesClient : ITemplatesClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientApiException(
+                        throw new CortiClientBaseApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -303,7 +303,7 @@ public partial class TemplatesClient : ITemplatesClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody

@@ -54,20 +54,20 @@ public class AgentsAgentResponse
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsAgent"/> if <see cref="Type"/> is 'agentsAgent', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsAgent'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsAgent'.</exception>
     public Corti.AgentsAgent AsAgentsAgent() =>
         IsAgentsAgent()
             ? (Corti.AgentsAgent)Value!
-            : throw new CortiClientException("Union type is not 'agentsAgent'");
+            : throw new CortiClientBaseException("Union type is not 'agentsAgent'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsAgentReference"/> if <see cref="Type"/> is 'agentsAgentReference', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsAgentReference'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsAgentReference'.</exception>
     public Corti.AgentsAgentReference AsAgentsAgentReference() =>
         IsAgentsAgentReference()
             ? (Corti.AgentsAgentReference)Value!
-            : throw new CortiClientException("Union type is not 'agentsAgentReference'");
+            : throw new CortiClientBaseException("Union type is not 'agentsAgentReference'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsAgent"/> and returns true if successful.
@@ -106,7 +106,7 @@ public class AgentsAgentResponse
         {
             "agentsAgent" => onAgentsAgent(AsAgentsAgent()),
             "agentsAgentReference" => onAgentsAgentReference(AsAgentsAgentReference()),
-            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
         };
     }
 
@@ -124,7 +124,7 @@ public class AgentsAgentResponse
                 onAgentsAgentReference(AsAgentsAgentReference());
                 break;
             default:
-                throw new CortiClientException($"Unknown union type: {Type}");
+                throw new CortiClientBaseException($"Unknown union type: {Type}");
         }
     }
 

@@ -54,20 +54,20 @@ public class AgentsContextItemsItem
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsTask"/> if <see cref="Type"/> is 'agentsTask', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsTask'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsTask'.</exception>
     public Corti.AgentsTask AsAgentsTask() =>
         IsAgentsTask()
             ? (Corti.AgentsTask)Value!
-            : throw new CortiClientException("Union type is not 'agentsTask'");
+            : throw new CortiClientBaseException("Union type is not 'agentsTask'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsMessage"/> if <see cref="Type"/> is 'agentsMessage', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsMessage'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsMessage'.</exception>
     public Corti.AgentsMessage AsAgentsMessage() =>
         IsAgentsMessage()
             ? (Corti.AgentsMessage)Value!
-            : throw new CortiClientException("Union type is not 'agentsMessage'");
+            : throw new CortiClientBaseException("Union type is not 'agentsMessage'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsTask"/> and returns true if successful.
@@ -106,7 +106,7 @@ public class AgentsContextItemsItem
         {
             "agentsTask" => onAgentsTask(AsAgentsTask()),
             "agentsMessage" => onAgentsMessage(AsAgentsMessage()),
-            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
         };
     }
 
@@ -124,7 +124,7 @@ public class AgentsContextItemsItem
                 onAgentsMessage(AsAgentsMessage());
                 break;
             default:
-                throw new CortiClientException($"Unknown union type: {Type}");
+                throw new CortiClientBaseException($"Unknown union type: {Type}");
         }
     }
 

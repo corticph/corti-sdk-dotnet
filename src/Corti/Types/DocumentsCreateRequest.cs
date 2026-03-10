@@ -58,22 +58,22 @@ public class DocumentsCreateRequest
     /// <summary>
     /// Returns the value as a <see cref="Corti.DocumentsCreateRequestWithTemplateKey"/> if <see cref="Type"/> is 'documentsCreateRequestWithTemplateKey', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsCreateRequestWithTemplateKey'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'documentsCreateRequestWithTemplateKey'.</exception>
     public Corti.DocumentsCreateRequestWithTemplateKey AsDocumentsCreateRequestWithTemplateKey() =>
         IsDocumentsCreateRequestWithTemplateKey()
             ? (Corti.DocumentsCreateRequestWithTemplateKey)Value!
-            : throw new CortiClientException(
+            : throw new CortiClientBaseException(
                 "Union type is not 'documentsCreateRequestWithTemplateKey'"
             );
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.DocumentsCreateRequestWithTemplate"/> if <see cref="Type"/> is 'documentsCreateRequestWithTemplate', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsCreateRequestWithTemplate'.</exception>
+    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'documentsCreateRequestWithTemplate'.</exception>
     public Corti.DocumentsCreateRequestWithTemplate AsDocumentsCreateRequestWithTemplate() =>
         IsDocumentsCreateRequestWithTemplate()
             ? (Corti.DocumentsCreateRequestWithTemplate)Value!
-            : throw new CortiClientException(
+            : throw new CortiClientBaseException(
                 "Union type is not 'documentsCreateRequestWithTemplate'"
             );
 
@@ -125,7 +125,7 @@ public class DocumentsCreateRequest
             "documentsCreateRequestWithTemplate" => onDocumentsCreateRequestWithTemplate(
                 AsDocumentsCreateRequestWithTemplate()
             ),
-            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
         };
     }
 
@@ -143,7 +143,7 @@ public class DocumentsCreateRequest
                 onDocumentsCreateRequestWithTemplate(AsDocumentsCreateRequestWithTemplate());
                 break;
             default:
-                throw new CortiClientException($"Unknown union type: {Type}");
+                throw new CortiClientBaseException($"Unknown union type: {Type}");
         }
     }
 

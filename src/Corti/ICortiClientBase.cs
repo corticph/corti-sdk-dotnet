@@ -1,6 +1,6 @@
 namespace Corti;
 
-public partial interface ICortiClient
+public partial interface ICortiClientBase
 {
     public IAuthClient Auth { get; }
     public IInteractionsClient Interactions { get; }

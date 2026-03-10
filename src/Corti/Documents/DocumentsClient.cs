@@ -76,7 +76,7 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientApiException(
+                        throw new CortiClientBaseApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -114,7 +114,7 @@ public partial class DocumentsClient : IDocumentsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -183,7 +183,7 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientApiException(
+                        throw new CortiClientBaseApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -221,7 +221,7 @@ public partial class DocumentsClient : IDocumentsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -289,7 +289,7 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientApiException(
+                        throw new CortiClientBaseApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -327,7 +327,7 @@ public partial class DocumentsClient : IDocumentsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -398,7 +398,7 @@ public partial class DocumentsClient : IDocumentsClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientApiException(
+                        throw new CortiClientBaseApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -436,7 +436,7 @@ public partial class DocumentsClient : IDocumentsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -590,7 +590,7 @@ public partial class DocumentsClient : IDocumentsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientApiException(
+                    throw new CortiClientBaseApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
