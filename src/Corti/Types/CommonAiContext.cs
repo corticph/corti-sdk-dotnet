@@ -55,20 +55,20 @@ public class CommonAiContext
     /// <summary>
     /// Returns the value as a <see cref="Corti.CommonTextContext"/> if <see cref="Type"/> is 'commonTextContext', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'commonTextContext'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'commonTextContext'.</exception>
     public Corti.CommonTextContext AsCommonTextContext() =>
         IsCommonTextContext()
             ? (Corti.CommonTextContext)Value!
-            : throw new CortiClientBaseException("Union type is not 'commonTextContext'");
+            : throw new CortiClientException("Union type is not 'commonTextContext'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.CommonDocumentIdContext"/> if <see cref="Type"/> is 'commonDocumentIdContext', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'commonDocumentIdContext'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'commonDocumentIdContext'.</exception>
     public Corti.CommonDocumentIdContext AsCommonDocumentIdContext() =>
         IsCommonDocumentIdContext()
             ? (Corti.CommonDocumentIdContext)Value!
-            : throw new CortiClientBaseException("Union type is not 'commonDocumentIdContext'");
+            : throw new CortiClientException("Union type is not 'commonDocumentIdContext'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.CommonTextContext"/> and returns true if successful.
@@ -107,7 +107,7 @@ public class CommonAiContext
         {
             "commonTextContext" => onCommonTextContext(AsCommonTextContext()),
             "commonDocumentIdContext" => onCommonDocumentIdContext(AsCommonDocumentIdContext()),
-            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
@@ -125,7 +125,7 @@ public class CommonAiContext
                 onCommonDocumentIdContext(AsCommonDocumentIdContext());
                 break;
             default:
-                throw new CortiClientBaseException($"Unknown union type: {Type}");
+                throw new CortiClientException($"Unknown union type: {Type}");
         }
     }
 

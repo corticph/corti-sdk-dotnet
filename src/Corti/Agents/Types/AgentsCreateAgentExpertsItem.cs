@@ -56,20 +56,20 @@ public class AgentsCreateAgentExpertsItem
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsCreateExpert"/> if <see cref="Type"/> is 'agentsCreateExpert', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsCreateExpert'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsCreateExpert'.</exception>
     public Corti.AgentsCreateExpert AsAgentsCreateExpert() =>
         IsAgentsCreateExpert()
             ? (Corti.AgentsCreateExpert)Value!
-            : throw new CortiClientBaseException("Union type is not 'agentsCreateExpert'");
+            : throw new CortiClientException("Union type is not 'agentsCreateExpert'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsCreateExpertReference"/> if <see cref="Type"/> is 'agentsCreateExpertReference', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsCreateExpertReference'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsCreateExpertReference'.</exception>
     public Corti.AgentsCreateExpertReference AsAgentsCreateExpertReference() =>
         IsAgentsCreateExpertReference()
             ? (Corti.AgentsCreateExpertReference)Value!
-            : throw new CortiClientBaseException("Union type is not 'agentsCreateExpertReference'");
+            : throw new CortiClientException("Union type is not 'agentsCreateExpertReference'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsCreateExpert"/> and returns true if successful.
@@ -110,7 +110,7 @@ public class AgentsCreateAgentExpertsItem
             "agentsCreateExpertReference" => onAgentsCreateExpertReference(
                 AsAgentsCreateExpertReference()
             ),
-            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
@@ -128,7 +128,7 @@ public class AgentsCreateAgentExpertsItem
                 onAgentsCreateExpertReference(AsAgentsCreateExpertReference());
                 break;
             default:
-                throw new CortiClientBaseException($"Unknown union type: {Type}");
+                throw new CortiClientException($"Unknown union type: {Type}");
         }
     }
 

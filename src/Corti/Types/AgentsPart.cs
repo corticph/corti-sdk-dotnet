@@ -65,29 +65,29 @@ public class AgentsPart
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsTextPart"/> if <see cref="Type"/> is 'agentsTextPart', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsTextPart'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsTextPart'.</exception>
     public Corti.AgentsTextPart AsAgentsTextPart() =>
         IsAgentsTextPart()
             ? (Corti.AgentsTextPart)Value!
-            : throw new CortiClientBaseException("Union type is not 'agentsTextPart'");
+            : throw new CortiClientException("Union type is not 'agentsTextPart'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsFilePart"/> if <see cref="Type"/> is 'agentsFilePart', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsFilePart'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsFilePart'.</exception>
     public Corti.AgentsFilePart AsAgentsFilePart() =>
         IsAgentsFilePart()
             ? (Corti.AgentsFilePart)Value!
-            : throw new CortiClientBaseException("Union type is not 'agentsFilePart'");
+            : throw new CortiClientException("Union type is not 'agentsFilePart'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsDataPart"/> if <see cref="Type"/> is 'agentsDataPart', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsDataPart'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsDataPart'.</exception>
     public Corti.AgentsDataPart AsAgentsDataPart() =>
         IsAgentsDataPart()
             ? (Corti.AgentsDataPart)Value!
-            : throw new CortiClientBaseException("Union type is not 'agentsDataPart'");
+            : throw new CortiClientException("Union type is not 'agentsDataPart'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsTextPart"/> and returns true if successful.
@@ -142,7 +142,7 @@ public class AgentsPart
             "agentsTextPart" => onAgentsTextPart(AsAgentsTextPart()),
             "agentsFilePart" => onAgentsFilePart(AsAgentsFilePart()),
             "agentsDataPart" => onAgentsDataPart(AsAgentsDataPart()),
-            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
@@ -164,7 +164,7 @@ public class AgentsPart
                 onAgentsDataPart(AsAgentsDataPart());
                 break;
             default:
-                throw new CortiClientBaseException($"Unknown union type: {Type}");
+                throw new CortiClientException($"Unknown union type: {Type}");
         }
     }
 

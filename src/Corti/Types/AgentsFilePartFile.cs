@@ -54,20 +54,20 @@ public class AgentsFilePartFile
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsFileWithUri"/> if <see cref="Type"/> is 'agentsFileWithUri', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsFileWithUri'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsFileWithUri'.</exception>
     public Corti.AgentsFileWithUri AsAgentsFileWithUri() =>
         IsAgentsFileWithUri()
             ? (Corti.AgentsFileWithUri)Value!
-            : throw new CortiClientBaseException("Union type is not 'agentsFileWithUri'");
+            : throw new CortiClientException("Union type is not 'agentsFileWithUri'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsFileWithBytes"/> if <see cref="Type"/> is 'agentsFileWithBytes', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'agentsFileWithBytes'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsFileWithBytes'.</exception>
     public Corti.AgentsFileWithBytes AsAgentsFileWithBytes() =>
         IsAgentsFileWithBytes()
             ? (Corti.AgentsFileWithBytes)Value!
-            : throw new CortiClientBaseException("Union type is not 'agentsFileWithBytes'");
+            : throw new CortiClientException("Union type is not 'agentsFileWithBytes'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsFileWithUri"/> and returns true if successful.
@@ -106,7 +106,7 @@ public class AgentsFilePartFile
         {
             "agentsFileWithUri" => onAgentsFileWithUri(AsAgentsFileWithUri()),
             "agentsFileWithBytes" => onAgentsFileWithBytes(AsAgentsFileWithBytes()),
-            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
@@ -124,7 +124,7 @@ public class AgentsFilePartFile
                 onAgentsFileWithBytes(AsAgentsFileWithBytes());
                 break;
             default:
-                throw new CortiClientBaseException($"Unknown union type: {Type}");
+                throw new CortiClientException($"Unknown union type: {Type}");
         }
     }
 

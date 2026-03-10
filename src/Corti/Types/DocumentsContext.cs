@@ -68,31 +68,29 @@ public class DocumentsContext
     /// <summary>
     /// Returns the value as a <see cref="Corti.DocumentsContextWithFacts"/> if <see cref="Type"/> is 'documentsContextWithFacts', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'documentsContextWithFacts'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsContextWithFacts'.</exception>
     public Corti.DocumentsContextWithFacts AsDocumentsContextWithFacts() =>
         IsDocumentsContextWithFacts()
             ? (Corti.DocumentsContextWithFacts)Value!
-            : throw new CortiClientBaseException("Union type is not 'documentsContextWithFacts'");
+            : throw new CortiClientException("Union type is not 'documentsContextWithFacts'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.DocumentsContextWithTranscript"/> if <see cref="Type"/> is 'documentsContextWithTranscript', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'documentsContextWithTranscript'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsContextWithTranscript'.</exception>
     public Corti.DocumentsContextWithTranscript AsDocumentsContextWithTranscript() =>
         IsDocumentsContextWithTranscript()
             ? (Corti.DocumentsContextWithTranscript)Value!
-            : throw new CortiClientBaseException(
-                "Union type is not 'documentsContextWithTranscript'"
-            );
+            : throw new CortiClientException("Union type is not 'documentsContextWithTranscript'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.DocumentsContextWithString"/> if <see cref="Type"/> is 'documentsContextWithString', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'documentsContextWithString'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'documentsContextWithString'.</exception>
     public Corti.DocumentsContextWithString AsDocumentsContextWithString() =>
         IsDocumentsContextWithString()
             ? (Corti.DocumentsContextWithString)Value!
-            : throw new CortiClientBaseException("Union type is not 'documentsContextWithString'");
+            : throw new CortiClientException("Union type is not 'documentsContextWithString'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.DocumentsContextWithFacts"/> and returns true if successful.
@@ -155,7 +153,7 @@ public class DocumentsContext
             "documentsContextWithString" => onDocumentsContextWithString(
                 AsDocumentsContextWithString()
             ),
-            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
@@ -177,7 +175,7 @@ public class DocumentsContext
                 onDocumentsContextWithString(AsDocumentsContextWithString());
                 break;
             default:
-                throw new CortiClientBaseException($"Unknown union type: {Type}");
+                throw new CortiClientException($"Unknown union type: {Type}");
         }
     }
 

@@ -18,7 +18,7 @@ public partial class ClientOptions
     /// <summary>
     /// The Environment for the API.
     /// </summary>
-    public CortiClientBaseEnvironment Environment { get;
+    public CortiClientEnvironment Environment { get;
 #if NET5_0_OR_GREATER
         init;
 #else

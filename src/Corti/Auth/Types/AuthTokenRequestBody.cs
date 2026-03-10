@@ -94,53 +94,53 @@ public class AuthTokenRequestBody
     /// <summary>
     /// Returns the value as a <see cref="Corti.AuthTokenRequestClientCredentials"/> if <see cref="Type"/> is 'authTokenRequestClientCredentials', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'authTokenRequestClientCredentials'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'authTokenRequestClientCredentials'.</exception>
     public Corti.AuthTokenRequestClientCredentials AsAuthTokenRequestClientCredentials() =>
         IsAuthTokenRequestClientCredentials()
             ? (Corti.AuthTokenRequestClientCredentials)Value!
-            : throw new CortiClientBaseException(
+            : throw new CortiClientException(
                 "Union type is not 'authTokenRequestClientCredentials'"
             );
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AuthTokenRequestAuthorizationCode"/> if <see cref="Type"/> is 'authTokenRequestAuthorizationCode', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'authTokenRequestAuthorizationCode'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'authTokenRequestAuthorizationCode'.</exception>
     public Corti.AuthTokenRequestAuthorizationCode AsAuthTokenRequestAuthorizationCode() =>
         IsAuthTokenRequestAuthorizationCode()
             ? (Corti.AuthTokenRequestAuthorizationCode)Value!
-            : throw new CortiClientBaseException(
+            : throw new CortiClientException(
                 "Union type is not 'authTokenRequestAuthorizationCode'"
             );
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AuthTokenRequestAuthorizationPkce"/> if <see cref="Type"/> is 'authTokenRequestAuthorizationPkce', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'authTokenRequestAuthorizationPkce'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'authTokenRequestAuthorizationPkce'.</exception>
     public Corti.AuthTokenRequestAuthorizationPkce AsAuthTokenRequestAuthorizationPkce() =>
         IsAuthTokenRequestAuthorizationPkce()
             ? (Corti.AuthTokenRequestAuthorizationPkce)Value!
-            : throw new CortiClientBaseException(
+            : throw new CortiClientException(
                 "Union type is not 'authTokenRequestAuthorizationPkce'"
             );
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AuthTokenRequestRopc"/> if <see cref="Type"/> is 'authTokenRequestRopc', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'authTokenRequestRopc'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'authTokenRequestRopc'.</exception>
     public Corti.AuthTokenRequestRopc AsAuthTokenRequestRopc() =>
         IsAuthTokenRequestRopc()
             ? (Corti.AuthTokenRequestRopc)Value!
-            : throw new CortiClientBaseException("Union type is not 'authTokenRequestRopc'");
+            : throw new CortiClientException("Union type is not 'authTokenRequestRopc'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AuthTokenRequestRefresh"/> if <see cref="Type"/> is 'authTokenRequestRefresh', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientBaseException">Thrown when <see cref="Type"/> is not 'authTokenRequestRefresh'.</exception>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'authTokenRequestRefresh'.</exception>
     public Corti.AuthTokenRequestRefresh AsAuthTokenRequestRefresh() =>
         IsAuthTokenRequestRefresh()
             ? (Corti.AuthTokenRequestRefresh)Value!
-            : throw new CortiClientBaseException("Union type is not 'authTokenRequestRefresh'");
+            : throw new CortiClientException("Union type is not 'authTokenRequestRefresh'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AuthTokenRequestClientCredentials"/> and returns true if successful.
@@ -239,7 +239,7 @@ public class AuthTokenRequestBody
             ),
             "authTokenRequestRopc" => onAuthTokenRequestRopc(AsAuthTokenRequestRopc()),
             "authTokenRequestRefresh" => onAuthTokenRequestRefresh(AsAuthTokenRequestRefresh()),
-            _ => throw new CortiClientBaseException($"Unknown union type: {Type}"),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
@@ -269,7 +269,7 @@ public class AuthTokenRequestBody
                 onAuthTokenRequestRefresh(AsAuthTokenRequestRefresh());
                 break;
             default:
-                throw new CortiClientBaseException($"Unknown union type: {Type}");
+                throw new CortiClientException($"Unknown union type: {Type}");
         }
     }
 

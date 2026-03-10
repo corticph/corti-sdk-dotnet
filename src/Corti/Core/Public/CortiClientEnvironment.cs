@@ -1,9 +1,9 @@
 namespace Corti;
 
 [Serializable]
-public class CortiClientBaseEnvironment
+public class CortiClientEnvironment
 {
-    public static readonly CortiClientBaseEnvironment Eu = new CortiClientBaseEnvironment
+    public static readonly CortiClientEnvironment Eu = new CortiClientEnvironment
     {
         Base = "https://api.eu.corti.app/v2",
         Wss = "wss://api.eu.corti.app/audio-bridge/v2",
@@ -11,7 +11,7 @@ public class CortiClientBaseEnvironment
         Agents = "https://api.eu.corti.app",
     };
 
-    public static readonly CortiClientBaseEnvironment Us = new CortiClientBaseEnvironment
+    public static readonly CortiClientEnvironment Us = new CortiClientEnvironment
     {
         Base = "https://api.us.corti.app/v2",
         Wss = "wss://api.us.corti.app/audio-bridge/v2",

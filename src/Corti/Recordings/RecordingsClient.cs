@@ -76,7 +76,7 @@ public partial class RecordingsClient : IRecordingsClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientBaseApiException(
+                        throw new CortiClientApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -114,7 +114,7 @@ public partial class RecordingsClient : IRecordingsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientBaseApiException(
+                    throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -183,7 +183,7 @@ public partial class RecordingsClient : IRecordingsClient
                     }
                     catch (JsonException e)
                     {
-                        throw new CortiClientBaseApiException(
+                        throw new CortiClientApiException(
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
@@ -221,7 +221,7 @@ public partial class RecordingsClient : IRecordingsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientBaseApiException(
+                    throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -312,7 +312,7 @@ public partial class RecordingsClient : IRecordingsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientBaseApiException(
+                    throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody
@@ -448,7 +448,7 @@ public partial class RecordingsClient : IRecordingsClient
                     {
                         // unable to map error response, throwing generic error
                     }
-                    throw new CortiClientBaseApiException(
+                    throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
                         responseBody

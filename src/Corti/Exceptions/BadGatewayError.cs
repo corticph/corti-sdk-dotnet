@@ -5,7 +5,7 @@ namespace Corti;
 /// </summary>
 [Serializable]
 public class BadGatewayError(ErrorResponse body)
-    : CortiClientBaseApiException("BadGatewayError", 502, body)
+    : CortiClientApiException("BadGatewayError", 502, body)
 {
     /// <summary>
     /// The body of the response that triggered the exception.
