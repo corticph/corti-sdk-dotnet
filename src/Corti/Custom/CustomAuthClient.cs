@@ -17,13 +17,28 @@ public sealed class CustomAuthClient : AuthClient
     }
 
     /// <summary>
-    /// Creates a CustomAuthClient instance for the given options and tenant. Use <see cref="GetTokenAsync"/> to exchange client credentials for an access token.
+    /// Creates a CustomAuthClient instance from the same shape of options as CortiClient (tenant + environment, no auth). Use <see cref="GetTokenAsync"/> to exchange client credentials for an access token.
     /// </summary>
-    public static CustomAuthClient Create(ClientOptions options, string tenantName)
+    public static CustomAuthClient Create(CortiAuthClientOptions options)
     {
-        var optionsWithTenant = options.Clone();
-        optionsWithTenant.Headers["Tenant-Name"] = tenantName;
+        var clientOptions = BuildClientOptions(options);
+        var optionsWithTenant = clientOptions.Clone();
+        optionsWithTenant.Headers["Tenant-Name"] = options.TenantName;
+
         return new CustomAuthClient(new RawClient(optionsWithTenant));
+    }
+
+    private static ClientOptions BuildClientOptions(CortiAuthClientOptions options)
+    {
+        var ro = options.RequestOptions;
+        return new ClientOptions
+        {
+            Environment = options.Environment,
+            HttpClient = ro?.HttpClient ?? new HttpClient(),
+            MaxRetries = ro?.MaxRetries ?? 2,
+            Timeout = ro?.Timeout ?? TimeSpan.FromSeconds(30),
+            AdditionalHeaders = ro?.AdditionalHeaders ?? [],
+        };
     }
 
     /// <summary>
