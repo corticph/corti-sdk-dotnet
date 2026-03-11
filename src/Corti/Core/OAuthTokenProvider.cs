@@ -2,11 +2,14 @@ using Corti;
 
 namespace Corti.Core;
 
-public partial class OAuthTokenProvider
+/// <summary>
+/// Patch: Uses CustomAuthClient (real tenant token endpoint) instead of AuthClient so token refresh hits the real OAuth endpoint. Implements IAuthTokenProvider for use in CortiClient.
+/// </summary>
+public partial class OAuthTokenProvider : IAuthTokenProvider
 {
     private const double BufferInMinutes = 2;
 
-    private AuthClient _client;
+    private CustomAuthClient _client;
 
     private string? _accessToken;
 
@@ -16,7 +19,7 @@ public partial class OAuthTokenProvider
 
     private string _clientSecret;
 
-    public OAuthTokenProvider(string clientId, string clientSecret, AuthClient client)
+    public OAuthTokenProvider(string clientId, string clientSecret, CustomAuthClient client)
     {
         _clientId = clientId;
         _clientSecret = clientSecret;

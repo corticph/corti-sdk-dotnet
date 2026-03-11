@@ -6,24 +6,24 @@ namespace Corti;
 /// Patch: Extends AuthClient; GetTokenAsync calls the real tenant token endpoint (client_credentials), not fake-token.
 /// Pre-call: ArgumentNullException for null request, InvalidOperationException when Tenant-Name is missing. API errors (4xx) come from base as CortiClientApiException / BadRequestError / UnauthorizedError.
 /// </summary>
-public sealed class CortiAuth : AuthClient
+public sealed class CustomAuthClient : AuthClient
 {
     private readonly RawClient _client;
 
-    internal CortiAuth(RawClient client)
+    internal CustomAuthClient(RawClient client)
         : base(client)
     {
         _client = client;
     }
 
     /// <summary>
-    /// Creates a CortiAuth instance for the given options and tenant. Use <see cref="GetTokenAsync"/> to exchange client credentials for an access token.
+    /// Creates a CustomAuthClient instance for the given options and tenant. Use <see cref="GetTokenAsync"/> to exchange client credentials for an access token.
     /// </summary>
-    public static CortiAuth Create(ClientOptions options, string tenantName)
+    public static CustomAuthClient Create(ClientOptions options, string tenantName)
     {
         var optionsWithTenant = options.Clone();
         optionsWithTenant.Headers["Tenant-Name"] = tenantName;
-        return new CortiAuth(new RawClient(optionsWithTenant));
+        return new CustomAuthClient(new RawClient(optionsWithTenant));
     }
 
     /// <summary>

@@ -6,16 +6,13 @@ public partial class CortiClient : ICortiClient
 {
     private readonly RawClient _client;
 
-    public CortiClient(
-        string tenantName,
-        string? clientId = null,
-        string? clientSecret = null,
-        ClientOptions? clientOptions = null
-    )
+    public CortiClient(CortiClientOptions options)
     {
+        var tenantName = options.TenantName ?? throw new ArgumentException("TenantName is required.", nameof(options));
+        var clientOptions = BuildClientOptions(options);
+
         try
         {
-            clientOptions ??= new ClientOptions();
             clientOptions.ExceptionHandler = new ExceptionHandler(
                 new CortiExceptionInterceptor(clientOptions)
             );
@@ -42,17 +39,16 @@ public partial class CortiClient : ICortiClient
             {
                 clientOptionsWithAuth.Headers[header.Key] = header.Value;
             }
-            var tokenProvider = new OAuthTokenProvider(
-                clientId,
-                clientSecret,
-                new AuthClient(new RawClient(clientOptions))
-            );
+            // Patch: auth options without Authorization so token requests don't resolve the bearer delegate (avoids stack overflow)
+            var authOptions = clientOptionsWithAuth.Clone();
+            IAuthTokenProvider tokenProvider = CreateAuthTokenProvider(options.Auth, authOptions);
             clientOptionsWithAuth.Headers["Authorization"] =
                 new Func<global::System.Threading.Tasks.ValueTask<string>>(async () =>
                     await tokenProvider.GetAccessTokenAsync().ConfigureAwait(false)
                 );
             _client = new RawClient(clientOptionsWithAuth);
-            Auth = new AuthClient(_client);
+            // Patch: CustomAuthClient instead of AuthClient
+            Auth = new CustomAuthClient(new RawClient(authOptions));
             Interactions = new InteractionsClient(_client);
             Recordings = new RecordingsClient(_client);
             Transcripts = new TranscriptsClient(_client);
@@ -70,7 +66,32 @@ public partial class CortiClient : ICortiClient
         }
     }
 
-    public IAuthClient Auth { get; }
+    private static IAuthTokenProvider CreateAuthTokenProvider(CortiClientAuth auth, ClientOptions authOptions)
+    {
+        if (auth == null)
+            throw new ArgumentException("Auth is required.", nameof(auth));
+        if (auth is CortiClientAuth.ClientCredentials cc)
+            return new OAuthTokenProvider(cc.ClientId, cc.ClientSecret, new CustomAuthClient(new RawClient(authOptions)));
+        if (auth is CortiClientAuth.Bearer b)
+            return new BearerTokenProvider(b.AccessToken ?? string.Empty);
+        throw new ArgumentException("Auth must be ClientCredentials or Bearer.", nameof(auth));
+    }
+
+    private static ClientOptions BuildClientOptions(CortiClientOptions options)
+    {
+        var ro = options.RequestOptions;
+        return new ClientOptions
+        {
+            Environment = options.Environment,
+            HttpClient = ro?.HttpClient ?? new HttpClient(),
+            MaxRetries = ro?.MaxRetries ?? 2,
+            Timeout = ro?.Timeout ?? TimeSpan.FromSeconds(30),
+            AdditionalHeaders = ro?.AdditionalHeaders ?? [],
+        };
+    }
+
+    // Patch: type CustomAuthClient instead of IAuthClient
+    public CustomAuthClient Auth { get; }
 
     public IInteractionsClient Interactions { get; }
 

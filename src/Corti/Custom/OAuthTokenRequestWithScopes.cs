@@ -1,7 +1,7 @@
 namespace Corti;
 
 /// <summary>
-/// Patch: Extends OAuthTokenRequest with optional Scopes for CortiAuth.GetTokenAsync (openid is always included, then these, deduplicated).
+/// Patch: Extends OAuthTokenRequest with optional Scopes for CustomAuthClient.GetTokenAsync (openid is always included, then these, deduplicated).
 /// </summary>
 public record OAuthTokenRequestWithScopes : OAuthTokenRequest
 {

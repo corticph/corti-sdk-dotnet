@@ -2,7 +2,8 @@ namespace Corti;
 
 public partial interface ICortiClient
 {
-    public IAuthClient Auth { get; }
+    // Patch: type CustomAuthClient instead of IAuthClient
+    public CustomAuthClient Auth { get; }
     public IInteractionsClient Interactions { get; }
     public IRecordingsClient Recordings { get; }
     public ITranscriptsClient Transcripts { get; }
