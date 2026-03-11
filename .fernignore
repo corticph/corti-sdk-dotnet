@@ -8,3 +8,4 @@ src/Corti/Auth/AuthClient.cs
 src/Corti/CortiClient.cs
 src/Corti/ICortiClient.cs
 src/Corti/Core/OAuthTokenProvider.cs
+src/Corti/Core/Public/CortiClientEnvironment.cs

@@ -1,7 +1,7 @@
 namespace Corti;
 
 [Serializable]
-public class CortiClientEnvironment
+public partial class CortiClientEnvironment
 {
     public static readonly CortiClientEnvironment Eu = new CortiClientEnvironment
     {
