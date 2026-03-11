@@ -8,3 +8,6 @@ src/Corti/Auth/AuthClient.cs
 src/Corti/CortiClient.cs
 src/Corti/ICortiClient.cs
 src/Corti/Core/OAuthTokenProvider.cs
+
+# Release workflow
+.github/workflows/release.yml
