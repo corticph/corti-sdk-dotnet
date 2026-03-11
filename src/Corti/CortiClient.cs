@@ -74,7 +74,14 @@ public partial class CortiClient : ICortiClient
             return new OAuthTokenProvider(cc.ClientId, cc.ClientSecret, new CustomAuthClient(new RawClient(authOptions)));
         if (auth is CortiClientAuth.Bearer b)
             return new BearerTokenProvider(b.AccessToken ?? string.Empty);
-        throw new ArgumentException("Auth must be ClientCredentials or Bearer.", nameof(auth));
+        if (auth is CortiClientAuth.Ropc r)
+            return new OAuthRopcTokenProvider(
+                r.ClientId,
+                r.Username,
+                r.Password,
+                new CustomAuthClient(new RawClient(authOptions))
+            );
+        throw new ArgumentException("Auth must be ClientCredentials, Bearer, or Ropc.", nameof(auth));
     }
 
     private static ClientOptions BuildClientOptions(CortiClientOptions options)
