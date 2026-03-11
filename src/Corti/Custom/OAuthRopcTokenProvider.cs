@@ -34,7 +34,7 @@ public sealed class OAuthRopcTokenProvider : IAuthTokenProvider
     {
         if (_accessToken == null || DateTime.UtcNow >= _expiresAt)
         {
-            var request = new RopcTokenRequest
+            var request = new OAuthRopcTokenRequest
             {
                 ClientId = _clientId,
                 Username = _username,

@@ -57,10 +57,10 @@ public sealed class CustomAuthClient : AuthClient
     }
 
     /// <summary>
-    /// Exchanges ROPC credentials (clientId, username, password) for a short-lived access token using the tenant token endpoint (password grant). Use <see cref="RopcTokenRequestWithScopes"/> to request optional scopes; "openid" is always included.
+    /// Exchanges ROPC credentials (clientId, username, password) for a short-lived access token using the tenant token endpoint (password grant). Use <see cref="OAuthRopcTokenRequestWithScopes"/> to request optional scopes; "openid" is always included.
     /// </summary>
     public WithRawResponseTask<AuthTokenResponse> GetTokenAsync(
-        RopcTokenRequest request,
+        OAuthRopcTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -104,10 +104,10 @@ public sealed class CustomAuthClient : AuthClient
         };
     }
 
-    private static AuthTokenRequestRopc BuildRopcTokenRequestBody(RopcTokenRequest request)
+    private static AuthTokenRequestRopc BuildRopcTokenRequestBody(OAuthRopcTokenRequest request)
     {
         var scopeString =
-            request is RopcTokenRequestWithScopes withScopes
+            request is OAuthRopcTokenRequestWithScopes withScopes
                 ? BuildScopeString(withScopes.Scopes)
                 : "openid";
 
