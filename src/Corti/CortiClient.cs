@@ -73,7 +73,18 @@ public partial class CortiClient : ICortiClient
         if (auth is CortiClientAuth.ClientCredentials cc)
             return new OAuthTokenProvider(cc.ClientId, cc.ClientSecret, new CustomAuthClient(new RawClient(authOptions)));
         if (auth is CortiClientAuth.Bearer b)
+        {
+            if (b.RefreshToken != null && b.ClientId != null)
+                return new BearerWithRefreshTokenProvider(
+                    b.ClientId,
+                    b.AccessToken,
+                    b.RefreshToken,
+                    b.ExpiresIn,
+                    b.RefreshExpiresIn,
+                    new CustomAuthClient(new RawClient(authOptions))
+                );
             return new BearerTokenProvider(b.AccessToken ?? string.Empty);
+        }
         if (auth is CortiClientAuth.Ropc r)
             return new OAuthRopcTokenProvider(
                 r.ClientId,

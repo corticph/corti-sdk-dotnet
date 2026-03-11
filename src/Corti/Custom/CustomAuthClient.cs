@@ -71,6 +71,21 @@ public sealed class CustomAuthClient : AuthClient
         );
     }
 
+    /// <summary>
+    /// Exchanges a refresh token for a new access token using the tenant token endpoint (refresh_token grant). Use <see cref="OAuthRefreshTokenRequestWithScopes"/> to request optional scopes; "openid" is always included.
+    /// </summary>
+    public WithRawResponseTask<AuthTokenResponse> GetTokenAsync(
+        OAuthRefreshTokenRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var body = BuildRefreshTokenRequestBody(request);
+        return new WithRawResponseTask<AuthTokenResponse>(
+            GetTokenAsyncCore(AuthTokenRequestBody.FromAuthTokenRequestRefresh(body), options, cancellationToken)
+        );
+    }
+
     private async Task<WithRawResponse<AuthTokenResponse>> GetTokenAsyncCore(
         AuthTokenRequestBody body,
         RequestOptions? options,
@@ -117,6 +132,23 @@ public sealed class CustomAuthClient : AuthClient
             Username = request.Username,
             Password = request.Password,
             GrantType = "password",
+            Scope = scopeString,
+        };
+    }
+
+    private static AuthTokenRequestRefresh BuildRefreshTokenRequestBody(OAuthRefreshTokenRequest request)
+    {
+        var scopeString =
+            request is OAuthRefreshTokenRequestWithScopes withScopes
+                ? BuildScopeString(withScopes.Scopes)
+                : "openid";
+
+        return new AuthTokenRequestRefresh
+        {
+            ClientId = request.ClientId,
+            RefreshToken = request.RefreshToken,
+            ClientSecret = request.ClientSecret,
+            GrantType = "refresh_token",
             Scope = scopeString,
         };
     }
