@@ -13,7 +13,7 @@ public abstract record CortiClientAuth
         string? RefreshToken = null,
         int? ExpiresIn = null,
         int? RefreshExpiresIn = null
-    ) : CortiClientAuth;
+    ) : CortiClientBearerAuth;
 
     /// <summary>Custom: <see cref="RefreshAccessToken"/> is called to obtain (and renew) the access token. <see cref="AccessToken"/>/<see cref="RefreshToken"/> may optionally seed the first call to avoid an immediate refresh round-trip; <see cref="RefreshToken"/> is passed as the argument to <see cref="RefreshAccessToken"/>.</summary>
     public sealed record BearerCustomRefresh(
@@ -22,8 +22,11 @@ public abstract record CortiClientAuth
         int? ExpiresIn = null,
         string? RefreshToken = null,
         int? RefreshExpiresIn = null
-    ) : CortiClientAuth;
+    ) : CortiClientBearerAuth;
 
     /// <summary>ROPC (resource owner password credentials): clientId + username + password. Same pattern as ClientCredentials (no scope when used with CortiClient); use GetTokenAsync(OAuthRopcTokenRequest) with <see cref="OAuthRopcTokenRequestWithScopes"/> for optional scopes.</summary>
     public sealed record Ropc(string ClientId, string Username, string Password) : CortiClientAuth;
 }
+
+/// <summary>Narrow base for Bearer and BearerCustomRefresh — the only auth variants whose JWT can be decoded to supply TenantName and Environment automatically. Used by <see cref="CortiClientBearerOptions"/>.</summary>
+public abstract record CortiClientBearerAuth : CortiClientAuth;

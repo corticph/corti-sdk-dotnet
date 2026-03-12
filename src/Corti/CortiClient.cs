@@ -6,9 +6,49 @@ public partial class CortiClient : ICortiClient
 {
     private readonly RawClient _client;
 
-    public CortiClient(CortiClientOptions options)
+    /// <summary>
+    /// Explicit tenant + environment: use for ClientCredentials, Ropc, or any Bearer variant when
+    /// tenant and environment are already known.
+    /// </summary>
+    public CortiClient(
+        string tenantName,
+        CortiClientEnvironment environment,
+        CortiClientAuth auth,
+        CortiRequestOptions? requestOptions = null)
+        : this(new CortiClientOptions
+        {
+            TenantName = tenantName,
+            Environment = environment,
+            Auth = auth,
+            RequestOptions = requestOptions,
+        }) { }
+
+    /// <summary>
+    /// Auto-derive: tenant and environment are decoded from the JWT inside the bearer token.
+    /// Accepts <see cref="CortiClientAuth.Bearer"/> or <see cref="CortiClientAuth.BearerCustomRefresh"/>.
+    /// </summary>
+    public CortiClient(CortiClientBearerAuth auth, CortiRequestOptions? requestOptions = null)
+        : this(ResolveFromBearer(auth, requestOptions)) { }
+
+    /// <summary>
+    /// Proxy / passthrough: custom environment URLs with no credentials and no tenant name.
+    /// Every request is forwarded without an Authorization header — a 401 from the server is expected
+    /// unless the caller supplies its own auth header via <see cref="CortiRequestOptions.AdditionalHeaders"/>.
+    /// </summary>
+    public CortiClient(CortiClientEnvironment environment, CortiRequestOptions? requestOptions = null)
+        : this(new CortiClientOptions
+        {
+            Environment = environment,
+            RequestOptions = requestOptions,
+        }) { }
+
+    private CortiClient(CortiClientOptions options)
     {
-        var tenantName = options.TenantName ?? throw new ArgumentException("TenantName is required.", nameof(options));
+        // Patch: TenantName is only required when auth is present; proxy/passthrough mode (null auth) may omit it
+        var tenantName = options.TenantName;
+        if (tenantName == null && options.Auth != null)
+            throw new ArgumentException("TenantName is required.", nameof(options));
+
         var clientOptions = BuildClientOptions(options);
 
         try
@@ -32,12 +72,16 @@ public partial class CortiClient : ICortiClient
                 }
             }
             var clientOptionsWithAuth = clientOptions.Clone();
-            var authHeaders = new Headers(
-                new Dictionary<string, string>() { { "Tenant-Name", tenantName } }
-            );
-            foreach (var header in authHeaders)
+            // Patch: only set Tenant-Name header when tenantName is known (proxy mode may omit it)
+            if (tenantName != null)
             {
-                clientOptionsWithAuth.Headers[header.Key] = header.Value;
+                var authHeaders = new Headers(
+                    new Dictionary<string, string>() { { "Tenant-Name", tenantName } }
+                );
+                foreach (var header in authHeaders)
+                {
+                    clientOptionsWithAuth.Headers[header.Key] = header.Value;
+                }
             }
             // Patch: auth options without Authorization so token requests don't resolve the bearer delegate (avoids stack overflow)
             var authOptions = clientOptionsWithAuth.Clone();
@@ -66,10 +110,53 @@ public partial class CortiClient : ICortiClient
         }
     }
 
-    private static IAuthTokenProvider CreateAuthTokenProvider(CortiClientAuth auth, ClientOptions authOptions)
+    private static CortiClientOptions ResolveFromBearer(CortiClientBearerAuth auth, CortiRequestOptions? requestOptions)
     {
+        // Seed token: for BearerCustomRefresh without an initial AccessToken we must call the
+        // delegate once anyway (to decode the JWT). Carry the result forward so
+        // BearerWithRefreshTokenProvider doesn't call the delegate a second time on the first request.
+        var resolvedAuth = (CortiClientAuth)auth;
+
+        string? accessToken;
+
+        if (auth is CortiClientAuth.Bearer b)
+        {
+            accessToken = b.AccessToken;
+        }
+        else if (auth is CortiClientAuth.BearerCustomRefresh bcr && bcr.AccessToken != null)
+        {
+            accessToken = bcr.AccessToken;
+        }
+        else
+        {
+            var bcr2 = (CortiClientAuth.BearerCustomRefresh)auth;
+            var seedResult = bcr2.RefreshAccessToken(bcr2.RefreshToken, CancellationToken.None)
+                                 .GetAwaiter().GetResult();
+            accessToken = seedResult.AccessToken;
+            // Seed the auth record so the provider starts with a pre-populated token
+            resolvedAuth = bcr2 with { AccessToken = seedResult.AccessToken, ExpiresIn = seedResult.ExpiresIn ?? bcr2.ExpiresIn };
+        }
+
+        var decoded = TokenDecoder.Decode(accessToken);
+        if (decoded == null)
+            throw new ArgumentException(
+                "TenantName and Environment could not be derived from the token. Provide them explicitly via the (tenantName, environment, auth) constructor.",
+                nameof(auth));
+
+        return new CortiClientOptions
+        {
+            TenantName = decoded.TenantName,
+            Environment = decoded.Environment, // implicit string → CortiClientEnvironment
+            Auth = resolvedAuth,
+            RequestOptions = requestOptions,
+        };
+    }
+
+    private static IAuthTokenProvider CreateAuthTokenProvider(CortiClientAuth? auth, ClientOptions authOptions)
+    {
+        // Patch: null auth — proxy/passthrough mode; no Authorization header is added
         if (auth == null)
-            throw new ArgumentException("Auth is required.", nameof(auth));
+            return new BearerTokenProvider(string.Empty);
         if (auth is CortiClientAuth.ClientCredentials cc)
             return new OAuthTokenProvider(cc.ClientId, cc.ClientSecret, new CustomAuthClient(new RawClient(authOptions)));
         if (auth is CortiClientAuth.Bearer b)
@@ -105,7 +192,7 @@ public partial class CortiClient : ICortiClient
                 r.Password,
                 new CustomAuthClient(new RawClient(authOptions))
             );
-        throw new ArgumentException("Auth must be ClientCredentials, Bearer, or Ropc.", nameof(auth));
+        throw new ArgumentException("Auth must be ClientCredentials, Bearer, BearerCustomRefresh, or Ropc.", nameof(auth));
     }
 
     private static ClientOptions BuildClientOptions(CortiClientOptions options)

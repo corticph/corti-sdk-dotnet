@@ -9,3 +9,6 @@ src/Corti/CortiClient.cs
 src/Corti/ICortiClient.cs
 src/Corti/Core/OAuthTokenProvider.cs
 src/Corti/Core/Public/CortiClientEnvironment.cs
+
+# Name of the package
+src/Corti/Corti.Custom.props
