@@ -9,7 +9,7 @@ public partial class OAuthTokenProvider : IAuthTokenProvider
 {
     private const double BufferInMinutes = 2;
 
-    private CustomAuthClient _client;
+    private readonly CustomAuthClient _client;
 
     private string? _accessToken;
 
