@@ -63,7 +63,7 @@ public partial class CortiClient : ICortiClient
                 new Dictionary<string, string>()
                 {
                     { "X-Fern-Language", "C#" },
-                    { "X-Fern-SDK-Name", "Corti" },
+                    { "X-Fern-SDK-Name", "Corti.Sdk" },
                     { "X-Fern-SDK-Version", Version.Current },
                 }
             );
