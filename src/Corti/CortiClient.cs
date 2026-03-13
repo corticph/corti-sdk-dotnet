@@ -192,7 +192,15 @@ public partial class CortiClient : ICortiClient
                 r.Password,
                 new CustomAuthClient(new RawClient(authOptions))
             );
-        throw new ArgumentException("Auth must be ClientCredentials, Bearer, BearerCustomRefresh, or Ropc.", nameof(auth));
+        if (auth is CortiClientAuth.AuthorizationCode ac)
+            return new OAuthAuthCodeTokenProvider(
+                ac.ClientId,
+                ac.ClientSecret,
+                ac.Code,
+                ac.RedirectUri,
+                new CustomAuthClient(new RawClient(authOptions))
+            );
+        throw new ArgumentException("Auth must be ClientCredentials, Bearer, BearerCustomRefresh, Ropc, or AuthorizationCode.", nameof(auth));
     }
 
     private static ClientOptions BuildClientOptions(CortiClientOptions options)

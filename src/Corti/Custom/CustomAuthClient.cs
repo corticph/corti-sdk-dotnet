@@ -86,6 +86,62 @@ public sealed class CustomAuthClient : AuthClient
         );
     }
 
+    /// <summary>
+    /// Exchanges an authorization code for an access token using the tenant token endpoint (authorization_code grant).
+    /// ClientSecret is required for non-PKCE clients. Tenant name is taken from client options (Tenant-Name header).
+    /// </summary>
+    public WithRawResponseTask<AuthTokenResponse> GetTokenAsync(
+        OAuthAuthCodeTokenRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var body = BuildAuthCodeTokenRequestBody(request);
+        return new WithRawResponseTask<AuthTokenResponse>(
+            GetTokenAsyncCore(AuthTokenRequestBody.FromAuthTokenRequestAuthorizationCode(body), options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Builds the Keycloak authorization endpoint URL for the authorization code flow.
+    /// Always returns the URL string — there is no browser redirect in a server environment.
+    /// </summary>
+    public async Task<string> AuthorizeUrlAsync(
+        string clientId,
+        string redirectUri,
+        string? codeChallenge = null,
+        IEnumerable<string>? scopes = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var tenantName = await GetTenantNameAsync(cancellationToken).ConfigureAwait(false);
+        var loginBase = _client.Options.Environment.Login.TrimEnd('/');
+        var basePath = $"{loginBase}/{tenantName}/protocol/openid-connect/auth";
+
+        var allScopes = new List<string> { "openid", "profile" };
+        if (scopes != null) allScopes.AddRange(scopes);
+        var scopeString = string.Join(" ", allScopes.Distinct(StringComparer.Ordinal));
+
+        var queryParams = new Dictionary<string, string>
+        {
+            ["response_type"] = "code",
+            ["scope"] = scopeString,
+            ["client_id"] = clientId,
+            ["redirect_uri"] = redirectUri,
+        };
+
+        if (codeChallenge != null)
+        {
+            queryParams["code_challenge"] = codeChallenge;
+            queryParams["code_challenge_method"] = "S256";
+        }
+
+        var queryString = string.Join("&", queryParams.Select(kv =>
+            $"{Uri.EscapeDataString(kv.Key)}={Uri.EscapeDataString(kv.Value)}"));
+
+        return $"{basePath}?{queryString}";
+    }
+
     private async Task<WithRawResponse<AuthTokenResponse>> GetTokenAsyncCore(
         AuthTokenRequestBody body,
         RequestOptions? options,
@@ -149,6 +205,24 @@ public sealed class CustomAuthClient : AuthClient
             RefreshToken = request.RefreshToken,
             ClientSecret = request.ClientSecret,
             GrantType = "refresh_token",
+            Scope = scopeString,
+        };
+    }
+
+    private static AuthTokenRequestAuthorizationCode BuildAuthCodeTokenRequestBody(OAuthAuthCodeTokenRequest request)
+    {
+        var scopeString =
+            request is OAuthAuthCodeTokenRequestWithScopes withScopes
+                ? BuildScopeString(withScopes.Scopes)
+                : "openid";
+
+        return new AuthTokenRequestAuthorizationCode
+        {
+            ClientId = request.ClientId,
+            ClientSecret = request.ClientSecret,
+            GrantType = "authorization_code",
+            RedirectUri = request.RedirectUri,
+            Code = request.Code,
             Scope = scopeString,
         };
     }

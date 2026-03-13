@@ -26,6 +26,18 @@ public abstract record CortiClientAuth
 
     /// <summary>ROPC (resource owner password credentials): clientId + username + password. Same pattern as ClientCredentials (no scope when used with CortiClient); use GetTokenAsync(OAuthRopcTokenRequest) with <see cref="OAuthRopcTokenRequestWithScopes"/> for optional scopes.</summary>
     public sealed record Ropc(string ClientId, string Username, string Password) : CortiClientAuth;
+
+    /// <summary>Authorization code grant: clientId + clientSecret + code + redirectUri.
+    /// The code is exchanged on first use (authorization_code grant); subsequent calls use the stored
+    /// refresh token (refresh_token grant with clientSecret). Requires the explicit
+    /// (tenantName, environment, auth) CortiClient constructor — tenant/environment cannot be derived
+    /// from the JWT before the first exchange.</summary>
+    public sealed record AuthorizationCode(
+        string ClientId,
+        string ClientSecret,
+        string Code,
+        string RedirectUri
+    ) : CortiClientAuth;
 }
 
 /// <summary>Narrow base for Bearer and BearerCustomRefresh — the only auth variants whose JWT can be decoded to supply TenantName and Environment automatically. Used by <see cref="CortiClientBearerOptions"/>.</summary>
