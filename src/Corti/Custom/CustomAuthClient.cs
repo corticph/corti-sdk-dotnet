@@ -186,7 +186,6 @@ public sealed class CustomAuthClient : AuthClient
         {
             ClientId = request.ClientId,
             ClientSecret = request.ClientSecret,
-            GrantType = "client_credentials",
             Scope = scopeString,
         };
     }
@@ -203,7 +202,6 @@ public sealed class CustomAuthClient : AuthClient
             ClientId = request.ClientId,
             Username = request.Username,
             Password = request.Password,
-            GrantType = "password",
             Scope = scopeString,
         };
     }
@@ -220,7 +218,6 @@ public sealed class CustomAuthClient : AuthClient
             ClientId = request.ClientId,
             RefreshToken = request.RefreshToken,
             ClientSecret = request.ClientSecret,
-            GrantType = "refresh_token",
             Scope = scopeString,
         };
     }
@@ -236,7 +233,6 @@ public sealed class CustomAuthClient : AuthClient
         {
             ClientId = request.ClientId,
             ClientSecret = request.ClientSecret,
-            GrantType = "authorization_code",
             RedirectUri = request.RedirectUri,
             Code = request.Code,
             Scope = scopeString,
@@ -253,7 +249,6 @@ public sealed class CustomAuthClient : AuthClient
         return new AuthTokenRequestAuthorizationPkce
         {
             ClientId = request.ClientId,
-            GrantType = "authorization_code",
             RedirectUri = request.RedirectUri,
             Code = request.Code,
             CodeVerifier = request.CodeVerifier,

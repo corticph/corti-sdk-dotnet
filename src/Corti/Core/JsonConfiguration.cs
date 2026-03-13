@@ -304,8 +304,8 @@ internal static class JsonUtils
     {
         try
         {
-            result = json.Deserialize<T>();
-            return true;
+            result = json.RootElement.Deserialize<T>(JsonOptions.JsonSerializerOptions);
+            return result != null;
         }
         catch (global::System.Exception)
         {
@@ -319,8 +319,8 @@ internal static class JsonUtils
     {
         try
         {
-            result = json.Deserialize<T>();
-            return true;
+            result = json.RootElement.Deserialize<T>(JsonOptions.JsonSerializerOptions);
+            return result != null;
         }
         catch (global::System.Exception)
         {

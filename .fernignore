@@ -8,7 +8,13 @@ src/Corti/Auth/AuthClient.cs
 src/Corti/CortiClient.cs
 src/Corti/ICortiClient.cs
 src/Corti/Core/OAuthTokenProvider.cs
+src/Corti/Core/JsonConfiguration.cs
 src/Corti/Core/Public/CortiClientEnvironment.cs
+
+# WebSocket and stream/transcribe code (custom/patched, must not be overwritten)
+src/Corti/Stream/
+src/Corti/Transcribe/
+src/Corti/Core/WebSockets/
 
 # Name of the package
 src/Corti/Corti.Custom.props
