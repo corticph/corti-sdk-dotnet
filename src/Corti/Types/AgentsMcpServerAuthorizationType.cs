@@ -1,10 +1,9 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgentsMcpServerAuthorizationType.AgentsMcpServerAuthorizationTypeSerializer))]
+[JsonConverter(typeof(StringEnumSerializer<AgentsMcpServerAuthorizationType>))]
 [Serializable]
 public readonly record struct AgentsMcpServerAuthorizationType : IStringEnum
 {
@@ -56,33 +55,6 @@ public readonly record struct AgentsMcpServerAuthorizationType : IStringEnum
     public static explicit operator string(AgentsMcpServerAuthorizationType value) => value.Value;
 
     public static explicit operator AgentsMcpServerAuthorizationType(string value) => new(value);
-
-    internal class AgentsMcpServerAuthorizationTypeSerializer
-        : JsonConverter<AgentsMcpServerAuthorizationType>
-    {
-        public override AgentsMcpServerAuthorizationType Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new AgentsMcpServerAuthorizationType(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            AgentsMcpServerAuthorizationType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-    }
 
     /// <summary>
     /// Constant strings for enum values

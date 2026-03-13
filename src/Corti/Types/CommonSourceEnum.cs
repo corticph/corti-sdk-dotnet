@@ -1,10 +1,9 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(CommonSourceEnum.CommonSourceEnumSerializer))]
+[JsonConverter(typeof(StringEnumSerializer<CommonSourceEnum>))]
 [Serializable]
 public readonly record struct CommonSourceEnum : IStringEnum
 {
@@ -54,32 +53,6 @@ public readonly record struct CommonSourceEnum : IStringEnum
     public static explicit operator string(CommonSourceEnum value) => value.Value;
 
     public static explicit operator CommonSourceEnum(string value) => new(value);
-
-    internal class CommonSourceEnumSerializer : JsonConverter<CommonSourceEnum>
-    {
-        public override CommonSourceEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new CommonSourceEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            CommonSourceEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-    }
 
     /// <summary>
     /// Constant strings for enum values

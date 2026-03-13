@@ -1,10 +1,9 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(InteractionsEncounterTypeEnum.InteractionsEncounterTypeEnumSerializer))]
+[JsonConverter(typeof(StringEnumSerializer<InteractionsEncounterTypeEnum>))]
 [Serializable]
 public readonly record struct InteractionsEncounterTypeEnum : IStringEnum
 {
@@ -60,33 +59,6 @@ public readonly record struct InteractionsEncounterTypeEnum : IStringEnum
     public static explicit operator string(InteractionsEncounterTypeEnum value) => value.Value;
 
     public static explicit operator InteractionsEncounterTypeEnum(string value) => new(value);
-
-    internal class InteractionsEncounterTypeEnumSerializer
-        : JsonConverter<InteractionsEncounterTypeEnum>
-    {
-        public override InteractionsEncounterTypeEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new InteractionsEncounterTypeEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            InteractionsEncounterTypeEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-    }
 
     /// <summary>
     /// Constant strings for enum values

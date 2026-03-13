@@ -1,10 +1,9 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(InteractionsListRequestSort.InteractionsListRequestSortSerializer))]
+[JsonConverter(typeof(StringEnumSerializer<InteractionsListRequestSort>))]
 [Serializable]
 public readonly record struct InteractionsListRequestSort : IStringEnum
 {
@@ -60,33 +59,6 @@ public readonly record struct InteractionsListRequestSort : IStringEnum
     public static explicit operator string(InteractionsListRequestSort value) => value.Value;
 
     public static explicit operator InteractionsListRequestSort(string value) => new(value);
-
-    internal class InteractionsListRequestSortSerializer
-        : JsonConverter<InteractionsListRequestSort>
-    {
-        public override InteractionsListRequestSort Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new InteractionsListRequestSort(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            InteractionsListRequestSort value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-    }
 
     /// <summary>
     /// Constant strings for enum values
