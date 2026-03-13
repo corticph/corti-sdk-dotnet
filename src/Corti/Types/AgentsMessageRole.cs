@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<AgentsMessageRole>))]
+[JsonConverter(typeof(AgentsMessageRole.AgentsMessageRoleSerializer))]
 [Serializable]
 public readonly record struct AgentsMessageRole : IStringEnum
 {
@@ -51,6 +52,32 @@ public readonly record struct AgentsMessageRole : IStringEnum
     public static explicit operator string(AgentsMessageRole value) => value.Value;
 
     public static explicit operator AgentsMessageRole(string value) => new(value);
+
+    internal class AgentsMessageRoleSerializer : JsonConverter<AgentsMessageRole>
+    {
+        public override AgentsMessageRole Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new AgentsMessageRole(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            AgentsMessageRole value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

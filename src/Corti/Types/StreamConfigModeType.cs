@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<StreamConfigModeType>))]
+[JsonConverter(typeof(StreamConfigModeType.StreamConfigModeTypeSerializer))]
 [Serializable]
 public readonly record struct StreamConfigModeType : IStringEnum
 {
@@ -51,6 +52,32 @@ public readonly record struct StreamConfigModeType : IStringEnum
     public static explicit operator string(StreamConfigModeType value) => value.Value;
 
     public static explicit operator StreamConfigModeType(string value) => new(value);
+
+    internal class StreamConfigModeTypeSerializer : JsonConverter<StreamConfigModeType>
+    {
+        public override StreamConfigModeType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new StreamConfigModeType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            StreamConfigModeType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<TranscriptsStatusEnum>))]
+[JsonConverter(typeof(TranscriptsStatusEnum.TranscriptsStatusEnumSerializer))]
 [Serializable]
 public readonly record struct TranscriptsStatusEnum : IStringEnum
 {
@@ -53,6 +54,32 @@ public readonly record struct TranscriptsStatusEnum : IStringEnum
     public static explicit operator string(TranscriptsStatusEnum value) => value.Value;
 
     public static explicit operator TranscriptsStatusEnum(string value) => new(value);
+
+    internal class TranscriptsStatusEnumSerializer : JsonConverter<TranscriptsStatusEnum>
+    {
+        public override TranscriptsStatusEnum Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new TranscriptsStatusEnum(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            TranscriptsStatusEnum value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values
