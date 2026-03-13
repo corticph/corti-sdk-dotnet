@@ -15,4 +15,20 @@ public partial class CortiClientEnvironment
     };
 
     public static implicit operator CortiClientEnvironment(string region) => FromRegion(region);
+
+    /// <summary>
+    /// Create a <see cref="CortiClientEnvironment"/> where all endpoints point to a single base URL.
+    /// Useful for proxy or custom-host scenarios. The WebSocket URL is derived automatically by
+    /// replacing the <c>https</c>/<c>http</c> scheme with <c>wss</c>/<c>ws</c>.
+    /// </summary>
+    public static CortiClientEnvironment FromBaseUrl(string baseUrl) => new()
+    {
+        Base   = baseUrl,
+        Wss    = System.Text.RegularExpressions.Regex.Replace(
+                     baseUrl,
+                     @"^https?",
+                     m => m.Value == "https" ? "wss" : "ws"),
+        Login  = baseUrl,
+        Agents = baseUrl,
+    };
 }
