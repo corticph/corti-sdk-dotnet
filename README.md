@@ -5,6 +5,8 @@
 
 The Corti.Sdk C# library provides convenient access to the Corti APIs from C#.
 
+> **Note:** We consider this package **alpha**. APIs may change before a stable release.
+
 ## Table of Contents
 
 - [Requirements](#requirements)
