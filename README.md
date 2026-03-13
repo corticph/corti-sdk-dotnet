@@ -1,6 +1,6 @@
 # Corti C# Library
 
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fcorticph%2Fcorti-sdk-csh)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fcorticph%2Fcorti-sdk-dotnet)
 [![nuget shield](https://img.shields.io/nuget/v/Corti)](https://nuget.org/packages/Corti)
 
 The Corti C# library provides convenient access to the Corti APIs from C#.
@@ -34,7 +34,7 @@ dotnet add package Corti
 
 ## Reference
 
-A full reference for this library is available [here](https://github.com/corticph/corti-sdk-csh/blob/HEAD/./reference.md).
+A full reference for this library is available [here](https://github.com/corticph/corti-sdk-dotnet/blob/HEAD/./reference.md).
 
 ## Usage
 
