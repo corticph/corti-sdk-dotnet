@@ -1,6 +1,120 @@
 # Reference
+## Auth
+<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">GetTokenAsync</a>(OAuthTokenRequest { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Auth.GetTokenAsync(
+    new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `OAuthTokenRequest` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Auth.<a href="/src/Corti/Auth/AuthClient.cs">TokenAsync</a>(tenantName, AuthTokenRequestBody { ... }) -> WithRawResponseTask&lt;AuthTokenResponse&gt;</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Exchange credentials for a short-lived access token. Supports grant_type client_credentials (server-to-server),
+authorization_code (with client_secret), authorization_code with PKCE (code_verifier), password (ROPC), or refresh_token. Use the returned access_token in the Authorization header when calling the Corti API.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```csharp
+await client.Auth.TokenAsync(
+    "tenantName",
+    new AuthTokenRequestClientCredentials
+    {
+        ClientId = "client_id",
+        ClientSecret = "client_secret",
+        GrantType = "client_credentials",
+    }
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**tenantName:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `AuthTokenRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Interactions
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">ListAsync</a>(InteractionsListRequest { ... }) -> Pager&lt;InteractionsGetResponse&gt;</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">ListAsync</a>(InteractionsListRequest { ... }) -> Pager&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -54,7 +168,7 @@ await client.Interactions.ListAsync(new InteractionsListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">CreateAsync</a>(InteractionsCreateRequest { ... }) -> WithRawResponseTask&lt;InteractionsCreateResponse&gt;</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">CreateAsync</a>(InteractionsCreateRequest { ... }) -> WithRawResponseTask&lt;InteractionsCreateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -118,7 +232,7 @@ await client.Interactions.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">GetAsync</a>(InteractionsGetRequest { ... }) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -145,9 +259,7 @@ Retrieves a previously recorded interaction by its unique identifier (interactio
 <dd>
 
 ```csharp
-await client.Interactions.GetAsync(
-    new InteractionsGetRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Interactions.GetAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -162,7 +274,7 @@ await client.Interactions.GetAsync(
 <dl>
 <dd>
 
-**request:** `InteractionsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -174,7 +286,7 @@ await client.Interactions.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">DeleteAsync</a>(InteractionsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">DeleteAsync</a>(id)</code></summary>
 <dl>
 <dd>
 
@@ -201,9 +313,7 @@ Deletes an existing interaction.
 <dd>
 
 ```csharp
-await client.Interactions.DeleteAsync(
-    new InteractionsDeleteRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Interactions.DeleteAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -218,7 +328,7 @@ await client.Interactions.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `InteractionsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -230,7 +340,7 @@ await client.Interactions.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Interactions.<a href="/src/CortiApi/Interactions/InteractionsClient.cs">UpdateAsync</a>(InteractionsUpdateRequest { ... }) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
+<details><summary><code>client.Interactions.<a href="/src/Corti/Interactions/InteractionsClient.cs">UpdateAsync</a>(id, InteractionsUpdateRequest { ... }) -> WithRawResponseTask&lt;InteractionsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -258,7 +368,8 @@ Modifies an existing interaction by updating specific fields without overwriting
 
 ```csharp
 await client.Interactions.UpdateAsync(
-    new InteractionsUpdateRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new InteractionsUpdateRequest()
 );
 ```
 </dd>
@@ -270,6 +381,14 @@ await client.Interactions.UpdateAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -287,7 +406,7 @@ await client.Interactions.UpdateAsync(
 </details>
 
 ## Recordings
-<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">ListAsync</a>(RecordingsListRequest { ... }) -> WithRawResponseTask&lt;RecordingsListResponse&gt;</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/Corti/Recordings/RecordingsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;RecordingsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -314,9 +433,7 @@ Retrieve a list of recordings for a given interaction.
 <dd>
 
 ```csharp
-await client.Recordings.ListAsync(
-    new RecordingsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -331,7 +448,7 @@ await client.Recordings.ListAsync(
 <dl>
 <dd>
 
-**request:** `RecordingsListRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -343,7 +460,7 @@ await client.Recordings.ListAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">GetAsync</a>(RecordingsGetRequest { ... }) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/Corti/Recordings/RecordingsClient.cs">GetAsync</a>(id, recordingId) -> WithRawResponseTask&lt;Stream&gt;</code></summary>
 <dl>
 <dd>
 
@@ -370,9 +487,7 @@ Retrieve a specific recording for a given interaction.
 <dd>
 
 ```csharp
-await client.Recordings.GetAsync(
-    new RecordingsGetRequest { Id = "id", RecordingId = "recordingId" }
-);
+await client.Recordings.GetAsync("id", "recordingId");
 ```
 </dd>
 </dl>
@@ -387,7 +502,15 @@ await client.Recordings.GetAsync(
 <dl>
 <dd>
 
-**request:** `RecordingsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**recordingId:** `string` — The unique identifier of the recording. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -399,7 +522,7 @@ await client.Recordings.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Recordings.<a href="/src/CortiApi/Recordings/RecordingsClient.cs">DeleteAsync</a>(RecordingsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Recordings.<a href="/src/Corti/Recordings/RecordingsClient.cs">DeleteAsync</a>(id, recordingId)</code></summary>
 <dl>
 <dd>
 
@@ -427,11 +550,8 @@ Delete a specific recording for a given interaction.
 
 ```csharp
 await client.Recordings.DeleteAsync(
-    new RecordingsDeleteRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -447,7 +567,15 @@ await client.Recordings.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `RecordingsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**recordingId:** `string` — The unique identifier of the recording. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -460,7 +588,7 @@ await client.Recordings.DeleteAsync(
 </details>
 
 ## Transcripts
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">ListAsync</a>(TranscriptsListRequest { ... }) -> WithRawResponseTask&lt;TranscriptsListResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">ListAsync</a>(id, TranscriptsListRequest { ... }) -> WithRawResponseTask&lt;TranscriptsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -488,7 +616,8 @@ Retrieves a list of transcripts for a given interaction.
 
 ```csharp
 await client.Transcripts.ListAsync(
-    new TranscriptsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new TranscriptsListRequest()
 );
 ```
 </dd>
@@ -500,6 +629,14 @@ await client.Transcripts.ListAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -516,7 +653,7 @@ await client.Transcripts.ListAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">CreateAsync</a>(TranscriptsCreateRequest { ... }) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">CreateAsync</a>(id, TranscriptsCreateRequest { ... }) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -544,9 +681,9 @@ Create a transcript from an audio file attached, via `/recordings` endpoint, to 
 
 ```csharp
 await client.Transcripts.CreateAsync(
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     new TranscriptsCreateRequest
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         PrimaryLanguage = "en",
     }
@@ -565,6 +702,14 @@ await client.Transcripts.CreateAsync(
 <dl>
 <dd>
 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `TranscriptsCreateRequest` 
     
 </dd>
@@ -577,7 +722,7 @@ await client.Transcripts.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">GetAsync</a>(TranscriptsGetRequest { ... }) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">GetAsync</a>(id, transcriptId) -> WithRawResponseTask&lt;TranscriptsResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -605,11 +750,8 @@ Retrieve a transcript from a specific interaction.<br/><Note>Each interaction ma
 
 ```csharp
 await client.Transcripts.GetAsync(
-    new TranscriptsGetRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -625,7 +767,15 @@ await client.Transcripts.GetAsync(
 <dl>
 <dd>
 
-**request:** `TranscriptsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcriptId:** `string` — The unique identifier of the transcript. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -637,7 +787,7 @@ await client.Transcripts.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">DeleteAsync</a>(TranscriptsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">DeleteAsync</a>(id, transcriptId)</code></summary>
 <dl>
 <dd>
 
@@ -665,11 +815,8 @@ Deletes a specific transcript associated with an interaction.
 
 ```csharp
 await client.Transcripts.DeleteAsync(
-    new TranscriptsDeleteRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -685,7 +832,15 @@ await client.Transcripts.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `TranscriptsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcriptId:** `string` — The unique identifier of the transcript. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -697,7 +852,7 @@ await client.Transcripts.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Transcripts.<a href="/src/CortiApi/Transcripts/TranscriptsClient.cs">GetStatusAsync</a>(TranscriptsGetStatusRequest { ... }) -> WithRawResponseTask&lt;TranscriptsStatusResponse&gt;</code></summary>
+<details><summary><code>client.Transcripts.<a href="/src/Corti/Transcripts/TranscriptsClient.cs">GetStatusAsync</a>(id, transcriptId) -> WithRawResponseTask&lt;TranscriptsStatusResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -725,11 +880,8 @@ Poll for transcript creation status.<br/><Note>Status of `completed` indicates t
 
 ```csharp
 await client.Transcripts.GetStatusAsync(
-    new TranscriptsGetStatusRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        TranscriptId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -745,7 +897,15 @@ await client.Transcripts.GetStatusAsync(
 <dl>
 <dd>
 
-**request:** `TranscriptsGetStatusRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**transcriptId:** `string` — The unique identifier of the transcript. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -758,7 +918,7 @@ await client.Transcripts.GetStatusAsync(
 </details>
 
 ## Facts
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">FactGroupsListAsync</a>() -> WithRawResponseTask&lt;FactsFactGroupsListResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">FactGroupsListAsync</a>() -> WithRawResponseTask&lt;FactsFactGroupsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -797,7 +957,7 @@ await client.Facts.FactGroupsListAsync();
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">ListAsync</a>(FactsListRequest { ... }) -> WithRawResponseTask&lt;FactsListResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;FactsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -824,7 +984,7 @@ Retrieves a list of facts for a given interaction.
 <dd>
 
 ```csharp
-await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" });
+await client.Facts.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -839,7 +999,7 @@ await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a56
 <dl>
 <dd>
 
-**request:** `FactsListRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -851,7 +1011,7 @@ await client.Facts.ListAsync(new FactsListRequest { Id = "f47ac10b-58cc-4372-a56
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">CreateAsync</a>(FactsCreateRequest { ... }) -> WithRawResponseTask&lt;FactsCreateResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">CreateAsync</a>(id, FactsCreateRequest { ... }) -> WithRawResponseTask&lt;FactsCreateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -879,9 +1039,9 @@ Adds new facts to an interaction.
 
 ```csharp
 await client.Facts.CreateAsync(
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     new FactsCreateRequest
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         Facts = new List<FactsCreateInput>()
         {
             new FactsCreateInput { Text = "text", Group = "other" },
@@ -902,6 +1062,14 @@ await client.Facts.CreateAsync(
 <dl>
 <dd>
 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `FactsCreateRequest` 
     
 </dd>
@@ -914,7 +1082,7 @@ await client.Facts.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">BatchUpdateAsync</a>(FactsBatchUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsBatchUpdateResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">BatchUpdateAsync</a>(id, FactsBatchUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsBatchUpdateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -942,9 +1110,9 @@ Updates multiple facts associated with an interaction.
 
 ```csharp
 await client.Facts.BatchUpdateAsync(
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     new FactsBatchUpdateRequest
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         Facts = new List<FactsBatchUpdateInput>()
         {
             new FactsBatchUpdateInput { FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08" },
@@ -965,6 +1133,14 @@ await client.Facts.BatchUpdateAsync(
 <dl>
 <dd>
 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `FactsBatchUpdateRequest` 
     
 </dd>
@@ -977,7 +1153,7 @@ await client.Facts.BatchUpdateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">UpdateAsync</a>(FactsUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsUpdateResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">UpdateAsync</a>(id, factId, FactsUpdateRequest { ... }) -> WithRawResponseTask&lt;FactsUpdateResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1005,11 +1181,9 @@ Updates an existing fact associated with a specific interaction.
 
 ```csharp
 await client.Facts.UpdateAsync(
-    new FactsUpdateRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
+    new FactsUpdateRequest()
 );
 ```
 </dd>
@@ -1021,6 +1195,22 @@ await client.Facts.UpdateAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**factId:** `string` — The unique identifier of the fact to update. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -1037,7 +1227,7 @@ await client.Facts.UpdateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Facts.<a href="/src/CortiApi/Facts/FactsClient.cs">ExtractAsync</a>(FactsExtractRequest { ... }) -> WithRawResponseTask&lt;FactsExtractResponse&gt;</code></summary>
+<details><summary><code>client.Facts.<a href="/src/Corti/Facts/FactsClient.cs">ExtractAsync</a>(FactsExtractRequest { ... }) -> WithRawResponseTask&lt;FactsExtractResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1101,7 +1291,7 @@ await client.Facts.ExtractAsync(
 </details>
 
 ## Documents
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">ListAsync</a>(DocumentsListRequest { ... }) -> WithRawResponseTask&lt;DocumentsListResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">ListAsync</a>(id) -> WithRawResponseTask&lt;DocumentsListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1128,9 +1318,7 @@ List Documents
 <dd>
 
 ```csharp
-await client.Documents.ListAsync(
-    new DocumentsListRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
+await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 ```
 </dd>
 </dl>
@@ -1145,7 +1333,7 @@ await client.Documents.ListAsync(
 <dl>
 <dd>
 
-**request:** `DocumentsListRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -1157,7 +1345,7 @@ await client.Documents.ListAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">CreateAsync</a>(DocumentsCreateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">CreateAsync</a>(id, DocumentsCreateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1185,31 +1373,19 @@ This endpoint offers different ways to generate a document. Find guides to docum
 
 ```csharp
 await client.Documents.CreateAsync(
-    new DocumentsCreateRequest
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new DocumentsCreateRequestWithTemplateKey
     {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        Body = new DocumentsCreateRequestWithTemplateKey
+        Context = new List<DocumentsContext>()
         {
-            Context = new List<
-                OneOf<
-                    DocumentsContextWithFacts,
-                    DocumentsContextWithTranscript,
-                    DocumentsContextWithString
-                >
-            >()
+            new DocumentsContextWithFacts
             {
-                new DocumentsContextWithFacts
-                {
-                    Type = DocumentsContextWithFactsType.Facts,
-                    Data = new List<FactsContext>()
-                    {
-                        new FactsContext { Text = "text", Source = CommonSourceEnum.Core },
-                    },
-                },
+                Type = DocumentsContextWithFactsType.Facts,
+                Data = new List<FactsContext>() { new FactsContext { Text = "text" } },
             },
-            TemplateKey = "templateKey",
-            OutputLanguage = "outputLanguage",
         },
+        TemplateKey = "templateKey",
+        OutputLanguage = "outputLanguage",
     }
 );
 ```
@@ -1226,6 +1402,14 @@ await client.Documents.CreateAsync(
 <dl>
 <dd>
 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `DocumentsCreateRequest` 
     
 </dd>
@@ -1238,7 +1422,7 @@ await client.Documents.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">GetAsync</a>(DocumentsGetRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">GetAsync</a>(id, documentId) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1266,11 +1450,8 @@ Get Document.
 
 ```csharp
 await client.Documents.GetAsync(
-    new DocumentsGetRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -1286,7 +1467,15 @@ await client.Documents.GetAsync(
 <dl>
 <dd>
 
-**request:** `DocumentsGetRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentId:** `string` — The document ID representing the context for the request. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -1298,7 +1487,7 @@ await client.Documents.GetAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">DeleteAsync</a>(DocumentsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">DeleteAsync</a>(id, documentId)</code></summary>
 <dl>
 <dd>
 
@@ -1312,11 +1501,8 @@ await client.Documents.GetAsync(
 
 ```csharp
 await client.Documents.DeleteAsync(
-    new DocumentsDeleteRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 );
 ```
 </dd>
@@ -1332,7 +1518,15 @@ await client.Documents.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `DocumentsDeleteRequest` 
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentId:** `string` — The document ID representing the context for the request. Must be a valid UUID.
     
 </dd>
 </dl>
@@ -1344,7 +1538,7 @@ await client.Documents.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Documents.<a href="/src/CortiApi/Documents/DocumentsClient.cs">UpdateAsync</a>(DocumentsUpdateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
+<details><summary><code>client.Documents.<a href="/src/Corti/Documents/DocumentsClient.cs">UpdateAsync</a>(id, documentId, DocumentsUpdateRequest { ... }) -> WithRawResponseTask&lt;DocumentsGetResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1358,11 +1552,9 @@ await client.Documents.DeleteAsync(
 
 ```csharp
 await client.Documents.UpdateAsync(
-    new DocumentsUpdateRequest
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        DocumentId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    }
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    new DocumentsUpdateRequest()
 );
 ```
 </dd>
@@ -1374,6 +1566,22 @@ await client.Documents.UpdateAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The unique identifier of the interaction. Must be a valid UUID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentId:** `string` — The document ID representing the context for the request. Must be a valid UUID.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -1391,7 +1599,7 @@ await client.Documents.UpdateAsync(
 </details>
 
 ## Templates
-<details><summary><code>client.Templates.<a href="/src/CortiApi/Templates/TemplatesClient.cs">SectionListAsync</a>(TemplatesSectionListRequest { ... }) -> WithRawResponseTask&lt;TemplatesSectionListResponse&gt;</code></summary>
+<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">SectionListAsync</a>(TemplatesSectionListRequest { ... }) -> WithRawResponseTask&lt;TemplatesSectionListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1445,7 +1653,7 @@ await client.Templates.SectionListAsync(new TemplatesSectionListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Templates.<a href="/src/CortiApi/Templates/TemplatesClient.cs">ListAsync</a>(TemplatesListRequest { ... }) -> WithRawResponseTask&lt;TemplatesListResponse&gt;</code></summary>
+<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">ListAsync</a>(TemplatesListRequest { ... }) -> WithRawResponseTask&lt;TemplatesListResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1499,7 +1707,7 @@ await client.Templates.ListAsync(new TemplatesListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Templates.<a href="/src/CortiApi/Templates/TemplatesClient.cs">GetAsync</a>(TemplatesGetRequest { ... }) -> WithRawResponseTask&lt;TemplatesItem&gt;</code></summary>
+<details><summary><code>client.Templates.<a href="/src/Corti/Templates/TemplatesClient.cs">GetAsync</a>(key) -> WithRawResponseTask&lt;TemplatesItem&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1526,7 +1734,7 @@ Retrieves template by key.
 <dd>
 
 ```csharp
-await client.Templates.GetAsync(new TemplatesGetRequest { Key = "key" });
+await client.Templates.GetAsync("key");
 ```
 </dd>
 </dl>
@@ -1541,7 +1749,7 @@ await client.Templates.GetAsync(new TemplatesGetRequest { Key = "key" });
 <dl>
 <dd>
 
-**request:** `TemplatesGetRequest` 
+**key:** `string` — The key of the template
     
 </dd>
 </dl>
@@ -1554,180 +1762,7 @@ await client.Templates.GetAsync(new TemplatesGetRequest { Key = "key" });
 </details>
 
 ## Codes
-<details><summary><code>client.Codes.<a href="/src/CortiApi/Codes/CodesClient.cs">ListCodesAsync</a>(GetInteractionsIdCodesRequest { ... }) -> WithRawResponseTask&lt;ResponseCodesList&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-`Limited Access - Contact us for more information`<br/><br/>List predicted codes within the context of an interaction.<br/><Note>This endpoint is only accessible within specific customer tenants. It is not available in the public API.<br/><br/>For stateless code prediction based on input text string or documentId, please refer to the [Predict Codes](/api-reference/codes/predict-codes) API, or [contact us](https://help.corti.app) for more information.</Note>
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Codes.ListCodesAsync(
-    new GetInteractionsIdCodesRequest { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `GetInteractionsIdCodesRequest` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Codes.<a href="/src/CortiApi/Codes/CodesClient.cs">GenerateCodesAsync</a>(RequestCodesPredict { ... }) -> WithRawResponseTask&lt;ResponseCodesList&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-`Limited Access - Contact us for more information`<br/><br/>Generate codes within the context of an interaction.<br/><Note>This endpoint is only accessible within specific customer tenants. It is not available in the public API.<br/><br/>For stateless code prediction based on input text string or documentId, please refer to the [Predict Codes](/api-reference/codes/predict-codes) API, or [contact us](https://help.corti.app) for more information.</Note>
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Codes.GenerateCodesAsync(
-    new RequestCodesPredict
-    {
-        Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-        ModelName = "\"geography_modelName (Latest)\" | \"geography_modelName_version\"",
-        Context = new CodesContext { Type = CodesContextTypeEnum.String, Data = "data" },
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `RequestCodesPredict` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Codes.<a href="/src/CortiApi/Codes/CodesClient.cs">SelectCodesAsync</a>(RequestCodesUpdate { ... }) -> WithRawResponseTask&lt;ResponseCodesList&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-`Limited Access - Contact us for more information`<br/><br/>Select predicted codes within the context of an interaction.<br/><Note>This endpoint is only accessible within specific customer tenants. It is not available in the public API.<br/><br/>For stateless code prediction based on input text string or documentId, please refer to the [Predict Codes](/api-reference/codes/predict-codes) API, or [contact us](https://help.corti.app) for more information.</Note>
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Codes.SelectCodesAsync(
-    new RequestCodesUpdate { Id = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `RequestCodesUpdate` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Codes.<a href="/src/CortiApi/Codes/CodesClient.cs">PredictAsync</a>(CodesGeneralPredictRequest { ... }) -> WithRawResponseTask&lt;CodesGeneralResponse&gt;</code></summary>
+<details><summary><code>client.Codes.<a href="/src/Corti/Codes/CodesClient.cs">PredictAsync</a>(CodesGeneralPredictRequest { ... }) -> WithRawResponseTask&lt;CodesGeneralResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1762,7 +1797,7 @@ await client.Codes.PredictAsync(
             CommonCodingSystemEnum.Icd10Cm,
             CommonCodingSystemEnum.Cpt,
         },
-        Context = new List<OneOf<CommonTextContext, CommonDocumentIdContext>>()
+        Context = new List<CommonAiContext>()
         {
             new CommonTextContext
             {
@@ -1799,71 +1834,8 @@ await client.Codes.PredictAsync(
 </dl>
 </details>
 
-## Auth
-<details><summary><code>client.Auth.<a href="/src/CortiApi/Auth/AuthClient.cs">GetTokenAsync</a>(GetTokenAuthRequest { ... }) -> WithRawResponseTask&lt;GetTokenResponse&gt;</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Obtain an OAuth2 access token using client credentials
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```csharp
-await client.Auth.GetTokenAsync(
-    new GetTokenAuthRequest
-    {
-        ClientId = "client_id_123",
-        ClientSecret = "my_secret_value",
-        Scope = "openid",
-        GrantType = "client_credentials",
-    }
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `GetTokenAuthRequest` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 ## Agents
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">ListAsync</a>(AgentsListRequest { ... }) -> WithRawResponseTask&lt;IEnumerable&lt;AgentsAgentResponse&gt;&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1917,7 +1889,7 @@ await client.Agents.ListAsync(new AgentsListRequest());
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">CreateAsync</a>(AgentsCreateAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">CreateAsync</a>(AgentsCreateAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
 <dl>
 <dd>
 
@@ -1973,7 +1945,7 @@ await client.Agents.CreateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetAsync</a>(AgentsGetRequest { ... }) -> WithRawResponseTask&lt;OneOf&lt;AgentsAgent, AgentsAgentReference&gt;&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetAsync</a>(id) -> WithRawResponseTask&lt;AgentsAgentResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2000,7 +1972,7 @@ This endpoint retrieves an agent by its identifier. The agent contains informati
 <dd>
 
 ```csharp
-await client.Agents.GetAsync(new AgentsGetRequest { Id = "12345678-90ab-cdef-gh12-34567890abc" });
+await client.Agents.GetAsync("12345678-90ab-cdef-gh12-34567890abc");
 ```
 </dd>
 </dl>
@@ -2015,7 +1987,7 @@ await client.Agents.GetAsync(new AgentsGetRequest { Id = "12345678-90ab-cdef-gh1
 <dl>
 <dd>
 
-**request:** `AgentsGetRequest` 
+**id:** `string` — The identifier of the agent associated with the context.
     
 </dd>
 </dl>
@@ -2027,7 +1999,7 @@ await client.Agents.GetAsync(new AgentsGetRequest { Id = "12345678-90ab-cdef-gh1
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">DeleteAsync</a>(AgentsDeleteRequest { ... })</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">DeleteAsync</a>(id)</code></summary>
 <dl>
 <dd>
 
@@ -2054,9 +2026,7 @@ This endpoint deletes an agent by its identifier. Once deleted, the agent can no
 <dd>
 
 ```csharp
-await client.Agents.DeleteAsync(
-    new AgentsDeleteRequest { Id = "12345678-90ab-cdef-gh12-34567890abc" }
-);
+await client.Agents.DeleteAsync("12345678-90ab-cdef-gh12-34567890abc");
 ```
 </dd>
 </dl>
@@ -2071,7 +2041,7 @@ await client.Agents.DeleteAsync(
 <dl>
 <dd>
 
-**request:** `AgentsDeleteRequest` 
+**id:** `string` — The identifier of the agent associated with the context.
     
 </dd>
 </dl>
@@ -2083,7 +2053,7 @@ await client.Agents.DeleteAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">UpdateAsync</a>(AgentsUpdateRequest { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">UpdateAsync</a>(id, AgentsUpdateAgent { ... }) -> WithRawResponseTask&lt;AgentsAgent&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2110,19 +2080,7 @@ This endpoint updates an existing agent. Only the fields provided in the request
 <dd>
 
 ```csharp
-await client.Agents.UpdateAsync(
-    new AgentsUpdateRequest
-    {
-        Id = "12345678-90ab-cdef-gh12-34567890abc",
-        Body = new AgentsAgent
-        {
-            Id = "id",
-            Name = "name",
-            Description = "description",
-            SystemPrompt = "systemPrompt",
-        },
-    }
-);
+await client.Agents.UpdateAsync("12345678-90ab-cdef-gh12-34567890abc", new AgentsUpdateAgent());
 ```
 </dd>
 </dl>
@@ -2137,7 +2095,15 @@ await client.Agents.UpdateAsync(
 <dl>
 <dd>
 
-**request:** `AgentsUpdateRequest` 
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `AgentsUpdateAgent` 
     
 </dd>
 </dl>
@@ -2149,7 +2115,7 @@ await client.Agents.UpdateAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetCardAsync</a>(AgentsGetCardRequest { ... }) -> WithRawResponseTask&lt;AgentsAgentCard&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetCardAsync</a>(id) -> WithRawResponseTask&lt;AgentsAgentCard&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2176,9 +2142,7 @@ This endpoint retrieves the agent card in JSON format, which provides metadata a
 <dd>
 
 ```csharp
-await client.Agents.GetCardAsync(
-    new AgentsGetCardRequest { Id = "12345678-90ab-cdef-gh12-34567890abc" }
-);
+await client.Agents.GetCardAsync("12345678-90ab-cdef-gh12-34567890abc");
 ```
 </dd>
 </dl>
@@ -2193,7 +2157,7 @@ await client.Agents.GetCardAsync(
 <dl>
 <dd>
 
-**request:** `AgentsGetCardRequest` 
+**id:** `string` — The identifier of the agent associated with the context.
     
 </dd>
 </dl>
@@ -2205,7 +2169,7 @@ await client.Agents.GetCardAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">MessageSendAsync</a>(AgentsMessageSendParams { ... }) -> WithRawResponseTask&lt;AgentsMessageSendResponse&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">MessageSendAsync</a>(id, AgentsMessageSendParams { ... }) -> WithRawResponseTask&lt;AgentsMessageSendResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2233,13 +2197,13 @@ This endpoint sends a message to the specified agent to start or continue a task
 
 ```csharp
 await client.Agents.MessageSendAsync(
+    "12345678-90ab-cdef-gh12-34567890abc",
     new AgentsMessageSendParams
     {
-        Id = "12345678-90ab-cdef-gh12-34567890abc",
         Message = new AgentsMessage
         {
             Role = AgentsMessageRole.User,
-            Parts = new List<OneOf<AgentsTextPart, AgentsFilePart, AgentsDataPart>>()
+            Parts = new List<AgentsPart>()
             {
                 new AgentsTextPart { Kind = AgentsTextPartKind.Text, Text = "text" },
             },
@@ -2262,6 +2226,14 @@ await client.Agents.MessageSendAsync(
 <dl>
 <dd>
 
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **request:** `AgentsMessageSendParams` 
     
 </dd>
@@ -2274,7 +2246,7 @@ await client.Agents.MessageSendAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetTaskAsync</a>(AgentsGetTaskRequest { ... }) -> WithRawResponseTask&lt;AgentsTask&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetTaskAsync</a>(id, taskId, AgentsGetTaskRequest { ... }) -> WithRawResponseTask&lt;AgentsTask&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2302,7 +2274,9 @@ This endpoint retrieves the status and details of a specific task associated wit
 
 ```csharp
 await client.Agents.GetTaskAsync(
-    new AgentsGetTaskRequest { Id = "12345678-90ab-cdef-gh12-34567890abc", TaskId = "taskId" }
+    "12345678-90ab-cdef-gh12-34567890abc",
+    "taskId",
+    new AgentsGetTaskRequest()
 );
 ```
 </dd>
@@ -2314,6 +2288,22 @@ await client.Agents.GetTaskAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**taskId:** `string` — The identifier of the task to retrieve.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -2330,7 +2320,7 @@ await client.Agents.GetTaskAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetContextAsync</a>(AgentsGetContextRequest { ... }) -> WithRawResponseTask&lt;AgentsContext&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetContextAsync</a>(id, contextId, AgentsGetContextRequest { ... }) -> WithRawResponseTask&lt;AgentsContext&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2358,11 +2348,9 @@ This endpoint retrieves all tasks and top-level messages associated with a speci
 
 ```csharp
 await client.Agents.GetContextAsync(
-    new AgentsGetContextRequest
-    {
-        Id = "12345678-90ab-cdef-gh12-34567890abc",
-        ContextId = "contextId",
-    }
+    "12345678-90ab-cdef-gh12-34567890abc",
+    "contextId",
+    new AgentsGetContextRequest()
 );
 ```
 </dd>
@@ -2374,6 +2362,22 @@ await client.Agents.GetContextAsync(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**id:** `string` — The identifier of the agent associated with the context.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**contextId:** `string` — The identifier of the context (thread) to retrieve tasks for.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -2390,7 +2394,7 @@ await client.Agents.GetContextAsync(
 </dl>
 </details>
 
-<details><summary><code>client.Agents.<a href="/src/CortiApi/Agents/AgentsClient.cs">GetRegistryExpertsAsync</a>(AgentsGetRegistryExpertsRequest { ... }) -> WithRawResponseTask&lt;AgentsRegistryExpertsResponse&gt;</code></summary>
+<details><summary><code>client.Agents.<a href="/src/Corti/Agents/AgentsClient.cs">GetRegistryExpertsAsync</a>(AgentsGetRegistryExpertsRequest { ... }) -> WithRawResponseTask&lt;AgentsRegistryExpertsResponse&gt;</code></summary>
 <dl>
 <dd>
 
@@ -2445,3 +2449,4 @@ await client.Agents.GetRegistryExpertsAsync(
 </dd>
 </dl>
 </details>
+

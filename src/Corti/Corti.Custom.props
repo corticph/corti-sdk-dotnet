@@ -1,0 +1,8 @@
+<Project>
+    <PropertyGroup>
+        <PackageId>Corti.Sdk</PackageId>
+        <Title>Corti SDK</Title>
+        <AssemblyName>Corti.Sdk</AssemblyName>
+        <AssemblyTitle>Corti.Sdk</AssemblyTitle>
+    </PropertyGroup>
+</Project>

@@ -1,6 +1,31 @@
 {
-  "cliVersion": "3.74.1",
+  "cliVersion": "4.28.0",
   "generatorName": "fernapi/fern-csharp-sdk",
-  "generatorVersion": "2.20.5",
-  "sdkVersion": "0.0.829"
+  "generatorVersion": "2.24.5",
+  "generatorConfig": {
+    "namespace": "Corti",
+    "client-class-name": "CortiClient",
+    "use-undiscriminated-unions": true,
+    "generate-error-types": true,
+    "include-exception-handler": true,
+    "inline-path-parameters": true,
+    "experimental-readonly-constants": true,
+    "experimental-enable-websockets": true,
+    "temporary-websocket-environments": {
+      "/interactions/": {
+        "environments": {
+          "EU": "wss://api.eu.corti.app/audio-bridge/v2",
+          "US": "wss://api.us.corti.app/audio-bridge/v2"
+        }
+      },
+      "/transcribe": {
+        "environments": {
+          "EU": "wss://api.eu.corti.app/audio-bridge/v2",
+          "US": "wss://api.us.corti.app/audio-bridge/v2"
+        }
+      }
+    }
+  },
+  "originGitCommit": "e295a8c36bc7dec06888485b0963afb532d97f20",
+  "sdkVersion": "0.0.1.0"
 }

@@ -2,63 +2,51 @@ name: ci
 
 on: [push]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_NOLOGO: true
 
 jobs:
-  compile:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v5
-
-      - uses: actions/checkout@master
+        uses: actions/checkout@v6
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.x
-
-      - name: Print .NET info
-        run: dotnet --info
 
       - name: Install tools
         run: dotnet tool restore
 
       - name: Restore dependencies
-        run: dotnet restore src/CortiApi/CortiApi.csproj
+        run: dotnet restore src/Corti/Corti.csproj
 
-      - name: Build Release
-        run: dotnet build src/CortiApi/CortiApi.csproj -c Release --no-restore
+      - name: Build
+        run: dotnet build src/Corti/Corti.csproj --no-restore -c Release
 
-  unit-tests:
-    runs-on: ubuntu-latest
+      - name: Restore test dependencies
+        run: dotnet restore src/Corti.Test/Corti.Test.csproj
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v5
+      - name: Build tests
+        run: dotnet build src/Corti.Test/Corti.Test.csproj --no-restore -c Release
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 10.x
+      - name: Test
+        run: dotnet test src/Corti.Test/Corti.Test.csproj --no-restore --no-build -c Release
 
-      - name: Print .NET info
-        run: dotnet --info
+      - name: Pack
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        run: dotnet pack src/Corti/Corti.csproj --no-build --no-restore -c Release
 
-      - name: Install tools
-        run: |
-          dotnet tool restore
-
-      - name: Restore dependencies
-        run: dotnet restore src/CortiApi.Test/CortiApi.Test.csproj
-
-      - name: Build Release
-        run: dotnet build src/CortiApi.Test/CortiApi.Test.csproj -c Release --no-restore
-
-      - name: Run Tests
-        run: dotnet test src/CortiApi.Test/CortiApi.Test.csproj -c Release --no-build --no-restore
-
+      - name: Publish to NuGet.org
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push src/Corti/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source "nuget.org"
 

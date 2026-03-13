@@ -1,0 +1,58 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Corti.Core;
+
+namespace Corti;
+
+[Serializable]
+public record AgentsExpert : IJsonOnDeserialized
+{
+    [JsonExtensionData]
+    private readonly IDictionary<string, JsonElement> _extensionData =
+        new Dictionary<string, JsonElement>();
+
+    [JsonPropertyName("type")]
+    public required AgentsExpertType Type { get; set; }
+
+    /// <summary>
+    /// The unique identifier of the expert.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    /// <summary>
+    /// The name of the expert. Must be unique.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    /// <summary>
+    /// A brief description of the expert's capabilities.
+    /// </summary>
+    [JsonPropertyName("description")]
+    public required string Description { get; set; }
+
+    /// <summary>
+    /// The system prompt that defines the expert's behavior and expectations.
+    /// </summary>
+    [JsonPropertyName("systemPrompt")]
+    public required string SystemPrompt { get; set; }
+
+    /// <summary>
+    /// A list of MCP servers that the expert can call. If omitted, the expert can't call any MCP Servers.
+    /// </summary>
+    [JsonPropertyName("mcpServers")]
+    public IEnumerable<AgentsMcpServer>? McpServers { get; set; }
+
+    [JsonIgnore]
+    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+
+    void IJsonOnDeserialized.OnDeserialized() =>
+        AdditionalProperties.CopyFromExtensionData(_extensionData);
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
+}
