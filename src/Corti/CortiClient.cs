@@ -200,7 +200,15 @@ public partial class CortiClient : ICortiClient
                 ac.RedirectUri,
                 new CustomAuthClient(new RawClient(authOptions))
             );
-        throw new ArgumentException("Auth must be ClientCredentials, Bearer, BearerCustomRefresh, Ropc, or AuthorizationCode.", nameof(auth));
+        if (auth is CortiClientAuth.Pkce pkce)
+            return new OAuthPkceTokenProvider(
+                pkce.ClientId,
+                pkce.Code,
+                pkce.RedirectUri,
+                pkce.CodeVerifier,
+                new CustomAuthClient(new RawClient(authOptions))
+            );
+        throw new ArgumentException("Auth must be ClientCredentials, Bearer, BearerCustomRefresh, Ropc, AuthorizationCode, or Pkce.", nameof(auth));
     }
 
     private static ClientOptions BuildClientOptions(CortiClientOptions options)

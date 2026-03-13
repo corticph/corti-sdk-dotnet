@@ -103,6 +103,22 @@ public sealed class CustomAuthClient : AuthClient
     }
 
     /// <summary>
+    /// Exchanges a PKCE authorization code for an access token (authorization_code grant with code_verifier, no client secret).
+    /// Tenant name is taken from client options (Tenant-Name header).
+    /// </summary>
+    public WithRawResponseTask<AuthTokenResponse> GetTokenAsync(
+        OAuthPkceTokenRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var body = BuildPkceTokenRequestBody(request);
+        return new WithRawResponseTask<AuthTokenResponse>(
+            GetTokenAsyncCore(AuthTokenRequestBody.FromAuthTokenRequestAuthorizationPkce(body), options, cancellationToken)
+        );
+    }
+
+    /// <summary>
     /// Builds the Keycloak authorization endpoint URL for the authorization code flow.
     /// Always returns the URL string — there is no browser redirect in a server environment.
     /// </summary>
@@ -223,6 +239,24 @@ public sealed class CustomAuthClient : AuthClient
             GrantType = "authorization_code",
             RedirectUri = request.RedirectUri,
             Code = request.Code,
+            Scope = scopeString,
+        };
+    }
+
+    private static AuthTokenRequestAuthorizationPkce BuildPkceTokenRequestBody(OAuthPkceTokenRequest request)
+    {
+        var scopeString =
+            request is OAuthPkceTokenRequestWithScopes withScopes
+                ? BuildScopeString(withScopes.Scopes)
+                : "openid";
+
+        return new AuthTokenRequestAuthorizationPkce
+        {
+            ClientId = request.ClientId,
+            GrantType = "authorization_code",
+            RedirectUri = request.RedirectUri,
+            Code = request.Code,
+            CodeVerifier = request.CodeVerifier,
             Scope = scopeString,
         };
     }

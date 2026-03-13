@@ -38,6 +38,16 @@ public abstract record CortiClientAuth
         string Code,
         string RedirectUri
     ) : CortiClientAuth;
+
+    /// <summary>PKCE authorization code grant: clientId + code + redirectUri + codeVerifier (no client secret).
+    /// The code is exchanged on first use; subsequent renewals use the stored refresh token (no clientSecret).
+    /// Requires the explicit (tenantName, environment, auth) CortiClient constructor.</summary>
+    public sealed record Pkce(
+        string ClientId,
+        string Code,
+        string RedirectUri,
+        string CodeVerifier
+    ) : CortiClientAuth;
 }
 
 /// <summary>Narrow base for Bearer and BearerCustomRefresh — the only auth variants whose JWT can be decoded to supply TenantName and Environment automatically. Used by <see cref="CortiClientBearerOptions"/>.</summary>
