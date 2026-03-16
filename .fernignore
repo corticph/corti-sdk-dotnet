@@ -7,7 +7,7 @@ README.md
 src/Corti/Custom/
 
 # Patched generated files
-src/Corti/Auth/AuthClient.cs
+# src/Corti/Auth/AuthClient.cs
 src/Corti/CortiClient.cs
 src/Corti/ICortiClient.cs
 src/Corti/Core/OAuthTokenProvider.cs
