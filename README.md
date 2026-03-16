@@ -1,11 +1,9 @@
-# Corti.Sdk C# Library
+# Corti C# Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fcorticph%2Fcorti-sdk-dotnet)
-[![nuget shield](https://img.shields.io/nuget/v/Corti.Sdk)](https://nuget.org/packages/Corti.Sdk)
+[![nuget shield](https://img.shields.io/nuget/v/Corti)](https://nuget.org/packages/Corti)
 
-The Corti.Sdk C# library provides convenient access to the Corti APIs from C#.
-
-> **Note:** We consider this package **alpha**. APIs may change before a stable release.
+The Corti C# library provides convenient access to the Corti APIs from C#.
 
 ## Table of Contents
 
@@ -31,7 +29,7 @@ This SDK requires:
 ## Installation
 
 ```sh
-dotnet add package Corti.Sdk
+dotnet add package Corti
 ```
 
 ## Reference
@@ -40,38 +38,16 @@ A full reference for this library is available [here](https://github.com/corticp
 
 ## Usage
 
-Create a client with **tenant name**, **environment**, and **auth**. The environment is a `CortiClientEnvironment` (e.g. `CortiClientEnvironment.Eu`, `CortiClientEnvironment.Us`, or `CortiClientEnvironment.FromRegion("eu")`). Auth is one of the `CortiClientAuth` variants (e.g. client credentials, ROPC, Bearer, PKCE, authorization code).
+Instantiate and use the client with the following:
 
 ```csharp
 using Corti;
 
-// Client credentials (tenant + environment + clientId + clientSecret)
-var client = new CortiClient(
-    "TENANT_NAME",
-    CortiClientEnvironment.Eu,
-    new CortiClientAuth.ClientCredentials("client_id", "client_secret")
-);
-
-// Use the API (token is obtained automatically by the client)
-var factGroups = await client.Facts.FactGroupsListAsync();
-```
-
-To get a **raw token** without creating a full client (e.g. for client credentials or ROPC), use `CustomAuthClient.Create` and `GetTokenAsync`:
-
-```csharp
-var auth = CustomAuthClient.Create(new CortiAuthClientOptions
-{
-    TenantName = "TENANT_NAME",
-    Environment = CortiClientEnvironment.Eu,
-});
-var tokenResponse = await auth.GetTokenAsync(
+var client = new CortiClient("TENANT_NAME", "client_id", "client_secret");
+await client.Auth.GetTokenAsync(
     new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
 );
 ```
-
-Other auth options: `CortiClientAuth.Ropc(clientId, username, password)`, `CortiClientAuth.Bearer(accessToken)`, `CortiClientAuth.AuthorizationCode(...)`, `CortiClientAuth.Pkce(...)`. For Bearer tokens, you can also use the constructor `new CortiClient(CortiClientAuth.Bearer(accessToken))` and the SDK will derive tenant and environment from the JWT.
-
-The client exposes **Interactions**, **Recordings**, **Transcripts**, **Facts**, **Documents**, **Templates**, **Codes**, and **Agents** for REST APIs. For real-time audio, use `await client.CreateStreamApiAsync(interactionId)` or `await client.CreateTranscribeApiAsync()` to get a WebSocket API instance.
 
 ## Exception Handling
 
@@ -96,11 +72,7 @@ List endpoints are paginated. The SDK provides an async enumerable so that you c
 ```csharp
 using Corti;
 
-var client = new CortiClient(
-    "TENANT_NAME",
-    CortiClientEnvironment.Eu,
-    new CortiClientAuth.ClientCredentials("client_id", "client_secret")
-);
+var client = new CortiClient("TENANT_NAME", "client_id", "client_secret");
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
 
 await foreach (var item in items)

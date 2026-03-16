@@ -5,57 +5,17 @@ namespace Corti;
 public partial class CortiClient : ICortiClient
 {
     private readonly RawClient _client;
-    private readonly IAuthTokenProvider _tokenProvider;
-    private readonly string? _tenantName;
-    private readonly string _wssUrl;
 
-    /// <summary>
-    /// Explicit tenant + environment: use for ClientCredentials, Ropc, or any Bearer variant when
-    /// tenant and environment are already known.
-    /// </summary>
     public CortiClient(
         string tenantName,
-        CortiClientEnvironment environment,
-        CortiClientAuth auth,
-        CortiRequestOptions? requestOptions = null)
-        : this(new CortiClientOptions
-        {
-            TenantName = tenantName,
-            Environment = environment,
-            Auth = auth,
-            RequestOptions = requestOptions,
-        }) { }
-
-    /// <summary>
-    /// Auto-derive: tenant and environment are decoded from the JWT inside the bearer token.
-    /// Accepts <see cref="CortiClientAuth.Bearer"/> or <see cref="CortiClientAuth.BearerCustomRefresh"/>.
-    /// </summary>
-    public CortiClient(CortiClientBearerAuth auth, CortiRequestOptions? requestOptions = null)
-        : this(ResolveFromBearer(auth, requestOptions)) { }
-
-    /// <summary>
-    /// Proxy / passthrough: custom environment URLs with no credentials and no tenant name.
-    /// Every request is forwarded without an Authorization header — a 401 from the server is expected
-    /// unless the caller supplies its own auth header via <see cref="CortiRequestOptions.AdditionalHeaders"/>.
-    /// </summary>
-    public CortiClient(CortiClientEnvironment environment, CortiRequestOptions? requestOptions = null)
-        : this(new CortiClientOptions
-        {
-            Environment = environment,
-            RequestOptions = requestOptions,
-        }) { }
-
-    private CortiClient(CortiClientOptions options)
+        string? clientId = null,
+        string? clientSecret = null,
+        ClientOptions? clientOptions = null
+    )
     {
-        // Patch: TenantName is only required when auth is present; proxy/passthrough mode (null auth) may omit it
-        var tenantName = options.TenantName;
-        if (tenantName == null && options.Auth != null)
-            throw new ArgumentException("TenantName is required.", nameof(options));
-
-        var clientOptions = BuildClientOptions(options);
-
         try
         {
+            clientOptions ??= new ClientOptions();
             clientOptions.ExceptionHandler = new ExceptionHandler(
                 new CortiExceptionInterceptor(clientOptions)
             );
@@ -63,8 +23,9 @@ public partial class CortiClient : ICortiClient
                 new Dictionary<string, string>()
                 {
                     { "X-Fern-Language", "C#" },
-                    { "X-Fern-SDK-Name", "Corti.Sdk" },
+                    { "X-Fern-SDK-Name", "Corti" },
                     { "X-Fern-SDK-Version", Version.Current },
+                    { "User-Agent", "Corti.Sdk/0.0.833" },
                 }
             );
             foreach (var header in platformHeaders)
@@ -75,29 +36,24 @@ public partial class CortiClient : ICortiClient
                 }
             }
             var clientOptionsWithAuth = clientOptions.Clone();
-            // Patch: only set Tenant-Name header when tenantName is known (proxy mode may omit it)
-            if (tenantName != null)
+            var authHeaders = new Headers(
+                new Dictionary<string, string>() { { "Tenant-Name", tenantName } }
+            );
+            foreach (var header in authHeaders)
             {
-                var authHeaders = new Headers(
-                    new Dictionary<string, string>() { { "Tenant-Name", tenantName } }
-                );
-                foreach (var header in authHeaders)
-                {
-                    clientOptionsWithAuth.Headers[header.Key] = header.Value;
-                }
+                clientOptionsWithAuth.Headers[header.Key] = header.Value;
             }
-            // Patch: auth options without Authorization so token requests don't resolve the bearer delegate (avoids stack overflow)
-            var authOptions = clientOptionsWithAuth.Clone();
-            _tokenProvider = CreateAuthTokenProvider(options.Auth, authOptions);
-            _tenantName = tenantName;
-            _wssUrl = options.Environment?.Wss ?? CortiClientEnvironment.Eu.Wss;
+            var tokenProvider = new OAuthTokenProvider(
+                clientId,
+                clientSecret,
+                new AuthClient(new RawClient(clientOptions))
+            );
             clientOptionsWithAuth.Headers["Authorization"] =
                 new Func<global::System.Threading.Tasks.ValueTask<string>>(async () =>
-                    await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false)
+                    await tokenProvider.GetAccessTokenAsync().ConfigureAwait(false)
                 );
             _client = new RawClient(clientOptionsWithAuth);
-            // Patch: CustomAuthClient instead of AuthClient
-            Auth = new CustomAuthClient(new RawClient(authOptions));
+            Auth = new AuthClient(_client);
             Interactions = new InteractionsClient(_client);
             Recordings = new RecordingsClient(_client);
             Transcripts = new TranscriptsClient(_client);
@@ -115,122 +71,7 @@ public partial class CortiClient : ICortiClient
         }
     }
 
-    private static CortiClientOptions ResolveFromBearer(CortiClientBearerAuth auth, CortiRequestOptions? requestOptions)
-    {
-        // Seed token: for BearerCustomRefresh without an initial AccessToken we must call the
-        // delegate once anyway (to decode the JWT). Carry the result forward so
-        // BearerWithRefreshTokenProvider doesn't call the delegate a second time on the first request.
-        var resolvedAuth = (CortiClientAuth)auth;
-
-        string? accessToken;
-
-        if (auth is CortiClientAuth.Bearer b)
-        {
-            accessToken = b.AccessToken;
-        }
-        else if (auth is CortiClientAuth.BearerCustomRefresh bcr && bcr.AccessToken != null)
-        {
-            accessToken = bcr.AccessToken;
-        }
-        else
-        {
-            var bcr2 = (CortiClientAuth.BearerCustomRefresh)auth;
-            var seedResult = bcr2.RefreshAccessToken(bcr2.RefreshToken, CancellationToken.None)
-                                 .GetAwaiter().GetResult();
-            accessToken = seedResult.AccessToken;
-            // Seed the auth record so the provider starts with a pre-populated token
-            resolvedAuth = bcr2 with { AccessToken = seedResult.AccessToken, ExpiresIn = seedResult.ExpiresIn ?? bcr2.ExpiresIn };
-        }
-
-        var decoded = TokenDecoder.Decode(accessToken);
-        if (decoded == null)
-            throw new ArgumentException(
-                "TenantName and Environment could not be derived from the token. Provide them explicitly via the (tenantName, environment, auth) constructor.",
-                nameof(auth));
-
-        return new CortiClientOptions
-        {
-            TenantName = decoded.TenantName,
-            Environment = decoded.Environment, // implicit string → CortiClientEnvironment
-            Auth = resolvedAuth,
-            RequestOptions = requestOptions,
-        };
-    }
-
-    private static IAuthTokenProvider CreateAuthTokenProvider(CortiClientAuth? auth, ClientOptions authOptions)
-    {
-        // Patch: null auth — proxy/passthrough mode; no Authorization header is added
-        if (auth == null)
-            return new BearerTokenProvider(string.Empty);
-        if (auth is CortiClientAuth.ClientCredentials cc)
-            return new OAuthTokenProvider(cc.ClientId, cc.ClientSecret, new CustomAuthClient(new RawClient(authOptions)));
-        if (auth is CortiClientAuth.Bearer b)
-        {
-            if (b.RefreshAccessToken != null || (b.RefreshToken != null && b.ClientId != null))
-                return new BearerWithRefreshTokenProvider(
-                    b.ClientId,
-                    b.AccessToken,
-                    b.RefreshToken,
-                    b.ExpiresIn,
-                    b.RefreshExpiresIn,
-                    b.RefreshAccessToken,
-                    new CustomAuthClient(new RawClient(authOptions))
-                );
-            return new BearerTokenProvider(b.AccessToken ?? string.Empty);
-        }
-        if (auth is CortiClientAuth.BearerCustomRefresh bcr)
-        {
-            return new BearerWithRefreshTokenProvider(
-                clientId: null,
-                bcr.AccessToken,
-                bcr.RefreshToken,
-                bcr.ExpiresIn,
-                bcr.RefreshExpiresIn,
-                bcr.RefreshAccessToken,
-                new CustomAuthClient(new RawClient(authOptions))
-            );
-        }
-        if (auth is CortiClientAuth.Ropc r)
-            return new OAuthRopcTokenProvider(
-                r.ClientId,
-                r.Username,
-                r.Password,
-                new CustomAuthClient(new RawClient(authOptions))
-            );
-        if (auth is CortiClientAuth.AuthorizationCode ac)
-            return new OAuthAuthCodeTokenProvider(
-                ac.ClientId,
-                ac.ClientSecret,
-                ac.Code,
-                ac.RedirectUri,
-                new CustomAuthClient(new RawClient(authOptions))
-            );
-        if (auth is CortiClientAuth.Pkce pkce)
-            return new OAuthPkceTokenProvider(
-                pkce.ClientId,
-                pkce.Code,
-                pkce.RedirectUri,
-                pkce.CodeVerifier,
-                new CustomAuthClient(new RawClient(authOptions))
-            );
-        throw new ArgumentException("Auth must be ClientCredentials, Bearer, BearerCustomRefresh, Ropc, AuthorizationCode, or Pkce.", nameof(auth));
-    }
-
-    private static ClientOptions BuildClientOptions(CortiClientOptions options)
-    {
-        var ro = options.RequestOptions;
-        return new ClientOptions
-        {
-            Environment = options.Environment,
-            HttpClient = ro?.HttpClient ?? new HttpClient(),
-            MaxRetries = ro?.MaxRetries ?? 2,
-            Timeout = ro?.Timeout ?? TimeSpan.FromSeconds(30),
-            AdditionalHeaders = ro?.AdditionalHeaders ?? [],
-        };
-    }
-
-    // Patch: type CustomAuthClient instead of IAuthClient
-    public CustomAuthClient Auth { get; }
+    public IAuthClient Auth { get; }
 
     public IInteractionsClient Interactions { get; }
 
@@ -248,34 +89,13 @@ public partial class CortiClient : ICortiClient
 
     public IAgentsClient Agents { get; }
 
-    public async Task<StreamApi> CreateStreamApiAsync(string interactionId)
+    public StreamApi CreateStreamApi(StreamApi.Options options)
     {
-        var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
-        if (string.IsNullOrEmpty(token))
-            throw new InvalidOperationException("Failed to obtain access token from the auth provider. Ensure the client is configured with valid credentials (e.g. ClientCredentials, ROPC, or Bearer).");
-        if (string.IsNullOrEmpty(_tenantName))
-            throw new InvalidOperationException("Tenant name is required for the Stream WebSocket. Create the CortiClient with an explicit tenant (e.g. the (tenantName, environment, auth) constructor).");
-        return new StreamApi(new StreamApi.Options
-        {
-            BaseUrl = _wssUrl,
-            TenantName = _tenantName,
-            Token = token,
-            Id = interactionId,
-        });
+        return new StreamApi(options);
     }
 
-    public async Task<TranscribeApi> CreateTranscribeApiAsync()
+    public TranscribeApi CreateTranscribeApi(TranscribeApi.Options options)
     {
-        var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
-        if (string.IsNullOrEmpty(token))
-            throw new InvalidOperationException("Failed to obtain access token from the auth provider. Ensure the client is configured with valid credentials (e.g. ClientCredentials, ROPC, or Bearer).");
-        if (string.IsNullOrEmpty(_tenantName))
-            throw new InvalidOperationException("Tenant name is required for the Transcribe WebSocket. Create the CortiClient with an explicit tenant (e.g. the (tenantName, environment, auth) constructor).");
-        return new TranscribeApi(new TranscribeApi.Options
-        {
-            BaseUrl = _wssUrl,
-            TenantName = _tenantName,
-            Token = token,
-        });
+        return new TranscribeApi(options);
     }
 }

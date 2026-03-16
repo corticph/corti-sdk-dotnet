@@ -119,99 +119,74 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
     /// </summary>
     private async Task OnTextMessage(Stream stream)
     {
-        using var json = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
-
-        if (!json.RootElement.TryGetProperty("type", out var typeProp))
+        var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
+        if (json == null)
         {
             await ExceptionOccurred
-                .RaiseEvent(new Exception("Invalid message - Missing 'type' field"))
+                .RaiseEvent(new Exception("Invalid message - Not valid JSON"))
                 .ConfigureAwait(false);
             return;
         }
 
-        var typeValue = typeProp.GetString();
-
-        switch (typeValue)
+        // deserialize the message to find the correct event
         {
-            case "CONFIG_ACCEPTED":
-            case "CONFIG_DENIED":
-            case "CONFIG_MISSING":
-            case "CONFIG_NOT_PROVIDED":
-            case "CONFIG_ALREADY_RECEIVED":
-            case "CONFIG_TIMEOUT":
+            if (JsonUtils.TryDeserialize(json, out StreamConfigStatusMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamConfigStatusMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamConfigStatusMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
-            case "transcript":
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamTranscriptMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamTranscriptMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamTranscriptMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamTranscriptMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
-            case "facts":
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamFactsMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamFactsMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamFactsMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamFactsMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
-            case "flushed":
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamFlushedMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamFlushedMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamFlushedMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamFlushedMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
-            case "ENDED":
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamEndedMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamEndedMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamEndedMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamEndedMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
-            case "usage":
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamUsageMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamUsageMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamUsageMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamUsageMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
-            case "error":
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamErrorMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamErrorMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamErrorMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamErrorMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
         }
 
         await ExceptionOccurred
-            .RaiseEvent(new Exception($"Unknown message type: {typeValue}"))
+            .RaiseEvent(new Exception($"Unknown message: {json.ToString()}"))
             .ConfigureAwait(false);
     }
 
@@ -260,11 +235,11 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
     }
 
     /// <summary>
-    /// Sends an audio message to the server as binary.
+    /// Sends a audio message to the server
     /// </summary>
     public async Task Send(byte[] message)
     {
-        await _client.SendInstant(message).ConfigureAwait(false);
+        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
     }
 
     /// <summary>

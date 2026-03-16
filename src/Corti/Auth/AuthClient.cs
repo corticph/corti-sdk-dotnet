@@ -113,8 +113,7 @@ public partial class AuthClient : IAuthClient
                     .ConfigureAwait(false);
                 var response = await _client
                     .SendRequestAsync(
-                        // Patch: Use FormRequest so the token request is sent as application/x-www-form-urlencoded
-                        new FormRequest
+                        new JsonRequest
                         {
                             BaseUrl = _client.Options.Environment.Login,
                             Method = HttpMethod.Post,
