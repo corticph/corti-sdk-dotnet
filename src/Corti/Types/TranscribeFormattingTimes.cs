@@ -7,11 +7,13 @@ namespace Corti;
 [Serializable]
 public readonly record struct TranscribeFormattingTimes : IStringEnum
 {
-    public static readonly TranscribeFormattingTimes AsDictated = new(Values.AsDictated);
+    public static readonly TranscribeFormattingTimes Locale = new(Values.Locale);
+
+    public static readonly TranscribeFormattingTimes H24 = new(Values.H24);
 
     public static readonly TranscribeFormattingTimes H12 = new(Values.H12);
 
-    public static readonly TranscribeFormattingTimes H24 = new(Values.H24);
+    public static readonly TranscribeFormattingTimes AsDictated = new(Values.AsDictated);
 
     public TranscribeFormattingTimes(string value)
     {
@@ -60,10 +62,12 @@ public readonly record struct TranscribeFormattingTimes : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string AsDictated = "as_dictated";
+        public const string Locale = "locale";
+
+        public const string H24 = "h24";
 
         public const string H12 = "h12";
 
-        public const string H24 = "h24";
+        public const string AsDictated = "as_dictated";
     }
 }

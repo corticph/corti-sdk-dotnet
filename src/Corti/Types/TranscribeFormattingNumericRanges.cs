@@ -7,9 +7,9 @@ namespace Corti;
 [Serializable]
 public readonly record struct TranscribeFormattingNumericRanges : IStringEnum
 {
-    public static readonly TranscribeFormattingNumericRanges AsDictated = new(Values.AsDictated);
-
     public static readonly TranscribeFormattingNumericRanges Numerals = new(Values.Numerals);
+
+    public static readonly TranscribeFormattingNumericRanges AsDictated = new(Values.AsDictated);
 
     public TranscribeFormattingNumericRanges(string value)
     {
@@ -58,8 +58,8 @@ public readonly record struct TranscribeFormattingNumericRanges : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string AsDictated = "as_dictated";
-
         public const string Numerals = "numerals";
+
+        public const string AsDictated = "as_dictated";
     }
 }
