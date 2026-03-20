@@ -202,6 +202,12 @@ public partial class AgentsClient : IAgentsClient
                                 throw new UnauthorizedError(
                                     JsonUtils.Deserialize<object>(responseBody)
                                 );
+                            case 422:
+                                throw new UnprocessableEntityError(
+                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
+                                        responseBody
+                                    )
+                                );
                         }
                     }
                     catch (JsonException)
@@ -403,6 +409,12 @@ public partial class AgentsClient : IAgentsClient
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
                                 );
+                            case 422:
+                                throw new UnprocessableEntityError(
+                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
+                                        responseBody
+                                    )
+                                );
                         }
                     }
                     catch (JsonException)
@@ -603,6 +615,12 @@ public partial class AgentsClient : IAgentsClient
                             case 404:
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 422:
+                                throw new UnprocessableEntityError(
+                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
+                                        responseBody
+                                    )
                                 );
                         }
                     }
@@ -915,6 +933,12 @@ public partial class AgentsClient : IAgentsClient
                             case 401:
                                 throw new UnauthorizedError(
                                     JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 422:
+                                throw new UnprocessableEntityError(
+                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
+                                        responseBody
+                                    )
                                 );
                         }
                     }
