@@ -10,8 +10,8 @@ The Corti C# library provides convenient access to the Corti APIs from C#.
 - [Documentation](#documentation)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Reference](#reference)
 - [Usage](#usage)
+- [Authentication](#authentication)
 - [Exception Handling](#exception-handling)
 - [Pagination](#pagination)
 - [Advanced](#advanced)
@@ -37,10 +37,6 @@ This SDK requires:
 dotnet add package Corti.Sdk
 ```
 
-## Reference
-
-A full reference for this library is available [here](https://github.com/corticph/corti-sdk-dotnet/blob/HEAD/./reference.md).
-
 ## Usage
 
 Instantiate and use the client with the following:
@@ -48,7 +44,7 @@ Instantiate and use the client with the following:
 ```csharp
 using Corti;
 
-var client = new CortiClient("TENANT_NAME", "client_id", "client_secret");
+var client = new CortiClient("TENANT_NAME", "YOUR_ENVIRONMENT_ID", new CortiClientAuth.ClientCredentials("CLIENT_ID", "CLIENT_SECRET"));
 await client.Interactions.CreateAsync(
     new InteractionsCreateRequest
     {
@@ -59,6 +55,85 @@ await client.Interactions.CreateAsync(
             Type = InteractionsEncounterTypeEnum.FirstConsultation,
         },
     }
+);
+```
+
+## Authentication
+
+The SDK supports several OAuth 2.0 flows. In all cases the SDK manages tokens in memory — before each request it checks whether the stored access token is still valid, and if not, calls the appropriate token endpoint transparently. No manual token management is needed.
+
+### Client Credentials (recommended for server-side apps)
+
+The SDK fetches and refreshes tokens automatically using your client credentials.
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.ClientCredentials("YOUR_CLIENT_ID", "YOUR_CLIENT_SECRET")
+);
+```
+
+### Bearer token (pre-obtained)
+
+Use when you already have a valid access token. Pass `ClientId` + `RefreshToken` to enable automatic renewal when the token expires.
+
+```csharp
+// Static token — no automatic renewal
+var client = new CortiClient(new CortiClientAuth.Bearer("YOUR_ACCESS_TOKEN"));
+
+// Token with automatic refresh via stored refresh token
+var client = new CortiClient(new CortiClientAuth.Bearer(
+    AccessToken: "YOUR_ACCESS_TOKEN",
+    ClientId: "YOUR_CLIENT_ID",
+    RefreshToken: "YOUR_REFRESH_TOKEN",
+    ExpiresIn: 300,          // seconds until access token expires
+    RefreshExpiresIn: 1800   // seconds until refresh token expires
+));
+```
+
+### Bearer token with custom refresh
+
+Use when your application manages token renewal (e.g. via a proxy or an external identity provider). The SDK calls `RefreshAccessToken` whenever the stored token expires.
+
+```csharp
+var client = new CortiClient(new CortiClientAuth.BearerCustomRefresh(
+    RefreshAccessToken: async (refreshToken, ct) =>
+    {
+        // call your own token endpoint and return the new token
+        return new CustomRefreshResult { AccessToken = "NEW_TOKEN", ExpiresIn = 300 };
+    },
+    AccessToken: "YOUR_ACCESS_TOKEN"
+));
+```
+
+### Resource Owner Password Credentials (ROPC)
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.Ropc("YOUR_CLIENT_ID", "USERNAME", "PASSWORD")
+);
+```
+
+### Authorization Code
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.AuthorizationCode("YOUR_CLIENT_ID", "YOUR_CLIENT_SECRET", "AUTH_CODE", "YOUR_REDIRECT_URI")
+);
+```
+
+### PKCE
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.Pkce("YOUR_CLIENT_ID", "AUTH_CODE", "YOUR_REDIRECT_URI", "YOUR_CODE_VERIFIER")
 );
 ```
 
@@ -85,7 +160,7 @@ List endpoints are paginated. The SDK provides an async enumerable so that you c
 ```csharp
 using Corti;
 
-var client = new CortiClient("TENANT_NAME", "client_id", "client_secret");
+var client = new CortiClient("TENANT_NAME", "YOUR_ENVIRONMENT_ID", new CortiClientAuth.ClientCredentials("CLIENT_ID", "CLIENT_SECRET"));
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
 
 await foreach (var item in items)
