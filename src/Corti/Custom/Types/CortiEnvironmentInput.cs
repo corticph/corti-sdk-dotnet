@@ -13,4 +13,6 @@ public readonly struct CortiEnvironmentInput
     public static implicit operator CortiEnvironmentInput(CortiClientEnvironment env) => new(env);
     public static implicit operator CortiEnvironmentInput(string region) => new(CortiEnvironments.FromRegion(region));
     public static implicit operator CortiClientEnvironment(CortiEnvironmentInput input) => input._env;
+
+    public string? Wss => _env.Wss;
 }

@@ -7,6 +7,7 @@ public partial class CortiClient : ICortiClient
     private readonly RawClient _client;
     private readonly IAuthTokenProvider _tokenProvider;
     private readonly string? _tenantName;
+    private readonly string _wssUrl;
 
     /// <summary>
     /// Explicit tenant + environment: use for ClientCredentials, Ropc, or any Bearer variant when
@@ -90,6 +91,7 @@ public partial class CortiClient : ICortiClient
             var authOptions = clientOptionsWithAuth.Clone();
             _tokenProvider = CreateAuthTokenProvider(options.Auth, authOptions);
             _tenantName = tenantName;
+            _wssUrl = options.Environment.Wss ?? CortiClientEnvironment.Eu.Wss;
             clientOptionsWithAuth.Headers["Authorization"] =
                 new Func<global::System.Threading.Tasks.ValueTask<string>>(async () =>
                     await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false)
@@ -247,7 +249,34 @@ public partial class CortiClient : ICortiClient
 
     public IAgentsClient Agents { get; }
 
-    public IStreamApi CreateStreamApi(StreamApi.Options options) => new StreamApi(options);
+    public async Task<IStreamApi> CreateStreamApiAsync(string interactionId)
+    {
+        var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
 
-    public ITranscribeApi CreateTranscribeApi(TranscribeApi.Options options) => new TranscribeApi(options);
+        if (string.IsNullOrEmpty(_tenantName))
+            throw new InvalidOperationException("TenantName is required for Stream WebSocket. Use the (tenantName, environment, auth) constructor.");
+
+        return new StreamApi(new StreamApi.Options
+        {
+            Id = interactionId,
+            TenantName = _tenantName,
+            Token = token,
+            BaseUrl = _wssUrl,
+        });
+    }
+
+    public async Task<ITranscribeApi> CreateTranscribeApiAsync()
+    {
+        var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
+
+        if (string.IsNullOrEmpty(_tenantName))
+            throw new InvalidOperationException("TenantName is required for Transcribe WebSocket. Use the (tenantName, environment, auth) constructor.");
+
+        return new TranscribeApi(new TranscribeApi.Options
+        {
+            TenantName = _tenantName,
+            Token = token,
+            BaseUrl = _wssUrl,
+        });
+    }
 }
