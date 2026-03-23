@@ -14,7 +14,7 @@ public partial class CortiClient : ICortiClient
     /// </summary>
     public CortiClient(
         string tenantName,
-        CortiClientEnvironment environment,
+        CortiEnvironmentInput environment,
         CortiClientAuth auth,
         CortiRequestOptions? requestOptions = null)
         : this(new CortiClientOptions
@@ -37,7 +37,7 @@ public partial class CortiClient : ICortiClient
     /// Every request is forwarded without an Authorization header — a 401 from the server is expected
     /// unless the caller supplies its own auth header via <see cref="CortiRequestOptions.AdditionalHeaders"/>.
     /// </summary>
-    public CortiClient(CortiClientEnvironment environment, CortiRequestOptions? requestOptions = null)
+    public CortiClient(CortiEnvironmentInput environment, CortiRequestOptions? requestOptions = null)
         : this(new CortiClientOptions
         {
             Environment = environment,
@@ -150,7 +150,7 @@ public partial class CortiClient : ICortiClient
         return new CortiClientOptions
         {
             TenantName = decoded.TenantName,
-            Environment = CortiEnvironments.FromRegion(decoded.Environment),
+            Environment = decoded.Environment,
             Auth = resolvedAuth,
             RequestOptions = requestOptions,
         };

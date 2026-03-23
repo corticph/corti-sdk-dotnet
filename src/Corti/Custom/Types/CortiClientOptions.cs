@@ -4,7 +4,7 @@ namespace Corti;
 internal class CortiClientOptions
 {
     public string? TenantName { get; init; }
-    public CortiClientEnvironment Environment { get; init; } = null!;
+    public CortiEnvironmentInput Environment { get; init; }
     public CortiClientAuth? Auth { get; init; }
     public CortiRequestOptions? RequestOptions { get; init; }
 }
