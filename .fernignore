@@ -7,15 +7,8 @@
 src/Corti/Custom/
 
 # Thin stubs — custom logic lives in src/Corti/Custom/
-# src/Corti/Auth/AuthClient.cs
-# src/Corti/CortiClient.cs
-# src/Corti/ICortiClient.cs
-# src/Corti/Core/OAuthTokenProvider.cs
-# src/Corti/Core/JsonConfiguration.cs
-# src/Corti/Core/Public/CortiClientEnvironment.cs
-# src/Corti/Stream/StreamApi.cs
-# src/Corti/Transcribe/TranscribeApi.cs
-# src/Corti/Core/WebSockets/
+src/Corti/CortiClient.cs
+src/Corti/Core/OAuthTokenProvider.cs
 
 # Name of the package
 src/Corti/Corti.Custom.props

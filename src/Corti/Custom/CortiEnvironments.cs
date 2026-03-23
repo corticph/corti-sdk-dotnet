@@ -1,6 +1,9 @@
 namespace Corti;
 
-public partial class CortiClientEnvironment
+/// <summary>
+/// Factory methods for creating <see cref="CortiClientEnvironment"/> instances from a region string or a custom base URL.
+/// </summary>
+public static class CortiEnvironments
 {
     /// <summary>
     /// Create a <see cref="CortiClientEnvironment"/> from a region string (e.g. <c>"eu"</c>, <c>"us"</c>).
@@ -13,8 +16,6 @@ public partial class CortiClientEnvironment
         Login = $"https://auth.{region}.corti.app/realms",
         Agents = $"https://api.{region}.corti.app",
     };
-
-    public static implicit operator CortiClientEnvironment(string region) => FromRegion(region);
 
     /// <summary>
     /// Create a <see cref="CortiClientEnvironment"/> where all endpoints point to a single base URL.

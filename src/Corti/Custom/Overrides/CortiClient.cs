@@ -7,7 +7,6 @@ public partial class CortiClient : ICortiClient
     private readonly RawClient _client;
     private readonly IAuthTokenProvider _tokenProvider;
     private readonly string? _tenantName;
-    private readonly string _wssUrl;
 
     /// <summary>
     /// Explicit tenant + environment: use for ClientCredentials, Ropc, or any Bearer variant when
@@ -63,8 +62,9 @@ public partial class CortiClient : ICortiClient
                 new Dictionary<string, string>()
                 {
                     { "X-Fern-Language", "C#" },
-                    { "X-Fern-SDK-Name", "Corti.Sdk" },
+                    { "X-Fern-SDK-Name", "Corti" },
                     { "X-Fern-SDK-Version", Version.Current },
+                    { "User-Agent", $"Corti.Sdk/{Version.Current}" },
                 }
             );
             foreach (var header in platformHeaders)
@@ -90,7 +90,6 @@ public partial class CortiClient : ICortiClient
             var authOptions = clientOptionsWithAuth.Clone();
             _tokenProvider = CreateAuthTokenProvider(options.Auth, authOptions);
             _tenantName = tenantName;
-            _wssUrl = options.Environment?.Wss ?? CortiClientEnvironment.Eu.Wss;
             clientOptionsWithAuth.Headers["Authorization"] =
                 new Func<global::System.Threading.Tasks.ValueTask<string>>(async () =>
                     await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false)
@@ -248,34 +247,7 @@ public partial class CortiClient : ICortiClient
 
     public IAgentsClient Agents { get; }
 
-    public async Task<StreamApi> CreateStreamApiAsync(string interactionId)
-    {
-        var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
-        if (string.IsNullOrEmpty(token))
-            throw new InvalidOperationException("Failed to obtain access token from the auth provider. Ensure the client is configured with valid credentials (e.g. ClientCredentials, ROPC, or Bearer).");
-        if (string.IsNullOrEmpty(_tenantName))
-            throw new InvalidOperationException("Tenant name is required for the Stream WebSocket. Create the CortiClient with an explicit tenant (e.g. the (tenantName, environment, auth) constructor).");
-        return new StreamApi(new StreamApi.Options
-        {
-            BaseUrl = _wssUrl,
-            TenantName = _tenantName,
-            Token = token,
-            Id = interactionId,
-        });
-    }
+    public IStreamApi CreateStreamApi(StreamApi.Options options) => new StreamApi(options);
 
-    public async Task<TranscribeApi> CreateTranscribeApiAsync()
-    {
-        var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
-        if (string.IsNullOrEmpty(token))
-            throw new InvalidOperationException("Failed to obtain access token from the auth provider. Ensure the client is configured with valid credentials (e.g. ClientCredentials, ROPC, or Bearer).");
-        if (string.IsNullOrEmpty(_tenantName))
-            throw new InvalidOperationException("Tenant name is required for the Transcribe WebSocket. Create the CortiClient with an explicit tenant (e.g. the (tenantName, environment, auth) constructor).");
-        return new TranscribeApi(new TranscribeApi.Options
-        {
-            BaseUrl = _wssUrl,
-            TenantName = _tenantName,
-            Token = token,
-        });
-    }
+    public ITranscribeApi CreateTranscribeApi(TranscribeApi.Options options) => new TranscribeApi(options);
 }
