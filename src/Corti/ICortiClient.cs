@@ -1,15 +1,4 @@
 namespace Corti;
 
-public partial interface ICortiClient
-{
-    // Patch: type CustomAuthClient instead of IAuthClient
-    public CustomAuthClient Auth { get; }
-    public IInteractionsClient Interactions { get; }
-    public IRecordingsClient Recordings { get; }
-    public ITranscriptsClient Transcripts { get; }
-    public IFactsClient Facts { get; }
-    public IDocumentsClient Documents { get; }
-    public ITemplatesClient Templates { get; }
-    public ICodesClient Codes { get; }
-    public IAgentsClient Agents { get; }
-}
+// Custom implementation lives in src/Corti/Custom/ICortiClientCustom.cs
+public partial interface ICortiClient { }
