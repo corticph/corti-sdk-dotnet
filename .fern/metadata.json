@@ -9,7 +9,7 @@
     "generate-error-types": true,
     "include-exception-handler": true,
     "inline-path-parameters": true,
-    "experimental-readonly-constants": true,
+    "generate-literals": true,
     "experimental-enable-websockets": true,
     "temporary-websocket-environments": {
       "/interactions/": {
