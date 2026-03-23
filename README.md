@@ -7,6 +7,7 @@ The Corti C# library provides convenient access to the Corti APIs from C#.
 
 ## Table of Contents
 
+- [Documentation](#documentation)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Reference](#reference)
@@ -21,6 +22,10 @@ The Corti C# library provides convenient access to the Corti APIs from C#.
   - [Additional Query Parameters](#additional-query-parameters)
   - [Forward Compatible Enums](#forward-compatible-enums)
 - [Contributing](#contributing)
+
+## Documentation
+
+API reference documentation is available [here](https://docs.corti.ai/api-reference).
 
 ## Requirements
 
@@ -44,8 +49,16 @@ Instantiate and use the client with the following:
 using Corti;
 
 var client = new CortiClient("TENANT_NAME", "client_id", "client_secret");
-await client.Auth.GetTokenAsync(
-    new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
+await client.Interactions.CreateAsync(
+    new InteractionsCreateRequest
+    {
+        Encounter = new InteractionsEncounterCreateRequest
+        {
+            Identifier = "identifier",
+            Status = InteractionsEncounterStatusEnum.Planned,
+            Type = InteractionsEncounterTypeEnum.FirstConsultation,
+        },
+    }
 );
 ```
 
@@ -58,7 +71,7 @@ will be thrown.
 using Corti;
 
 try {
-    var response = await client.Auth.GetTokenAsync(...);
+    var response = await client.Interactions.CreateAsync(...);
 } catch (CortiClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -98,7 +111,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -111,7 +124,7 @@ var response = await client.Auth.GetTokenAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
@@ -127,7 +140,7 @@ Access raw HTTP response data (status code, headers, URL) alongside parsed respo
 using Corti;
 
 // Access raw response data (status code, headers, etc.) alongside the parsed response
-var result = await client.Auth.GetTokenAsync(...).WithRawResponse();
+var result = await client.Interactions.CreateAsync(...).WithRawResponse();
 
 // Access the parsed data
 var data = result.Data;
@@ -144,7 +157,7 @@ if (headers.TryGetValue("X-Request-Id", out var requestId))
 }
 
 // For the default behavior, simply await without .WithRawResponse()
-var data = await client.Auth.GetTokenAsync(...);
+var data = await client.Interactions.CreateAsync(...);
 ```
 
 ### Additional Headers
@@ -152,7 +165,7 @@ var data = await client.Auth.GetTokenAsync(...);
 If you would like to send additional headers as part of the request, use the `AdditionalHeaders` request option.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         AdditionalHeaders = new Dictionary<string, string?>
@@ -168,7 +181,7 @@ var response = await client.Auth.GetTokenAsync(
 If you would like to send additional query parameters as part of the request, use the `AdditionalQueryParameters` request option.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         AdditionalQueryParameters = new Dictionary<string, string>
