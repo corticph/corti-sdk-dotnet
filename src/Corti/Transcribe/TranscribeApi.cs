@@ -25,12 +25,6 @@ public partial class TranscribeApi
     }
 
     /// <summary>
-    /// Event handler for TranscribeConfigStatusMessage.
-    /// Use TranscribeConfigStatusMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage = new();
-
-    /// <summary>
     /// Event handler for TranscribeUsageMessage.
     /// Use TranscribeUsageMessage.Subscribe(...) to receive messages.
     /// </summary>
@@ -65,6 +59,12 @@ public partial class TranscribeApi
     /// Use TranscribeCommandMessage.Subscribe(...) to receive messages.
     /// </summary>
     public readonly Event<TranscribeCommandMessage> TranscribeCommandMessage = new();
+
+    /// <summary>
+    /// Event handler for TranscribeConfigStatusMessage.
+    /// Use TranscribeConfigStatusMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage = new();
 
     /// <summary>
     /// Event handler for unknown/unrecognized message types.
@@ -125,13 +125,13 @@ public partial class TranscribeApi
     /// </summary>
     private void DisposeEvents()
     {
-        TranscribeConfigStatusMessage.Dispose();
         TranscribeUsageMessage.Dispose();
         TranscribeFlushedMessage.Dispose();
         TranscribeEndedMessage.Dispose();
         TranscribeErrorMessage.Dispose();
         TranscribeTranscriptMessage.Dispose();
         TranscribeCommandMessage.Dispose();
+        TranscribeConfigStatusMessage.Dispose();
         UnknownMessage.Dispose();
     }
 
@@ -150,14 +150,6 @@ public partial class TranscribeApi
         }
 
         // deserialize the message to find the correct event
-        {
-            if (JsonUtils.TryDeserialize(json, out TranscribeConfigStatusMessage? message))
-            {
-                await TranscribeConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
-                return;
-            }
-        }
-
         {
             if (JsonUtils.TryDeserialize(json, out TranscribeUsageMessage? message))
             {
@@ -202,6 +194,14 @@ public partial class TranscribeApi
             if (JsonUtils.TryDeserialize(json, out TranscribeCommandMessage? message))
             {
                 await TranscribeCommandMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out TranscribeConfigStatusMessage? message))
+            {
+                await TranscribeConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
