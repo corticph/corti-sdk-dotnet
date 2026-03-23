@@ -21,12 +21,6 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     }
 
     /// <summary>
-    /// Event handler for StreamConfigStatusMessage.
-    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamConfigStatusMessage> StreamConfigStatusMessage = new();
-
-    /// <summary>
     /// Event handler for StreamTranscriptMessage.
     /// Use StreamTranscriptMessage.Subscribe(...) to receive messages.
     /// </summary>
@@ -61,6 +55,12 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     /// Use StreamErrorMessage.Subscribe(...) to receive messages.
     /// </summary>
     public readonly Event<StreamErrorMessage> StreamErrorMessage = new();
+
+    /// <summary>
+    /// Event handler for StreamConfigStatusMessage.
+    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<StreamConfigStatusMessage> StreamConfigStatusMessage = new();
 
     /// <summary>
     /// Event handler for unknown/unrecognized message types.
@@ -122,13 +122,13 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     /// </summary>
     private void DisposeEvents()
     {
-        StreamConfigStatusMessage.Dispose();
         StreamTranscriptMessage.Dispose();
         StreamFactsMessage.Dispose();
         StreamFlushedMessage.Dispose();
         StreamEndedMessage.Dispose();
         StreamUsageMessage.Dispose();
         StreamErrorMessage.Dispose();
+        StreamConfigStatusMessage.Dispose();
         UnknownMessage.Dispose();
     }
 
@@ -147,14 +147,6 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
         }
 
         // deserialize the message to find the correct event
-        {
-            if (JsonUtils.TryDeserialize(json, out StreamConfigStatusMessage? message))
-            {
-                await StreamConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
-                return;
-            }
-        }
-
         {
             if (JsonUtils.TryDeserialize(json, out StreamTranscriptMessage? message))
             {
@@ -199,6 +191,14 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
             if (JsonUtils.TryDeserialize(json, out StreamErrorMessage? message))
             {
                 await StreamErrorMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamConfigStatusMessage? message))
+            {
+                await StreamConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
