@@ -8,6 +8,7 @@ src/Corti/Custom/
 
 # Thin stubs — custom logic lives in src/Corti/Custom/
 src/Corti/CortiClient.cs
+src/Corti/ICortiClient.cs
 src/Corti/Core/OAuthTokenProvider.cs
 
 # Name of the package

@@ -150,7 +150,7 @@ public partial class CortiClient : ICortiClient
         return new CortiClientOptions
         {
             TenantName = decoded.TenantName,
-            Environment = decoded.Environment, // implicit string → CortiClientEnvironment
+            Environment = CortiEnvironments.FromRegion(decoded.Environment),
             Auth = resolvedAuth,
             RequestOptions = requestOptions,
         };
