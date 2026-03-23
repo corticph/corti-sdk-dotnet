@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<InteractionsEncounterStatusEnum>))]
+[JsonConverter(typeof(InteractionsEncounterStatusEnum.InteractionsEncounterStatusEnumSerializer))]
 [Serializable]
 public readonly record struct InteractionsEncounterStatusEnum : IStringEnum
 {
@@ -59,6 +60,56 @@ public readonly record struct InteractionsEncounterStatusEnum : IStringEnum
     public static explicit operator string(InteractionsEncounterStatusEnum value) => value.Value;
 
     public static explicit operator InteractionsEncounterStatusEnum(string value) => new(value);
+
+    internal class InteractionsEncounterStatusEnumSerializer
+        : JsonConverter<InteractionsEncounterStatusEnum>
+    {
+        public override InteractionsEncounterStatusEnum Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new InteractionsEncounterStatusEnum(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            InteractionsEncounterStatusEnum value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override InteractionsEncounterStatusEnum ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new InteractionsEncounterStatusEnum(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            InteractionsEncounterStatusEnum value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

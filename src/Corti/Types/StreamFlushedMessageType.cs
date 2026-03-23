@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<StreamFlushedMessageType>))]
+[JsonConverter(typeof(StreamFlushedMessageType.StreamFlushedMessageTypeSerializer))]
 [Serializable]
 public readonly record struct StreamFlushedMessageType : IStringEnum
 {
@@ -49,6 +50,55 @@ public readonly record struct StreamFlushedMessageType : IStringEnum
     public static explicit operator string(StreamFlushedMessageType value) => value.Value;
 
     public static explicit operator StreamFlushedMessageType(string value) => new(value);
+
+    internal class StreamFlushedMessageTypeSerializer : JsonConverter<StreamFlushedMessageType>
+    {
+        public override StreamFlushedMessageType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new StreamFlushedMessageType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            StreamFlushedMessageType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override StreamFlushedMessageType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new StreamFlushedMessageType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            StreamFlushedMessageType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

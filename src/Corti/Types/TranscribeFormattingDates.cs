@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<TranscribeFormattingDates>))]
+[JsonConverter(typeof(TranscribeFormattingDates.TranscribeFormattingDatesSerializer))]
 [Serializable]
 public readonly record struct TranscribeFormattingDates : IStringEnum
 {
@@ -57,6 +58,55 @@ public readonly record struct TranscribeFormattingDates : IStringEnum
     public static explicit operator string(TranscribeFormattingDates value) => value.Value;
 
     public static explicit operator TranscribeFormattingDates(string value) => new(value);
+
+    internal class TranscribeFormattingDatesSerializer : JsonConverter<TranscribeFormattingDates>
+    {
+        public override TranscribeFormattingDates Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new TranscribeFormattingDates(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            TranscribeFormattingDates value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override TranscribeFormattingDates ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new TranscribeFormattingDates(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            TranscribeFormattingDates value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

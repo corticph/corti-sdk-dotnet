@@ -26,16 +26,15 @@ public record AuthTokenRequestRefresh : IJsonOnDeserialized
     [JsonPropertyName("client_secret")]
     public string? ClientSecret { get; set; }
 
+    [JsonRequired]
     [JsonPropertyName("grant_type")]
-    public string GrantType
-    {
-        get => "refresh_token";
-        set =>
-            value.Assert(
-                value == "refresh_token",
-                string.Format("'GrantType' must be {0}", "refresh_token")
-            );
-    }
+    public AuthTokenRequestRefresh.GrantTypeLiteral GrantType { get;
+#if NET5_0_OR_GREATER
+        init;
+#else
+        set;
+#endif
+    } = new();
 
     /// <summary>
     /// Refresh token received from a previous token response.
@@ -59,5 +58,79 @@ public record AuthTokenRequestRefresh : IJsonOnDeserialized
     public override string ToString()
     {
         return JsonUtils.Serialize(this);
+    }
+
+    [JsonConverter(typeof(GrantTypeLiteralConverter))]
+    public readonly struct GrantTypeLiteral
+    {
+        public const string Value = "refresh_token";
+
+        public static implicit operator string(GrantTypeLiteral _) => Value;
+
+        public override string ToString() => Value;
+
+        public override int GetHashCode() =>
+            global::System.StringComparer.Ordinal.GetHashCode(Value);
+
+        public override bool Equals(object? obj) => obj is GrantTypeLiteral;
+
+        public static bool operator ==(GrantTypeLiteral _, GrantTypeLiteral __) => true;
+
+        public static bool operator !=(GrantTypeLiteral _, GrantTypeLiteral __) => false;
+
+        internal sealed class GrantTypeLiteralConverter : JsonConverter<GrantTypeLiteral>
+        {
+            public override GrantTypeLiteral Read(
+                ref Utf8JsonReader reader,
+                global::System.Type typeToConvert,
+                JsonSerializerOptions options
+            )
+            {
+                var value = reader.GetString();
+                if (value != GrantTypeLiteral.Value)
+                {
+                    throw new JsonException(
+                        "Expected \""
+                            + GrantTypeLiteral.Value
+                            + "\" for type discriminator but got \""
+                            + value
+                            + "\"."
+                    );
+                }
+                return new GrantTypeLiteral();
+            }
+
+            public override void Write(
+                Utf8JsonWriter writer,
+                GrantTypeLiteral value,
+                JsonSerializerOptions options
+            ) => writer.WriteStringValue(GrantTypeLiteral.Value);
+
+            public override GrantTypeLiteral ReadAsPropertyName(
+                ref Utf8JsonReader reader,
+                global::System.Type typeToConvert,
+                JsonSerializerOptions options
+            )
+            {
+                var value = reader.GetString();
+                if (value != GrantTypeLiteral.Value)
+                {
+                    throw new JsonException(
+                        "Expected \""
+                            + GrantTypeLiteral.Value
+                            + "\" for type discriminator but got \""
+                            + value
+                            + "\"."
+                    );
+                }
+                return new GrantTypeLiteral();
+            }
+
+            public override void WriteAsPropertyName(
+                Utf8JsonWriter writer,
+                GrantTypeLiteral value,
+                JsonSerializerOptions options
+            ) => writer.WritePropertyName(GrantTypeLiteral.Value);
+        }
     }
 }

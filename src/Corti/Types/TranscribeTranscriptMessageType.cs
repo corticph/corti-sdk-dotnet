@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<TranscribeTranscriptMessageType>))]
+[JsonConverter(typeof(TranscribeTranscriptMessageType.TranscribeTranscriptMessageTypeSerializer))]
 [Serializable]
 public readonly record struct TranscribeTranscriptMessageType : IStringEnum
 {
@@ -49,6 +50,56 @@ public readonly record struct TranscribeTranscriptMessageType : IStringEnum
     public static explicit operator string(TranscribeTranscriptMessageType value) => value.Value;
 
     public static explicit operator TranscribeTranscriptMessageType(string value) => new(value);
+
+    internal class TranscribeTranscriptMessageTypeSerializer
+        : JsonConverter<TranscribeTranscriptMessageType>
+    {
+        public override TranscribeTranscriptMessageType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new TranscribeTranscriptMessageType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            TranscribeTranscriptMessageType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override TranscribeTranscriptMessageType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new TranscribeTranscriptMessageType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            TranscribeTranscriptMessageType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

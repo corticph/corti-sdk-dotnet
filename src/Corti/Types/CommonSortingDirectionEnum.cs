@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<CommonSortingDirectionEnum>))]
+[JsonConverter(typeof(CommonSortingDirectionEnum.CommonSortingDirectionEnumSerializer))]
 [Serializable]
 public readonly record struct CommonSortingDirectionEnum : IStringEnum
 {
@@ -51,6 +52,55 @@ public readonly record struct CommonSortingDirectionEnum : IStringEnum
     public static explicit operator string(CommonSortingDirectionEnum value) => value.Value;
 
     public static explicit operator CommonSortingDirectionEnum(string value) => new(value);
+
+    internal class CommonSortingDirectionEnumSerializer : JsonConverter<CommonSortingDirectionEnum>
+    {
+        public override CommonSortingDirectionEnum Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new CommonSortingDirectionEnum(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            CommonSortingDirectionEnum value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override CommonSortingDirectionEnum ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new CommonSortingDirectionEnum(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            CommonSortingDirectionEnum value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values
