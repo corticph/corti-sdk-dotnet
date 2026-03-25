@@ -24,12 +24,12 @@ public static class CortiEnvironments
     /// </summary>
     public static CortiClientEnvironment FromBaseUrl(string baseUrl) => new()
     {
-        Base   = baseUrl,
-        Wss    = System.Text.RegularExpressions.Regex.Replace(
+        Base = baseUrl,
+        Wss = System.Text.RegularExpressions.Regex.Replace(
                      baseUrl,
                      @"^https?",
                      m => m.Value == "https" ? "wss" : "ws"),
-        Login  = baseUrl,
+        Login = baseUrl,
         Agents = baseUrl,
     };
 }

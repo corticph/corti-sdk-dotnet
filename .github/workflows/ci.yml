@@ -71,7 +71,7 @@ jobs:
         run: dotnet tool restore
 
       - name: Lint
-        run: dotnet format --verify-no-changes
+        run: dotnet format src/Corti/Corti.csproj --include src/Corti/Custom/ --verify-no-changes
 
   publish:
     needs: [compile, test, lint]

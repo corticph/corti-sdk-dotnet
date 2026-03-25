@@ -24,7 +24,8 @@ public partial class CortiClient : ICortiClient
             Environment = environment,
             Auth = auth,
             RequestOptions = requestOptions,
-        }) { }
+        })
+    { }
 
     /// <summary>
     /// Auto-derive: tenant and environment are decoded from the JWT inside the bearer token.
@@ -43,7 +44,8 @@ public partial class CortiClient : ICortiClient
         {
             Environment = environment,
             RequestOptions = requestOptions,
-        }) { }
+        })
+    { }
 
     private CortiClient(CortiClientOptions options)
     {
