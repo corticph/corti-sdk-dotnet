@@ -38,6 +38,12 @@ public record CodesGeneralReadResponse : IJsonOnDeserialized
     [JsonPropertyName("evidences")]
     public IEnumerable<CodesGeneralReadResponseEvidencesItem>? Evidences { get; set; }
 
+    /// <summary>
+    /// Codes the model also considered for this prediction.
+    /// </summary>
+    [JsonPropertyName("alternatives")]
+    public IEnumerable<CodesGeneralReadResponseAlternativesItem>? Alternatives { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

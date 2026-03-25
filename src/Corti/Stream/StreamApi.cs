@@ -5,7 +5,7 @@ using Corti.Core.WebSockets;
 
 namespace Corti;
 
-public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyChanged
+public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INotifyPropertyChanged
 {
     private readonly StreamApi.Options _options;
 
@@ -19,12 +19,6 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
         add => _client.PropertyChanged += value;
         remove => _client.PropertyChanged -= value;
     }
-
-    /// <summary>
-    /// Event handler for StreamConfigStatusMessage.
-    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamConfigStatusMessage> StreamConfigStatusMessage = new();
 
     /// <summary>
     /// Event handler for StreamTranscriptMessage.
@@ -63,6 +57,18 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
     public readonly Event<StreamErrorMessage> StreamErrorMessage = new();
 
     /// <summary>
+    /// Event handler for StreamConfigStatusMessage.
+    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<StreamConfigStatusMessage> StreamConfigStatusMessage = new();
+
+    /// <summary>
+    /// Event handler for unknown/unrecognized message types.
+    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
+    /// </summary>
+    public readonly Event<JsonElement> UnknownMessage = new();
+
+    /// <summary>
     /// Constructor with options
     /// </summary>
     public StreamApi(StreamApi.Options options)
@@ -78,6 +84,12 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
         uri.Path =
             $"{uri.Path.TrimEnd('/')}/interactions/{Uri.EscapeDataString(_options.Id)}/streams";
         _client = new WebSocketClient(uri.Uri, OnTextMessage);
+        _client.HttpInvoker = _options.HttpInvoker;
+        _client.IsReconnectionEnabled = _options.IsReconnectionEnabled;
+        _client.ReconnectTimeout = _options.ReconnectTimeout;
+        _client.ErrorReconnectTimeout = _options.ErrorReconnectTimeout;
+        _client.LostReconnectTimeout = _options.LostReconnectTimeout;
+        _client.Backoff = _options.ReconnectBackoff;
     }
 
     /// <summary>
@@ -101,17 +113,23 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
     public Event<Exception> ExceptionOccurred => _client.ExceptionOccurred;
 
     /// <summary>
+    /// Event raised when the WebSocket connection is re-established after a disconnect.
+    /// </summary>
+    public Event<ReconnectionInfo> Reconnecting => _client.Reconnecting;
+
+    /// <summary>
     /// Disposes of event subscriptions
     /// </summary>
     private void DisposeEvents()
     {
-        StreamConfigStatusMessage.Dispose();
         StreamTranscriptMessage.Dispose();
         StreamFactsMessage.Dispose();
         StreamFlushedMessage.Dispose();
         StreamEndedMessage.Dispose();
         StreamUsageMessage.Dispose();
         StreamErrorMessage.Dispose();
+        StreamConfigStatusMessage.Dispose();
+        UnknownMessage.Dispose();
     }
 
     /// <summary>
@@ -119,116 +137,124 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
     /// </summary>
     private async Task OnTextMessage(Stream stream)
     {
-        using var json = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
-
-        if (!json.RootElement.TryGetProperty("type", out var typeProp))
+        using var json = await JsonSerializer.DeserializeAsync<JsonDocument>(stream);
+        if (json == null)
         {
             await ExceptionOccurred
-                .RaiseEvent(new Exception("Invalid message - Missing 'type' field"))
+                .RaiseEvent(new Exception("Invalid message - Not valid JSON"))
                 .ConfigureAwait(false);
             return;
         }
 
-        var typeValue = typeProp.GetString();
-
-        switch (typeValue)
+        // deserialize the message to find the correct event
         {
-            case "CONFIG_ACCEPTED":
-            case "CONFIG_DENIED":
-            case "CONFIG_MISSING":
-            case "CONFIG_NOT_PROVIDED":
-            case "CONFIG_ALREADY_RECEIVED":
-            case "CONFIG_TIMEOUT":
+            if (JsonUtils.TryDeserialize(json, out StreamTranscriptMessage? message))
             {
-                var message = json.RootElement.Deserialize<global::Corti.StreamConfigStatusMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamConfigStatusMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
-            }
-            case "transcript":
-            {
-                var message = json.RootElement.Deserialize<global::Corti.StreamTranscriptMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamTranscriptMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
-            }
-            case "facts":
-            {
-                var message = json.RootElement.Deserialize<global::Corti.StreamFactsMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamFactsMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
-            }
-            case "flushed":
-            {
-                var message = json.RootElement.Deserialize<global::Corti.StreamFlushedMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamFlushedMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
-            }
-            case "ENDED":
-            {
-                var message = json.RootElement.Deserialize<global::Corti.StreamEndedMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamEndedMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
-            }
-            case "usage":
-            {
-                var message = json.RootElement.Deserialize<global::Corti.StreamUsageMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamUsageMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
-            }
-            case "error":
-            {
-                var message = json.RootElement.Deserialize<global::Corti.StreamErrorMessage>(JsonOptions.JsonSerializerOptions);
-                if (message != null)
-                {
-                    await StreamErrorMessage.RaiseEvent(message).ConfigureAwait(false);
-                    return;
-                }
-                break;
+                await StreamTranscriptMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
             }
         }
 
-        await ExceptionOccurred
-            .RaiseEvent(new Exception($"Unknown message type: {typeValue}"))
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamFactsMessage? message))
+            {
+                await StreamFactsMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamFlushedMessage? message))
+            {
+                await StreamFlushedMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamEndedMessage? message))
+            {
+                await StreamEndedMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamUsageMessage? message))
+            {
+                await StreamUsageMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamErrorMessage? message))
+            {
+                await StreamErrorMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamConfigStatusMessage? message))
+            {
+                await StreamConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        await UnknownMessage.RaiseEvent(json.RootElement.Clone()).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Serializes and sends a JSON message to the server
+    /// </summary>
+    private async Task SendJsonAsync(object message, CancellationToken cancellationToken = default)
+    {
+        await _client
+            .SendInstant(JsonUtils.Serialize(message), cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Sends a binary message to the server
+    /// </summary>
+    private async Task SendBinaryAsync(
+        byte[] message,
+        CancellationToken cancellationToken = default
+    )
+    {
+        await _client.SendInstant(message, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Injects a fake text message for testing. Dispatches through the normal message handling pipeline.
+    /// </summary>
+    internal async Task InjectTestMessage(string rawJson)
+    {
+        using var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(rawJson));
+        await OnTextMessage(stream).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Asynchronously establishes a WebSocket connection.
     /// </summary>
-    public async Task ConnectAsync()
+    public async Task ConnectAsync(CancellationToken cancellationToken = default)
     {
-        await _client.ConnectAsync().ConfigureAwait(false);
+#if NET6_0_OR_GREATER
+        _client.DeflateOptions = _options.EnableCompression
+            ? new System.Net.WebSockets.WebSocketDeflateOptions()
+            : null;
+#endif
+        await _client.ConnectAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Asynchronously closes the WebSocket connection.
     /// </summary>
-    public async Task CloseAsync()
+    public async Task CloseAsync(CancellationToken cancellationToken = default)
     {
-        await _client.CloseAsync().ConfigureAwait(false);
+        await _client.CloseAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -254,33 +280,39 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
     /// <summary>
     /// Sends a StreamConfigMessage message to the server
     /// </summary>
-    public async Task Send(StreamConfigMessage message)
+    public async Task Send(
+        StreamConfigMessage message,
+        CancellationToken cancellationToken = default
+    )
     {
-        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await SendJsonAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
-    /// Sends an audio message to the server as binary.
+    /// Sends a audio message to the server
     /// </summary>
-    public async Task Send(byte[] message)
+    public async Task Send(byte[] message, CancellationToken cancellationToken = default)
     {
-        await _client.SendInstant(message).ConfigureAwait(false);
+        await SendBinaryAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Sends a StreamFlushMessage message to the server
     /// </summary>
-    public async Task Send(StreamFlushMessage message)
+    public async Task Send(
+        StreamFlushMessage message,
+        CancellationToken cancellationToken = default
+    )
     {
-        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await SendJsonAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
     /// Sends a StreamEndMessage message to the server
     /// </summary>
-    public async Task Send(StreamEndMessage message)
+    public async Task Send(StreamEndMessage message, CancellationToken cancellationToken = default)
     {
-        await _client.SendInstant(JsonUtils.Serialize(message)).ConfigureAwait(false);
+        await SendJsonAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -309,6 +341,17 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
         }
 
         /// <summary>
+        /// Enable per-message deflate compression (RFC 7692). When true, the client sets <c>ClientWebSocketOptions.DangerousDeflateOptions</c> before connecting. Compression is negotiated during the handshake; if the server does not support it, the connection proceeds uncompressed. Default: <c>false</c>.
+        /// <para><b>Security warning:</b> do not enable compression when transmitting data containing secrets — compressed encrypted payloads are vulnerable to CRIME/BREACH side-channel attacks. See <see href="https://learn.microsoft.com/dotnet/api/system.net.websockets.clientwebsocketoptions.dangerousdeflateoptions">ClientWebSocketOptions.DangerousDeflateOptions</see> for details.</para>
+        /// </summary>
+        public bool EnableCompression { get; set; } = false;
+
+        /// <summary>
+        /// Optional HTTP/2 handler for multiplexed WebSocket connections (.NET 7+).
+        /// </summary>
+        public System.Net.Http.HttpMessageInvoker? HttpInvoker { get; set; }
+
+        /// <summary>
         /// Specifies the tenant context.
         /// </summary>
         public required string TenantName { get; set; }
@@ -322,6 +365,31 @@ public partial class StreamApi : IAsyncDisposable, IDisposable, INotifyPropertyC
         /// Unique identifier for the interaction session.
         /// </summary>
         public required string Id { get; set; }
+
+        /// <summary>
+        /// Enable or disable automatic reconnection. Default: false.
+        /// </summary>
+        public bool IsReconnectionEnabled { get; set; } = false;
+
+        /// <summary>
+        /// Time to wait before reconnecting if no message comes from the server. Set null to disable. Default: 1 minute.
+        /// </summary>
+        public TimeSpan? ReconnectTimeout { get; set; } = TimeSpan.FromMinutes(1);
+
+        /// <summary>
+        /// Time to wait before reconnecting if the last reconnection attempt failed. Set null to disable. Default: 1 minute.
+        /// </summary>
+        public TimeSpan? ErrorReconnectTimeout { get; set; } = TimeSpan.FromMinutes(1);
+
+        /// <summary>
+        /// Time to wait before reconnecting if the connection is lost with a transient error. Set null to disable (reconnect immediately). Default: null.
+        /// </summary>
+        public TimeSpan? LostReconnectTimeout { get; set; }
+
+        /// <summary>
+        /// Backoff strategy for reconnection delays. Controls interval growth, jitter, and max attempts. Set to null to use fixed-interval reconnection (legacy behavior). Default: exponential backoff, 1s→60s, unlimited attempts, with jitter.
+        /// </summary>
+        public ReconnectStrategy? ReconnectBackoff { get; set; } = new ReconnectStrategy();
     }
 
     /// <summary>

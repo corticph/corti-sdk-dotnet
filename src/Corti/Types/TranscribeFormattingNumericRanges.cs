@@ -1,15 +1,18 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<TranscribeFormattingNumericRanges>))]
+[JsonConverter(
+    typeof(TranscribeFormattingNumericRanges.TranscribeFormattingNumericRangesSerializer)
+)]
 [Serializable]
 public readonly record struct TranscribeFormattingNumericRanges : IStringEnum
 {
-    public static readonly TranscribeFormattingNumericRanges AsDictated = new(Values.AsDictated);
-
     public static readonly TranscribeFormattingNumericRanges Numerals = new(Values.Numerals);
+
+    public static readonly TranscribeFormattingNumericRanges AsDictated = new(Values.AsDictated);
 
     public TranscribeFormattingNumericRanges(string value)
     {
@@ -52,14 +55,64 @@ public readonly record struct TranscribeFormattingNumericRanges : IStringEnum
 
     public static explicit operator TranscribeFormattingNumericRanges(string value) => new(value);
 
+    internal class TranscribeFormattingNumericRangesSerializer
+        : JsonConverter<TranscribeFormattingNumericRanges>
+    {
+        public override TranscribeFormattingNumericRanges Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new TranscribeFormattingNumericRanges(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            TranscribeFormattingNumericRanges value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override TranscribeFormattingNumericRanges ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new TranscribeFormattingNumericRanges(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            TranscribeFormattingNumericRanges value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
+
     /// <summary>
     /// Constant strings for enum values
     /// </summary>
     [Serializable]
     public static class Values
     {
-        public const string AsDictated = "as_dictated";
-
         public const string Numerals = "numerals";
+
+        public const string AsDictated = "as_dictated";
     }
 }

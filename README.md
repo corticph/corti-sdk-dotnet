@@ -1,18 +1,17 @@
-# Corti.Sdk C# Library
+# Corti C# Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fcorticph%2Fcorti-sdk-dotnet)
 [![nuget shield](https://img.shields.io/nuget/v/Corti.Sdk)](https://nuget.org/packages/Corti.Sdk)
 
-The Corti.Sdk C# library provides convenient access to the Corti APIs from C#.
-
-> **Note:** We consider this package **alpha**. APIs may change before a stable release.
+The Corti C# library provides convenient access to the Corti APIs from C#.
 
 ## Table of Contents
 
+- [Documentation](#documentation)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Reference](#reference)
 - [Usage](#usage)
+- [Authentication](#authentication)
 - [Exception Handling](#exception-handling)
 - [Pagination](#pagination)
 - [Advanced](#advanced)
@@ -24,6 +23,13 @@ The Corti.Sdk C# library provides convenient access to the Corti APIs from C#.
   - [Forward Compatible Enums](#forward-compatible-enums)
 - [Contributing](#contributing)
 
+## Documentation
+
+- [Documentation](https://docs.corti.ai/)
+- [API Reference](https://docs.corti.ai/api-reference)
+- [Console](https://console.corti.app/) — get your credentials here
+- [Examples](https://github.com/corticph/corti-examples)
+
 ## Requirements
 
 This SDK requires:
@@ -34,44 +40,105 @@ This SDK requires:
 dotnet add package Corti.Sdk
 ```
 
-## Reference
-
-A full reference for this library is available [here](https://github.com/corticph/corti-sdk-dotnet/blob/HEAD/./reference.md).
-
 ## Usage
 
-Create a client with **tenant name**, **environment**, and **auth**. The environment is a `CortiClientEnvironment` (e.g. `CortiClientEnvironment.Eu`, `CortiClientEnvironment.Us`, or `CortiClientEnvironment.FromRegion("eu")`). Auth is one of the `CortiClientAuth` variants (e.g. client credentials, ROPC, Bearer, PKCE, authorization code).
+Instantiate and use the client with the following:
 
 ```csharp
 using Corti;
 
-// Client credentials (tenant + environment + clientId + clientSecret)
-var client = new CortiClient(
-    "TENANT_NAME",
-    CortiClientEnvironment.Eu,
-    new CortiClientAuth.ClientCredentials("client_id", "client_secret")
+var client = new CortiClient("TENANT_NAME", "YOUR_ENVIRONMENT_ID", new CortiClientAuth.ClientCredentials("CLIENT_ID", "CLIENT_SECRET"));
+await client.Interactions.CreateAsync(
+    new InteractionsCreateRequest
+    {
+        Encounter = new InteractionsEncounterCreateRequest
+        {
+            Identifier = "identifier",
+            Status = InteractionsEncounterStatusEnum.Planned,
+            Type = InteractionsEncounterTypeEnum.FirstConsultation,
+        },
+    }
 );
-
-// Use the API (token is obtained automatically by the client)
-var factGroups = await client.Facts.FactGroupsListAsync();
 ```
 
-To get a **raw token** without creating a full client (e.g. for client credentials or ROPC), use `CustomAuthClient.Create` and `GetTokenAsync`:
+## Authentication
+
+The SDK supports several OAuth 2.0 flows. In all cases the SDK manages tokens in memory — before each request it checks whether the stored access token is still valid, and if not, calls the appropriate token endpoint transparently. No manual token management is needed.
+
+### Client Credentials (recommended for server-side apps)
+
+The SDK fetches and refreshes tokens automatically using your client credentials.
 
 ```csharp
-var auth = CustomAuthClient.Create(new CortiAuthClientOptions
-{
-    TenantName = "TENANT_NAME",
-    Environment = CortiClientEnvironment.Eu,
-});
-var tokenResponse = await auth.GetTokenAsync(
-    new OAuthTokenRequest { ClientId = "client_id", ClientSecret = "client_secret" }
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.ClientCredentials("YOUR_CLIENT_ID", "YOUR_CLIENT_SECRET")
 );
 ```
 
-Other auth options: `CortiClientAuth.Ropc(clientId, username, password)`, `CortiClientAuth.Bearer(accessToken)`, `CortiClientAuth.AuthorizationCode(...)`, `CortiClientAuth.Pkce(...)`. For Bearer tokens, you can also use the constructor `new CortiClient(CortiClientAuth.Bearer(accessToken))` and the SDK will derive tenant and environment from the JWT.
+### Bearer token (pre-obtained)
 
-The client exposes **Interactions**, **Recordings**, **Transcripts**, **Facts**, **Documents**, **Templates**, **Codes**, and **Agents** for REST APIs. For real-time audio, use `await client.CreateStreamApiAsync(interactionId)` or `await client.CreateTranscribeApiAsync()` to get a WebSocket API instance.
+Use when you already have a valid access token. Pass `ClientId` + `RefreshToken` to enable automatic renewal when the token expires.
+
+```csharp
+// Static token — no automatic renewal
+var client = new CortiClient(new CortiClientAuth.Bearer("YOUR_ACCESS_TOKEN"));
+
+// Token with automatic refresh via stored refresh token
+var client = new CortiClient(new CortiClientAuth.Bearer(
+    AccessToken: "YOUR_ACCESS_TOKEN",
+    ClientId: "YOUR_CLIENT_ID",
+    RefreshToken: "YOUR_REFRESH_TOKEN",
+    ExpiresIn: 300,          // seconds until access token expires
+    RefreshExpiresIn: 1800   // seconds until refresh token expires
+));
+```
+
+### Bearer token with custom refresh
+
+Use when your application manages token renewal (e.g. via a proxy or an external identity provider). The SDK calls `RefreshAccessToken` whenever the stored token expires.
+
+```csharp
+var client = new CortiClient(new CortiClientAuth.BearerCustomRefresh(
+    RefreshAccessToken: async (refreshToken, ct) =>
+    {
+        // call your own token endpoint and return the new token
+        return new CustomRefreshResult { AccessToken = "NEW_TOKEN", ExpiresIn = 300 };
+    },
+    AccessToken: "YOUR_ACCESS_TOKEN"
+));
+```
+
+### Resource Owner Password Credentials (ROPC)
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.Ropc("YOUR_CLIENT_ID", "USERNAME", "PASSWORD")
+);
+```
+
+### Authorization Code
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.AuthorizationCode("YOUR_CLIENT_ID", "YOUR_CLIENT_SECRET", "AUTH_CODE", "YOUR_REDIRECT_URI")
+);
+```
+
+### PKCE
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.Pkce("YOUR_CLIENT_ID", "AUTH_CODE", "YOUR_REDIRECT_URI", "YOUR_CODE_VERIFIER")
+);
+```
 
 ## Exception Handling
 
@@ -82,7 +149,7 @@ will be thrown.
 using Corti;
 
 try {
-    var response = await client.Auth.GetTokenAsync(...);
+    var response = await client.Interactions.CreateAsync(...);
 } catch (CortiClientApiException e) {
     System.Console.WriteLine(e.Body);
     System.Console.WriteLine(e.StatusCode);
@@ -96,11 +163,7 @@ List endpoints are paginated. The SDK provides an async enumerable so that you c
 ```csharp
 using Corti;
 
-var client = new CortiClient(
-    "TENANT_NAME",
-    CortiClientEnvironment.Eu,
-    new CortiClientAuth.ClientCredentials("client_id", "client_secret")
-);
+var client = new CortiClient("TENANT_NAME", "YOUR_ENVIRONMENT_ID", new CortiClientAuth.ClientCredentials("CLIENT_ID", "CLIENT_SECRET"));
 var items = await client.Interactions.ListAsync(new InteractionsListRequest());
 
 await foreach (var item in items)
@@ -126,7 +189,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `MaxRetries` request option to configure this behavior.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         MaxRetries: 0 // Override MaxRetries at the request level
@@ -139,7 +202,7 @@ var response = await client.Auth.GetTokenAsync(
 The SDK defaults to a 30 second timeout. Use the `Timeout` option to configure this behavior.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         Timeout: TimeSpan.FromSeconds(3) // Override timeout to 3s
@@ -155,7 +218,7 @@ Access raw HTTP response data (status code, headers, URL) alongside parsed respo
 using Corti;
 
 // Access raw response data (status code, headers, etc.) alongside the parsed response
-var result = await client.Auth.GetTokenAsync(...).WithRawResponse();
+var result = await client.Interactions.CreateAsync(...).WithRawResponse();
 
 // Access the parsed data
 var data = result.Data;
@@ -172,7 +235,7 @@ if (headers.TryGetValue("X-Request-Id", out var requestId))
 }
 
 // For the default behavior, simply await without .WithRawResponse()
-var data = await client.Auth.GetTokenAsync(...);
+var data = await client.Interactions.CreateAsync(...);
 ```
 
 ### Additional Headers
@@ -180,7 +243,7 @@ var data = await client.Auth.GetTokenAsync(...);
 If you would like to send additional headers as part of the request, use the `AdditionalHeaders` request option.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         AdditionalHeaders = new Dictionary<string, string?>
@@ -196,7 +259,7 @@ var response = await client.Auth.GetTokenAsync(
 If you would like to send additional query parameters as part of the request, use the `AdditionalQueryParameters` request option.
 
 ```csharp
-var response = await client.Auth.GetTokenAsync(
+var response = await client.Interactions.CreateAsync(
     ...,
     new RequestOptions {
         AdditionalQueryParameters = new Dictionary<string, string>

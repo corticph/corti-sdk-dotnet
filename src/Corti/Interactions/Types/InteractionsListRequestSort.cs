@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<InteractionsListRequestSort>))]
+[JsonConverter(typeof(InteractionsListRequestSort.InteractionsListRequestSortSerializer))]
 [Serializable]
 public readonly record struct InteractionsListRequestSort : IStringEnum
 {
@@ -59,6 +60,56 @@ public readonly record struct InteractionsListRequestSort : IStringEnum
     public static explicit operator string(InteractionsListRequestSort value) => value.Value;
 
     public static explicit operator InteractionsListRequestSort(string value) => new(value);
+
+    internal class InteractionsListRequestSortSerializer
+        : JsonConverter<InteractionsListRequestSort>
+    {
+        public override InteractionsListRequestSort Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new InteractionsListRequestSort(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            InteractionsListRequestSort value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override InteractionsListRequestSort ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new InteractionsListRequestSort(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            InteractionsListRequestSort value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

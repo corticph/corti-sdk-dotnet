@@ -1,7 +1,7 @@
 {
-  "cliVersion": "4.28.0",
+  "cliVersion": "4.43.1",
   "generatorName": "fernapi/fern-csharp-sdk",
-  "generatorVersion": "2.24.5",
+  "generatorVersion": "2.52.0",
   "generatorConfig": {
     "namespace": "Corti",
     "client-class-name": "CortiClient",
@@ -9,7 +9,7 @@
     "generate-error-types": true,
     "include-exception-handler": true,
     "inline-path-parameters": true,
-    "experimental-readonly-constants": true,
+    "generate-literals": true,
     "experimental-enable-websockets": true,
     "temporary-websocket-environments": {
       "/interactions/": {
@@ -26,6 +26,6 @@
       }
     }
   },
-  "originGitCommit": "e295a8c36bc7dec06888485b0963afb532d97f20",
-  "sdkVersion": "0.0.1.0"
+  "originGitCommit": "db8b795c16d8affac1c9eca2afb536a829c6e979",
+  "sdkVersion": "0.0.833"
 }

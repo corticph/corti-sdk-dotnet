@@ -1,17 +1,20 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<TranscribeFormattingTimes>))]
+[JsonConverter(typeof(TranscribeFormattingTimes.TranscribeFormattingTimesSerializer))]
 [Serializable]
 public readonly record struct TranscribeFormattingTimes : IStringEnum
 {
-    public static readonly TranscribeFormattingTimes AsDictated = new(Values.AsDictated);
+    public static readonly TranscribeFormattingTimes Locale = new(Values.Locale);
+
+    public static readonly TranscribeFormattingTimes H24 = new(Values.H24);
 
     public static readonly TranscribeFormattingTimes H12 = new(Values.H12);
 
-    public static readonly TranscribeFormattingTimes H24 = new(Values.H24);
+    public static readonly TranscribeFormattingTimes AsDictated = new(Values.AsDictated);
 
     public TranscribeFormattingTimes(string value)
     {
@@ -54,16 +57,67 @@ public readonly record struct TranscribeFormattingTimes : IStringEnum
 
     public static explicit operator TranscribeFormattingTimes(string value) => new(value);
 
+    internal class TranscribeFormattingTimesSerializer : JsonConverter<TranscribeFormattingTimes>
+    {
+        public override TranscribeFormattingTimes Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new TranscribeFormattingTimes(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            TranscribeFormattingTimes value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override TranscribeFormattingTimes ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new TranscribeFormattingTimes(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            TranscribeFormattingTimes value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
+
     /// <summary>
     /// Constant strings for enum values
     /// </summary>
     [Serializable]
     public static class Values
     {
-        public const string AsDictated = "as_dictated";
+        public const string Locale = "locale";
+
+        public const string H24 = "h24";
 
         public const string H12 = "h12";
 
-        public const string H24 = "h24";
+        public const string AsDictated = "as_dictated";
     }
 }

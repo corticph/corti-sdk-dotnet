@@ -1,9 +1,12 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<AgentsCreateMcpServerTransportType>))]
+[JsonConverter(
+    typeof(AgentsCreateMcpServerTransportType.AgentsCreateMcpServerTransportTypeSerializer)
+)]
 [Serializable]
 public readonly record struct AgentsCreateMcpServerTransportType : IStringEnum
 {
@@ -55,6 +58,56 @@ public readonly record struct AgentsCreateMcpServerTransportType : IStringEnum
     public static explicit operator string(AgentsCreateMcpServerTransportType value) => value.Value;
 
     public static explicit operator AgentsCreateMcpServerTransportType(string value) => new(value);
+
+    internal class AgentsCreateMcpServerTransportTypeSerializer
+        : JsonConverter<AgentsCreateMcpServerTransportType>
+    {
+        public override AgentsCreateMcpServerTransportType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new AgentsCreateMcpServerTransportType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            AgentsCreateMcpServerTransportType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override AgentsCreateMcpServerTransportType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new AgentsCreateMcpServerTransportType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            AgentsCreateMcpServerTransportType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

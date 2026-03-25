@@ -115,7 +115,7 @@ public partial class InteractionsClient : IInteractionsClient
                         {
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 504:
                                 throw new GatewayTimeoutError(
@@ -214,7 +214,7 @@ public partial class InteractionsClient : IInteractionsClient
                                 );
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 500:
                                 throw new InternalServerError(
@@ -314,7 +314,7 @@ public partial class InteractionsClient : IInteractionsClient
                         {
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 504:
                                 throw new GatewayTimeoutError(
@@ -413,7 +413,7 @@ public partial class InteractionsClient : IInteractionsClient
                         {
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 504:
                                 throw new GatewayTimeoutError(
@@ -575,7 +575,7 @@ public partial class InteractionsClient : IInteractionsClient
                         {
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 504:
                                 throw new GatewayTimeoutError(

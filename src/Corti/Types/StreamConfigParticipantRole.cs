@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<StreamConfigParticipantRole>))]
+[JsonConverter(typeof(StreamConfigParticipantRole.StreamConfigParticipantRoleSerializer))]
 [Serializable]
 public readonly record struct StreamConfigParticipantRole : IStringEnum
 {
@@ -53,6 +54,56 @@ public readonly record struct StreamConfigParticipantRole : IStringEnum
     public static explicit operator string(StreamConfigParticipantRole value) => value.Value;
 
     public static explicit operator StreamConfigParticipantRole(string value) => new(value);
+
+    internal class StreamConfigParticipantRoleSerializer
+        : JsonConverter<StreamConfigParticipantRole>
+    {
+        public override StreamConfigParticipantRole Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new StreamConfigParticipantRole(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            StreamConfigParticipantRole value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override StreamConfigParticipantRole ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new StreamConfigParticipantRole(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            StreamConfigParticipantRole value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

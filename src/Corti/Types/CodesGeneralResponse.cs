@@ -12,14 +12,14 @@ public record CodesGeneralResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Highest confidence bundle of codes, preselected by the code prediction model
+    /// Codes predicted by the model.
     /// </summary>
     [JsonPropertyName("codes")]
     public IEnumerable<CodesGeneralReadResponse> Codes { get; set; } =
         new List<CodesGeneralReadResponse>();
 
     /// <summary>
-    /// Full list of candidate codes as predicted by the model, rank sorted by model confidence
+    /// Lower-confidence codes the model considered potentially relevant but excluded from the predicted set.
     /// </summary>
     [JsonPropertyName("candidates")]
     public IEnumerable<CodesGeneralReadResponse> Candidates { get; set; } =

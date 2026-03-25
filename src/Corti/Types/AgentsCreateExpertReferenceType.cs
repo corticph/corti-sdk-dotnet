@@ -1,9 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<AgentsCreateExpertReferenceType>))]
+[JsonConverter(typeof(AgentsCreateExpertReferenceType.AgentsCreateExpertReferenceTypeSerializer))]
 [Serializable]
 public readonly record struct AgentsCreateExpertReferenceType : IStringEnum
 {
@@ -49,6 +50,56 @@ public readonly record struct AgentsCreateExpertReferenceType : IStringEnum
     public static explicit operator string(AgentsCreateExpertReferenceType value) => value.Value;
 
     public static explicit operator AgentsCreateExpertReferenceType(string value) => new(value);
+
+    internal class AgentsCreateExpertReferenceTypeSerializer
+        : JsonConverter<AgentsCreateExpertReferenceType>
+    {
+        public override AgentsCreateExpertReferenceType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new AgentsCreateExpertReferenceType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            AgentsCreateExpertReferenceType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override AgentsCreateExpertReferenceType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new AgentsCreateExpertReferenceType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            AgentsCreateExpertReferenceType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

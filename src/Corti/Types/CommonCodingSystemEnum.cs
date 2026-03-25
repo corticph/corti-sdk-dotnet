@@ -1,13 +1,16 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(StringEnumSerializer<CommonCodingSystemEnum>))]
+[JsonConverter(typeof(CommonCodingSystemEnum.CommonCodingSystemEnumSerializer))]
 [Serializable]
 public readonly record struct CommonCodingSystemEnum : IStringEnum
 {
-    public static readonly CommonCodingSystemEnum Icd10Cm = new(Values.Icd10Cm);
+    public static readonly CommonCodingSystemEnum Icd10CmInpatient = new(Values.Icd10CmInpatient);
+
+    public static readonly CommonCodingSystemEnum Icd10CmOutpatient = new(Values.Icd10CmOutpatient);
 
     public static readonly CommonCodingSystemEnum Icd10Pcs = new(Values.Icd10Pcs);
 
@@ -54,13 +57,64 @@ public readonly record struct CommonCodingSystemEnum : IStringEnum
 
     public static explicit operator CommonCodingSystemEnum(string value) => new(value);
 
+    internal class CommonCodingSystemEnumSerializer : JsonConverter<CommonCodingSystemEnum>
+    {
+        public override CommonCodingSystemEnum Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new CommonCodingSystemEnum(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            CommonCodingSystemEnum value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override CommonCodingSystemEnum ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new CommonCodingSystemEnum(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            CommonCodingSystemEnum value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
+
     /// <summary>
     /// Constant strings for enum values
     /// </summary>
     [Serializable]
     public static class Values
     {
-        public const string Icd10Cm = "icd10cm";
+        public const string Icd10CmInpatient = "icd10cm-inpatient";
+
+        public const string Icd10CmOutpatient = "icd10cm-outpatient";
 
         public const string Icd10Pcs = "icd10pcs";
 

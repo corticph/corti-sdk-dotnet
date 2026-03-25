@@ -15,13 +15,25 @@ public record CodesGeneralReadResponseEvidencesItem : IJsonOnDeserialized
     /// Index from the context input array
     /// </summary>
     [JsonPropertyName("contextIndex")]
-    public int? ContextIndex { get; set; }
+    public required int ContextIndex { get; set; }
 
     /// <summary>
     /// Part of input text
     /// </summary>
     [JsonPropertyName("text")]
-    public string? Text { get; set; }
+    public required string Text { get; set; }
+
+    /// <summary>
+    /// 0-based start character offset of the evidence span (inclusive)
+    /// </summary>
+    [JsonPropertyName("start")]
+    public required int Start { get; set; }
+
+    /// <summary>
+    /// 0-based end character offset of the evidence span (exclusive)
+    /// </summary>
+    [JsonPropertyName("end")]
+    public required int End { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

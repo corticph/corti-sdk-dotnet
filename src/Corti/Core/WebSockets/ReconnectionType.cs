@@ -5,7 +5,7 @@ namespace Corti.Core.WebSockets;
 /// <summary>
 /// Specifies the type of reconnection that occurred in a WebSocket connection.
 /// </summary>
-internal enum ReconnectionType
+public enum ReconnectionType
 {
     /// <summary>
     /// Initial connection to the WebSocket stream.
