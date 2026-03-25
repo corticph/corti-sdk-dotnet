@@ -5,6 +5,55 @@ namespace Corti;
 
 public partial class TranscribeApi
 {
+    /// <summary>
+    /// Connects and sends configuration, resolving only after CONFIG_ACCEPTED.
+    /// Throws <see cref="InvalidOperationException"/> on CONFIG_DENIED / CONFIG_TIMEOUT.
+    /// </summary>
+    public async Task ConnectAsync(
+        TranscribeConfig configuration,
+        CancellationToken cancellationToken = default)
+    {
+        await ConnectAsync(cancellationToken).ConfigureAwait(false);
+
+        await ConnectWithConfigAckAsync(configuration, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task ConnectWithConfigAckAsync(TranscribeConfig configuration, CancellationToken cancellationToken)
+    {
+        var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        Action<TranscribeConfigStatusMessage>? handler = null;
+        handler = (msg) =>
+        {
+            if (msg.Type == TranscribeConfigStatusMessageType.ConfigAccepted)
+            {
+                TranscribeConfigStatusMessage.Unsubscribe(handler!);
+                tcs.TrySetResult(true);
+            }
+            else if (
+                msg.Type == TranscribeConfigStatusMessageType.ConfigDenied ||
+                msg.Type == TranscribeConfigStatusMessageType.ConfigTimeout)
+            {
+                TranscribeConfigStatusMessage.Unsubscribe(handler!);
+                tcs.TrySetException(new InvalidOperationException($"Config rejected: {msg.Type}"));
+            }
+        };
+
+        TranscribeConfigStatusMessage.Subscribe(handler);
+
+        await Send(new TranscribeConfigMessage { Configuration = configuration }, cancellationToken).ConfigureAwait(false);
+
+        try
+        {
+            await tcs.Task.ConfigureAwait(false);
+        }
+        catch
+        {
+            await CloseAsync(cancellationToken).ConfigureAwait(false);
+            throw;
+        }
+    }
+
     Event<TranscribeConfigStatusMessage> ITranscribeApi.TranscribeConfigStatusMessage => TranscribeConfigStatusMessage;
     Event<TranscribeUsageMessage> ITranscribeApi.TranscribeUsageMessage => TranscribeUsageMessage;
     Event<TranscribeFlushedMessage> ITranscribeApi.TranscribeFlushedMessage => TranscribeFlushedMessage;
