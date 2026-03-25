@@ -14,3 +14,6 @@ src/Corti/Core/OAuthTokenProvider.cs
 
 # Name of the package
 src/Corti/Corti.Custom.props
+
+# Tests patched to reflect locale-dependent numeric serialization behaviour
+src/Corti.Test/Core/WebSockets/QueryTests.cs

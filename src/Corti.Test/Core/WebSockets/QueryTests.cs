@@ -1,3 +1,4 @@
+using System.Globalization;
 using Corti.Core.WebSockets;
 using NUnit.Framework;
 
@@ -111,7 +112,8 @@ public class QueryTests
         var query = new Query();
         query.Add("rate", 1.5f);
 
-        Assert.That(query.ToString(), Does.StartWith("rate=1.5"));
+        var expected = Uri.EscapeDataString(1.5f.ToString());
+        Assert.That(query.ToString(), Does.StartWith($"rate={expected}"));
     }
 
     [Test]
@@ -120,7 +122,8 @@ public class QueryTests
         var query = new Query();
         query.Add("pi", 3.14159);
 
-        Assert.That(query.ToString(), Does.StartWith("pi=3.14159"));
+        var expected = Uri.EscapeDataString(3.14159.ToString());
+        Assert.That(query.ToString(), Does.StartWith($"pi={expected}"));
     }
 
     [Test]
@@ -129,7 +132,8 @@ public class QueryTests
         var query = new Query();
         query.Add("price", 19.99m);
 
-        Assert.That(query.ToString(), Is.EqualTo("price=19.99"));
+        var expected = Uri.EscapeDataString(19.99m.ToString());
+        Assert.That(query.ToString(), Is.EqualTo($"price={expected}"));
     }
 
     [Test]
