@@ -18,5 +18,5 @@ src/Corti/Corti.Custom.props
 # Tests patched to reflect locale-dependent numeric serialization behaviour
 src/Corti.Test/Core/WebSockets/QueryTests.cs
 
-# CI workflow — pack/publish steps removed; Fern must not restore them
-.github/workflows/
+# CI/release workflows and GitHub config — hand-maintained, Fern must not overwrite
+.github/

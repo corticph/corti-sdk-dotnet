@@ -4,5 +4,10 @@
         <Title>Corti SDK</Title>
         <AssemblyName>Corti.Sdk</AssemblyName>
         <AssemblyTitle>Corti.Sdk</AssemblyTitle>
+        <!-- Strip pre-release suffix: AssemblyVersion/FileVersion must be numeric only -->
+        <AssemblyVersion>$(Version.Split('-')[0])</AssemblyVersion>
+        <FileVersion>$(Version.Split('-')[0])</FileVersion>
+        <!-- Full SemVer including pre-release suffix, readable via Assembly.GetInformationalVersion() -->
+        <InformationalVersion>$(Version)</InformationalVersion>
     </PropertyGroup>
 </Project>

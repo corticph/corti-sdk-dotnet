@@ -10,7 +10,7 @@ env:
   DOTNET_NOLOGO: true
 
 jobs:
-  ci:
+  compile:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,19 +25,100 @@ jobs:
       - name: Install tools
         run: dotnet tool restore
 
-      - name: Restore dependencies
+      - name: Restore
         run: dotnet restore src/Corti/Corti.csproj
 
       - name: Build
         run: dotnet build src/Corti/Corti.csproj --no-restore -c Release
 
-      - name: Restore test dependencies
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Install tools
+        run: dotnet tool restore
+
+      - name: Restore
         run: dotnet restore src/Corti.Test/Corti.Test.csproj
 
-      - name: Build tests
+      - name: Build
         run: dotnet build src/Corti.Test/Corti.Test.csproj --no-restore -c Release
 
       - name: Test
         run: dotnet test src/Corti.Test/Corti.Test.csproj --no-restore --no-build -c Release
 
+  lint:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Install tools
+        run: dotnet tool restore
+
+      - name: Lint
+        run: dotnet format --verify-no-changes
+
+  publish:
+    needs: [compile, test, lint]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          echo "tag=$TAG"
+          echo "version=$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set version
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          sed -i "s/Current = \"[^\"]*\"/Current = \"${VERSION}\"/" src/Corti/Core/Public/Version.cs
+          echo "Version.cs: $(grep Current src/Corti/Core/Public/Version.cs)"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Install tools
+        run: dotnet tool restore
+
+      - name: Restore
+        run: dotnet restore src/Corti/Corti.csproj
+
+      - name: Build
+        run: dotnet build src/Corti/Corti.csproj --no-restore -c Release
+
+      - name: Pack
+        run: |
+          dotnet pack src/Corti/Corti.csproj --no-restore -c Release -p:Version=${{ steps.version.outputs.version }}
+          echo "packed version: ${{ steps.version.outputs.version }}"
+
+      - name: Publish to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push src/Corti/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source "nuget.org"
