@@ -4,29 +4,27 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// The alternative code
+/// </summary>
 [Serializable]
-public record CodesGeneralResponse : IJsonOnDeserialized
+public record CodesGeneralReadResponseAlternativesItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Codes predicted by the model.
+    /// The medical code
     /// </summary>
-    [JsonPropertyName("codes")]
-    public IEnumerable<CodesGeneralReadResponse> Codes { get; set; } =
-        new List<CodesGeneralReadResponse>();
+    [JsonPropertyName("code")]
+    public required string Code { get; set; }
 
     /// <summary>
-    /// Lower-confidence codes the model considered potentially relevant but excluded from the predicted set.
+    /// Description of the medical code
     /// </summary>
-    [JsonPropertyName("candidates")]
-    public IEnumerable<CodesGeneralReadResponse> Candidates { get; set; } =
-        new List<CodesGeneralReadResponse>();
-
-    [JsonPropertyName("usageInfo")]
-    public CommonUsageInfo? UsageInfo { get; set; }
+    [JsonPropertyName("display")]
+    public required string Display { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

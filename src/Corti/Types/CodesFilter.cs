@@ -4,36 +4,33 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Optional filter to restrict the set of codes the model can predict.
+/// </summary>
 [Serializable]
-public record CodesGeneralReadResponseEvidencesItem : IJsonOnDeserialized
+public record CodesFilter : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Index from the context input array
+    /// Codes or categories to include. When empty, the full set of codes for the requested systems is used.
     /// </summary>
-    [JsonPropertyName("contextIndex")]
-    public required int ContextIndex { get; set; }
+    [JsonPropertyName("include")]
+    public IEnumerable<string>? Include { get; set; }
 
     /// <summary>
-    /// Part of input text
+    /// Codes or categories to subtract from the include set.
     /// </summary>
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    [JsonPropertyName("exclude")]
+    public IEnumerable<string>? Exclude { get; set; }
 
     /// <summary>
-    /// 0-based start character offset of the evidence span (inclusive)
+    /// When true (default), category codes are expanded to their leaf codes.
     /// </summary>
-    [JsonPropertyName("start")]
-    public required int Start { get; set; }
-
-    /// <summary>
-    /// 0-based end character offset of the evidence span (exclusive)
-    /// </summary>
-    [JsonPropertyName("end")]
-    public required int End { get; set; }
+    [JsonPropertyName("expand")]
+    public bool? Expand { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -612,6 +612,10 @@ public partial class AgentsClient : IAgentsClient
                                 throw new UnauthorizedError(
                                     JsonUtils.Deserialize<object>(responseBody)
                                 );
+                            case 403:
+                                throw new ForbiddenError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
                             case 404:
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
@@ -722,6 +726,10 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 401:
                                 throw new UnauthorizedError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 403:
+                                throw new ForbiddenError(
                                     JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 404:

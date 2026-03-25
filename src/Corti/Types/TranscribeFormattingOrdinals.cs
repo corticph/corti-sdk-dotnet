@@ -8,6 +8,10 @@ namespace Corti;
 [Serializable]
 public readonly record struct TranscribeFormattingOrdinals : IStringEnum
 {
+    public static readonly TranscribeFormattingOrdinals NumeralsAboveNine = new(
+        Values.NumeralsAboveNine
+    );
+
     public static readonly TranscribeFormattingOrdinals AsDictated = new(Values.AsDictated);
 
     public static readonly TranscribeFormattingOrdinals Numerals = new(Values.Numerals);
@@ -109,6 +113,8 @@ public readonly record struct TranscribeFormattingOrdinals : IStringEnum
     [Serializable]
     public static class Values
     {
+        public const string NumeralsAboveNine = "numerals_above_nine";
+
         public const string AsDictated = "as_dictated";
 
         public const string Numerals = "numerals";

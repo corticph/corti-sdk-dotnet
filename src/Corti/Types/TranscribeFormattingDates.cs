@@ -8,15 +8,15 @@ namespace Corti;
 [Serializable]
 public readonly record struct TranscribeFormattingDates : IStringEnum
 {
+    public static readonly TranscribeFormattingDates LocaleLong = new(Values.LocaleLong);
+
+    public static readonly TranscribeFormattingDates LocaleMedium = new(Values.LocaleMedium);
+
+    public static readonly TranscribeFormattingDates LocaleShort = new(Values.LocaleShort);
+
     public static readonly TranscribeFormattingDates AsDictated = new(Values.AsDictated);
 
-    public static readonly TranscribeFormattingDates EuSlash = new(Values.EuSlash);
-
-    public static readonly TranscribeFormattingDates IsoCompact = new(Values.IsoCompact);
-
-    public static readonly TranscribeFormattingDates LongText = new(Values.LongText);
-
-    public static readonly TranscribeFormattingDates UsSlash = new(Values.UsSlash);
+    public static readonly TranscribeFormattingDates Iso = new(Values.Iso);
 
     public TranscribeFormattingDates(string value)
     {
@@ -114,14 +114,14 @@ public readonly record struct TranscribeFormattingDates : IStringEnum
     [Serializable]
     public static class Values
     {
+        public const string LocaleLong = "locale:long";
+
+        public const string LocaleMedium = "locale:medium";
+
+        public const string LocaleShort = "locale:short";
+
         public const string AsDictated = "as_dictated";
 
-        public const string EuSlash = "eu_slash";
-
-        public const string IsoCompact = "iso_compact";
-
-        public const string LongText = "long_text";
-
-        public const string UsSlash = "us_slash";
+        public const string Iso = "iso";
     }
 }

@@ -8,7 +8,9 @@ namespace Corti;
 [Serializable]
 public readonly record struct CommonCodingSystemEnum : IStringEnum
 {
-    public static readonly CommonCodingSystemEnum Icd10Cm = new(Values.Icd10Cm);
+    public static readonly CommonCodingSystemEnum Icd10CmInpatient = new(Values.Icd10CmInpatient);
+
+    public static readonly CommonCodingSystemEnum Icd10CmOutpatient = new(Values.Icd10CmOutpatient);
 
     public static readonly CommonCodingSystemEnum Icd10Pcs = new(Values.Icd10Pcs);
 
@@ -110,7 +112,9 @@ public readonly record struct CommonCodingSystemEnum : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string Icd10Cm = "icd10cm";
+        public const string Icd10CmInpatient = "icd10cm-inpatient";
+
+        public const string Icd10CmOutpatient = "icd10cm-outpatient";
 
         public const string Icd10Pcs = "icd10pcs";
 

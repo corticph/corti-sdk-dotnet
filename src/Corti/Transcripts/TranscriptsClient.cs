@@ -108,7 +108,7 @@ public partial class TranscriptsClient : ITranscriptsClient
                                 );
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 500:
                                 throw new InternalServerError(
@@ -219,7 +219,7 @@ public partial class TranscriptsClient : ITranscriptsClient
                                 );
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 500:
                                 throw new InternalServerError(
@@ -329,7 +329,7 @@ public partial class TranscriptsClient : ITranscriptsClient
                                 );
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 500:
                                 throw new InternalServerError(
@@ -580,7 +580,7 @@ public partial class TranscriptsClient : ITranscriptsClient
                                 );
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                             case 500:
                                 throw new InternalServerError(

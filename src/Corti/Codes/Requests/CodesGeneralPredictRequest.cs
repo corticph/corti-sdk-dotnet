@@ -20,10 +20,10 @@ public record CodesGeneralPredictRequest
     public IEnumerable<CommonAiContext> Context { get; set; } = new List<CommonAiContext>();
 
     /// <summary>
-    /// Maximum number of code candidates to include in the response (per system).
+    /// Optional filter to restrict predicted codes.
     /// </summary>
-    [JsonPropertyName("maxCandidates")]
-    public int? MaxCandidates { get; set; }
+    [JsonPropertyName("filter")]
+    public CodesFilter? Filter { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
