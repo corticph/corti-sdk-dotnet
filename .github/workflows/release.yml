@@ -1,0 +1,130 @@
+name: release
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Read metadata
+        id: meta
+        run: |
+          SDK_VERSION=$(jq -r '.sdkVersion' .fern/metadata.json)
+          ORIGIN_COMMIT=$(jq -r '.originGitCommit' .fern/metadata.json)
+          echo "sdk_version=$SDK_VERSION" >> $GITHUB_OUTPUT
+          echo "origin_commit=$ORIGIN_COMMIT" >> $GITHUB_OUTPUT
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if regeneration is needed
+        id: regen
+        run: |
+          if [[ "${{ steps.version.outputs.version }}" == "${{ steps.meta.outputs.sdk_version }}" ]]; then
+            echo "needed=false" >> $GITHUB_OUTPUT
+            echo "Version matches sdkVersion in metadata — skipping Fern generation"
+          else
+            echo "needed=true" >> $GITHUB_OUTPUT
+            echo "Version mismatch: tag=${{ steps.version.outputs.version }}, metadata=${{ steps.meta.outputs.sdk_version }} — regeneration required"
+          fi
+
+      # --- Regeneration path (skipped when version already matches) ---
+
+      - name: Checkout api-specs at originGitCommit
+        if: steps.regen.outputs.needed == 'true'
+        uses: actions/checkout@v6
+        with:
+          repository: corticph/api-specs
+          ref: ${{ steps.meta.outputs.origin_commit }}
+          token: ${{ secrets.CORTI_GITHUB_TOKEN_READ_ALL }}
+          path: api-specs
+
+      - name: Install Fern CLI
+        if: steps.regen.outputs.needed == 'true'
+        run: npm install -g fern-api
+
+      - name: Determine Fern target branch and mode
+        if: steps.regen.outputs.needed == 'true'
+        id: fern_config
+        run: |
+          TARGET="${{ github.event.release.target_commitish }}"
+          TAG="${{ github.event.release.tag_name }}"
+          if [[ "$TARGET" == "main" || "$TARGET" == "master" ]]; then
+            # Default branch — Fern creates the PR itself via --mode pull-request
+            echo "head_ref=release/${TAG}" >> $GITHUB_OUTPUT
+            echo "fern_mode=pull-request" >> $GITHUB_OUTPUT
+          else
+            # Feature/release branch — push generated code directly onto that branch
+            echo "head_ref=$TARGET" >> $GITHUB_OUTPUT
+            echo "fern_mode=push" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Fern generate
+        if: steps.regen.outputs.needed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_HEAD_REF: ${{ steps.fern_config.outputs.head_ref }}
+        run: |
+          cd api-specs
+          fern generate --group dotnet-sdk --version ${{ steps.version.outputs.version }} --mode ${{ steps.fern_config.outputs.fern_mode }} --log-level debug
+
+      - name: Switch to generated branch
+        if: steps.regen.outputs.needed == 'true'
+        # Fern pushes the generated code to this SDK repo (not api-specs).
+        # This step runs at the workspace root (the SDK repo checkout), so git fetch/checkout operate on the right remote.
+        run: |
+          git fetch origin
+          git checkout -B "${{ steps.fern_config.outputs.head_ref }}" "origin/${{ steps.fern_config.outputs.head_ref }}"
+
+      # --- Build, test, publish ---
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Install tools
+        run: dotnet tool restore
+
+      - name: Restore dependencies
+        run: dotnet restore src/Corti/Corti.csproj
+
+      - name: Build
+        run: dotnet build src/Corti/Corti.csproj --no-restore -c Release
+
+      - name: Restore test dependencies
+        run: dotnet restore src/Corti.Test/Corti.Test.csproj
+
+      - name: Build tests
+        run: dotnet build src/Corti.Test/Corti.Test.csproj --no-restore -c Release
+
+      - name: Test
+        run: dotnet test src/Corti.Test/Corti.Test.csproj --no-restore --no-build -c Release
+
+      - name: Pack
+        run: dotnet pack src/Corti/Corti.csproj --no-restore -c Release -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Publish to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push src/Corti/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source "nuget.org"
