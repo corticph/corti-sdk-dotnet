@@ -18,7 +18,7 @@ public record StreamConfig : IJsonOnDeserialized
     public required StreamConfigMode Mode { get; set; }
 
     /// <summary>
-    /// Optional parameter to specify data retention policy for the generated transcripts and facts. Define value 'none' to indicate data should not be stored in the database. Use value 'retain' to indicate that the data should be retained according to standard retention policies. If configuration is not provided, then the default retention policy will apply.
+    /// Optional parameter to specify data retention policy for the generated transcripts and facts. Use value 'none' to indicate data should not be stored in the database. Use value 'retain' to indicate that the data should be retained according to standard retention policies. If configuration is not provided, then the default retention policy will apply.
     /// </summary>
     [JsonPropertyName("X-Corti-Retention-Policy")]
     public StreamConfigXCortiRetentionPolicy? XCortiRetentionPolicy { get; set; }
