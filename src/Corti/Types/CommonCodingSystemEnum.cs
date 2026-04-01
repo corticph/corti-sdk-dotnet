@@ -16,6 +16,16 @@ public readonly record struct CommonCodingSystemEnum : IStringEnum
 
     public static readonly CommonCodingSystemEnum Cpt = new(Values.Cpt);
 
+    public static readonly CommonCodingSystemEnum Icd10IntInpatient = new(Values.Icd10IntInpatient);
+
+    public static readonly CommonCodingSystemEnum Icd10IntOutpatient = new(
+        Values.Icd10IntOutpatient
+    );
+
+    public static readonly CommonCodingSystemEnum Icd10UkInpatient = new(Values.Icd10UkInpatient);
+
+    public static readonly CommonCodingSystemEnum Icd10UkOutpatient = new(Values.Icd10UkOutpatient);
+
     public CommonCodingSystemEnum(string value)
     {
         Value = value;
@@ -119,5 +129,13 @@ public readonly record struct CommonCodingSystemEnum : IStringEnum
         public const string Icd10Pcs = "icd10pcs";
 
         public const string Cpt = "cpt";
+
+        public const string Icd10IntInpatient = "icd10int-inpatient";
+
+        public const string Icd10IntOutpatient = "icd10int-outpatient";
+
+        public const string Icd10UkInpatient = "icd10uk-inpatient";
+
+        public const string Icd10UkOutpatient = "icd10uk-outpatient";
     }
 }
