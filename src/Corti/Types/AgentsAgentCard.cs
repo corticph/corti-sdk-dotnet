@@ -66,7 +66,7 @@ public record AgentsAgentCard : IJsonOnDeserialized
     public required string Version { get; set; }
 
     [JsonPropertyName("capabilities")]
-    public required AgentsAgentCapabilities Capabilities { get; set; }
+    public AgentsAgentCapabilities? Capabilities { get; set; }
 
     /// <summary>
     /// A declaration of the security schemes available to authorize requests. The key is the scheme name. Follows the OpenAPI 3.0 Security Scheme Object.
