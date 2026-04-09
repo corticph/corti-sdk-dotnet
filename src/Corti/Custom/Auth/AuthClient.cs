@@ -9,6 +9,14 @@ namespace Corti;
 public sealed class CustomAuthClient : AuthClient
 {
     private readonly RawClient _client;
+    private static readonly string[] PlatformHeaderNames =
+    [
+        "X-Fern-Language",
+        "X-Fern-SDK-Name",
+        "X-Fern-SDK-Version",
+        "User-Agent",
+        "Tenant-Name",
+    ];
 
     internal CustomAuthClient(RawClient client)
         : base(client)
@@ -165,9 +173,33 @@ public sealed class CustomAuthClient : AuthClient
     )
     {
         var tenantName = await GetTenantNameAsync(cancellationToken).ConfigureAwait(false);
-        return await TokenAsync(tenantName, body, options, cancellationToken)
-            .WithRawResponse()
-            .ConfigureAwait(false);
+
+        // Hack (by request): Temporarily strip platform headers for token requests only.
+        // This avoids sending Fern/platform headers (and Tenant-Name header) to the token endpoint,
+        // while still allowing user-provided AdditionalHeaders.
+        var backup = new Dictionary<string, HeaderValue>(StringComparer.OrdinalIgnoreCase);
+        foreach (var headerName in PlatformHeaderNames)
+        {
+            if (_client.Options.Headers.TryGetValue(headerName, out var existing))
+            {
+                backup[headerName] = existing;
+                _client.Options.Headers.Remove(headerName);
+            }
+        }
+
+        try
+        {
+            return await TokenAsync(tenantName, body, options, cancellationToken)
+                .WithRawResponse()
+                .ConfigureAwait(false);
+        }
+        finally
+        {
+            foreach (var kvp in backup)
+            {
+                _client.Options.Headers[kvp.Key] = kvp.Value;
+            }
+        }
     }
 
     private async ValueTask<string> GetTenantNameAsync(CancellationToken cancellationToken) =>
