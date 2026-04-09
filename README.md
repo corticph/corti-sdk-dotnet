@@ -25,7 +25,7 @@ The Corti C# library provides convenient access to the Corti APIs from C#.
 
 ## Documentation
 
-- [Documentation](https://docs.corti.ai/)
+- [Documentation](https://docs.corti.ai/sdk/dotnet)
 - [API Reference](https://docs.corti.ai/api-reference)
 - [Console](https://console.corti.app/) — get your credentials here
 - [Examples](https://github.com/corticph/corti-examples)
