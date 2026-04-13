@@ -35,8 +35,11 @@ public record AgentsErrorResponse : IJsonOnDeserialized
     [JsonPropertyName("details")]
     public Dictionary<string, object?>? Details { get; set; }
 
+    /// <summary>
+    /// An optional object containing the cause of the error, following the same structure as the parent error response.
+    /// </summary>
     [JsonPropertyName("cause")]
-    public AgentsErrorResponse? Cause { get; set; }
+    public Dictionary<string, object?>? Cause { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

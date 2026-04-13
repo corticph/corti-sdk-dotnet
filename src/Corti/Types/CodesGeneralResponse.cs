@@ -26,7 +26,7 @@ public record CodesGeneralResponse : IJsonOnDeserialized
         new List<CodesGeneralReadResponse>();
 
     [JsonPropertyName("usageInfo")]
-    public CommonUsageInfo? UsageInfo { get; set; }
+    public required CommonUsageInfo UsageInfo { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
