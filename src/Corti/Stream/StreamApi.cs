@@ -63,6 +63,12 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     public readonly Event<StreamConfigStatusMessage> StreamConfigStatusMessage = new();
 
     /// <summary>
+    /// Event handler for StreamAudioEventMessage.
+    /// Use StreamAudioEventMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<StreamAudioEventMessage> StreamAudioEventMessage = new();
+
+    /// <summary>
     /// Event handler for unknown/unrecognized message types.
     /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
     /// </summary>
@@ -129,6 +135,7 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
         StreamUsageMessage.Dispose();
         StreamErrorMessage.Dispose();
         StreamConfigStatusMessage.Dispose();
+        StreamAudioEventMessage.Dispose();
         UnknownMessage.Dispose();
     }
 
@@ -199,6 +206,14 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
             if (JsonUtils.TryDeserialize(json, out StreamConfigStatusMessage? message))
             {
                 await StreamConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamAudioEventMessage? message))
+            {
+                await StreamAudioEventMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
