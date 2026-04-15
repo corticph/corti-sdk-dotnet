@@ -27,7 +27,7 @@ public record TranscribeConfigStatusMessage : IJsonOnDeserialized
     /// Session identifier returned when configuration is accepted
     /// </summary>
     [JsonPropertyName("sessionId")]
-    public string? SessionId { get; set; }
+    public required string SessionId { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
