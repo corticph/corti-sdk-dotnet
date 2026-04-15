@@ -24,10 +24,16 @@ public record TranscribeConfigStatusMessage : IJsonOnDeserialized
     public string? Reason { get; set; }
 
     /// <summary>
-    /// Session identifier returned when configuration is accepted
+    /// Session identifier. Only present when type is CONFIG_ACCEPTED.
     /// </summary>
     [JsonPropertyName("sessionId")]
-    public required string SessionId { get; set; }
+    public string? SessionId { get; set; }
+
+    /// <summary>
+    /// The resolved configuration. Only present when type is CONFIG_ACCEPTED.
+    /// </summary>
+    [JsonPropertyName("configuration")]
+    public TranscribeConfig? Configuration { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
