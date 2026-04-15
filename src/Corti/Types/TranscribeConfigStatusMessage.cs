@@ -29,6 +29,12 @@ public record TranscribeConfigStatusMessage : IJsonOnDeserialized
     [JsonPropertyName("sessionId")]
     public required string SessionId { get; set; }
 
+    /// <summary>
+    /// The resolved configuration, returned when configuration is accepted
+    /// </summary>
+    [JsonPropertyName("configuration")]
+    public TranscribeConfig? Configuration { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
