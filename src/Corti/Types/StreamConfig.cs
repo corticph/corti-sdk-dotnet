@@ -23,6 +23,12 @@ public record StreamConfig : IJsonOnDeserialized
     [JsonPropertyName("X-Corti-Retention-Policy")]
     public StreamConfigXCortiRetentionPolicy? XCortiRetentionPolicy { get; set; }
 
+    /// <summary>
+    /// The audio format of the incoming audio stream
+    /// </summary>
+    [JsonPropertyName("audioFormat")]
+    public string? AudioFormat { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
