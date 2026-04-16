@@ -7,7 +7,8 @@ public partial class TranscribeApi
 {
     /// <summary>
     /// Connects and sends configuration, resolving only after CONFIG_ACCEPTED.
-    /// Throws <see cref="InvalidOperationException"/> on CONFIG_DENIED / CONFIG_TIMEOUT.
+    /// Throws <see cref="InvalidOperationException"/> on CONFIG_DENIED / CONFIG_TIMEOUT /
+    /// CONFIG_MISSING.
     /// </summary>
     public async Task ConnectAsync(
         TranscribeConfig configuration,
@@ -25,14 +26,18 @@ public partial class TranscribeApi
         Action<TranscribeConfigStatusMessage>? handler = null;
         handler = (msg) =>
         {
-            if (msg.Type == TranscribeConfigStatusMessageType.ConfigAccepted)
+            if (
+                msg.Type == TranscribeConfigStatusMessageType.ConfigAccepted
+                || msg.Type == TranscribeConfigStatusMessageType.ConfigAlreadyReceived
+            )
             {
                 TranscribeConfigStatusMessage.Unsubscribe(handler!);
                 tcs.TrySetResult(true);
             }
             else if (
                 msg.Type == TranscribeConfigStatusMessageType.ConfigDenied ||
-                msg.Type == TranscribeConfigStatusMessageType.ConfigTimeout)
+                msg.Type == TranscribeConfigStatusMessageType.ConfigTimeout ||
+                msg.Type == TranscribeConfigStatusMessageType.ConfigMissing)
             {
                 TranscribeConfigStatusMessage.Unsubscribe(handler!);
                 tcs.TrySetException(new InvalidOperationException($"Config rejected: {msg.Type}"));
