@@ -8,7 +8,7 @@ public partial class StreamApi
     /// <summary>
     /// Connects and sends configuration, resolving only after CONFIG_ACCEPTED.
     /// Throws <see cref="InvalidOperationException"/> on CONFIG_DENIED / CONFIG_MISSING /
-    /// CONFIG_TIMEOUT / CONFIG_NOT_PROVIDED.
+    /// CONFIG_NOT_PROVIDED.
     /// </summary>
     public async Task ConnectAsync(
         StreamConfig configuration,
@@ -26,7 +26,10 @@ public partial class StreamApi
         Action<StreamConfigStatusMessage>? handler = null;
         handler = (msg) =>
         {
-            if (msg.Type == StreamConfigStatusMessageType.ConfigAccepted)
+            if (
+                msg.Type == StreamConfigStatusMessageType.ConfigAccepted
+                || msg.Type == StreamConfigStatusMessageType.ConfigAlreadyReceived
+            )
             {
                 StreamConfigStatusMessage.Unsubscribe(handler!);
                 tcs.TrySetResult(true);
@@ -34,7 +37,6 @@ public partial class StreamApi
             else if (
                 msg.Type == StreamConfigStatusMessageType.ConfigDenied ||
                 msg.Type == StreamConfigStatusMessageType.ConfigMissing ||
-                msg.Type == StreamConfigStatusMessageType.ConfigTimeout ||
                 msg.Type == StreamConfigStatusMessageType.ConfigNotProvided)
             {
                 StreamConfigStatusMessage.Unsubscribe(handler!);
