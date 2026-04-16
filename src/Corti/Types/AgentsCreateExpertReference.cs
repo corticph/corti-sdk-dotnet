@@ -21,7 +21,7 @@ public record AgentsCreateExpertReference : IJsonOnDeserialized
     /// The unique identifier of the expert.
     /// </summary>
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public string? Id { get; set; }
 
     /// <summary>
     /// The name of the expert.
