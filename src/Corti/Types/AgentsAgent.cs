@@ -38,6 +38,12 @@ public record AgentsAgent : IJsonOnDeserialized
     [JsonPropertyName("experts")]
     public IEnumerable<AgentsAgentExpertsItem>? Experts { get; set; }
 
+    /// <summary>
+    /// A list of MCP servers that the agent can call. If omitted, the agent can't call any MCP Servers.
+    /// </summary>
+    [JsonPropertyName("mcpServers")]
+    public IEnumerable<AgentsMcpServer>? McpServers { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
