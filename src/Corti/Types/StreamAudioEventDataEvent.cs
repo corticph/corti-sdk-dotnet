@@ -8,19 +8,21 @@ namespace Corti;
 [Serializable]
 public readonly record struct StreamAudioEventDataEvent : IStringEnum
 {
-    public static readonly StreamAudioEventDataEvent SpeechQualityAssessmentBadToGoodQuality = new(
-        Values.SpeechQualityAssessmentBadToGoodQuality
+    public static readonly StreamAudioEventDataEvent SpeechQualityIssueDetected = new(
+        Values.SpeechQualityIssueDetected
     );
 
-    public static readonly StreamAudioEventDataEvent SpeechQualityAssessmentGoodToBadQuality = new(
-        Values.SpeechQualityAssessmentGoodToBadQuality
+    public static readonly StreamAudioEventDataEvent SpeechQualityIssueRecovered = new(
+        Values.SpeechQualityIssueRecovered
     );
 
-    public static readonly StreamAudioEventDataEvent SpeechQualityAssessmentSpeechToLongSilence =
-        new(Values.SpeechQualityAssessmentSpeechToLongSilence);
+    public static readonly StreamAudioEventDataEvent LongSilenceDetected = new(
+        Values.LongSilenceDetected
+    );
 
-    public static readonly StreamAudioEventDataEvent SpeechQualityAssessmentLongSilenceToSpeech =
-        new(Values.SpeechQualityAssessmentLongSilenceToSpeech);
+    public static readonly StreamAudioEventDataEvent LongSilenceRecovered = new(
+        Values.LongSilenceRecovered
+    );
 
     public StreamAudioEventDataEvent(string value)
     {
@@ -118,16 +120,12 @@ public readonly record struct StreamAudioEventDataEvent : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string SpeechQualityAssessmentBadToGoodQuality =
-            "SPEECH_QUALITY_ASSESSMENT_BAD_TO_GOOD_QUALITY";
+        public const string SpeechQualityIssueDetected = "speechQualityIssueDetected";
 
-        public const string SpeechQualityAssessmentGoodToBadQuality =
-            "SPEECH_QUALITY_ASSESSMENT_GOOD_TO_BAD_QUALITY";
+        public const string SpeechQualityIssueRecovered = "speechQualityIssueRecovered";
 
-        public const string SpeechQualityAssessmentSpeechToLongSilence =
-            "SPEECH_QUALITY_ASSESSMENT_SPEECH_TO_LONG_SILENCE";
+        public const string LongSilenceDetected = "longSilenceDetected";
 
-        public const string SpeechQualityAssessmentLongSilenceToSpeech =
-            "SPEECH_QUALITY_ASSESSMENT_LONG_SILENCE_TO_SPEECH";
+        public const string LongSilenceRecovered = "longSilenceRecovered";
     }
 }
