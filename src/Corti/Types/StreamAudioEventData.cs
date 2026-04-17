@@ -20,8 +20,8 @@ public record StreamAudioEventData : IJsonOnDeserialized
     /// <summary>
     /// Audio channel identifier
     /// </summary>
-    [JsonPropertyName("channelId")]
-    public required int ChannelId { get; set; }
+    [JsonPropertyName("channel")]
+    public required int Channel { get; set; }
 
     /// <summary>
     /// Start time of the event in milliseconds
