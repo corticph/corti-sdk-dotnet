@@ -40,7 +40,7 @@ public record AgentsCreateAgent
     public IEnumerable<AgentsCreateAgentExpertsItem>? Experts { get; set; }
 
     /// <summary>
-    /// A list of MCP servers that the agent can call. If omitted, the agent can't call any MCP Servers.
+    /// A list of MCP servers that the agent can call. If omitted, the agent can't call any MCP servers.
     /// </summary>
     [JsonPropertyName("mcpServers")]
     public IEnumerable<AgentsCreateMcpServer>? McpServers { get; set; }
