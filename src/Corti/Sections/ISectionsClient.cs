@@ -13,11 +13,4 @@ public partial interface ISectionsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
-
-    WithRawResponseTask<Section> PatchAsync(
-        string sectionId,
-        UpdateSectionRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
 }
