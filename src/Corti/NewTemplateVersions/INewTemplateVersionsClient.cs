@@ -1,6 +1,6 @@
 namespace Corti;
 
-public partial interface ITemplateVersionsClient
+public partial interface INewTemplateVersionsClient
 {
     WithRawResponseTask<IEnumerable<TemplateVersion>> ListAsync(
         string templateId,

@@ -3,11 +3,11 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class TemplateVersionsClient : ITemplateVersionsClient
+public partial class NewSectionVersionsClient : INewSectionVersionsClient
 {
     private readonly RawClient _client;
 
-    internal TemplateVersionsClient(RawClient client)
+    internal NewSectionVersionsClient(RawClient client)
     {
         try
         {
@@ -20,8 +20,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
         }
     }
 
-    private async Task<WithRawResponse<IEnumerable<TemplateVersion>>> ListAsyncCore(
-        string templateId,
+    private async Task<WithRawResponse<IEnumerable<SectionVersion>>> ListAsyncCore(
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -42,8 +42,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
                             Path = string.Format(
-                                "new/templates/{0}/versions",
-                                ValueConvert.ToPathParameterString(templateId)
+                                "new/sections/{0}/versions",
+                                ValueConvert.ToPathParameterString(sectionId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -58,10 +58,10 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<TemplateVersion>>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<SectionVersion>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<IEnumerable<TemplateVersion>>()
+                        return new WithRawResponse<IEnumerable<SectionVersion>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -112,9 +112,9 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplateVersion>> CreateAsyncCore(
-        string templateId,
-        CreateTemplateVersionRequest request,
+    private async Task<WithRawResponse<SectionVersion>> CreateAsyncCore(
+        string sectionId,
+        CreateSectionVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -135,8 +135,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
                             Path = string.Format(
-                                "new/templates/{0}/versions",
-                                ValueConvert.ToPathParameterString(templateId)
+                                "new/sections/{0}/versions",
+                                ValueConvert.ToPathParameterString(sectionId)
                             ),
                             Body = request,
                             Headers = _headers,
@@ -153,8 +153,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<TemplateVersion>(responseBody)!;
-                        return new WithRawResponse<TemplateVersion>()
+                        var responseData = JsonUtils.Deserialize<SectionVersion>(responseBody)!;
+                        return new WithRawResponse<SectionVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -209,8 +209,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplateVersion>> GetAsyncCore(
-        string templateId,
+    private async Task<WithRawResponse<SectionVersion>> GetAsyncCore(
+        string sectionId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -232,8 +232,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
                             Path = string.Format(
-                                "new/templates/{0}/versions/{1}",
-                                ValueConvert.ToPathParameterString(templateId),
+                                "new/sections/{0}/versions/{1}",
+                                ValueConvert.ToPathParameterString(sectionId),
                                 ValueConvert.ToPathParameterString(versionId)
                             ),
                             Headers = _headers,
@@ -249,8 +249,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<TemplateVersion>(responseBody)!;
-                        return new WithRawResponse<TemplateVersion>()
+                        var responseData = JsonUtils.Deserialize<SectionVersion>(responseBody)!;
+                        return new WithRawResponse<SectionVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -302,7 +302,7 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
     }
 
     private async Task<WithRawResponse<StatusResponse>> PublishAsyncCore(
-        string templateId,
+        string sectionId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -324,8 +324,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
                             Path = string.Format(
-                                "new/templates/{0}/versions/{1}/publish",
-                                ValueConvert.ToPathParameterString(templateId),
+                                "new/sections/{0}/versions/{1}/publish",
+                                ValueConvert.ToPathParameterString(sectionId),
                                 ValueConvert.ToPathParameterString(versionId)
                             ),
                             Headers = _headers,
@@ -394,54 +394,65 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
     }
 
     /// <example><code>
-    /// await client.TemplateVersions.ListAsync("templateId");
+    /// await client.NewSectionVersions.ListAsync("sectionID");
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<TemplateVersion>> ListAsync(
-        string templateId,
+    public WithRawResponseTask<IEnumerable<SectionVersion>> ListAsync(
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<TemplateVersion>>(
-            ListAsyncCore(templateId, options, cancellationToken)
+        return new WithRawResponseTask<IEnumerable<SectionVersion>>(
+            ListAsyncCore(sectionId, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.TemplateVersions.CreateAsync("templateId", new CreateTemplateVersionRequest());
+    /// await client.NewSectionVersions.CreateAsync(
+    ///     "sectionID",
+    ///     new CreateSectionVersionRequest
+    ///     {
+    ///         Title = "title",
+    ///         Instructions = new SectionInstructions
+    ///         {
+    ///             ContentPrompt = "contentPrompt",
+    ///             WritingStylePrompt = "writingStylePrompt",
+    ///         },
+    ///     }
+    /// );
     /// </code></example>
-    public WithRawResponseTask<TemplateVersion> CreateAsync(
-        string templateId,
-        CreateTemplateVersionRequest request,
+    public WithRawResponseTask<SectionVersion> CreateAsync(
+        string sectionId,
+        CreateSectionVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<TemplateVersion>(
-            CreateAsyncCore(templateId, request, options, cancellationToken)
+        return new WithRawResponseTask<SectionVersion>(
+            CreateAsyncCore(sectionId, request, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.TemplateVersions.GetAsync("templateId", "versionID");
+    /// await client.NewSectionVersions.GetAsync("sectionID", "versionID");
     /// </code></example>
-    public WithRawResponseTask<TemplateVersion> GetAsync(
-        string templateId,
+    public WithRawResponseTask<SectionVersion> GetAsync(
+        string sectionId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<TemplateVersion>(
-            GetAsyncCore(templateId, versionId, options, cancellationToken)
+        return new WithRawResponseTask<SectionVersion>(
+            GetAsyncCore(sectionId, versionId, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.TemplateVersions.DeleteAsync("templateId", "versionID");
+    /// await client.NewSectionVersions.DeleteAsync("sectionID", "versionID");
     /// </code></example>
     public async Task DeleteAsync(
-        string templateId,
+        string sectionId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -463,8 +474,8 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Delete,
                             Path = string.Format(
-                                "new/templates/{0}/versions/{1}",
-                                ValueConvert.ToPathParameterString(templateId),
+                                "new/sections/{0}/versions/{1}",
+                                ValueConvert.ToPathParameterString(sectionId),
                                 ValueConvert.ToPathParameterString(versionId)
                             ),
                             Headers = _headers,
@@ -506,20 +517,20 @@ public partial class TemplateVersionsClient : ITemplateVersionsClient
     }
 
     /// <summary>
-    /// Sets this version as the published version of the template.
+    /// Sets this version as the published version of the section.
     /// </summary>
     /// <example><code>
-    /// await client.TemplateVersions.PublishAsync("templateId", "versionID");
+    /// await client.NewSectionVersions.PublishAsync("sectionID", "versionID");
     /// </code></example>
     public WithRawResponseTask<StatusResponse> PublishAsync(
-        string templateId,
+        string sectionId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<StatusResponse>(
-            PublishAsyncCore(templateId, versionId, options, cancellationToken)
+            PublishAsyncCore(sectionId, versionId, options, cancellationToken)
         );
     }
 }
