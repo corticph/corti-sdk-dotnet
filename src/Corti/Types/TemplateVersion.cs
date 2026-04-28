@@ -11,9 +11,15 @@ public record TemplateVersion : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The UUID of the version.
+    /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
+    /// <summary>
+    /// Starts a 0 and auto-increments.
+    /// </summary>
     [JsonPropertyName("versionNumber")]
     public required int VersionNumber { get; set; }
 

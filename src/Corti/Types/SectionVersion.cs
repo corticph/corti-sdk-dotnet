@@ -11,6 +11,9 @@ public record SectionVersion : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The UUID of the section version.
+    /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 

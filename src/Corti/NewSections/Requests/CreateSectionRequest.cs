@@ -31,7 +31,7 @@ public record CreateSectionRequest
     public IEnumerable<string>? Labels { get; set; }
 
     /// <summary>
-    /// Reference to the section to inherit instructions and outputSchema from. Inherits from published version unless fields are changed or overridden in the POST /documents request.
+    /// Reference to the section to inherit generation configuration from. Inherits from published version unless fields are changed or overridden in the POST /documents request.
     /// </summary>
     [JsonPropertyName("inheritFromId")]
     public string? InheritFromId { get; set; }
