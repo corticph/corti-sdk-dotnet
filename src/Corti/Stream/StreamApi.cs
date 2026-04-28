@@ -39,6 +39,12 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     public readonly Event<StreamFlushedMessage> StreamFlushedMessage = new();
 
     /// <summary>
+    /// Event handler for StreamDeltaUsageMessage.
+    /// Use StreamDeltaUsageMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<StreamDeltaUsageMessage> StreamDeltaUsageMessage = new();
+
+    /// <summary>
     /// Event handler for StreamEndedMessage.
     /// Use StreamEndedMessage.Subscribe(...) to receive messages.
     /// </summary>
@@ -125,6 +131,7 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
         StreamTranscriptMessage.Dispose();
         StreamFactsMessage.Dispose();
         StreamFlushedMessage.Dispose();
+        StreamDeltaUsageMessage.Dispose();
         StreamEndedMessage.Dispose();
         StreamUsageMessage.Dispose();
         StreamErrorMessage.Dispose();
@@ -167,6 +174,14 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
             if (JsonUtils.TryDeserialize(json, out StreamFlushedMessage? message))
             {
                 await StreamFlushedMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out StreamDeltaUsageMessage? message))
+            {
+                await StreamDeltaUsageMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }

@@ -12,6 +12,8 @@ public readonly record struct AgentsMcpServerTransportType : IStringEnum
 
     public static readonly AgentsMcpServerTransportType StreamableHttp = new(Values.StreamableHttp);
 
+    public static readonly AgentsMcpServerTransportType Sse = new(Values.Sse);
+
     public AgentsMcpServerTransportType(string value)
     {
         Value = value;
@@ -112,5 +114,7 @@ public readonly record struct AgentsMcpServerTransportType : IStringEnum
         public const string Stdio = "stdio";
 
         public const string StreamableHttp = "streamable_http";
+
+        public const string Sse = "sse";
     }
 }

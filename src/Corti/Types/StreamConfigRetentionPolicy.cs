@@ -4,17 +4,15 @@ using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(
-    typeof(StreamConfigXCortiRetentionPolicy.StreamConfigXCortiRetentionPolicySerializer)
-)]
+[JsonConverter(typeof(StreamConfigRetentionPolicy.StreamConfigRetentionPolicySerializer))]
 [Serializable]
-public readonly record struct StreamConfigXCortiRetentionPolicy : IStringEnum
+public readonly record struct StreamConfigRetentionPolicy : IStringEnum
 {
-    public static readonly StreamConfigXCortiRetentionPolicy Retain = new(Values.Retain);
+    public static readonly StreamConfigRetentionPolicy Retain = new(Values.Retain);
 
-    public static readonly StreamConfigXCortiRetentionPolicy None = new(Values.None);
+    public static readonly StreamConfigRetentionPolicy None = new(Values.None);
 
-    public StreamConfigXCortiRetentionPolicy(string value)
+    public StreamConfigRetentionPolicy(string value)
     {
         Value = value;
     }
@@ -27,9 +25,9 @@ public readonly record struct StreamConfigXCortiRetentionPolicy : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static StreamConfigXCortiRetentionPolicy FromCustom(string value)
+    public static StreamConfigRetentionPolicy FromCustom(string value)
     {
-        return new StreamConfigXCortiRetentionPolicy(value);
+        return new StreamConfigRetentionPolicy(value);
     }
 
     public bool Equals(string? other)
@@ -45,20 +43,20 @@ public readonly record struct StreamConfigXCortiRetentionPolicy : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(StreamConfigXCortiRetentionPolicy value1, string value2) =>
+    public static bool operator ==(StreamConfigRetentionPolicy value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(StreamConfigXCortiRetentionPolicy value1, string value2) =>
+    public static bool operator !=(StreamConfigRetentionPolicy value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(StreamConfigXCortiRetentionPolicy value) => value.Value;
+    public static explicit operator string(StreamConfigRetentionPolicy value) => value.Value;
 
-    public static explicit operator StreamConfigXCortiRetentionPolicy(string value) => new(value);
+    public static explicit operator StreamConfigRetentionPolicy(string value) => new(value);
 
-    internal class StreamConfigXCortiRetentionPolicySerializer
-        : JsonConverter<StreamConfigXCortiRetentionPolicy>
+    internal class StreamConfigRetentionPolicySerializer
+        : JsonConverter<StreamConfigRetentionPolicy>
     {
-        public override StreamConfigXCortiRetentionPolicy Read(
+        public override StreamConfigRetentionPolicy Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -69,19 +67,19 @@ public readonly record struct StreamConfigXCortiRetentionPolicy : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new StreamConfigXCortiRetentionPolicy(stringValue);
+            return new StreamConfigRetentionPolicy(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            StreamConfigXCortiRetentionPolicy value,
+            StreamConfigRetentionPolicy value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override StreamConfigXCortiRetentionPolicy ReadAsPropertyName(
+        public override StreamConfigRetentionPolicy ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -92,12 +90,12 @@ public readonly record struct StreamConfigXCortiRetentionPolicy : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new StreamConfigXCortiRetentionPolicy(stringValue);
+            return new StreamConfigRetentionPolicy(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            StreamConfigXCortiRetentionPolicy value,
+            StreamConfigRetentionPolicy value,
             JsonSerializerOptions options
         )
         {
