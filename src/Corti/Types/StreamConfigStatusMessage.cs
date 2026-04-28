@@ -23,6 +23,12 @@ public record StreamConfigStatusMessage : IJsonOnDeserialized
     [JsonPropertyName("reason")]
     public string? Reason { get; set; }
 
+    /// <summary>
+    /// The resolved configuration. Only present when type is CONFIG_ACCEPTED.
+    /// </summary>
+    [JsonPropertyName("configuration")]
+    public StreamConfig? Configuration { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
