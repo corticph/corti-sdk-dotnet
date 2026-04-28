@@ -1,0 +1,55 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Corti.Core;
+
+namespace Corti;
+
+[Serializable]
+public record Section : IJsonOnDeserialized
+{
+    [JsonExtensionData]
+    private readonly IDictionary<string, JsonElement> _extensionData =
+        new Dictionary<string, JsonElement>();
+
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    [JsonPropertyName("inheritedFromId")]
+    public string? InheritedFromId { get; set; }
+
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("language")]
+    public required string Language { get; set; }
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("labels")]
+    public IEnumerable<string> Labels { get; set; } = new List<string>();
+
+    /// <summary>
+    /// Shows the currently published version of this section.
+    /// </summary>
+    [JsonPropertyName("publishedVersion")]
+    public SectionVersion? PublishedVersion { get; set; }
+
+    [JsonPropertyName("createdAt")]
+    public required DateTime CreatedAt { get; set; }
+
+    [JsonPropertyName("updatedAt")]
+    public required DateTime UpdatedAt { get; set; }
+
+    [JsonIgnore]
+    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+
+    void IJsonOnDeserialized.OnDeserialized() =>
+        AdditionalProperties.CopyFromExtensionData(_extensionData);
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
+}

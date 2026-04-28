@@ -28,4 +28,23 @@ public partial interface ITemplatesClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    WithRawResponseTask<Template> NewTemplatesGetAsync(
+        string templateId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    Task NewTemplatesDeleteAsync(
+        string templateId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    WithRawResponseTask<Template> NewTemplatesPatchAsync(
+        string templateId,
+        UpdateTemplateRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }
