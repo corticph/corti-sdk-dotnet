@@ -37,11 +37,11 @@ public class AgentsUpdateAgentExpertsItem
     ) => new("agentsCreateExpert", value);
 
     /// <summary>
-    /// Factory method to create a union from a AgentsCreateExpertReference value.
+    /// Factory method to create a union from a Corti.AgentsCreateExpertReference value.
     /// </summary>
-    public static AgentsUpdateAgentExpertsItem FromAgentsUpdateExpertReference(
-        AgentsCreateExpertReference value
-    ) => new("agentsUpdateExpertReference", value);
+    public static AgentsUpdateAgentExpertsItem FromAgentsCreateExpertReference(
+        Corti.AgentsCreateExpertReference value
+    ) => new("agentsCreateExpertReference", value);
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "agentsCreateExpert"
@@ -49,9 +49,9 @@ public class AgentsUpdateAgentExpertsItem
     public bool IsAgentsCreateExpert() => Type == "agentsCreateExpert";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "agentsUpdateExpertReference"
+    /// Returns true if <see cref="Type"/> is "agentsCreateExpertReference"
     /// </summary>
-    public bool IsAgentsUpdateExpertReference() => Type == "agentsUpdateExpertReference";
+    public bool IsAgentsCreateExpertReference() => Type == "agentsCreateExpertReference";
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.AgentsCreateExpert"/> if <see cref="Type"/> is 'agentsCreateExpert', otherwise throws an exception.
@@ -63,13 +63,13 @@ public class AgentsUpdateAgentExpertsItem
             : throw new CortiClientException("Union type is not 'agentsCreateExpert'");
 
     /// <summary>
-    /// Returns the value as a <see cref="AgentsCreateExpertReference"/> if <see cref="Type"/> is 'agentsUpdateExpertReference', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.AgentsCreateExpertReference"/> if <see cref="Type"/> is 'agentsCreateExpertReference', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsUpdateExpertReference'.</exception>
-    public AgentsCreateExpertReference AsAgentsUpdateExpertReference() =>
-        IsAgentsUpdateExpertReference()
-            ? (AgentsCreateExpertReference)Value!
-            : throw new CortiClientException("Union type is not 'agentsUpdateExpertReference'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'agentsCreateExpertReference'.</exception>
+    public Corti.AgentsCreateExpertReference AsAgentsCreateExpertReference() =>
+        IsAgentsCreateExpertReference()
+            ? (Corti.AgentsCreateExpertReference)Value!
+            : throw new CortiClientException("Union type is not 'agentsCreateExpertReference'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.AgentsCreateExpert"/> and returns true if successful.
@@ -86,13 +86,13 @@ public class AgentsUpdateAgentExpertsItem
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="AgentsCreateExpertReference"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.AgentsCreateExpertReference"/> and returns true if successful.
     /// </summary>
-    public bool TryGetAgentsUpdateExpertReference(out AgentsCreateExpertReference? value)
+    public bool TryGetAgentsCreateExpertReference(out Corti.AgentsCreateExpertReference? value)
     {
-        if (Type == "agentsUpdateExpertReference")
+        if (Type == "agentsCreateExpertReference")
         {
-            value = (AgentsCreateExpertReference)Value!;
+            value = (Corti.AgentsCreateExpertReference)Value!;
             return true;
         }
         value = null;
@@ -101,14 +101,14 @@ public class AgentsUpdateAgentExpertsItem
 
     public T Match<T>(
         Func<Corti.AgentsCreateExpert, T> onAgentsCreateExpert,
-        Func<AgentsCreateExpertReference, T> onAgentsUpdateExpertReference
+        Func<Corti.AgentsCreateExpertReference, T> onAgentsCreateExpertReference
     )
     {
         return Type switch
         {
             "agentsCreateExpert" => onAgentsCreateExpert(AsAgentsCreateExpert()),
-            "agentsUpdateExpertReference" => onAgentsUpdateExpertReference(
-                AsAgentsUpdateExpertReference()
+            "agentsCreateExpertReference" => onAgentsCreateExpertReference(
+                AsAgentsCreateExpertReference()
             ),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
@@ -116,7 +116,7 @@ public class AgentsUpdateAgentExpertsItem
 
     public void Visit(
         Action<Corti.AgentsCreateExpert> onAgentsCreateExpert,
-        Action<AgentsCreateExpertReference> onAgentsUpdateExpertReference
+        Action<Corti.AgentsCreateExpertReference> onAgentsCreateExpertReference
     )
     {
         switch (Type)
@@ -124,8 +124,8 @@ public class AgentsUpdateAgentExpertsItem
             case "agentsCreateExpert":
                 onAgentsCreateExpert(AsAgentsCreateExpert());
                 break;
-            case "agentsUpdateExpertReference":
-                onAgentsUpdateExpertReference(AsAgentsUpdateExpertReference());
+            case "agentsCreateExpertReference":
+                onAgentsCreateExpertReference(AsAgentsCreateExpertReference());
                 break;
             default:
                 throw new CortiClientException($"Unknown union type: {Type}");
@@ -171,8 +171,8 @@ public class AgentsUpdateAgentExpertsItem
         new("agentsCreateExpert", value);
 
     public static implicit operator AgentsUpdateAgentExpertsItem(
-        AgentsCreateExpertReference value
-    ) => new("agentsUpdateExpertReference", value);
+        Corti.AgentsCreateExpertReference value
+    ) => new("agentsCreateExpertReference", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<AgentsUpdateAgentExpertsItem>
@@ -194,8 +194,8 @@ public class AgentsUpdateAgentExpertsItem
 
                 var types = new (string Key, System.Type Type)[]
                 {
-                    ("agentsUpdateExpertReference", typeof(AgentsCreateExpertReference)),
                     ("agentsCreateExpert", typeof(Corti.AgentsCreateExpert)),
+                    ("agentsCreateExpertReference", typeof(Corti.AgentsCreateExpertReference)),
                 };
 
                 foreach (var (key, type) in types)

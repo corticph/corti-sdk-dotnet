@@ -18,18 +18,6 @@ public record AgentsRegistryExpert : IJsonOnDeserialized
     public required string Name { get; set; }
 
     /// <summary>
-    /// An optional human-readable display name for the expert.
-    /// </summary>
-    [JsonPropertyName("displayName")]
-    public string? DisplayName { get; set; }
-
-    /// <summary>
-    /// An optional human-readable display description for the expert.
-    /// </summary>
-    [JsonPropertyName("displayDescription")]
-    public string? DisplayDescription { get; set; }
-
-    /// <summary>
     /// A brief description of the expert's capabilities.
     /// </summary>
     [JsonPropertyName("description")]

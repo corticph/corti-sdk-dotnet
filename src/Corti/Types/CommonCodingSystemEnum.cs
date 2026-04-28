@@ -26,20 +26,6 @@ public readonly record struct CommonCodingSystemEnum : IStringEnum
 
     public static readonly CommonCodingSystemEnum Icd10UkOutpatient = new(Values.Icd10UkOutpatient);
 
-    public static readonly CommonCodingSystemEnum Cim10FrInpatient = new(Values.Cim10FrInpatient);
-
-    public static readonly CommonCodingSystemEnum Cim10FrOutpatient = new(Values.Cim10FrOutpatient);
-
-    public static readonly CommonCodingSystemEnum Icd10GmInpatient = new(Values.Icd10GmInpatient);
-
-    public static readonly CommonCodingSystemEnum Icd10GmOutpatient = new(Values.Icd10GmOutpatient);
-
-    public static readonly CommonCodingSystemEnum Opcs4 = new(Values.Opcs4);
-
-    public static readonly CommonCodingSystemEnum Ops = new(Values.Ops);
-
-    public static readonly CommonCodingSystemEnum Ccam = new(Values.Ccam);
-
     public CommonCodingSystemEnum(string value)
     {
         Value = value;
@@ -151,19 +137,5 @@ public readonly record struct CommonCodingSystemEnum : IStringEnum
         public const string Icd10UkInpatient = "icd10uk-inpatient";
 
         public const string Icd10UkOutpatient = "icd10uk-outpatient";
-
-        public const string Cim10FrInpatient = "cim10fr-inpatient";
-
-        public const string Cim10FrOutpatient = "cim10fr-outpatient";
-
-        public const string Icd10GmInpatient = "icd10gm-inpatient";
-
-        public const string Icd10GmOutpatient = "icd10gm-outpatient";
-
-        public const string Opcs4 = "opcs4";
-
-        public const string Ops = "ops";
-
-        public const string Ccam = "ccam";
     }
 }

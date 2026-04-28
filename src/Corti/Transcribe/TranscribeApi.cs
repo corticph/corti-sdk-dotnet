@@ -37,12 +37,6 @@ public partial class TranscribeApi
     public readonly Event<TranscribeFlushedMessage> TranscribeFlushedMessage = new();
 
     /// <summary>
-    /// Event handler for TranscribeDeltaUsageMessage.
-    /// Use TranscribeDeltaUsageMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeDeltaUsageMessage> TranscribeDeltaUsageMessage = new();
-
-    /// <summary>
     /// Event handler for TranscribeEndedMessage.
     /// Use TranscribeEndedMessage.Subscribe(...) to receive messages.
     /// </summary>
@@ -133,7 +127,6 @@ public partial class TranscribeApi
     {
         TranscribeUsageMessage.Dispose();
         TranscribeFlushedMessage.Dispose();
-        TranscribeDeltaUsageMessage.Dispose();
         TranscribeEndedMessage.Dispose();
         TranscribeErrorMessage.Dispose();
         TranscribeTranscriptMessage.Dispose();
@@ -169,14 +162,6 @@ public partial class TranscribeApi
             if (JsonUtils.TryDeserialize(json, out TranscribeFlushedMessage? message))
             {
                 await TranscribeFlushedMessage.RaiseEvent(message!).ConfigureAwait(false);
-                return;
-            }
-        }
-
-        {
-            if (JsonUtils.TryDeserialize(json, out TranscribeDeltaUsageMessage? message))
-            {
-                await TranscribeDeltaUsageMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }

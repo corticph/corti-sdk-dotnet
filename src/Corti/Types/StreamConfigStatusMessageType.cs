@@ -24,6 +24,8 @@ public readonly record struct StreamConfigStatusMessageType : IStringEnum
         Values.ConfigAlreadyReceived
     );
 
+    public static readonly StreamConfigStatusMessageType ConfigTimeout = new(Values.ConfigTimeout);
+
     public StreamConfigStatusMessageType(string value)
     {
         Value = value;
@@ -130,5 +132,7 @@ public readonly record struct StreamConfigStatusMessageType : IStringEnum
         public const string ConfigNotProvided = "CONFIG_NOT_PROVIDED";
 
         public const string ConfigAlreadyReceived = "CONFIG_ALREADY_RECEIVED";
+
+        public const string ConfigTimeout = "CONFIG_TIMEOUT";
     }
 }

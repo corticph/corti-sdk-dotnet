@@ -22,14 +22,6 @@ public readonly record struct TranscribeConfigStatusMessageType : IStringEnum
         Values.ConfigTimeout
     );
 
-    public static readonly TranscribeConfigStatusMessageType ConfigAlreadyReceived = new(
-        Values.ConfigAlreadyReceived
-    );
-
-    public static readonly TranscribeConfigStatusMessageType ConfigMissing = new(
-        Values.ConfigMissing
-    );
-
     public TranscribeConfigStatusMessageType(string value)
     {
         Value = value;
@@ -132,9 +124,5 @@ public readonly record struct TranscribeConfigStatusMessageType : IStringEnum
         public const string ConfigDenied = "CONFIG_DENIED";
 
         public const string ConfigTimeout = "CONFIG_TIMEOUT";
-
-        public const string ConfigAlreadyReceived = "CONFIG_ALREADY_RECEIVED";
-
-        public const string ConfigMissing = "CONFIG_MISSING";
     }
 }
