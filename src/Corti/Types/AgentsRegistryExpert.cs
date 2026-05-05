@@ -41,6 +41,12 @@ public record AgentsRegistryExpert : IJsonOnDeserialized
     [JsonPropertyName("mcpServers")]
     public IEnumerable<AgentsRegistryMcpServer>? McpServers { get; set; }
 
+    /// <summary>
+    /// Optional JSON Schema describing the configuration this expert accepts. When present, callers may supply a matching `config` object on `AgentsCreateExpertReference`; values are deep-merged with schema defaults and validated against this schema.
+    /// </summary>
+    [JsonPropertyName("configSchema")]
+    public Dictionary<string, object?>? ConfigSchema { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
