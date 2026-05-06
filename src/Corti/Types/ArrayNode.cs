@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record DictNode : IJsonOnDeserialized
+public record ArrayNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record DictNode : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public DictNode.TypeLiteral Type { get;
+    public ArrayNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -27,23 +27,26 @@ public record DictNode : IJsonOnDeserialized
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
-    /// <summary>
-    /// Controls how subheadings are rendered in the generated output. Use `inline` (default) for `{key}: {value}\n` or `block` for `{key}\n{value}\n`, or provide a custom format string containing both `{key}` and `{value}` placeholders. Mutually exclusive with `objectFormat`.
-    /// </summary>
-    [JsonPropertyName("subheadingFormat")]
-    public string? SubheadingFormat { get; set; }
+    [JsonPropertyName("items")]
+    public required OutputSchema Items { get; set; }
 
     /// <summary>
-    /// A format string referencing field keys as placeholders (e.g. `{fieldKey}`). All placeholders must correspond to defined field keys. Mutually exclusive with `subheadingFormat`.
+    /// Controls how each array item is rendered in the generated output. Use `bullet` (default), `numbered`, or `plain`, or provide a custom format string containing the `{item}` placeholder.
     /// </summary>
-    [JsonPropertyName("objectFormat")]
-    public string? ObjectFormat { get; set; }
+    [JsonPropertyName("itemFormat")]
+    public string? ItemFormat { get; set; }
 
     /// <summary>
-    /// Define what fields are possible to return in the dict.
+    /// Minimum number of array items to generate.
     /// </summary>
-    [JsonPropertyName("fields")]
-    public IEnumerable<FieldDefinition>? Fields { get; set; }
+    [JsonPropertyName("minItems")]
+    public int? MinItems { get; set; }
+
+    /// <summary>
+    /// Maximum number of array items to generate.
+    /// </summary>
+    [JsonPropertyName("maxItems")]
+    public int? MaxItems { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -60,7 +63,7 @@ public record DictNode : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "dict";
+        public const string Value = "array";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

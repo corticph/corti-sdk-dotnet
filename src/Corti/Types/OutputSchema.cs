@@ -35,15 +35,9 @@ public class OutputSchema
     public static OutputSchema FromStringNode(Corti.StringNode value) => new("stringNode", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.IntegerNode value.
+    /// Factory method to create a union from a Corti.NumberNode value.
     /// </summary>
-    public static OutputSchema FromIntegerNode(Corti.IntegerNode value) =>
-        new("integerNode", value);
-
-    /// <summary>
-    /// Factory method to create a union from a Corti.FloatNode value.
-    /// </summary>
-    public static OutputSchema FromFloatNode(Corti.FloatNode value) => new("floatNode", value);
+    public static OutputSchema FromNumberNode(Corti.NumberNode value) => new("numberNode", value);
 
     /// <summary>
     /// Factory method to create a union from a Corti.BoolNode value.
@@ -51,14 +45,14 @@ public class OutputSchema
     public static OutputSchema FromBoolNode(Corti.BoolNode value) => new("boolNode", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.DictNode value.
+    /// Factory method to create a union from a Corti.ObjectNode value.
     /// </summary>
-    public static OutputSchema FromDictNode(Corti.DictNode value) => new("dictNode", value);
+    public static OutputSchema FromObjectNode(Corti.ObjectNode value) => new("objectNode", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.ListNode value.
+    /// Factory method to create a union from a Corti.ArrayNode value.
     /// </summary>
-    public static OutputSchema FromListNode(Corti.ListNode value) => new("listNode", value);
+    public static OutputSchema FromArrayNode(Corti.ArrayNode value) => new("arrayNode", value);
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "stringNode"
@@ -66,14 +60,9 @@ public class OutputSchema
     public bool IsStringNode() => Type == "stringNode";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "integerNode"
+    /// Returns true if <see cref="Type"/> is "numberNode"
     /// </summary>
-    public bool IsIntegerNode() => Type == "integerNode";
-
-    /// <summary>
-    /// Returns true if <see cref="Type"/> is "floatNode"
-    /// </summary>
-    public bool IsFloatNode() => Type == "floatNode";
+    public bool IsNumberNode() => Type == "numberNode";
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "boolNode"
@@ -81,14 +70,14 @@ public class OutputSchema
     public bool IsBoolNode() => Type == "boolNode";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "dictNode"
+    /// Returns true if <see cref="Type"/> is "objectNode"
     /// </summary>
-    public bool IsDictNode() => Type == "dictNode";
+    public bool IsObjectNode() => Type == "objectNode";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "listNode"
+    /// Returns true if <see cref="Type"/> is "arrayNode"
     /// </summary>
-    public bool IsListNode() => Type == "listNode";
+    public bool IsArrayNode() => Type == "arrayNode";
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.StringNode"/> if <see cref="Type"/> is 'stringNode', otherwise throws an exception.
@@ -100,22 +89,13 @@ public class OutputSchema
             : throw new CortiClientException("Union type is not 'stringNode'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.IntegerNode"/> if <see cref="Type"/> is 'integerNode', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.NumberNode"/> if <see cref="Type"/> is 'numberNode', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'integerNode'.</exception>
-    public Corti.IntegerNode AsIntegerNode() =>
-        IsIntegerNode()
-            ? (Corti.IntegerNode)Value!
-            : throw new CortiClientException("Union type is not 'integerNode'");
-
-    /// <summary>
-    /// Returns the value as a <see cref="Corti.FloatNode"/> if <see cref="Type"/> is 'floatNode', otherwise throws an exception.
-    /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'floatNode'.</exception>
-    public Corti.FloatNode AsFloatNode() =>
-        IsFloatNode()
-            ? (Corti.FloatNode)Value!
-            : throw new CortiClientException("Union type is not 'floatNode'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'numberNode'.</exception>
+    public Corti.NumberNode AsNumberNode() =>
+        IsNumberNode()
+            ? (Corti.NumberNode)Value!
+            : throw new CortiClientException("Union type is not 'numberNode'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.BoolNode"/> if <see cref="Type"/> is 'boolNode', otherwise throws an exception.
@@ -127,22 +107,22 @@ public class OutputSchema
             : throw new CortiClientException("Union type is not 'boolNode'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.DictNode"/> if <see cref="Type"/> is 'dictNode', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.ObjectNode"/> if <see cref="Type"/> is 'objectNode', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'dictNode'.</exception>
-    public Corti.DictNode AsDictNode() =>
-        IsDictNode()
-            ? (Corti.DictNode)Value!
-            : throw new CortiClientException("Union type is not 'dictNode'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'objectNode'.</exception>
+    public Corti.ObjectNode AsObjectNode() =>
+        IsObjectNode()
+            ? (Corti.ObjectNode)Value!
+            : throw new CortiClientException("Union type is not 'objectNode'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.ListNode"/> if <see cref="Type"/> is 'listNode', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.ArrayNode"/> if <see cref="Type"/> is 'arrayNode', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'listNode'.</exception>
-    public Corti.ListNode AsListNode() =>
-        IsListNode()
-            ? (Corti.ListNode)Value!
-            : throw new CortiClientException("Union type is not 'listNode'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'arrayNode'.</exception>
+    public Corti.ArrayNode AsArrayNode() =>
+        IsArrayNode()
+            ? (Corti.ArrayNode)Value!
+            : throw new CortiClientException("Union type is not 'arrayNode'");
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.StringNode"/> and returns true if successful.
@@ -159,27 +139,13 @@ public class OutputSchema
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.IntegerNode"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.NumberNode"/> and returns true if successful.
     /// </summary>
-    public bool TryGetIntegerNode(out Corti.IntegerNode? value)
+    public bool TryGetNumberNode(out Corti.NumberNode? value)
     {
-        if (Type == "integerNode")
+        if (Type == "numberNode")
         {
-            value = (Corti.IntegerNode)Value!;
-            return true;
-        }
-        value = null;
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.FloatNode"/> and returns true if successful.
-    /// </summary>
-    public bool TryGetFloatNode(out Corti.FloatNode? value)
-    {
-        if (Type == "floatNode")
-        {
-            value = (Corti.FloatNode)Value!;
+            value = (Corti.NumberNode)Value!;
             return true;
         }
         value = null;
@@ -201,13 +167,13 @@ public class OutputSchema
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.DictNode"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.ObjectNode"/> and returns true if successful.
     /// </summary>
-    public bool TryGetDictNode(out Corti.DictNode? value)
+    public bool TryGetObjectNode(out Corti.ObjectNode? value)
     {
-        if (Type == "dictNode")
+        if (Type == "objectNode")
         {
-            value = (Corti.DictNode)Value!;
+            value = (Corti.ObjectNode)Value!;
             return true;
         }
         value = null;
@@ -215,13 +181,13 @@ public class OutputSchema
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.ListNode"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.ArrayNode"/> and returns true if successful.
     /// </summary>
-    public bool TryGetListNode(out Corti.ListNode? value)
+    public bool TryGetArrayNode(out Corti.ArrayNode? value)
     {
-        if (Type == "listNode")
+        if (Type == "arrayNode")
         {
-            value = (Corti.ListNode)Value!;
+            value = (Corti.ArrayNode)Value!;
             return true;
         }
         value = null;
@@ -230,32 +196,29 @@ public class OutputSchema
 
     public T Match<T>(
         Func<Corti.StringNode, T> onStringNode,
-        Func<Corti.IntegerNode, T> onIntegerNode,
-        Func<Corti.FloatNode, T> onFloatNode,
+        Func<Corti.NumberNode, T> onNumberNode,
         Func<Corti.BoolNode, T> onBoolNode,
-        Func<Corti.DictNode, T> onDictNode,
-        Func<Corti.ListNode, T> onListNode
+        Func<Corti.ObjectNode, T> onObjectNode,
+        Func<Corti.ArrayNode, T> onArrayNode
     )
     {
         return Type switch
         {
             "stringNode" => onStringNode(AsStringNode()),
-            "integerNode" => onIntegerNode(AsIntegerNode()),
-            "floatNode" => onFloatNode(AsFloatNode()),
+            "numberNode" => onNumberNode(AsNumberNode()),
             "boolNode" => onBoolNode(AsBoolNode()),
-            "dictNode" => onDictNode(AsDictNode()),
-            "listNode" => onListNode(AsListNode()),
+            "objectNode" => onObjectNode(AsObjectNode()),
+            "arrayNode" => onArrayNode(AsArrayNode()),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
     public void Visit(
         Action<Corti.StringNode> onStringNode,
-        Action<Corti.IntegerNode> onIntegerNode,
-        Action<Corti.FloatNode> onFloatNode,
+        Action<Corti.NumberNode> onNumberNode,
         Action<Corti.BoolNode> onBoolNode,
-        Action<Corti.DictNode> onDictNode,
-        Action<Corti.ListNode> onListNode
+        Action<Corti.ObjectNode> onObjectNode,
+        Action<Corti.ArrayNode> onArrayNode
     )
     {
         switch (Type)
@@ -263,20 +226,17 @@ public class OutputSchema
             case "stringNode":
                 onStringNode(AsStringNode());
                 break;
-            case "integerNode":
-                onIntegerNode(AsIntegerNode());
-                break;
-            case "floatNode":
-                onFloatNode(AsFloatNode());
+            case "numberNode":
+                onNumberNode(AsNumberNode());
                 break;
             case "boolNode":
                 onBoolNode(AsBoolNode());
                 break;
-            case "dictNode":
-                onDictNode(AsDictNode());
+            case "objectNode":
+                onObjectNode(AsObjectNode());
                 break;
-            case "listNode":
-                onListNode(AsListNode());
+            case "arrayNode":
+                onArrayNode(AsArrayNode());
                 break;
             default:
                 throw new CortiClientException($"Unknown union type: {Type}");
@@ -321,16 +281,15 @@ public class OutputSchema
     public static implicit operator OutputSchema(Corti.StringNode value) =>
         new("stringNode", value);
 
-    public static implicit operator OutputSchema(Corti.IntegerNode value) =>
-        new("integerNode", value);
-
-    public static implicit operator OutputSchema(Corti.FloatNode value) => new("floatNode", value);
+    public static implicit operator OutputSchema(Corti.NumberNode value) =>
+        new("numberNode", value);
 
     public static implicit operator OutputSchema(Corti.BoolNode value) => new("boolNode", value);
 
-    public static implicit operator OutputSchema(Corti.DictNode value) => new("dictNode", value);
+    public static implicit operator OutputSchema(Corti.ObjectNode value) =>
+        new("objectNode", value);
 
-    public static implicit operator OutputSchema(Corti.ListNode value) => new("listNode", value);
+    public static implicit operator OutputSchema(Corti.ArrayNode value) => new("arrayNode", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<OutputSchema>
@@ -353,11 +312,10 @@ public class OutputSchema
                 var types = new (string Key, System.Type Type)[]
                 {
                     ("stringNode", typeof(Corti.StringNode)),
-                    ("integerNode", typeof(Corti.IntegerNode)),
-                    ("floatNode", typeof(Corti.FloatNode)),
+                    ("numberNode", typeof(Corti.NumberNode)),
                     ("boolNode", typeof(Corti.BoolNode)),
-                    ("dictNode", typeof(Corti.DictNode)),
-                    ("listNode", typeof(Corti.ListNode)),
+                    ("objectNode", typeof(Corti.ObjectNode)),
+                    ("arrayNode", typeof(Corti.ArrayNode)),
                 };
 
                 foreach (var (key, type) in types)
@@ -396,7 +354,6 @@ public class OutputSchema
             }
 
             value.Visit(
-                obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),

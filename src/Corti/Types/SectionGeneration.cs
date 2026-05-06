@@ -5,23 +5,26 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record CreateSectionVersionRequest : IJsonOnDeserialized
+public record SectionGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The title of this section. Passed to the LLM and also returned in the response.
+    /// The title of this section. Passed to the LLM.
     /// </summary>
     [JsonPropertyName("title")]
     public required string Title { get; set; }
 
+    /// <summary>
+    /// The prompt instructions for this section.
+    /// </summary>
     [JsonPropertyName("instructions")]
     public required SectionInstructions Instructions { get; set; }
 
     [JsonPropertyName("outputSchema")]
-    public OutputSchema? OutputSchema { get; set; }
+    public required OutputSchema OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

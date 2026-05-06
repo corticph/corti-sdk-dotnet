@@ -3,11 +3,11 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
+public partial class AlphaSectionsClient : IAlphaSectionsClient
 {
     private readonly RawClient _client;
 
-    internal NewTemplateVersionsClient(RawClient client)
+    internal AlphaSectionsClient(RawClient client)
     {
         try
         {
@@ -20,8 +20,179 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
         }
     }
 
-    private async Task<WithRawResponse<IEnumerable<TemplateVersion>>> ListAsyncCore(
-        string templateId,
+    private async Task<WithRawResponse<IEnumerable<Section>>> ListAsyncCore(
+        ListAlphaSectionsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
+                    .Add("lang", request.Lang)
+                    .Add("label", request.Label)
+                    .Add("published", request.Published)
+                    .MergeAdditional(options?.AdditionalQueryParameters)
+                    .Build();
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Get,
+                            Path = "alpha/sections",
+                            QueryString = _queryString,
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<IEnumerable<Section>>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<IEnumerable<Section>>()
+                        {
+                            Data = responseData,
+                            RawResponse = new RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
+    private async Task<WithRawResponse<Section>> CreateAsyncCore(
+        CreateSectionRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Post,
+                            Path = "alpha/sections",
+                            Body = request,
+                            Headers = _headers,
+                            ContentType = "application/json",
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
+                        return new WithRawResponse<Section>()
+                        {
+                            Data = responseData,
+                            RawResponse = new RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
+    private async Task<WithRawResponse<Section>> GetAsyncCore(
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -42,8 +213,8 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
                             Path = string.Format(
-                                "new/templates/{0}/versions",
-                                ValueConvert.ToPathParameterString(templateId)
+                                "alpha/sections/{0}",
+                                ValueConvert.ToPathParameterString(sectionId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -58,10 +229,8 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<TemplateVersion>>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<IEnumerable<TemplateVersion>>()
+                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
+                        return new WithRawResponse<Section>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -112,9 +281,9 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplateVersion>> CreateAsyncCore(
-        string templateId,
-        CreateTemplateVersionRequest request,
+    private async Task<WithRawResponse<Section>> UpdateAsyncCore(
+        string sectionId,
+        UpdateSectionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -133,10 +302,10 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
                         new JsonRequest
                         {
                             BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Post,
+                            Method = HttpMethodExtensions.Patch,
                             Path = string.Format(
-                                "new/templates/{0}/versions",
-                                ValueConvert.ToPathParameterString(templateId)
+                                "alpha/sections/{0}",
+                                ValueConvert.ToPathParameterString(sectionId)
                             ),
                             Body = request,
                             Headers = _headers,
@@ -153,8 +322,8 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<TemplateVersion>(responseBody)!;
-                        return new WithRawResponse<TemplateVersion>()
+                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
+                        return new WithRawResponse<Section>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -209,240 +378,65 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplateVersion>> GetAsyncCore(
-        string templateId,
-        string versionId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Get,
-                            Path = string.Format(
-                                "new/templates/{0}/versions/{1}",
-                                ValueConvert.ToPathParameterString(templateId),
-                                ValueConvert.ToPathParameterString(versionId)
-                            ),
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<TemplateVersion>(responseBody)!;
-                        return new WithRawResponse<TemplateVersion>()
-                        {
-                            Data = responseData,
-                            RawResponse = new RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 404:
-                                throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    private async Task<WithRawResponse<StatusResponse>> PublishAsyncCore(
-        string templateId,
-        string versionId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Post,
-                            Path = string.Format(
-                                "new/templates/{0}/versions/{1}/publish",
-                                ValueConvert.ToPathParameterString(templateId),
-                                ValueConvert.ToPathParameterString(versionId)
-                            ),
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<StatusResponse>(responseBody)!;
-                        return new WithRawResponse<StatusResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 404:
-                                throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
     /// <example><code>
-    /// await client.NewTemplateVersions.ListAsync("templateId");
+    /// await client.AlphaSections.ListAsync(new ListAlphaSectionsRequest());
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<TemplateVersion>> ListAsync(
-        string templateId,
+    public WithRawResponseTask<IEnumerable<Section>> ListAsync(
+        ListAlphaSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<TemplateVersion>>(
-            ListAsyncCore(templateId, options, cancellationToken)
+        return new WithRawResponseTask<IEnumerable<Section>>(
+            ListAsyncCore(request, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.NewTemplateVersions.CreateAsync("templateId", new CreateTemplateVersionRequest());
+    /// await client.AlphaSections.CreateAsync(
+    ///     new CreateSectionRequest
+    ///     {
+    ///         Name = "name",
+    ///         Language = "language",
+    ///         Generation = new SectionGeneration
+    ///         {
+    ///             Title = "title",
+    ///             Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
+    ///             OutputSchema = new StringNode { Type = "string" },
+    ///         },
+    ///     }
+    /// );
     /// </code></example>
-    public WithRawResponseTask<TemplateVersion> CreateAsync(
-        string templateId,
-        CreateTemplateVersionRequest request,
+    public WithRawResponseTask<Section> CreateAsync(
+        CreateSectionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<TemplateVersion>(
-            CreateAsyncCore(templateId, request, options, cancellationToken)
+        return new WithRawResponseTask<Section>(
+            CreateAsyncCore(request, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.NewTemplateVersions.GetAsync("templateId", "versionID");
+    /// await client.AlphaSections.GetAsync("sectionID");
     /// </code></example>
-    public WithRawResponseTask<TemplateVersion> GetAsync(
-        string templateId,
-        string versionId,
+    public WithRawResponseTask<Section> GetAsync(
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<TemplateVersion>(
-            GetAsyncCore(templateId, versionId, options, cancellationToken)
+        return new WithRawResponseTask<Section>(
+            GetAsyncCore(sectionId, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.NewTemplateVersions.DeleteAsync("templateId", "versionID");
+    /// await client.AlphaSections.DeleteAsync("sectionID");
     /// </code></example>
     public async Task DeleteAsync(
-        string templateId,
-        string versionId,
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -463,9 +457,8 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Delete,
                             Path = string.Format(
-                                "new/templates/{0}/versions/{1}",
-                                ValueConvert.ToPathParameterString(templateId),
-                                ValueConvert.ToPathParameterString(versionId)
+                                "alpha/sections/{0}",
+                                ValueConvert.ToPathParameterString(sectionId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -505,21 +498,18 @@ public partial class NewTemplateVersionsClient : INewTemplateVersionsClient
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Sets this version as the published version of the template.
-    /// </summary>
     /// <example><code>
-    /// await client.NewTemplateVersions.PublishAsync("templateId", "versionID");
+    /// await client.AlphaSections.UpdateAsync("sectionID", new UpdateSectionRequest());
     /// </code></example>
-    public WithRawResponseTask<StatusResponse> PublishAsync(
-        string templateId,
-        string versionId,
+    public WithRawResponseTask<Section> UpdateAsync(
+        string sectionId,
+        UpdateSectionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<StatusResponse>(
-            PublishAsyncCore(templateId, versionId, options, cancellationToken)
+        return new WithRawResponseTask<Section>(
+            UpdateAsyncCore(sectionId, request, options, cancellationToken)
         );
     }
 }

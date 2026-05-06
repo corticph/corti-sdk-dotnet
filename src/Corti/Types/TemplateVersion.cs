@@ -18,19 +18,13 @@ public record TemplateVersion : IJsonOnDeserialized
     public required string Id { get; set; }
 
     /// <summary>
-    /// Starts a 0 and auto-increments.
+    /// Starts at 0 and auto-increments.
     /// </summary>
     [JsonPropertyName("versionNumber")]
     public required int VersionNumber { get; set; }
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
-
-    /// <summary>
-    /// Populated only on GET /new/templates/{id}/versions/{versionID}
-    /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("generation")]
+    public required TemplateGeneration Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

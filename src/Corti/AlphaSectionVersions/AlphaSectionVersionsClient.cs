@@ -3,11 +3,11 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class NewSectionsClient : INewSectionsClient
+public partial class AlphaSectionVersionsClient : IAlphaSectionVersionsClient
 {
     private readonly RawClient _client;
 
-    internal NewSectionsClient(RawClient client)
+    internal AlphaSectionVersionsClient(RawClient client)
     {
         try
         {
@@ -20,8 +20,8 @@ public partial class NewSectionsClient : INewSectionsClient
         }
     }
 
-    private async Task<WithRawResponse<IEnumerable<Section>>> ListAsyncCore(
-        ListNewSectionsRequest request,
+    private async Task<WithRawResponse<IEnumerable<SectionVersion>>> ListAsyncCore(
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -29,12 +29,6 @@ public partial class NewSectionsClient : INewSectionsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
-                    .Add("lang", request.Lang)
-                    .Add("label", request.Label)
-                    .Add("published", request.Published)
-                    .MergeAdditional(options?.AdditionalQueryParameters)
-                    .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
@@ -47,8 +41,10 @@ public partial class NewSectionsClient : INewSectionsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
-                            Path = "new/sections",
-                            QueryString = _queryString,
+                            Path = string.Format(
+                                "alpha/sections/{0}/versions",
+                                ValueConvert.ToPathParameterString(sectionId)
+                            ),
                             Headers = _headers,
                             Options = options,
                         },
@@ -62,10 +58,10 @@ public partial class NewSectionsClient : INewSectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<Section>>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<SectionVersion>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<IEnumerable<Section>>()
+                        return new WithRawResponse<IEnumerable<SectionVersion>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -92,6 +88,20 @@ public partial class NewSectionsClient : INewSectionsClient
                     var responseBody = await response
                         .Raw.Content.ReadAsStringAsync(cancellationToken)
                         .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
@@ -102,8 +112,9 @@ public partial class NewSectionsClient : INewSectionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Section>> CreateAsyncCore(
-        CreateSectionRequest request,
+    private async Task<WithRawResponse<SectionVersion>> CreateAsyncCore(
+        string sectionId,
+        SectionGeneration request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -123,7 +134,10 @@ public partial class NewSectionsClient : INewSectionsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
-                            Path = "new/sections",
+                            Path = string.Format(
+                                "alpha/sections/{0}/versions",
+                                ValueConvert.ToPathParameterString(sectionId)
+                            ),
                             Body = request,
                             Headers = _headers,
                             ContentType = "application/json",
@@ -139,8 +153,8 @@ public partial class NewSectionsClient : INewSectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
-                        return new WithRawResponse<Section>()
+                        var responseData = JsonUtils.Deserialize<SectionVersion>(responseBody)!;
+                        return new WithRawResponse<SectionVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -175,6 +189,10 @@ public partial class NewSectionsClient : INewSectionsClient
                                 throw new BadRequestError(
                                     JsonUtils.Deserialize<object>(responseBody)
                                 );
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
                         }
                     }
                     catch (JsonException)
@@ -191,8 +209,9 @@ public partial class NewSectionsClient : INewSectionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Section>> GetAsyncCore(
+    private async Task<WithRawResponse<SectionVersion>> GetAsyncCore(
         string sectionId,
+        string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -213,8 +232,9 @@ public partial class NewSectionsClient : INewSectionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
                             Path = string.Format(
-                                "new/sections/{0}",
-                                ValueConvert.ToPathParameterString(sectionId)
+                                "alpha/sections/{0}/versions/{1}",
+                                ValueConvert.ToPathParameterString(sectionId),
+                                ValueConvert.ToPathParameterString(versionId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -229,8 +249,8 @@ public partial class NewSectionsClient : INewSectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
-                        return new WithRawResponse<Section>()
+                        var responseData = JsonUtils.Deserialize<SectionVersion>(responseBody)!;
+                        return new WithRawResponse<SectionVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -281,9 +301,9 @@ public partial class NewSectionsClient : INewSectionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Section>> UpdateAsyncCore(
+    private async Task<WithRawResponse<StatusResponse>> PublishAsyncCore(
         string sectionId,
-        UpdateSectionRequest request,
+        string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -302,14 +322,13 @@ public partial class NewSectionsClient : INewSectionsClient
                         new JsonRequest
                         {
                             BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethodExtensions.Patch,
+                            Method = HttpMethod.Post,
                             Path = string.Format(
-                                "new/sections/{0}",
-                                ValueConvert.ToPathParameterString(sectionId)
+                                "alpha/sections/{0}/versions/{1}/publish",
+                                ValueConvert.ToPathParameterString(sectionId),
+                                ValueConvert.ToPathParameterString(versionId)
                             ),
-                            Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -322,8 +341,8 @@ public partial class NewSectionsClient : INewSectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
-                        return new WithRawResponse<Section>()
+                        var responseData = JsonUtils.Deserialize<StatusResponse>(responseBody)!;
+                        return new WithRawResponse<StatusResponse>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -354,10 +373,6 @@ public partial class NewSectionsClient : INewSectionsClient
                     {
                         switch (response.StatusCode)
                         {
-                            case 400:
-                                throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
                             case 404:
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
@@ -379,67 +394,63 @@ public partial class NewSectionsClient : INewSectionsClient
     }
 
     /// <example><code>
-    /// await client.NewSections.ListAsync(new ListNewSectionsRequest());
+    /// await client.AlphaSectionVersions.ListAsync("sectionID");
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<Section>> ListAsync(
-        ListNewSectionsRequest request,
+    public WithRawResponseTask<IEnumerable<SectionVersion>> ListAsync(
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<Section>>(
-            ListAsyncCore(request, options, cancellationToken)
+        return new WithRawResponseTask<IEnumerable<SectionVersion>>(
+            ListAsyncCore(sectionId, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.NewSections.CreateAsync(
-    ///     new CreateSectionRequest
+    /// await client.AlphaSectionVersions.CreateAsync(
+    ///     "sectionID",
+    ///     new SectionGeneration
     ///     {
-    ///         Name = "name",
-    ///         Language = "language",
-    ///         Generation = new CreateSectionVersionRequest
-    ///         {
-    ///             Title = "title",
-    ///             Instructions = new SectionInstructions
-    ///             {
-    ///                 ContentPrompt = "contentPrompt",
-    ///                 WritingStylePrompt = "writingStylePrompt",
-    ///             },
-    ///         },
+    ///         Title = "title",
+    ///         Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
+    ///         OutputSchema = new StringNode { Type = "string" },
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<Section> CreateAsync(
-        CreateSectionRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<Section>(
-            CreateAsyncCore(request, options, cancellationToken)
-        );
-    }
-
-    /// <example><code>
-    /// await client.NewSections.GetAsync("sectionID");
-    /// </code></example>
-    public WithRawResponseTask<Section> GetAsync(
+    public WithRawResponseTask<SectionVersion> CreateAsync(
         string sectionId,
+        SectionGeneration request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Section>(
-            GetAsyncCore(sectionId, options, cancellationToken)
+        return new WithRawResponseTask<SectionVersion>(
+            CreateAsyncCore(sectionId, request, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.NewSections.DeleteAsync("sectionID");
+    /// await client.AlphaSectionVersions.GetAsync("sectionID", "versionID");
+    /// </code></example>
+    public WithRawResponseTask<SectionVersion> GetAsync(
+        string sectionId,
+        string versionId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<SectionVersion>(
+            GetAsyncCore(sectionId, versionId, options, cancellationToken)
+        );
+    }
+
+    /// <example><code>
+    /// await client.AlphaSectionVersions.DeleteAsync("sectionID", "versionID");
     /// </code></example>
     public async Task DeleteAsync(
         string sectionId,
+        string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -460,8 +471,9 @@ public partial class NewSectionsClient : INewSectionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Delete,
                             Path = string.Format(
-                                "new/sections/{0}",
-                                ValueConvert.ToPathParameterString(sectionId)
+                                "alpha/sections/{0}/versions/{1}",
+                                ValueConvert.ToPathParameterString(sectionId),
+                                ValueConvert.ToPathParameterString(versionId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -501,18 +513,21 @@ public partial class NewSectionsClient : INewSectionsClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Sets this version as the published version of the section.
+    /// </summary>
     /// <example><code>
-    /// await client.NewSections.UpdateAsync("sectionID", new UpdateSectionRequest());
+    /// await client.AlphaSectionVersions.PublishAsync("sectionID", "versionID");
     /// </code></example>
-    public WithRawResponseTask<Section> UpdateAsync(
+    public WithRawResponseTask<StatusResponse> PublishAsync(
         string sectionId,
-        UpdateSectionRequest request,
+        string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Section>(
-            UpdateAsyncCore(sectionId, request, options, cancellationToken)
+        return new WithRawResponseTask<StatusResponse>(
+            PublishAsyncCore(sectionId, versionId, options, cancellationToken)
         );
     }
 }

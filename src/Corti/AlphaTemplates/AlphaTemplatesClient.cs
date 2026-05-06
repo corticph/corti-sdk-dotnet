@@ -3,11 +3,11 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class NewTemplatesClient : INewTemplatesClient
+public partial class AlphaTemplatesClient : IAlphaTemplatesClient
 {
     private readonly RawClient _client;
 
-    internal NewTemplatesClient(RawClient client)
+    internal AlphaTemplatesClient(RawClient client)
     {
         try
         {
@@ -21,7 +21,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
     }
 
     private async Task<WithRawResponse<IEnumerable<Template>>> ListAsyncCore(
-        ListNewTemplatesRequest request,
+        ListAlphaTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -47,7 +47,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
-                            Path = "new/templates",
+                            Path = "alpha/templates",
                             QueryString = _queryString,
                             Headers = _headers,
                             Options = options,
@@ -123,7 +123,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
-                            Path = "new/templates",
+                            Path = "alpha/templates",
                             Body = request,
                             Headers = _headers,
                             ContentType = "application/json",
@@ -213,7 +213,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
                             Path = string.Format(
-                                "new/templates/{0}",
+                                "alpha/templates/{0}",
                                 ValueConvert.ToPathParameterString(templateId)
                             ),
                             Headers = _headers,
@@ -304,7 +304,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethodExtensions.Patch,
                             Path = string.Format(
-                                "new/templates/{0}",
+                                "alpha/templates/{0}",
                                 ValueConvert.ToPathParameterString(templateId)
                             ),
                             Body = request,
@@ -379,10 +379,10 @@ public partial class NewTemplatesClient : INewTemplatesClient
     }
 
     /// <example><code>
-    /// await client.NewTemplates.ListAsync(new ListNewTemplatesRequest());
+    /// await client.AlphaTemplates.ListAsync(new ListAlphaTemplatesRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<Template>> ListAsync(
-        ListNewTemplatesRequest request,
+        ListAlphaTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -393,8 +393,16 @@ public partial class NewTemplatesClient : INewTemplatesClient
     }
 
     /// <example><code>
-    /// await client.NewTemplates.CreateAsync(
-    ///     new CreateTemplateRequest { Name = "name", Language = "language" }
+    /// await client.AlphaTemplates.CreateAsync(
+    ///     new CreateTemplateRequest
+    ///     {
+    ///         Name = "name",
+    ///         Language = "language",
+    ///         Generation = new CreateTemplateRequestGeneration
+    ///         {
+    ///             Instructions = new TemplateInstructions { Prompt = "prompt" },
+    ///         },
+    ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<Template> CreateAsync(
@@ -409,7 +417,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
     }
 
     /// <example><code>
-    /// await client.NewTemplates.GetAsync("templateId");
+    /// await client.AlphaTemplates.GetAsync("templateID");
     /// </code></example>
     public WithRawResponseTask<Template> GetAsync(
         string templateId,
@@ -423,7 +431,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
     }
 
     /// <example><code>
-    /// await client.NewTemplates.DeleteAsync("templateId");
+    /// await client.AlphaTemplates.DeleteAsync("templateID");
     /// </code></example>
     public async Task DeleteAsync(
         string templateId,
@@ -447,7 +455,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Delete,
                             Path = string.Format(
-                                "new/templates/{0}",
+                                "alpha/templates/{0}",
                                 ValueConvert.ToPathParameterString(templateId)
                             ),
                             Headers = _headers,
@@ -489,7 +497,7 @@ public partial class NewTemplatesClient : INewTemplatesClient
     }
 
     /// <example><code>
-    /// await client.NewTemplates.UpdateAsync("templateId", new UpdateTemplateRequest());
+    /// await client.AlphaTemplates.UpdateAsync("templateID", new UpdateTemplateRequest());
     /// </code></example>
     public WithRawResponseTask<Template> UpdateAsync(
         string templateId,

@@ -21,7 +21,13 @@ public record SectionInstructions : IJsonOnDeserialized
     /// The writingStyle prompt instructs the model in what tone and style to output.
     /// </summary>
     [JsonPropertyName("writingStylePrompt")]
-    public required string WritingStylePrompt { get; set; }
+    public string? WritingStylePrompt { get; set; }
+
+    /// <summary>
+    /// Optional free-form prompt for any instructions that don't fit contentPrompt or writingStylePrompt.
+    /// </summary>
+    [JsonPropertyName("miscPrompt")]
+    public string? MiscPrompt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

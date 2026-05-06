@@ -37,7 +37,7 @@ public record CreateSectionRequest
     public string? InheritFromId { get; set; }
 
     [JsonPropertyName("generation")]
-    public required CreateSectionVersionRequest Generation { get; set; }
+    public required SectionGeneration Generation { get; set; }
 
     /// <summary>
     /// Defaults to true when omitted. Set this to false if you do not want the section to automatically show up in LIST /sections.

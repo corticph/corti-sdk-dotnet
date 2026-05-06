@@ -6,11 +6,8 @@ namespace Corti;
 [Serializable]
 public record CreateTemplateVersionRequest
 {
-    [JsonPropertyName("instructions")]
-    public TemplateInstructions? Instructions { get; set; }
-
-    [JsonPropertyName("sections")]
-    public IEnumerable<TemplateVersionSectionRequest>? Sections { get; set; }
+    [JsonPropertyName("generation")]
+    public required CreateTemplateVersionRequestGeneration Generation { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

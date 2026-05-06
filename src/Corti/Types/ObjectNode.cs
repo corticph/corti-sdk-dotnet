@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record FloatNode : IJsonOnDeserialized
+public record ObjectNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record FloatNode : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public FloatNode.TypeLiteral Type { get;
+    public ObjectNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -28,28 +28,22 @@ public record FloatNode : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// The default to output if nothing to output.
+    /// Controls how subheadings are rendered in the generated output. Use `inline` (default) for `{key}: {value}\n` or `block` for `{key}\n{value}\n`, or provide a custom format string containing both `{key}` and `{value}` placeholders. Mutually exclusive with `objectFormat`.
     /// </summary>
-    [JsonPropertyName("default")]
-    public float? Default { get; set; }
+    [JsonPropertyName("subheadingFormat")]
+    public string? SubheadingFormat { get; set; }
 
     /// <summary>
-    /// Can be used to prompt the LLM for specifically allowed float values to output.
+    /// A format string referencing field keys as placeholders (e.g. `{fieldKey}`). All placeholders must correspond to defined field keys. Mutually exclusive with `subheadingFormat`.
     /// </summary>
-    [JsonPropertyName("enum")]
-    public IEnumerable<float>? Enum { get; set; }
+    [JsonPropertyName("objectFormat")]
+    public string? ObjectFormat { get; set; }
 
     /// <summary>
-    /// Use if a minimum value applies.
+    /// Define what fields are possible to return in the object.
     /// </summary>
-    [JsonPropertyName("minimum")]
-    public float? Minimum { get; set; }
-
-    /// <summary>
-    /// Use if a maximum value applies.
-    /// </summary>
-    [JsonPropertyName("maximum")]
-    public float? Maximum { get; set; }
+    [JsonPropertyName("fields")]
+    public IEnumerable<FieldDefinition>? Fields { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -66,7 +60,7 @@ public record FloatNode : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "float";
+        public const string Value = "object";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

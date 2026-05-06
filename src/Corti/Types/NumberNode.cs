@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record IntegerNode : IJsonOnDeserialized
+public record NumberNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record IntegerNode : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public IntegerNode.TypeLiteral Type { get;
+    public NumberNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -31,25 +31,25 @@ public record IntegerNode : IJsonOnDeserialized
     /// The default to output if nothing to output.
     /// </summary>
     [JsonPropertyName("default")]
-    public int? Default { get; set; }
+    public double? Default { get; set; }
 
     /// <summary>
-    /// Can be used to prompt the LLM for specifically allowed integer values to output.
+    /// Can be used to prompt the LLM for specifically allowed numeric values to output.
     /// </summary>
     [JsonPropertyName("enum")]
-    public IEnumerable<int>? Enum { get; set; }
+    public IEnumerable<double>? Enum { get; set; }
 
     /// <summary>
     /// Use if a minimum value applies.
     /// </summary>
     [JsonPropertyName("minimum")]
-    public int? Minimum { get; set; }
+    public double? Minimum { get; set; }
 
     /// <summary>
     /// Use if a maximum value applies.
     /// </summary>
     [JsonPropertyName("maximum")]
-    public int? Maximum { get; set; }
+    public double? Maximum { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -66,7 +66,7 @@ public record IntegerNode : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "integer";
+        public const string Value = "number";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

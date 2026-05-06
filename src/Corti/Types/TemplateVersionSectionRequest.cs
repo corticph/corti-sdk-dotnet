@@ -11,17 +11,14 @@ public record TemplateVersionSectionRequest : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The UUID of the section to include in the template version.
+    /// </summary>
     [JsonPropertyName("sectionId")]
     public required string SectionId { get; set; }
 
     /// <summary>
-    /// Can be used to pin the version of a section, else the latest published version is used in the resource.
-    /// </summary>
-    [JsonPropertyName("pinnedVersionId")]
-    public string? PinnedVersionId { get; set; }
-
-    /// <summary>
-    /// Sets the order of this section within this template. Starts a 0.
+    /// Sets the order of this section within this template. Starts at 0.
     /// </summary>
     [JsonPropertyName("orderIndex")]
     public int? OrderIndex { get; set; }

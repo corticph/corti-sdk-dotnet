@@ -36,11 +36,8 @@ public record CreateTemplateRequest
     [JsonPropertyName("inheritFromId")]
     public string? InheritFromId { get; set; }
 
-    [JsonPropertyName("instructions")]
-    public TemplateInstructions? Instructions { get; set; }
-
-    [JsonPropertyName("sections")]
-    public IEnumerable<TemplateVersionSectionRequest>? Sections { get; set; }
+    [JsonPropertyName("generation")]
+    public required CreateTemplateRequestGeneration Generation { get; set; }
 
     /// <summary>
     /// Defaults to true when omitted. Set this to false if you do not want the template to automatically show up in LIST templates.

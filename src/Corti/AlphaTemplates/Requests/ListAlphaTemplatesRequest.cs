@@ -4,16 +4,16 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record ListNewSectionsRequest
+public record ListAlphaTemplatesRequest
 {
     /// <summary>
-    /// Filter sections by language (BCP 47 tag). Repeatable.
+    /// Filter templates by language (BCP 47 tag). Repeatable.
     /// </summary>
     [JsonIgnore]
     public IEnumerable<string> Lang { get; set; } = new List<string>();
 
     /// <summary>
-    /// Filter sections by label. Repeatable; matches sections that have any of the given labels.
+    /// Filter templates by label. Repeatable; matches templates that have any of the given labels.
     /// </summary>
     [JsonIgnore]
     public IEnumerable<string> Label { get; set; } = new List<string>();

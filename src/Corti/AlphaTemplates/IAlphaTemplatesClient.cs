@@ -1,34 +1,34 @@
 namespace Corti;
 
-public partial interface INewSectionsClient
+public partial interface IAlphaTemplatesClient
 {
-    WithRawResponseTask<IEnumerable<Section>> ListAsync(
-        ListNewSectionsRequest request,
+    WithRawResponseTask<IEnumerable<Template>> ListAsync(
+        ListAlphaTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Section> CreateAsync(
-        CreateSectionRequest request,
+    WithRawResponseTask<Template> CreateAsync(
+        CreateTemplateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Section> GetAsync(
-        string sectionId,
+    WithRawResponseTask<Template> GetAsync(
+        string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
     Task DeleteAsync(
-        string sectionId,
+        string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Section> UpdateAsync(
-        string sectionId,
-        UpdateSectionRequest request,
+    WithRawResponseTask<Template> UpdateAsync(
+        string templateId,
+        UpdateTemplateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

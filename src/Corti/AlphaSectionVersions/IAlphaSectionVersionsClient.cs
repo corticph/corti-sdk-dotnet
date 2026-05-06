@@ -1,6 +1,6 @@
 namespace Corti;
 
-public partial interface INewSectionVersionsClient
+public partial interface IAlphaSectionVersionsClient
 {
     WithRawResponseTask<IEnumerable<SectionVersion>> ListAsync(
         string sectionId,
@@ -10,7 +10,7 @@ public partial interface INewSectionVersionsClient
 
     WithRawResponseTask<SectionVersion> CreateAsync(
         string sectionId,
-        CreateSectionVersionRequest request,
+        SectionGeneration request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
