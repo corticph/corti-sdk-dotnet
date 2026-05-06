@@ -23,6 +23,12 @@ public record StreamConfigMode : IJsonOnDeserialized
     [JsonPropertyName("outputLocale")]
     public string? OutputLocale { get; set; }
 
+    /// <summary>
+    /// Rate at which fact generation should process and return results. If no value is set, the default is `fixed` and will trigger fact generation at the standard interval of around 60s. With `fast_init`, fact generation will follow a logarithmic curve.
+    /// </summary>
+    [JsonPropertyName("factGenerationInterval")]
+    public StreamConfigModeFactGenerationInterval? FactGenerationInterval { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
