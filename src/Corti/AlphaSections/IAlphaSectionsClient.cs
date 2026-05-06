@@ -2,18 +2,6 @@ namespace Corti;
 
 public partial interface IAlphaSectionsClient
 {
-    WithRawResponseTask<IEnumerable<Section>> ListAsync(
-        ListAlphaSectionsRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    WithRawResponseTask<Section> CreateAsync(
-        CreateSectionRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
     WithRawResponseTask<Section> GetAsync(
         string sectionId,
         RequestOptions? options = null,
@@ -32,4 +20,8 @@ public partial interface IAlphaSectionsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    Task ListAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
+
+    Task CreateAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
 }

@@ -2,19 +2,6 @@ namespace Corti;
 
 public partial interface IAlphaSectionVersionsClient
 {
-    WithRawResponseTask<IEnumerable<SectionVersion>> ListAsync(
-        string sectionId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    WithRawResponseTask<SectionVersion> CreateAsync(
-        string sectionId,
-        SectionGeneration request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
     WithRawResponseTask<SectionVersion> GetAsync(
         string sectionId,
         string versionId,
@@ -35,6 +22,18 @@ public partial interface IAlphaSectionVersionsClient
     WithRawResponseTask<StatusResponse> PublishAsync(
         string sectionId,
         string versionId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    Task ListAsync(
+        string sectionId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    Task CreateAsync(
+        string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
