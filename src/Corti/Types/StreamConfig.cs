@@ -23,6 +23,9 @@ public record StreamConfig : IJsonOnDeserialized
     [JsonPropertyName("retentionPolicy")]
     public StreamConfigRetentionPolicy? RetentionPolicy { get; set; }
 
+    [JsonPropertyName("audioEvents")]
+    public StreamAudioEventsConfig? AudioEvents { get; set; }
+
     /// <summary>
     /// The audio format of the incoming audio stream
     /// </summary>
