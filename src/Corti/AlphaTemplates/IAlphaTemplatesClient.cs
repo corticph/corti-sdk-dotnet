@@ -2,6 +2,18 @@ namespace Corti;
 
 public partial interface IAlphaTemplatesClient
 {
+    WithRawResponseTask<IEnumerable<Template>> ListAsync(
+        ListAlphaTemplatesRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    WithRawResponseTask<Template> CreateAsync(
+        CreateTemplateRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
     WithRawResponseTask<Template> GetAsync(
         string templateId,
         RequestOptions? options = null,
@@ -20,8 +32,4 @@ public partial interface IAlphaTemplatesClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
-
-    Task ListAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
-
-    Task CreateAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
 }
