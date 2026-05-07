@@ -1,12 +1,8 @@
 namespace Corti;
 
-public partial interface INewTemplatesClient
+public partial interface IAlphaTemplatesClient
 {
-    Task ListAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
-
-    Task CreateAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
-
-    Task GetAsync(
+    WithRawResponseTask<Template> GetAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -18,9 +14,14 @@ public partial interface INewTemplatesClient
         CancellationToken cancellationToken = default
     );
 
-    Task UpdateAsync(
+    WithRawResponseTask<Template> UpdateAsync(
         string templateId,
+        UpdateTemplateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    Task ListAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
+
+    Task CreateAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
 }

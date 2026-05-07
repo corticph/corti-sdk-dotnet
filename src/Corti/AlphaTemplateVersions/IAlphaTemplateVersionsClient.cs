@@ -1,36 +1,39 @@
 namespace Corti;
 
-public partial interface INewSectionVersionsClient
+public partial interface IAlphaTemplateVersionsClient
 {
-    Task ListAsync(
-        string sectionId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    Task CreateAsync(
-        string sectionId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    Task GetAsync(
-        string sectionId,
+    WithRawResponseTask<TemplateVersion> GetAsync(
+        string templateId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
     Task DeleteAsync(
-        string sectionId,
+        string templateId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    Task PublishAsync(
-        string sectionId,
+    /// <summary>
+    /// Sets this version as the published version of the template.
+    /// </summary>
+    WithRawResponseTask<StatusResponse> PublishAsync(
+        string templateId,
         string versionId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    Task ListAsync(
+        string templateId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    Task CreateAsync(
+        string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

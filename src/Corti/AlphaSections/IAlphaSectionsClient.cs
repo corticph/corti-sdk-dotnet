@@ -1,12 +1,8 @@
 namespace Corti;
 
-public partial interface INewSectionsClient
+public partial interface IAlphaSectionsClient
 {
-    Task ListAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
-
-    Task CreateAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
-
-    Task GetAsync(
+    WithRawResponseTask<Section> GetAsync(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -18,9 +14,14 @@ public partial interface INewSectionsClient
         CancellationToken cancellationToken = default
     );
 
-    Task UpdateAsync(
+    WithRawResponseTask<Section> UpdateAsync(
         string sectionId,
+        UpdateSectionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    Task ListAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
+
+    Task CreateAsync(RequestOptions? options = null, CancellationToken cancellationToken = default);
 }
