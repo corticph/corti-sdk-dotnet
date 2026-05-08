@@ -5,20 +5,26 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Generate a document by assembling a template from existing stored sections, with input context drawn implicitly from an existing interaction's facts and transcripts. The resulting template aggregate is auto-saved and can be referenced in future calls.
+/// Generate a document by assembling a template from existing stored sections. The resulting template aggregate is auto-saved and can be referenced in future calls. At least one of `context` or `interactionId` must be supplied as input context for the model.
 /// </summary>
 [Serializable]
-public record GuidedDocumentByAssemblyWithInteractionId : IJsonOnDeserialized
+public record GuidedDocumentByAssembly : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// All facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
+    /// Ordered list of context items the model reasons over. Each item is one of text, a transcript (with optional metadata and segments), or a single fact. Items are interleaved by timestamps where present on transcript segments; otherwise array order is preserved.
+    /// </summary>
+    [JsonPropertyName("context")]
+    public IEnumerable<GuidedDocumentContext>? Context { get; set; }
+
+    /// <summary>
+    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
     /// </summary>
     [JsonPropertyName("interactionId")]
-    public required string InteractionId { get; set; }
+    public string? InteractionId { get; set; }
 
     /// <summary>
     /// Assemble a template from existing stored sections.
