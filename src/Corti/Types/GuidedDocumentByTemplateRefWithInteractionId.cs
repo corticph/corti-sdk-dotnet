@@ -4,6 +4,9 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Generate a document using a stored template, with input context drawn implicitly from an existing interaction's facts and transcripts. Optionally supply runtime overrides to patch instructions or sections without mutating the base template.
+/// </summary>
 [Serializable]
 public record GuidedDocumentByTemplateRefWithInteractionId : IJsonOnDeserialized
 {
@@ -12,7 +15,7 @@ public record GuidedDocumentByTemplateRefWithInteractionId : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
+    /// All facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
     /// </summary>
     [JsonPropertyName("interactionId")]
     public required string InteractionId { get; set; }

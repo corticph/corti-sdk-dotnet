@@ -30,76 +30,159 @@ public class GuidedDocumentRequest
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedDocumentByTemplateRef value.
+    /// Factory method to create a union from a Corti.GuidedDocumentByTemplateRefWithContext value.
     /// </summary>
-    public static GuidedDocumentRequest FromGuidedDocumentByTemplateRef(
-        Corti.GuidedDocumentByTemplateRef value
-    ) => new("guidedDocumentByTemplateRef", value);
+    public static GuidedDocumentRequest FromGuidedDocumentByTemplateRefWithContext(
+        Corti.GuidedDocumentByTemplateRefWithContext value
+    ) => new("guidedDocumentByTemplateRefWithContext", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedDocumentByAssembly value.
+    /// Factory method to create a union from a Corti.GuidedDocumentByTemplateRefWithInteractionId value.
     /// </summary>
-    public static GuidedDocumentRequest FromGuidedDocumentByAssembly(
-        Corti.GuidedDocumentByAssembly value
-    ) => new("guidedDocumentByAssembly", value);
+    public static GuidedDocumentRequest FromGuidedDocumentByTemplateRefWithInteractionId(
+        Corti.GuidedDocumentByTemplateRefWithInteractionId value
+    ) => new("guidedDocumentByTemplateRefWithInteractionId", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedDocumentByDynamic value.
+    /// Factory method to create a union from a Corti.GuidedDocumentByAssemblyWithContext value.
     /// </summary>
-    public static GuidedDocumentRequest FromGuidedDocumentByDynamic(
-        Corti.GuidedDocumentByDynamic value
-    ) => new("guidedDocumentByDynamic", value);
+    public static GuidedDocumentRequest FromGuidedDocumentByAssemblyWithContext(
+        Corti.GuidedDocumentByAssemblyWithContext value
+    ) => new("guidedDocumentByAssemblyWithContext", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedDocumentByTemplateRef"
+    /// Factory method to create a union from a Corti.GuidedDocumentByAssemblyWithInteractionId value.
     /// </summary>
-    public bool IsGuidedDocumentByTemplateRef() => Type == "guidedDocumentByTemplateRef";
+    public static GuidedDocumentRequest FromGuidedDocumentByAssemblyWithInteractionId(
+        Corti.GuidedDocumentByAssemblyWithInteractionId value
+    ) => new("guidedDocumentByAssemblyWithInteractionId", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedDocumentByAssembly"
+    /// Factory method to create a union from a Corti.GuidedDocumentByDynamicWithContext value.
     /// </summary>
-    public bool IsGuidedDocumentByAssembly() => Type == "guidedDocumentByAssembly";
+    public static GuidedDocumentRequest FromGuidedDocumentByDynamicWithContext(
+        Corti.GuidedDocumentByDynamicWithContext value
+    ) => new("guidedDocumentByDynamicWithContext", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedDocumentByDynamic"
+    /// Factory method to create a union from a Corti.GuidedDocumentByDynamicWithInteractionId value.
     /// </summary>
-    public bool IsGuidedDocumentByDynamic() => Type == "guidedDocumentByDynamic";
+    public static GuidedDocumentRequest FromGuidedDocumentByDynamicWithInteractionId(
+        Corti.GuidedDocumentByDynamicWithInteractionId value
+    ) => new("guidedDocumentByDynamicWithInteractionId", value);
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedDocumentByTemplateRef"/> if <see cref="Type"/> is 'guidedDocumentByTemplateRef', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "guidedDocumentByTemplateRefWithContext"
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByTemplateRef'.</exception>
-    public Corti.GuidedDocumentByTemplateRef AsGuidedDocumentByTemplateRef() =>
-        IsGuidedDocumentByTemplateRef()
-            ? (Corti.GuidedDocumentByTemplateRef)Value!
-            : throw new CortiClientException("Union type is not 'guidedDocumentByTemplateRef'");
+    public bool IsGuidedDocumentByTemplateRefWithContext() =>
+        Type == "guidedDocumentByTemplateRefWithContext";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedDocumentByAssembly"/> if <see cref="Type"/> is 'guidedDocumentByAssembly', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "guidedDocumentByTemplateRefWithInteractionId"
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByAssembly'.</exception>
-    public Corti.GuidedDocumentByAssembly AsGuidedDocumentByAssembly() =>
-        IsGuidedDocumentByAssembly()
-            ? (Corti.GuidedDocumentByAssembly)Value!
-            : throw new CortiClientException("Union type is not 'guidedDocumentByAssembly'");
+    public bool IsGuidedDocumentByTemplateRefWithInteractionId() =>
+        Type == "guidedDocumentByTemplateRefWithInteractionId";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedDocumentByDynamic"/> if <see cref="Type"/> is 'guidedDocumentByDynamic', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "guidedDocumentByAssemblyWithContext"
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByDynamic'.</exception>
-    public Corti.GuidedDocumentByDynamic AsGuidedDocumentByDynamic() =>
-        IsGuidedDocumentByDynamic()
-            ? (Corti.GuidedDocumentByDynamic)Value!
-            : throw new CortiClientException("Union type is not 'guidedDocumentByDynamic'");
+    public bool IsGuidedDocumentByAssemblyWithContext() =>
+        Type == "guidedDocumentByAssemblyWithContext";
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByTemplateRef"/> and returns true if successful.
+    /// Returns true if <see cref="Type"/> is "guidedDocumentByAssemblyWithInteractionId"
     /// </summary>
-    public bool TryGetGuidedDocumentByTemplateRef(out Corti.GuidedDocumentByTemplateRef? value)
+    public bool IsGuidedDocumentByAssemblyWithInteractionId() =>
+        Type == "guidedDocumentByAssemblyWithInteractionId";
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "guidedDocumentByDynamicWithContext"
+    /// </summary>
+    public bool IsGuidedDocumentByDynamicWithContext() =>
+        Type == "guidedDocumentByDynamicWithContext";
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "guidedDocumentByDynamicWithInteractionId"
+    /// </summary>
+    public bool IsGuidedDocumentByDynamicWithInteractionId() =>
+        Type == "guidedDocumentByDynamicWithInteractionId";
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.GuidedDocumentByTemplateRefWithContext"/> if <see cref="Type"/> is 'guidedDocumentByTemplateRefWithContext', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByTemplateRefWithContext'.</exception>
+    public Corti.GuidedDocumentByTemplateRefWithContext AsGuidedDocumentByTemplateRefWithContext() =>
+        IsGuidedDocumentByTemplateRefWithContext()
+            ? (Corti.GuidedDocumentByTemplateRefWithContext)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedDocumentByTemplateRefWithContext'"
+            );
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.GuidedDocumentByTemplateRefWithInteractionId"/> if <see cref="Type"/> is 'guidedDocumentByTemplateRefWithInteractionId', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByTemplateRefWithInteractionId'.</exception>
+    public Corti.GuidedDocumentByTemplateRefWithInteractionId AsGuidedDocumentByTemplateRefWithInteractionId() =>
+        IsGuidedDocumentByTemplateRefWithInteractionId()
+            ? (Corti.GuidedDocumentByTemplateRefWithInteractionId)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedDocumentByTemplateRefWithInteractionId'"
+            );
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.GuidedDocumentByAssemblyWithContext"/> if <see cref="Type"/> is 'guidedDocumentByAssemblyWithContext', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByAssemblyWithContext'.</exception>
+    public Corti.GuidedDocumentByAssemblyWithContext AsGuidedDocumentByAssemblyWithContext() =>
+        IsGuidedDocumentByAssemblyWithContext()
+            ? (Corti.GuidedDocumentByAssemblyWithContext)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedDocumentByAssemblyWithContext'"
+            );
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.GuidedDocumentByAssemblyWithInteractionId"/> if <see cref="Type"/> is 'guidedDocumentByAssemblyWithInteractionId', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByAssemblyWithInteractionId'.</exception>
+    public Corti.GuidedDocumentByAssemblyWithInteractionId AsGuidedDocumentByAssemblyWithInteractionId() =>
+        IsGuidedDocumentByAssemblyWithInteractionId()
+            ? (Corti.GuidedDocumentByAssemblyWithInteractionId)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedDocumentByAssemblyWithInteractionId'"
+            );
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.GuidedDocumentByDynamicWithContext"/> if <see cref="Type"/> is 'guidedDocumentByDynamicWithContext', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByDynamicWithContext'.</exception>
+    public Corti.GuidedDocumentByDynamicWithContext AsGuidedDocumentByDynamicWithContext() =>
+        IsGuidedDocumentByDynamicWithContext()
+            ? (Corti.GuidedDocumentByDynamicWithContext)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedDocumentByDynamicWithContext'"
+            );
+
+    /// <summary>
+    /// Returns the value as a <see cref="Corti.GuidedDocumentByDynamicWithInteractionId"/> if <see cref="Type"/> is 'guidedDocumentByDynamicWithInteractionId', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByDynamicWithInteractionId'.</exception>
+    public Corti.GuidedDocumentByDynamicWithInteractionId AsGuidedDocumentByDynamicWithInteractionId() =>
+        IsGuidedDocumentByDynamicWithInteractionId()
+            ? (Corti.GuidedDocumentByDynamicWithInteractionId)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedDocumentByDynamicWithInteractionId'"
+            );
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByTemplateRefWithContext"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetGuidedDocumentByTemplateRefWithContext(
+        out Corti.GuidedDocumentByTemplateRefWithContext? value
+    )
     {
-        if (Type == "guidedDocumentByTemplateRef")
+        if (Type == "guidedDocumentByTemplateRefWithContext")
         {
-            value = (Corti.GuidedDocumentByTemplateRef)Value!;
+            value = (Corti.GuidedDocumentByTemplateRefWithContext)Value!;
             return true;
         }
         value = null;
@@ -107,13 +190,15 @@ public class GuidedDocumentRequest
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByAssembly"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByTemplateRefWithInteractionId"/> and returns true if successful.
     /// </summary>
-    public bool TryGetGuidedDocumentByAssembly(out Corti.GuidedDocumentByAssembly? value)
+    public bool TryGetGuidedDocumentByTemplateRefWithInteractionId(
+        out Corti.GuidedDocumentByTemplateRefWithInteractionId? value
+    )
     {
-        if (Type == "guidedDocumentByAssembly")
+        if (Type == "guidedDocumentByTemplateRefWithInteractionId")
         {
-            value = (Corti.GuidedDocumentByAssembly)Value!;
+            value = (Corti.GuidedDocumentByTemplateRefWithInteractionId)Value!;
             return true;
         }
         value = null;
@@ -121,13 +206,63 @@ public class GuidedDocumentRequest
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByDynamic"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByAssemblyWithContext"/> and returns true if successful.
     /// </summary>
-    public bool TryGetGuidedDocumentByDynamic(out Corti.GuidedDocumentByDynamic? value)
+    public bool TryGetGuidedDocumentByAssemblyWithContext(
+        out Corti.GuidedDocumentByAssemblyWithContext? value
+    )
     {
-        if (Type == "guidedDocumentByDynamic")
+        if (Type == "guidedDocumentByAssemblyWithContext")
         {
-            value = (Corti.GuidedDocumentByDynamic)Value!;
+            value = (Corti.GuidedDocumentByAssemblyWithContext)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByAssemblyWithInteractionId"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetGuidedDocumentByAssemblyWithInteractionId(
+        out Corti.GuidedDocumentByAssemblyWithInteractionId? value
+    )
+    {
+        if (Type == "guidedDocumentByAssemblyWithInteractionId")
+        {
+            value = (Corti.GuidedDocumentByAssemblyWithInteractionId)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByDynamicWithContext"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetGuidedDocumentByDynamicWithContext(
+        out Corti.GuidedDocumentByDynamicWithContext? value
+    )
+    {
+        if (Type == "guidedDocumentByDynamicWithContext")
+        {
+            value = (Corti.GuidedDocumentByDynamicWithContext)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByDynamicWithInteractionId"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetGuidedDocumentByDynamicWithInteractionId(
+        out Corti.GuidedDocumentByDynamicWithInteractionId? value
+    )
+    {
+        if (Type == "guidedDocumentByDynamicWithInteractionId")
+        {
+            value = (Corti.GuidedDocumentByDynamicWithInteractionId)Value!;
             return true;
         }
         value = null;
@@ -135,38 +270,89 @@ public class GuidedDocumentRequest
     }
 
     public T Match<T>(
-        Func<Corti.GuidedDocumentByTemplateRef, T> onGuidedDocumentByTemplateRef,
-        Func<Corti.GuidedDocumentByAssembly, T> onGuidedDocumentByAssembly,
-        Func<Corti.GuidedDocumentByDynamic, T> onGuidedDocumentByDynamic
+        Func<
+            Corti.GuidedDocumentByTemplateRefWithContext,
+            T
+        > onGuidedDocumentByTemplateRefWithContext,
+        Func<
+            Corti.GuidedDocumentByTemplateRefWithInteractionId,
+            T
+        > onGuidedDocumentByTemplateRefWithInteractionId,
+        Func<Corti.GuidedDocumentByAssemblyWithContext, T> onGuidedDocumentByAssemblyWithContext,
+        Func<
+            Corti.GuidedDocumentByAssemblyWithInteractionId,
+            T
+        > onGuidedDocumentByAssemblyWithInteractionId,
+        Func<Corti.GuidedDocumentByDynamicWithContext, T> onGuidedDocumentByDynamicWithContext,
+        Func<
+            Corti.GuidedDocumentByDynamicWithInteractionId,
+            T
+        > onGuidedDocumentByDynamicWithInteractionId
     )
     {
         return Type switch
         {
-            "guidedDocumentByTemplateRef" => onGuidedDocumentByTemplateRef(
-                AsGuidedDocumentByTemplateRef()
+            "guidedDocumentByTemplateRefWithContext" => onGuidedDocumentByTemplateRefWithContext(
+                AsGuidedDocumentByTemplateRefWithContext()
             ),
-            "guidedDocumentByAssembly" => onGuidedDocumentByAssembly(AsGuidedDocumentByAssembly()),
-            "guidedDocumentByDynamic" => onGuidedDocumentByDynamic(AsGuidedDocumentByDynamic()),
+            "guidedDocumentByTemplateRefWithInteractionId" =>
+                onGuidedDocumentByTemplateRefWithInteractionId(
+                    AsGuidedDocumentByTemplateRefWithInteractionId()
+                ),
+            "guidedDocumentByAssemblyWithContext" => onGuidedDocumentByAssemblyWithContext(
+                AsGuidedDocumentByAssemblyWithContext()
+            ),
+            "guidedDocumentByAssemblyWithInteractionId" =>
+                onGuidedDocumentByAssemblyWithInteractionId(
+                    AsGuidedDocumentByAssemblyWithInteractionId()
+                ),
+            "guidedDocumentByDynamicWithContext" => onGuidedDocumentByDynamicWithContext(
+                AsGuidedDocumentByDynamicWithContext()
+            ),
+            "guidedDocumentByDynamicWithInteractionId" =>
+                onGuidedDocumentByDynamicWithInteractionId(
+                    AsGuidedDocumentByDynamicWithInteractionId()
+                ),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
     public void Visit(
-        Action<Corti.GuidedDocumentByTemplateRef> onGuidedDocumentByTemplateRef,
-        Action<Corti.GuidedDocumentByAssembly> onGuidedDocumentByAssembly,
-        Action<Corti.GuidedDocumentByDynamic> onGuidedDocumentByDynamic
+        Action<Corti.GuidedDocumentByTemplateRefWithContext> onGuidedDocumentByTemplateRefWithContext,
+        Action<Corti.GuidedDocumentByTemplateRefWithInteractionId> onGuidedDocumentByTemplateRefWithInteractionId,
+        Action<Corti.GuidedDocumentByAssemblyWithContext> onGuidedDocumentByAssemblyWithContext,
+        Action<Corti.GuidedDocumentByAssemblyWithInteractionId> onGuidedDocumentByAssemblyWithInteractionId,
+        Action<Corti.GuidedDocumentByDynamicWithContext> onGuidedDocumentByDynamicWithContext,
+        Action<Corti.GuidedDocumentByDynamicWithInteractionId> onGuidedDocumentByDynamicWithInteractionId
     )
     {
         switch (Type)
         {
-            case "guidedDocumentByTemplateRef":
-                onGuidedDocumentByTemplateRef(AsGuidedDocumentByTemplateRef());
+            case "guidedDocumentByTemplateRefWithContext":
+                onGuidedDocumentByTemplateRefWithContext(
+                    AsGuidedDocumentByTemplateRefWithContext()
+                );
                 break;
-            case "guidedDocumentByAssembly":
-                onGuidedDocumentByAssembly(AsGuidedDocumentByAssembly());
+            case "guidedDocumentByTemplateRefWithInteractionId":
+                onGuidedDocumentByTemplateRefWithInteractionId(
+                    AsGuidedDocumentByTemplateRefWithInteractionId()
+                );
                 break;
-            case "guidedDocumentByDynamic":
-                onGuidedDocumentByDynamic(AsGuidedDocumentByDynamic());
+            case "guidedDocumentByAssemblyWithContext":
+                onGuidedDocumentByAssemblyWithContext(AsGuidedDocumentByAssemblyWithContext());
+                break;
+            case "guidedDocumentByAssemblyWithInteractionId":
+                onGuidedDocumentByAssemblyWithInteractionId(
+                    AsGuidedDocumentByAssemblyWithInteractionId()
+                );
+                break;
+            case "guidedDocumentByDynamicWithContext":
+                onGuidedDocumentByDynamicWithContext(AsGuidedDocumentByDynamicWithContext());
+                break;
+            case "guidedDocumentByDynamicWithInteractionId":
+                onGuidedDocumentByDynamicWithInteractionId(
+                    AsGuidedDocumentByDynamicWithInteractionId()
+                );
                 break;
             default:
                 throw new CortiClientException($"Unknown union type: {Type}");
@@ -209,38 +395,28 @@ public class GuidedDocumentRequest
     public override string ToString() => JsonUtils.Serialize(this);
 
     public static implicit operator GuidedDocumentRequest(
-        Corti.GuidedDocumentByTemplateRef value
-    ) => new("guidedDocumentByTemplateRef", value);
-
-    public static implicit operator GuidedDocumentRequest(Corti.GuidedDocumentByAssembly value) =>
-        new("guidedDocumentByAssembly", value);
-
-    public static implicit operator GuidedDocumentRequest(Corti.GuidedDocumentByDynamic value) =>
-        new("guidedDocumentByDynamic", value);
-
-    public static implicit operator GuidedDocumentRequest(
         Corti.GuidedDocumentByTemplateRefWithContext value
-    ) => new("guidedDocumentByTemplateRef", (GuidedDocumentByTemplateRef)value);
+    ) => new("guidedDocumentByTemplateRefWithContext", value);
 
     public static implicit operator GuidedDocumentRequest(
         Corti.GuidedDocumentByTemplateRefWithInteractionId value
-    ) => new("guidedDocumentByTemplateRef", (GuidedDocumentByTemplateRef)value);
+    ) => new("guidedDocumentByTemplateRefWithInteractionId", value);
 
     public static implicit operator GuidedDocumentRequest(
         Corti.GuidedDocumentByAssemblyWithContext value
-    ) => new("guidedDocumentByAssembly", (GuidedDocumentByAssembly)value);
+    ) => new("guidedDocumentByAssemblyWithContext", value);
 
     public static implicit operator GuidedDocumentRequest(
         Corti.GuidedDocumentByAssemblyWithInteractionId value
-    ) => new("guidedDocumentByAssembly", (GuidedDocumentByAssembly)value);
+    ) => new("guidedDocumentByAssemblyWithInteractionId", value);
 
     public static implicit operator GuidedDocumentRequest(
         Corti.GuidedDocumentByDynamicWithContext value
-    ) => new("guidedDocumentByDynamic", (GuidedDocumentByDynamic)value);
+    ) => new("guidedDocumentByDynamicWithContext", value);
 
     public static implicit operator GuidedDocumentRequest(
         Corti.GuidedDocumentByDynamicWithInteractionId value
-    ) => new("guidedDocumentByDynamic", (GuidedDocumentByDynamic)value);
+    ) => new("guidedDocumentByDynamicWithInteractionId", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<GuidedDocumentRequest>
@@ -262,9 +438,30 @@ public class GuidedDocumentRequest
 
                 var types = new (string Key, System.Type Type)[]
                 {
-                    ("guidedDocumentByTemplateRef", typeof(Corti.GuidedDocumentByTemplateRef)),
-                    ("guidedDocumentByAssembly", typeof(Corti.GuidedDocumentByAssembly)),
-                    ("guidedDocumentByDynamic", typeof(Corti.GuidedDocumentByDynamic)),
+                    (
+                        "guidedDocumentByTemplateRefWithContext",
+                        typeof(Corti.GuidedDocumentByTemplateRefWithContext)
+                    ),
+                    (
+                        "guidedDocumentByTemplateRefWithInteractionId",
+                        typeof(Corti.GuidedDocumentByTemplateRefWithInteractionId)
+                    ),
+                    (
+                        "guidedDocumentByAssemblyWithContext",
+                        typeof(Corti.GuidedDocumentByAssemblyWithContext)
+                    ),
+                    (
+                        "guidedDocumentByAssemblyWithInteractionId",
+                        typeof(Corti.GuidedDocumentByAssemblyWithInteractionId)
+                    ),
+                    (
+                        "guidedDocumentByDynamicWithContext",
+                        typeof(Corti.GuidedDocumentByDynamicWithContext)
+                    ),
+                    (
+                        "guidedDocumentByDynamicWithInteractionId",
+                        typeof(Corti.GuidedDocumentByDynamicWithInteractionId)
+                    ),
                 };
 
                 foreach (var (key, type) in types)
@@ -303,6 +500,9 @@ public class GuidedDocumentRequest
             }
 
             value.Visit(
+                obj => JsonSerializer.Serialize(writer, obj, options),
+                obj => JsonSerializer.Serialize(writer, obj, options),
+                obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options)

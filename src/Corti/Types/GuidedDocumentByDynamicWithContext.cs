@@ -4,6 +4,9 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Generate a document from a fully inline template definition supplied in the request body, with explicitly supplied input context. Sections and the wrapping template are created and immediately published as auto-generated resources.
+/// </summary>
 [Serializable]
 public record GuidedDocumentByDynamicWithContext : IJsonOnDeserialized
 {

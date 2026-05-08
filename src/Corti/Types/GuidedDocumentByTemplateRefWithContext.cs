@@ -4,6 +4,9 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Generate a document using a stored template, with explicitly supplied input context. Optionally supply runtime overrides to patch instructions or sections without mutating the base template.
+/// </summary>
 [Serializable]
 public record GuidedDocumentByTemplateRefWithContext : IJsonOnDeserialized
 {

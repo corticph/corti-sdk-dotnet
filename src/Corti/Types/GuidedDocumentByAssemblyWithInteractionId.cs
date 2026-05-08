@@ -4,6 +4,9 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Generate a document by assembling a template from existing stored sections, with input context drawn implicitly from an existing interaction's facts and transcripts. The resulting template aggregate is auto-saved and can be referenced in future calls.
+/// </summary>
 [Serializable]
 public record GuidedDocumentByAssemblyWithInteractionId : IJsonOnDeserialized
 {
@@ -12,7 +15,7 @@ public record GuidedDocumentByAssemblyWithInteractionId : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
+    /// All facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
     /// </summary>
     [JsonPropertyName("interactionId")]
     public required string InteractionId { get; set; }

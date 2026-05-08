@@ -4,6 +4,9 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Generate a document by assembling a template from existing stored sections, with explicitly supplied input context. The resulting template aggregate is auto-saved and can be referenced in future calls.
+/// </summary>
 [Serializable]
 public record GuidedDocumentByAssemblyWithContext : IJsonOnDeserialized
 {
