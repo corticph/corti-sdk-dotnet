@@ -8,7 +8,7 @@ namespace Corti;
 /// A transcript provided as input context to the model.
 /// </summary>
 [Serializable]
-public record GuidedDocumentContextTranscript : IJsonOnDeserialized
+public record ContextTranscript : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -16,7 +16,7 @@ public record GuidedDocumentContextTranscript : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public GuidedDocumentContextTranscript.TypeLiteral Type { get;
+    public ContextTranscript.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else

@@ -5,10 +5,10 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// A batch of facts provided as input context to the model.
+/// A single fact provided as input context to the model.
 /// </summary>
 [Serializable]
-public record GuidedDocumentContextFacts : IJsonOnDeserialized
+public record ContextFacts : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -16,7 +16,7 @@ public record GuidedDocumentContextFacts : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public GuidedDocumentContextFacts.TypeLiteral Type { get;
+    public ContextFacts.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -24,9 +24,8 @@ public record GuidedDocumentContextFacts : IJsonOnDeserialized
 #endif
     } = new();
 
-    [JsonPropertyName("facts")]
-    public IEnumerable<GuidedDocumentFactMinimal> Facts { get; set; } =
-        new List<GuidedDocumentFactMinimal>();
+    [JsonPropertyName("fact")]
+    public required GuidedDocumentFactMinimal Fact { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

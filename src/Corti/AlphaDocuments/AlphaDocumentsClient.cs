@@ -134,7 +134,7 @@ public partial class AlphaDocumentsClient : IAlphaDocumentsClient
     ///     {
     ///         Context = new List&lt;GuidedDocumentContext&gt;()
     ///         {
-    ///             new GuidedDocumentContextText { Type = "text", Text = "text" },
+    ///             new ContextText { Type = "text", Text = "text" },
     ///         },
     ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
     ///     }

@@ -30,76 +30,73 @@ public class GuidedDocumentContext
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedDocumentContextText value.
+    /// Factory method to create a union from a Corti.ContextText value.
     /// </summary>
-    public static GuidedDocumentContext FromGuidedDocumentContextText(
-        Corti.GuidedDocumentContextText value
-    ) => new("guidedDocumentContextText", value);
+    public static GuidedDocumentContext FromContextText(Corti.ContextText value) =>
+        new("contextText", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedDocumentContextTranscript value.
+    /// Factory method to create a union from a Corti.ContextTranscript value.
     /// </summary>
-    public static GuidedDocumentContext FromGuidedDocumentContextTranscript(
-        Corti.GuidedDocumentContextTranscript value
-    ) => new("guidedDocumentContextTranscript", value);
+    public static GuidedDocumentContext FromContextTranscript(Corti.ContextTranscript value) =>
+        new("contextTranscript", value);
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedDocumentContextFacts value.
+    /// Factory method to create a union from a Corti.ContextFacts value.
     /// </summary>
-    public static GuidedDocumentContext FromGuidedDocumentContextFacts(
-        Corti.GuidedDocumentContextFacts value
-    ) => new("guidedDocumentContextFacts", value);
+    public static GuidedDocumentContext FromContextFacts(Corti.ContextFacts value) =>
+        new("contextFacts", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedDocumentContextText"
+    /// Returns true if <see cref="Type"/> is "contextText"
     /// </summary>
-    public bool IsGuidedDocumentContextText() => Type == "guidedDocumentContextText";
+    public bool IsContextText() => Type == "contextText";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedDocumentContextTranscript"
+    /// Returns true if <see cref="Type"/> is "contextTranscript"
     /// </summary>
-    public bool IsGuidedDocumentContextTranscript() => Type == "guidedDocumentContextTranscript";
+    public bool IsContextTranscript() => Type == "contextTranscript";
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedDocumentContextFacts"
+    /// Returns true if <see cref="Type"/> is "contextFacts"
     /// </summary>
-    public bool IsGuidedDocumentContextFacts() => Type == "guidedDocumentContextFacts";
+    public bool IsContextFacts() => Type == "contextFacts";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedDocumentContextText"/> if <see cref="Type"/> is 'guidedDocumentContextText', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.ContextText"/> if <see cref="Type"/> is 'contextText', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentContextText'.</exception>
-    public Corti.GuidedDocumentContextText AsGuidedDocumentContextText() =>
-        IsGuidedDocumentContextText()
-            ? (Corti.GuidedDocumentContextText)Value!
-            : throw new CortiClientException("Union type is not 'guidedDocumentContextText'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'contextText'.</exception>
+    public Corti.ContextText AsContextText() =>
+        IsContextText()
+            ? (Corti.ContextText)Value!
+            : throw new CortiClientException("Union type is not 'contextText'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedDocumentContextTranscript"/> if <see cref="Type"/> is 'guidedDocumentContextTranscript', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.ContextTranscript"/> if <see cref="Type"/> is 'contextTranscript', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentContextTranscript'.</exception>
-    public Corti.GuidedDocumentContextTranscript AsGuidedDocumentContextTranscript() =>
-        IsGuidedDocumentContextTranscript()
-            ? (Corti.GuidedDocumentContextTranscript)Value!
-            : throw new CortiClientException("Union type is not 'guidedDocumentContextTranscript'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'contextTranscript'.</exception>
+    public Corti.ContextTranscript AsContextTranscript() =>
+        IsContextTranscript()
+            ? (Corti.ContextTranscript)Value!
+            : throw new CortiClientException("Union type is not 'contextTranscript'");
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedDocumentContextFacts"/> if <see cref="Type"/> is 'guidedDocumentContextFacts', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.ContextFacts"/> if <see cref="Type"/> is 'contextFacts', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentContextFacts'.</exception>
-    public Corti.GuidedDocumentContextFacts AsGuidedDocumentContextFacts() =>
-        IsGuidedDocumentContextFacts()
-            ? (Corti.GuidedDocumentContextFacts)Value!
-            : throw new CortiClientException("Union type is not 'guidedDocumentContextFacts'");
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'contextFacts'.</exception>
+    public Corti.ContextFacts AsContextFacts() =>
+        IsContextFacts()
+            ? (Corti.ContextFacts)Value!
+            : throw new CortiClientException("Union type is not 'contextFacts'");
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentContextText"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.ContextText"/> and returns true if successful.
     /// </summary>
-    public bool TryGetGuidedDocumentContextText(out Corti.GuidedDocumentContextText? value)
+    public bool TryGetContextText(out Corti.ContextText? value)
     {
-        if (Type == "guidedDocumentContextText")
+        if (Type == "contextText")
         {
-            value = (Corti.GuidedDocumentContextText)Value!;
+            value = (Corti.ContextText)Value!;
             return true;
         }
         value = null;
@@ -107,15 +104,13 @@ public class GuidedDocumentContext
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentContextTranscript"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.ContextTranscript"/> and returns true if successful.
     /// </summary>
-    public bool TryGetGuidedDocumentContextTranscript(
-        out Corti.GuidedDocumentContextTranscript? value
-    )
+    public bool TryGetContextTranscript(out Corti.ContextTranscript? value)
     {
-        if (Type == "guidedDocumentContextTranscript")
+        if (Type == "contextTranscript")
         {
-            value = (Corti.GuidedDocumentContextTranscript)Value!;
+            value = (Corti.ContextTranscript)Value!;
             return true;
         }
         value = null;
@@ -123,13 +118,13 @@ public class GuidedDocumentContext
     }
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentContextFacts"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.ContextFacts"/> and returns true if successful.
     /// </summary>
-    public bool TryGetGuidedDocumentContextFacts(out Corti.GuidedDocumentContextFacts? value)
+    public bool TryGetContextFacts(out Corti.ContextFacts? value)
     {
-        if (Type == "guidedDocumentContextFacts")
+        if (Type == "contextFacts")
         {
-            value = (Corti.GuidedDocumentContextFacts)Value!;
+            value = (Corti.ContextFacts)Value!;
             return true;
         }
         value = null;
@@ -137,42 +132,36 @@ public class GuidedDocumentContext
     }
 
     public T Match<T>(
-        Func<Corti.GuidedDocumentContextText, T> onGuidedDocumentContextText,
-        Func<Corti.GuidedDocumentContextTranscript, T> onGuidedDocumentContextTranscript,
-        Func<Corti.GuidedDocumentContextFacts, T> onGuidedDocumentContextFacts
+        Func<Corti.ContextText, T> onContextText,
+        Func<Corti.ContextTranscript, T> onContextTranscript,
+        Func<Corti.ContextFacts, T> onContextFacts
     )
     {
         return Type switch
         {
-            "guidedDocumentContextText" => onGuidedDocumentContextText(
-                AsGuidedDocumentContextText()
-            ),
-            "guidedDocumentContextTranscript" => onGuidedDocumentContextTranscript(
-                AsGuidedDocumentContextTranscript()
-            ),
-            "guidedDocumentContextFacts" => onGuidedDocumentContextFacts(
-                AsGuidedDocumentContextFacts()
-            ),
+            "contextText" => onContextText(AsContextText()),
+            "contextTranscript" => onContextTranscript(AsContextTranscript()),
+            "contextFacts" => onContextFacts(AsContextFacts()),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
     public void Visit(
-        Action<Corti.GuidedDocumentContextText> onGuidedDocumentContextText,
-        Action<Corti.GuidedDocumentContextTranscript> onGuidedDocumentContextTranscript,
-        Action<Corti.GuidedDocumentContextFacts> onGuidedDocumentContextFacts
+        Action<Corti.ContextText> onContextText,
+        Action<Corti.ContextTranscript> onContextTranscript,
+        Action<Corti.ContextFacts> onContextFacts
     )
     {
         switch (Type)
         {
-            case "guidedDocumentContextText":
-                onGuidedDocumentContextText(AsGuidedDocumentContextText());
+            case "contextText":
+                onContextText(AsContextText());
                 break;
-            case "guidedDocumentContextTranscript":
-                onGuidedDocumentContextTranscript(AsGuidedDocumentContextTranscript());
+            case "contextTranscript":
+                onContextTranscript(AsContextTranscript());
                 break;
-            case "guidedDocumentContextFacts":
-                onGuidedDocumentContextFacts(AsGuidedDocumentContextFacts());
+            case "contextFacts":
+                onContextFacts(AsContextFacts());
                 break;
             default:
                 throw new CortiClientException($"Unknown union type: {Type}");
@@ -214,15 +203,14 @@ public class GuidedDocumentContext
 
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator GuidedDocumentContext(Corti.GuidedDocumentContextText value) =>
-        new("guidedDocumentContextText", value);
+    public static implicit operator GuidedDocumentContext(Corti.ContextText value) =>
+        new("contextText", value);
 
-    public static implicit operator GuidedDocumentContext(
-        Corti.GuidedDocumentContextTranscript value
-    ) => new("guidedDocumentContextTranscript", value);
+    public static implicit operator GuidedDocumentContext(Corti.ContextTranscript value) =>
+        new("contextTranscript", value);
 
-    public static implicit operator GuidedDocumentContext(Corti.GuidedDocumentContextFacts value) =>
-        new("guidedDocumentContextFacts", value);
+    public static implicit operator GuidedDocumentContext(Corti.ContextFacts value) =>
+        new("contextFacts", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<GuidedDocumentContext>
@@ -244,12 +232,9 @@ public class GuidedDocumentContext
 
                 var types = new (string Key, System.Type Type)[]
                 {
-                    ("guidedDocumentContextText", typeof(Corti.GuidedDocumentContextText)),
-                    (
-                        "guidedDocumentContextTranscript",
-                        typeof(Corti.GuidedDocumentContextTranscript)
-                    ),
-                    ("guidedDocumentContextFacts", typeof(Corti.GuidedDocumentContextFacts)),
+                    ("contextText", typeof(Corti.ContextText)),
+                    ("contextTranscript", typeof(Corti.ContextTranscript)),
+                    ("contextFacts", typeof(Corti.ContextFacts)),
                 };
 
                 foreach (var (key, type) in types)

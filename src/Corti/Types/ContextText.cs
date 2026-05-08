@@ -8,7 +8,7 @@ namespace Corti;
 /// A freeform text snippet provided as input context to the model.
 /// </summary>
 [Serializable]
-public record GuidedDocumentContextText : IJsonOnDeserialized
+public record ContextText : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -16,7 +16,7 @@ public record GuidedDocumentContextText : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public GuidedDocumentContextText.TypeLiteral Type { get;
+    public ContextText.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
