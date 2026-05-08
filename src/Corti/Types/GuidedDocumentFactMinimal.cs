@@ -5,29 +5,20 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Generation result. The shape mirrors the resolved template's section output schemas.
+/// Minimal fact shape. Only `text` is required.
 /// </summary>
 [Serializable]
-public record GuidedGenerationResult : IJsonOnDeserialized
+public record GuidedDocumentFactMinimal : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The generated document as a map of section key to rendered string output.
+    /// The text of the fact.
     /// </summary>
-    [JsonPropertyName("stringDocument")]
-    public Dictionary<string, string>? StringDocument { get; set; }
-
-    /// <summary>
-    /// The generated document as a structured object keyed by section.
-    /// </summary>
-    [JsonPropertyName("structuredDocument")]
-    public Dictionary<string, object?>? StructuredDocument { get; set; }
-
-    [JsonPropertyName("usage")]
-    public GuidedGenerationResultUsage? Usage { get; set; }
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -4,30 +4,24 @@ using Corti.Core;
 
 namespace Corti;
 
-/// <summary>
-/// Generation result. The shape mirrors the resolved template's section output schemas.
-/// </summary>
 [Serializable]
-public record GuidedGenerationResult : IJsonOnDeserialized
+public record GuidedDocumentByDynamicWithInteractionId : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The generated document as a map of section key to rendered string output.
+    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
     /// </summary>
-    [JsonPropertyName("stringDocument")]
-    public Dictionary<string, string>? StringDocument { get; set; }
+    [JsonPropertyName("interactionId")]
+    public required string InteractionId { get; set; }
 
     /// <summary>
-    /// The generated document as a structured object keyed by section.
+    /// Fully inline template defined in the request body.
     /// </summary>
-    [JsonPropertyName("structuredDocument")]
-    public Dictionary<string, object?>? StructuredDocument { get; set; }
-
-    [JsonPropertyName("usage")]
-    public GuidedGenerationResultUsage? Usage { get; set; }
+    [JsonPropertyName("dynamicTemplate")]
+    public required GuidedDynamicRequest DynamicTemplate { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

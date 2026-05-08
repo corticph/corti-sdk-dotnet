@@ -218,6 +218,30 @@ public class GuidedDocumentRequest
     public static implicit operator GuidedDocumentRequest(Corti.GuidedDocumentByDynamic value) =>
         new("guidedDocumentByDynamic", value);
 
+    public static implicit operator GuidedDocumentRequest(
+        Corti.GuidedDocumentByTemplateRefWithContext value
+    ) => new("guidedDocumentByTemplateRef", (GuidedDocumentByTemplateRef)value);
+
+    public static implicit operator GuidedDocumentRequest(
+        Corti.GuidedDocumentByTemplateRefWithInteractionId value
+    ) => new("guidedDocumentByTemplateRef", (GuidedDocumentByTemplateRef)value);
+
+    public static implicit operator GuidedDocumentRequest(
+        Corti.GuidedDocumentByAssemblyWithContext value
+    ) => new("guidedDocumentByAssembly", (GuidedDocumentByAssembly)value);
+
+    public static implicit operator GuidedDocumentRequest(
+        Corti.GuidedDocumentByAssemblyWithInteractionId value
+    ) => new("guidedDocumentByAssembly", (GuidedDocumentByAssembly)value);
+
+    public static implicit operator GuidedDocumentRequest(
+        Corti.GuidedDocumentByDynamicWithContext value
+    ) => new("guidedDocumentByDynamic", (GuidedDocumentByDynamic)value);
+
+    public static implicit operator GuidedDocumentRequest(
+        Corti.GuidedDocumentByDynamicWithInteractionId value
+    ) => new("guidedDocumentByDynamic", (GuidedDocumentByDynamic)value);
+
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<GuidedDocumentRequest>
     {

@@ -4,30 +4,25 @@ using Corti.Core;
 
 namespace Corti;
 
-/// <summary>
-/// Generation result. The shape mirrors the resolved template's section output schemas.
-/// </summary>
 [Serializable]
-public record GuidedGenerationResult : IJsonOnDeserialized
+public record GuidedDocumentByAssemblyWithContext : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The generated document as a map of section key to rendered string output.
+    /// Ordered list of context items the model reasons over. Each item is one of text, a transcript (with optional metadata and segments), or a batch of facts. Items are interleaved by timestamps where present on transcript segments; otherwise array order is preserved.
     /// </summary>
-    [JsonPropertyName("stringDocument")]
-    public Dictionary<string, string>? StringDocument { get; set; }
+    [JsonPropertyName("context")]
+    public IEnumerable<GuidedDocumentContext> Context { get; set; } =
+        new List<GuidedDocumentContext>();
 
     /// <summary>
-    /// The generated document as a structured object keyed by section.
+    /// Assemble a template from existing stored sections.
     /// </summary>
-    [JsonPropertyName("structuredDocument")]
-    public Dictionary<string, object?>? StructuredDocument { get; set; }
-
-    [JsonPropertyName("usage")]
-    public GuidedGenerationResultUsage? Usage { get; set; }
+    [JsonPropertyName("assemblyTemplate")]
+    public required GuidedAssemblyRequest AssemblyTemplate { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -130,12 +130,11 @@ public partial class AlphaDocumentsClient : IAlphaDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.AlphaDocuments.GenerateAsync(
-    ///     new GuidedDocumentByTemplateRef
+    ///     new GuidedDocumentByTemplateRefWithContext
     ///     {
-    ///         Context = new DocumentsContextWithFacts
+    ///         Context = new List&lt;GuidedDocumentContext&gt;()
     ///         {
-    ///             Type = DocumentsContextWithFactsType.Facts,
-    ///             Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
+    ///             new GuidedDocumentContextText { Type = "text", Text = "text" },
     ///         },
     ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
     ///     }
