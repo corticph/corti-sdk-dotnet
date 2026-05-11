@@ -17,8 +17,8 @@ public record SectionGenerationPartial : IJsonOnDeserialized
     /// <summary>
     /// Override the inherited section title. Passed to the LLM.
     /// </summary>
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
+    [JsonPropertyName("heading")]
+    public string? Heading { get; set; }
 
     /// <summary>
     /// Override the inherited prompt instructions for this section. Any field omitted is inherited.
