@@ -133,6 +133,7 @@ public partial class AlphaDocumentsClient : IAlphaDocumentsClient
     ///     new GuidedDocumentByTemplateRef
     ///     {
     ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
+    ///         OutputLanguage = "outputLanguage",
     ///     }
     /// );
     /// </code></example>

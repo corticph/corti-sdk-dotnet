@@ -32,6 +32,12 @@ public record GuidedDocumentByDynamic : IJsonOnDeserialized
     [JsonPropertyName("dynamicTemplate")]
     public required GuidedDynamicRequest DynamicTemplate { get; set; }
 
+    /// <summary>
+    /// The language in which the document will be generated as a BCP 47 tag.
+    /// </summary>
+    [JsonPropertyName("outputLanguage")]
+    public required string OutputLanguage { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
