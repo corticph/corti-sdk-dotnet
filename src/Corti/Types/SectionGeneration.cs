@@ -12,10 +12,10 @@ public record SectionGeneration : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The title of this section. Passed to the LLM.
+    /// The heading of this section. Passed to the LLM.
     /// </summary>
-    [JsonPropertyName("title")]
-    public required string Title { get; set; }
+    [JsonPropertyName("heading")]
+    public required string Heading { get; set; }
 
     /// <summary>
     /// The prompt instructions for this section.

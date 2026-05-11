@@ -400,7 +400,7 @@ public partial class AlphaSectionsClient : IAlphaSectionsClient
     ///         Language = "language",
     ///         Generation = new SectionGeneration
     ///         {
-    ///             Title = "title",
+    ///             Heading = "heading",
     ///             Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
     ///             OutputSchema = new StringNode { Type = "string" },
     ///         },

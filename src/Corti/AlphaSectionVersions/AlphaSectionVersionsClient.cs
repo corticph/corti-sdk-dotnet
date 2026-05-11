@@ -412,7 +412,7 @@ public partial class AlphaSectionVersionsClient : IAlphaSectionVersionsClient
     ///     "sectionID",
     ///     new SectionGeneration
     ///     {
-    ///         Title = "title",
+    ///         Heading = "heading",
     ///         Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
     ///         OutputSchema = new StringNode { Type = "string" },
     ///     }
