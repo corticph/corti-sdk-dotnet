@@ -20,20 +20,8 @@ public record GuidedSectionOverride : IJsonOnDeserialized
     [JsonPropertyName("sectionId")]
     public required string SectionId { get; set; }
 
-    /// <summary>
-    /// When provided, replaces the section's title for this call.
-    /// </summary>
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
-
-    [JsonPropertyName("instructions")]
-    public SectionInstructionsOverride? Instructions { get; set; }
-
-    /// <summary>
-    /// When provided, fully replaces the parent's output schema. Not a partial merge — any submitted value replaces the parent's schema in its entirety.
-    /// </summary>
-    [JsonPropertyName("outputSchema")]
-    public OutputSchema? OutputSchema { get; set; }
+    [JsonPropertyName("generation")]
+    public SectionOverrides? Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
