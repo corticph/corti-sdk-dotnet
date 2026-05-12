@@ -20,8 +20,8 @@ public partial class AlphaDocumentsClient : IAlphaDocumentsClient
         }
     }
 
-    private async Task<WithRawResponse<object>> GenerateAsyncCore(
-        object request,
+    private async Task<WithRawResponse<GuidedDocumentResponse>> GenerateAsyncCore(
+        GuidedDocumentRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -57,8 +57,10 @@ public partial class AlphaDocumentsClient : IAlphaDocumentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<object>(responseBody)!;
-                        return new WithRawResponse<object>()
+                        var responseData = JsonUtils.Deserialize<GuidedDocumentResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<GuidedDocumentResponse>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -127,15 +129,21 @@ public partial class AlphaDocumentsClient : IAlphaDocumentsClient
     /// With the exception of the plain `templateRef` path (no overrides), every call persists a new auto-generated template aggregate that snapshots the resolved content. The snapshot is drift-proof: subsequent edits to base templates or sections do not affect previously generated documents.
     /// </summary>
     /// <example><code>
-    /// await client.AlphaDocuments.GenerateAsync(new Dictionary&lt;object, object?&gt;() { { "key", "value" } });
+    /// await client.AlphaDocuments.GenerateAsync(
+    ///     new GuidedDocumentByTemplateRef
+    ///     {
+    ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
+    ///         OutputLanguage = "outputLanguage",
+    ///     }
+    /// );
     /// </code></example>
-    public WithRawResponseTask<object> GenerateAsync(
-        object request,
+    public WithRawResponseTask<GuidedDocumentResponse> GenerateAsync(
+        GuidedDocumentRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<object>(
+        return new WithRawResponseTask<GuidedDocumentResponse>(
             GenerateAsyncCore(request, options, cancellationToken)
         );
     }
