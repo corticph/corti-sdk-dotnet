@@ -1,11 +1,11 @@
 namespace Corti;
 
-public partial interface ITemplatesClient
+public partial interface IDocumentsClassicTemplatesClient
 {
     /// <summary>
     /// Retrieves a list of template sections with optional filters for organization and language.
     /// </summary>
-    WithRawResponseTask<TemplatesSectionListResponse> SectionListAsync(
+    WithRawResponseTask<TemplatesSectionListResponse> TemplatesSectionListAsync(
         TemplatesSectionListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -14,7 +14,7 @@ public partial interface ITemplatesClient
     /// <summary>
     /// Retrieves a list of templates with optional filters for organization, language, and status.
     /// </summary>
-    WithRawResponseTask<TemplatesListResponse> ListAsync(
+    WithRawResponseTask<TemplatesListResponse> TemplatesListAsync(
         TemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -23,7 +23,7 @@ public partial interface ITemplatesClient
     /// <summary>
     /// Retrieves template by key.
     /// </summary>
-    WithRawResponseTask<TemplatesItem> GetAsync(
+    WithRawResponseTask<TemplatesItem> TemplatesGetAsync(
         string key,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

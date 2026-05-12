@@ -3,11 +3,11 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class TemplatesClient : ITemplatesClient
+public partial class DocumentsClassicTemplatesClient : IDocumentsClassicTemplatesClient
 {
     private readonly RawClient _client;
 
-    internal TemplatesClient(RawClient client)
+    internal DocumentsClassicTemplatesClient(RawClient client)
     {
         try
         {
@@ -20,7 +20,7 @@ public partial class TemplatesClient : ITemplatesClient
         }
     }
 
-    private async Task<WithRawResponse<TemplatesSectionListResponse>> SectionListAsyncCore(
+    private async Task<WithRawResponse<TemplatesSectionListResponse>> TemplatesSectionListAsyncCore(
         TemplatesSectionListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -119,7 +119,7 @@ public partial class TemplatesClient : ITemplatesClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplatesListResponse>> ListAsyncCore(
+    private async Task<WithRawResponse<TemplatesListResponse>> TemplatesListAsyncCore(
         TemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -219,7 +219,7 @@ public partial class TemplatesClient : ITemplatesClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplatesItem>> GetAsyncCore(
+    private async Task<WithRawResponse<TemplatesItem>> TemplatesGetAsyncCore(
         string key,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -317,16 +317,16 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves a list of template sections with optional filters for organization and language.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.SectionListAsync(new TemplatesSectionListRequest());
+    /// await client.DocumentsClassicTemplates.TemplatesSectionListAsync(new TemplatesSectionListRequest());
     /// </code></example>
-    public WithRawResponseTask<TemplatesSectionListResponse> SectionListAsync(
+    public WithRawResponseTask<TemplatesSectionListResponse> TemplatesSectionListAsync(
         TemplatesSectionListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TemplatesSectionListResponse>(
-            SectionListAsyncCore(request, options, cancellationToken)
+            TemplatesSectionListAsyncCore(request, options, cancellationToken)
         );
     }
 
@@ -334,16 +334,16 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves a list of templates with optional filters for organization, language, and status.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.ListAsync(new TemplatesListRequest());
+    /// await client.DocumentsClassicTemplates.TemplatesListAsync(new TemplatesListRequest());
     /// </code></example>
-    public WithRawResponseTask<TemplatesListResponse> ListAsync(
+    public WithRawResponseTask<TemplatesListResponse> TemplatesListAsync(
         TemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TemplatesListResponse>(
-            ListAsyncCore(request, options, cancellationToken)
+            TemplatesListAsyncCore(request, options, cancellationToken)
         );
     }
 
@@ -351,16 +351,16 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves template by key.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.GetAsync("key");
+    /// await client.DocumentsClassicTemplates.TemplatesGetAsync("key");
     /// </code></example>
-    public WithRawResponseTask<TemplatesItem> GetAsync(
+    public WithRawResponseTask<TemplatesItem> TemplatesGetAsync(
         string key,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TemplatesItem>(
-            GetAsyncCore(key, options, cancellationToken)
+            TemplatesGetAsyncCore(key, options, cancellationToken)
         );
     }
 }

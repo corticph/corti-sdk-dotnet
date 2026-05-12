@@ -3,11 +3,11 @@ using Corti.Core;
 
 namespace Corti;
 
-public partial class DocumentsClient : IDocumentsClient
+public partial class DocumentsClassicClient : IDocumentsClassicClient
 {
     private readonly RawClient _client;
 
-    internal DocumentsClient(RawClient client)
+    internal DocumentsClassicClient(RawClient client)
     {
         try
         {
@@ -20,7 +20,7 @@ public partial class DocumentsClient : IDocumentsClient
         }
     }
 
-    private async Task<WithRawResponse<DocumentsListResponse>> ListAsyncCore(
+    private async Task<WithRawResponse<DocumentsListResponse>> DocumentsListAsyncCore(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -124,7 +124,7 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<DocumentsGetResponse>> CreateAsyncCore(
+    private async Task<WithRawResponse<DocumentsGetResponse>> DocumentsCreateAsyncCore(
         string id,
         DocumentsCreateRequest request,
         RequestOptions? options = null,
@@ -231,7 +231,7 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<DocumentsGetResponse>> GetAsyncCore(
+    private async Task<WithRawResponse<DocumentsGetResponse>> DocumentsGetAsyncCore(
         string id,
         string documentId,
         RequestOptions? options = null,
@@ -337,7 +337,7 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<DocumentsGetResponse>> UpdateAsyncCore(
+    private async Task<WithRawResponse<DocumentsGetResponse>> DocumentsUpdateAsyncCore(
         string id,
         string documentId,
         DocumentsUpdateRequest request,
@@ -450,16 +450,16 @@ public partial class DocumentsClient : IDocumentsClient
     /// List Documents
     /// </summary>
     /// <example><code>
-    /// await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// await client.DocumentsClassic.DocumentsListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     /// </code></example>
-    public WithRawResponseTask<DocumentsListResponse> ListAsync(
+    public WithRawResponseTask<DocumentsListResponse> DocumentsListAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<DocumentsListResponse>(
-            ListAsyncCore(id, options, cancellationToken)
+            DocumentsListAsyncCore(id, options, cancellationToken)
         );
     }
 
@@ -467,7 +467,7 @@ public partial class DocumentsClient : IDocumentsClient
     /// This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
     /// </summary>
     /// <example><code>
-    /// await client.Documents.CreateAsync(
+    /// await client.DocumentsClassic.DocumentsCreateAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new DocumentsCreateRequestWithTemplateKey
     ///     {
@@ -484,7 +484,7 @@ public partial class DocumentsClient : IDocumentsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> CreateAsync(
+    public WithRawResponseTask<DocumentsGetResponse> DocumentsCreateAsync(
         string id,
         DocumentsCreateRequest request,
         RequestOptions? options = null,
@@ -492,7 +492,7 @@ public partial class DocumentsClient : IDocumentsClient
     )
     {
         return new WithRawResponseTask<DocumentsGetResponse>(
-            CreateAsyncCore(id, request, options, cancellationToken)
+            DocumentsCreateAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -500,12 +500,12 @@ public partial class DocumentsClient : IDocumentsClient
     /// Get Document.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.GetAsync(
+    /// await client.DocumentsClassic.DocumentsGetAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> GetAsync(
+    public WithRawResponseTask<DocumentsGetResponse> DocumentsGetAsync(
         string id,
         string documentId,
         RequestOptions? options = null,
@@ -513,17 +513,17 @@ public partial class DocumentsClient : IDocumentsClient
     )
     {
         return new WithRawResponseTask<DocumentsGetResponse>(
-            GetAsyncCore(id, documentId, options, cancellationToken)
+            DocumentsGetAsyncCore(id, documentId, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.Documents.DeleteAsync(
+    /// await client.DocumentsClassic.DocumentsDeleteAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
-    public async Task DeleteAsync(
+    public async Task DocumentsDeleteAsync(
         string id,
         string documentId,
         RequestOptions? options = null,
@@ -601,13 +601,13 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     /// <example><code>
-    /// await client.Documents.UpdateAsync(
+    /// await client.DocumentsClassic.DocumentsUpdateAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new DocumentsUpdateRequest()
     /// );
     /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
+    public WithRawResponseTask<DocumentsGetResponse> DocumentsUpdateAsync(
         string id,
         string documentId,
         DocumentsUpdateRequest request,
@@ -616,7 +616,7 @@ public partial class DocumentsClient : IDocumentsClient
     )
     {
         return new WithRawResponseTask<DocumentsGetResponse>(
-            UpdateAsyncCore(id, documentId, request, options, cancellationToken)
+            DocumentsUpdateAsyncCore(id, documentId, request, options, cancellationToken)
         );
     }
 }
