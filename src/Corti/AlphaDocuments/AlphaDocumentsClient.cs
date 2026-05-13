@@ -132,12 +132,8 @@ public partial class AlphaDocumentsClient : IAlphaDocumentsClient
     /// await client.AlphaDocuments.GenerateAsync(
     ///     new GuidedDocumentByTemplateRef
     ///     {
-    ///         Context = new DocumentsContextWithFacts
-    ///         {
-    ///             Type = DocumentsContextWithFactsType.Facts,
-    ///             Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
-    ///         },
     ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
+    ///         OutputLanguage = "outputLanguage",
     ///     }
     /// );
     /// </code></example>
