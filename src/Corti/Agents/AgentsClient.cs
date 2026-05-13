@@ -204,9 +204,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -411,9 +409,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -622,9 +618,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -944,9 +938,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
