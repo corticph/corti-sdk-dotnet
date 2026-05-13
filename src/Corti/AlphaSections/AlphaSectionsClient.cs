@@ -432,6 +432,9 @@ public partial class AlphaSectionsClient : IAlphaSectionsClient
         );
     }
 
+    /// <summary>
+    /// Delete section
+    /// </summary>
     /// <example><code>
     /// await client.AlphaSections.DeleteAsync("sectionID");
     /// </code></example>

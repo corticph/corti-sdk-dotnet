@@ -18,7 +18,7 @@ public record CreateSectionBase : IJsonOnDeserialized
     public required string Name { get; set; }
 
     /// <summary>
-    /// The intended language for outputs as BCP 47 tag. Does not strictly have to match outputLanguage in POST /documents request.
+    /// The intended language for outputs as BCP 47 tag. Informational metadata only. The final output language is determined by outputLanguage in the POST /documents request.
     /// </summary>
     [JsonPropertyName("language")]
     public required string Language { get; set; }

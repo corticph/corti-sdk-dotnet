@@ -22,6 +22,9 @@ public partial interface IAlphaTemplateVersionsClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// A published version cannot be deleted. When deleting a last remaining version of a template, simply create a new version again if needed.
+    /// </summary>
     Task DeleteAsync(
         string templateId,
         string versionId,

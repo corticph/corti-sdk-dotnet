@@ -446,6 +446,9 @@ public partial class AlphaTemplateVersionsClient : IAlphaTemplateVersionsClient
         );
     }
 
+    /// <summary>
+    /// A published version cannot be deleted. When deleting a last remaining version of a template, simply create a new version again if needed.
+    /// </summary>
     /// <example><code>
     /// await client.AlphaTemplateVersions.DeleteAsync("templateID", "versionID");
     /// </code></example>

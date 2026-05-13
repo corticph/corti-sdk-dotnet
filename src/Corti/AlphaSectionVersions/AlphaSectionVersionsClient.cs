@@ -445,6 +445,9 @@ public partial class AlphaSectionVersionsClient : IAlphaSectionVersionsClient
         );
     }
 
+    /// <summary>
+    /// Currently published version cannot be deleted. Last remaining version can be deleted, simply create a new section version again if needed.
+    /// </summary>
     /// <example><code>
     /// await client.AlphaSectionVersions.DeleteAsync("sectionID", "versionID");
     /// </code></example>

@@ -20,6 +20,9 @@ public partial interface IAlphaTemplatesClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Deletes a template and its versions.
+    /// </summary>
     Task DeleteAsync(
         string templateId,
         RequestOptions? options = null,

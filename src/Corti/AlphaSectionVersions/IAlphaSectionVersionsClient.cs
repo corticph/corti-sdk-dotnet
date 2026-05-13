@@ -22,6 +22,9 @@ public partial interface IAlphaSectionVersionsClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Currently published version cannot be deleted. Last remaining version can be deleted, simply create a new section version again if needed.
+    /// </summary>
     Task DeleteAsync(
         string sectionId,
         string versionId,

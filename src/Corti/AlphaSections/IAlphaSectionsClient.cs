@@ -20,6 +20,9 @@ public partial interface IAlphaSectionsClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Delete section
+    /// </summary>
     Task DeleteAsync(
         string sectionId,
         RequestOptions? options = null,

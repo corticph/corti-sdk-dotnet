@@ -430,6 +430,9 @@ public partial class AlphaTemplatesClient : IAlphaTemplatesClient
         );
     }
 
+    /// <summary>
+    /// Deletes a template and its versions.
+    /// </summary>
     /// <example><code>
     /// await client.AlphaTemplates.DeleteAsync("templateID");
     /// </code></example>
