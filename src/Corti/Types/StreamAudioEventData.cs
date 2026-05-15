@@ -5,29 +5,29 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record StreamConfigMode : IJsonOnDeserialized
+public record StreamAudioEventData : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Processing mode
+    /// The type of audio quality or speech activity event
     /// </summary>
-    [JsonPropertyName("type")]
-    public required StreamConfigModeType Type { get; set; }
+    [JsonPropertyName("event")]
+    public required StreamAudioEventDataEvent Event { get; set; }
 
     /// <summary>
-    /// Output language locale specific to facts.
+    /// Audio channel identifier
     /// </summary>
-    [JsonPropertyName("outputLocale")]
-    public string? OutputLocale { get; set; }
+    [JsonPropertyName("channel")]
+    public required int Channel { get; set; }
 
     /// <summary>
-    /// Rate at which fact generation should process and return results. If no value is set, the default is `fixed` and will trigger fact generation at the standard interval of around 60s. With `fast_init`, fact generation will follow a logarithmic curve.
+    /// Start time of the event in milliseconds
     /// </summary>
-    [JsonPropertyName("factGenerationInterval")]
-    public StreamConfigModeFactGenerationInterval? FactGenerationInterval { get; set; }
+    [JsonPropertyName("startTimeMs")]
+    public required int StartTimeMs { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

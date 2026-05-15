@@ -1,5 +1,5 @@
 {
-  "cliVersion": "4.86.1",
+  "cliVersion": "5.20.1",
   "generatorName": "fernapi/fern-csharp-sdk",
   "generatorVersion": "2.52.0",
   "generatorConfig": {
@@ -26,6 +26,6 @@
       }
     }
   },
-  "originGitCommit": "23bce53307f0836f2dcd50e82ef0aba136e7ec2f",
+  "originGitCommit": "d7dd6cfac3a85b72f5a1e62867061977a278490c",
   "sdkVersion": "0.0.0-dev"
 }
