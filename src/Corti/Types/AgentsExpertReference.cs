@@ -35,6 +35,12 @@ public record AgentsExpertReference : IJsonOnDeserialized
     [JsonPropertyName("systemPrompt")]
     public string? SystemPrompt { get; set; }
 
+    /// <summary>
+    /// The fully resolved configuration for this expert: schema defaults from the registry expert deep-merged with any `config` override supplied at creation. Present only when the source registry expert defined a `configSchema`.
+    /// </summary>
+    [JsonPropertyName("resolvedConfig")]
+    public Dictionary<string, object?>? ResolvedConfig { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
