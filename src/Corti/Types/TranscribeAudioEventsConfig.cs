@@ -5,17 +5,17 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record StatusResponse : IJsonOnDeserialized
+public record TranscribeAudioEventsConfig : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("status")]
-    public required string Status { get; set; }
-
-    [JsonPropertyName("evidence")]
-    public DocumentationEvidence? Evidence { get; set; }
+    /// <summary>
+    /// When true, enables audio quality and speech activity events to be sent over the WebSocket. Disabled by default.
+    /// </summary>
+    [JsonPropertyName("enabled")]
+    public bool? Enabled { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

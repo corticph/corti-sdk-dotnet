@@ -114,7 +114,7 @@ public partial class AlphaSectionVersionsClient : IAlphaSectionVersionsClient
 
     private async Task<WithRawResponse<SectionVersion>> CreateAsyncCore(
         string sectionId,
-        SectionGeneration request,
+        CreateSectionVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -410,17 +410,20 @@ public partial class AlphaSectionVersionsClient : IAlphaSectionVersionsClient
     /// <example><code>
     /// await client.AlphaSectionVersions.CreateAsync(
     ///     "sectionID",
-    ///     new SectionGeneration
+    ///     new CreateSectionVersionRequest
     ///     {
-    ///         Heading = "heading",
-    ///         Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
-    ///         OutputSchema = new StringNode { Type = "string" },
+    ///         Generation = new SectionGeneration
+    ///         {
+    ///             Heading = "heading",
+    ///             Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
+    ///             OutputSchema = new StringNode { Type = "string" },
+    ///         },
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<SectionVersion> CreateAsync(
         string sectionId,
-        SectionGeneration request,
+        CreateSectionVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

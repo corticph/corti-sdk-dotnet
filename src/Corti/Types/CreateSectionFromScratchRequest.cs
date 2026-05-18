@@ -24,22 +24,34 @@ public record CreateSectionFromScratchRequest : IJsonOnDeserialized
     public required string Name { get; set; }
 
     /// <summary>
-    /// The intended language for outputs as BCP 47 tag. Informational metadata only. The final output language is determined by outputLanguage in the POST /documents request.
-    /// </summary>
-    [JsonPropertyName("language")]
-    public required string Language { get; set; }
-
-    /// <summary>
     /// A description for this section. Not passed to the LLM.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
     /// <summary>
+    /// BCP 47 language subtags this section has been tweaked for.
+    /// </summary>
+    [JsonPropertyName("languages")]
+    public IEnumerable<string>? Languages { get; set; }
+
+    /// <summary>
+    /// ISO 3166-1 alpha-3 country codes this section has been tweaked for.
+    /// </summary>
+    [JsonPropertyName("regions")]
+    public IEnumerable<string>? Regions { get; set; }
+
+    /// <summary>
+    /// Clinical specialties this section has been tweaked for.
+    /// </summary>
+    [JsonPropertyName("specialties")]
+    public IEnumerable<string>? Specialties { get; set; }
+
+    /// <summary>
     /// Labels work as query param filter in the LIST /sections endpoint.
     /// </summary>
     [JsonPropertyName("labels")]
-    public IEnumerable<string>? Labels { get; set; }
+    public IEnumerable<Label>? Labels { get; set; }
 
     /// <summary>
     /// Defaults to true when omitted. Set this to false if you do not want the section to automatically show up in LIST /sections.

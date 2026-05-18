@@ -5,17 +5,20 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record StatusResponse : IJsonOnDeserialized
+public record DocumentationEvidence : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("status")]
-    public required string Status { get; set; }
+    [JsonPropertyName("evidenceId")]
+    public string? EvidenceId { get; set; }
 
-    [JsonPropertyName("evidence")]
-    public DocumentationEvidence? Evidence { get; set; }
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
+
+    [JsonPropertyName("quote")]
+    public string? Quote { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

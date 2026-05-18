@@ -10,7 +10,7 @@ public partial interface IAlphaSectionVersionsClient
 
     WithRawResponseTask<SectionVersion> CreateAsync(
         string sectionId,
-        SectionGeneration request,
+        CreateSectionVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

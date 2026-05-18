@@ -15,7 +15,7 @@ public record CreateTemplateFromInheritanceRequest : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Reference to the template to inherit template instructions and sections from. Inherits from the published version of the referenced template.
+    /// Reference to the template to inherit instructions and sections from. Inherits from the published version of the referenced template.
     /// </summary>
     [JsonPropertyName("inheritFromId")]
     public required string InheritFromId { get; set; }
@@ -24,7 +24,7 @@ public record CreateTemplateFromInheritanceRequest : IJsonOnDeserialized
     /// Partial overrides applied on top of the inherited template. All inner fields are optional. Any field omitted is inherited from the referenced template.
     /// </summary>
     [JsonPropertyName("generation")]
-    public required CreateTemplateFromInheritanceRequestGeneration Generation { get; set; }
+    public CreateTemplateFromInheritanceRequestGeneration? Generation { get; set; }
 
     /// <summary>
     /// The name of this template. Not passed to the LLM.
@@ -39,22 +39,40 @@ public record CreateTemplateFromInheritanceRequest : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// The intended language for outputs as BCP 47 tag. Informational metadata only. The final output language is determined by outputLanguage in the POST /documents request.
+    /// BCP 47 language subtags this template has been tweaked for (e.g. `["fr", "de"]`).
     /// </summary>
-    [JsonPropertyName("language")]
-    public required string Language { get; set; }
+    [JsonPropertyName("languages")]
+    public IEnumerable<string>? Languages { get; set; }
+
+    /// <summary>
+    /// ISO 3166-1 alpha-3 country codes this template has been tweaked for (e.g. `["BEL"]`).
+    /// </summary>
+    [JsonPropertyName("regions")]
+    public IEnumerable<string>? Regions { get; set; }
+
+    /// <summary>
+    /// Clinical specialties this template has been tweaked for.
+    /// </summary>
+    [JsonPropertyName("specialties")]
+    public IEnumerable<string>? Specialties { get; set; }
 
     /// <summary>
     /// Labels work as query param filter in the LIST /templates endpoint.
     /// </summary>
     [JsonPropertyName("labels")]
-    public IEnumerable<string>? Labels { get; set; }
+    public IEnumerable<Label>? Labels { get; set; }
 
     /// <summary>
     /// Defaults to true when omitted. Set this to false if you do not want the template to automatically show up in LIST templates.
     /// </summary>
     [JsonPropertyName("publish")]
     public bool? Publish { get; set; }
+
+    /// <summary>
+    /// Access policies to apply to the template on creation.
+    /// </summary>
+    [JsonPropertyName("policies")]
+    public IEnumerable<object>? Policies { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

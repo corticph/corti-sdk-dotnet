@@ -29,8 +29,10 @@ public partial class AlphaTemplatesClient : IAlphaTemplatesClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 5)
                     .Add("lang", request.Lang)
+                    .Add("region", request.Region)
+                    .Add("specialty", request.Specialty)
                     .Add("label", request.Label)
                     .Add("published", request.Published)
                     .MergeAdditional(options?.AdditionalQueryParameters)
@@ -397,7 +399,6 @@ public partial class AlphaTemplatesClient : IAlphaTemplatesClient
     ///     new CreateTemplateFromScratchRequest
     ///     {
     ///         Name = "name",
-    ///         Language = "language",
     ///         Generation = new CreateTemplateFromScratchRequestGeneration
     ///         {
     ///             Instructions = new TemplateInstructions { Prompt = "prompt" },

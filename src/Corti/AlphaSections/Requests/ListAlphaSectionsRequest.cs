@@ -7,13 +7,25 @@ namespace Corti;
 public record ListAlphaSectionsRequest
 {
     /// <summary>
-    /// Filter sections by language (BCP 47 tag). Repeatable.
+    /// Filter sections by BCP 47 language subtag (e.g. `fr`, `de`). Repeatable.
     /// </summary>
     [JsonIgnore]
     public IEnumerable<string> Lang { get; set; } = new List<string>();
 
     /// <summary>
-    /// Filter sections by label. Repeatable; matches sections that have any of the given labels.
+    /// Filter sections by ISO 3166-1 alpha-3 region code (e.g. `BEL`). Repeatable.
+    /// </summary>
+    [JsonIgnore]
+    public IEnumerable<string> Region { get; set; } = new List<string>();
+
+    /// <summary>
+    /// Filter sections by clinical specialty. Repeatable.
+    /// </summary>
+    [JsonIgnore]
+    public IEnumerable<string> Specialty { get; set; } = new List<string>();
+
+    /// <summary>
+    /// Filter sections by label in `key:value` format. Repeatable; matches sections that have any of the given labels.
     /// </summary>
     [JsonIgnore]
     public IEnumerable<string> Label { get; set; } = new List<string>();

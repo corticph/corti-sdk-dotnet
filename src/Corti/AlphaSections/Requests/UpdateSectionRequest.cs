@@ -9,14 +9,20 @@ public record UpdateSectionRequest
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonPropertyName("language")]
-    public string? Language { get; set; }
-
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
+    [JsonPropertyName("languages")]
+    public IEnumerable<string>? Languages { get; set; }
+
+    [JsonPropertyName("regions")]
+    public IEnumerable<string>? Regions { get; set; }
+
+    [JsonPropertyName("specialties")]
+    public IEnumerable<string>? Specialties { get; set; }
+
     [JsonPropertyName("labels")]
-    public IEnumerable<string>? Labels { get; set; }
+    public IEnumerable<Label>? Labels { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
