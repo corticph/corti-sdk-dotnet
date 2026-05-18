@@ -1,20 +1,19 @@
 using System.Text.Json;
+using Corti;
 using Corti.Core;
-using Corti.Documents;
 
-namespace Corti;
+namespace Corti.Documents;
 
-public partial class DocumentsClient : IDocumentsClient
+public partial class TemplatesClient : ITemplatesClient
 {
     private readonly RawClient _client;
 
-    internal DocumentsClient(RawClient client)
+    internal TemplatesClient(RawClient client)
     {
         try
         {
             _client = client;
-            Templates = new Corti.Documents.TemplatesClient(_client);
-            Sections = new SectionsClient(_client);
+            Versions = new Corti.Documents.Templates.VersionsClient(_client);
         }
         catch (Exception ex)
         {
@@ -23,12 +22,10 @@ public partial class DocumentsClient : IDocumentsClient
         }
     }
 
-    public Corti.Documents.ITemplatesClient Templates { get; }
+    public Corti.Documents.Templates.IVersionsClient Versions { get; }
 
-    public ISectionsClient Sections { get; }
-
-    private async Task<WithRawResponse<DocumentsListResponse>> ListAsyncCore(
-        string id,
+    private async Task<WithRawResponse<IEnumerable<Template>>> ListAsyncCore(
+        ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -36,6 +33,14 @@ public partial class DocumentsClient : IDocumentsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 5)
+                    .Add("lang", request.Lang)
+                    .Add("region", request.Region)
+                    .Add("specialty", request.Specialty)
+                    .Add("label", request.Label)
+                    .Add("published", request.Published)
+                    .MergeAdditional(options?.AdditionalQueryParameters)
+                    .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
@@ -48,10 +53,8 @@ public partial class DocumentsClient : IDocumentsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
-                            Path = string.Format(
-                                "interactions/{0}/documents/",
-                                ValueConvert.ToPathParameterString(id)
-                            ),
+                            Path = "documents/templates/",
+                            QueryString = _queryString,
                             Headers = _headers,
                             Options = options,
                         },
@@ -65,10 +68,10 @@ public partial class DocumentsClient : IDocumentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<DocumentsListResponse>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<Template>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<DocumentsListResponse>()
+                        return new WithRawResponse<IEnumerable<Template>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -95,32 +98,6 @@ public partial class DocumentsClient : IDocumentsClient
                     var responseBody = await response
                         .Raw.Content.ReadAsStringAsync(cancellationToken)
                         .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 400:
-                                throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
@@ -131,9 +108,8 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<DocumentsGetResponse>> CreateAsyncCore(
-        string id,
-        DocumentsCreateRequest request,
+    private async Task<WithRawResponse<Template>> CreateAsyncCore(
+        CreateTemplateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -153,10 +129,7 @@ public partial class DocumentsClient : IDocumentsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
-                            Path = string.Format(
-                                "interactions/{0}/documents/",
-                                ValueConvert.ToPathParameterString(id)
-                            ),
+                            Path = "documents/templates/",
                             Body = request,
                             Headers = _headers,
                             ContentType = "application/json",
@@ -172,10 +145,8 @@ public partial class DocumentsClient : IDocumentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<DocumentsGetResponse>()
+                        var responseData = JsonUtils.Deserialize<Template>(responseBody)!;
+                        return new WithRawResponse<Template>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -210,18 +181,6 @@ public partial class DocumentsClient : IDocumentsClient
                                 throw new BadRequestError(
                                     JsonUtils.Deserialize<object>(responseBody)
                                 );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
                         }
                     }
                     catch (JsonException)
@@ -238,9 +197,8 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<DocumentsGetResponse>> GetAsyncCore(
-        string id,
-        string documentId,
+    private async Task<WithRawResponse<Template>> GetAsyncCore(
+        string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -261,9 +219,8 @@ public partial class DocumentsClient : IDocumentsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
                             Path = string.Format(
-                                "interactions/{0}/documents/{1}",
-                                ValueConvert.ToPathParameterString(id),
-                                ValueConvert.ToPathParameterString(documentId)
+                                "documents/templates/{0}",
+                                ValueConvert.ToPathParameterString(templateId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -278,10 +235,8 @@ public partial class DocumentsClient : IDocumentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<DocumentsGetResponse>()
+                        var responseData = JsonUtils.Deserialize<Template>(responseBody)!;
+                        return new WithRawResponse<Template>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -312,21 +267,9 @@ public partial class DocumentsClient : IDocumentsClient
                     {
                         switch (response.StatusCode)
                         {
-                            case 400:
-                                throw new BadRequestError(
+                            case 404:
+                                throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
                                 );
                         }
                     }
@@ -344,10 +287,9 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<DocumentsGetResponse>> UpdateAsyncCore(
-        string id,
-        string documentId,
-        DocumentsUpdateRequest request,
+    private async Task<WithRawResponse<Template>> UpdateAsyncCore(
+        string templateId,
+        UpdateTemplateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -368,9 +310,8 @@ public partial class DocumentsClient : IDocumentsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethodExtensions.Patch,
                             Path = string.Format(
-                                "interactions/{0}/documents/{1}",
-                                ValueConvert.ToPathParameterString(id),
-                                ValueConvert.ToPathParameterString(documentId)
+                                "documents/templates/{0}",
+                                ValueConvert.ToPathParameterString(templateId)
                             ),
                             Body = request,
                             Headers = _headers,
@@ -387,114 +328,8 @@ public partial class DocumentsClient : IDocumentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<DocumentsGetResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 400:
-                                throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    private async Task<WithRawResponse<CreateEphemeralDocumentResponse>> GenerateAsyncCore(
-        GenerateDocumentsRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("X-Corti-Retention-Policy", request.CortiRetentionPolicy)
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Post,
-                            Path = "documents/",
-                            Body = request.Body,
-                            Headers = _headers,
-                            ContentType = "application/json",
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<CreateEphemeralDocumentResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<CreateEphemeralDocumentResponse>()
+                        var responseData = JsonUtils.Deserialize<Template>(responseBody)!;
+                        return new WithRawResponse<Template>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -533,14 +368,6 @@ public partial class DocumentsClient : IDocumentsClient
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
                                 );
-                            case 422:
-                                throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
                         }
                     }
                     catch (JsonException)
@@ -557,86 +384,65 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// List Documents
-    /// </summary>
     /// <example><code>
-    /// await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// await client.Documents.Templates.ListAsync(new ListTemplatesRequest());
     /// </code></example>
-    public WithRawResponseTask<DocumentsListResponse> ListAsync(
-        string id,
+    public WithRawResponseTask<IEnumerable<Template>> ListAsync(
+        ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<DocumentsListResponse>(
-            ListAsyncCore(id, options, cancellationToken)
+        return new WithRawResponseTask<IEnumerable<Template>>(
+            ListAsyncCore(request, options, cancellationToken)
         );
     }
 
-    /// <summary>
-    /// This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
-    /// </summary>
     /// <example><code>
-    /// await client.Documents.CreateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new DocumentsCreateRequestWithTemplateKey
+    /// await client.Documents.Templates.CreateAsync(
+    ///     new CreateTemplateFromScratchRequest
     ///     {
-    ///         Context = new List&lt;DocumentsContext&gt;()
+    ///         Name = "name",
+    ///         Generation = new CreateTemplateFromScratchRequestGeneration
     ///         {
-    ///             new DocumentsContextWithFacts
-    ///             {
-    ///                 Type = DocumentsContextWithFactsType.Facts,
-    ///                 Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
-    ///             },
+    ///             Instructions = new TemplateInstructions { Prompt = "prompt" },
     ///         },
-    ///         TemplateKey = "templateKey",
-    ///         OutputLanguage = "outputLanguage",
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> CreateAsync(
-        string id,
-        DocumentsCreateRequest request,
+    public WithRawResponseTask<Template> CreateAsync(
+        CreateTemplateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<DocumentsGetResponse>(
-            CreateAsyncCore(id, request, options, cancellationToken)
+        return new WithRawResponseTask<Template>(
+            CreateAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <example><code>
+    /// await client.Documents.Templates.GetAsync("templateID");
+    /// </code></example>
+    public WithRawResponseTask<Template> GetAsync(
+        string templateId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<Template>(
+            GetAsyncCore(templateId, options, cancellationToken)
         );
     }
 
     /// <summary>
-    /// Get Document.
+    /// Deletes a template and its versions.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.GetAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> GetAsync(
-        string id,
-        string documentId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<DocumentsGetResponse>(
-            GetAsyncCore(id, documentId, options, cancellationToken)
-        );
-    }
-
-    /// <example><code>
-    /// await client.Documents.DeleteAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-    /// );
+    /// await client.Documents.Templates.DeleteAsync("templateID");
     /// </code></example>
     public async Task DeleteAsync(
-        string id,
-        string documentId,
+        string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -657,9 +463,8 @@ public partial class DocumentsClient : IDocumentsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Delete,
                             Path = string.Format(
-                                "interactions/{0}/documents/{1}",
-                                ValueConvert.ToPathParameterString(id),
-                                ValueConvert.ToPathParameterString(documentId)
+                                "documents/templates/{0}",
+                                ValueConvert.ToPathParameterString(templateId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -679,21 +484,9 @@ public partial class DocumentsClient : IDocumentsClient
                     {
                         switch (response.StatusCode)
                         {
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
                             case 404:
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
                                 );
                         }
                     }
@@ -712,52 +505,17 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     /// <example><code>
-    /// await client.Documents.UpdateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new DocumentsUpdateRequest()
-    /// );
+    /// await client.Documents.Templates.UpdateAsync("templateID", new UpdateTemplateRequest());
     /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
-        string id,
-        string documentId,
-        DocumentsUpdateRequest request,
+    public WithRawResponseTask<Template> UpdateAsync(
+        string templateId,
+        UpdateTemplateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<DocumentsGetResponse>(
-            UpdateAsyncCore(id, documentId, request, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Generates a structured document using one of three template-supply paths: a stored template reference (optionally with runtime overrides), an ad-hoc assembly of stored sections, or a fully inline dynamic template. Exactly one of `templateRef`, `assemblyTemplate`, or `dynamicTemplate` must be provided.
-    ///
-    /// With the exception of the plain `templateRef` path (no overrides), every call persists a new auto-generated template aggregate that snapshots the resolved content. The snapshot is drift-proof: subsequent edits to base templates or sections do not affect previously generated documents.
-    ///
-    /// Pass the `X-Corti-Retention-Policy: none` header to generate and return the document without saving it to the database. The response will be 200 with `EphemeralDocumentResponse`. Without the header the document is saved and the response is 201 with `CreateDocumentResponse`.
-    /// </summary>
-    /// <example><code>
-    /// await client.Documents.GenerateAsync(
-    ///     new GenerateDocumentsRequest
-    ///     {
-    ///         Body = new GuidedDocumentByTemplateRef
-    ///         {
-    ///             OutputLanguage = "outputLanguage",
-    ///             TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
-    ///         },
-    ///     }
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<CreateEphemeralDocumentResponse> GenerateAsync(
-        GenerateDocumentsRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<CreateEphemeralDocumentResponse>(
-            GenerateAsyncCore(request, options, cancellationToken)
+        return new WithRawResponseTask<Template>(
+            UpdateAsyncCore(templateId, request, options, cancellationToken)
         );
     }
 }

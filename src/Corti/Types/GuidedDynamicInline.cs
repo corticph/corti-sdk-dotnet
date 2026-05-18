@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedDynamicInline : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -14,11 +14,8 @@ public record TemplateGeneration : IJsonOnDeserialized
     [JsonPropertyName("instructions")]
     public required TemplateInstructions Instructions { get; set; }
 
-    /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
-    /// </summary>
     [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    public IEnumerable<SectionGeneration> Sections { get; set; } = new List<SectionGeneration>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

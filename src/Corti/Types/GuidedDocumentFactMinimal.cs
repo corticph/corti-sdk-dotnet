@@ -4,21 +4,21 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Minimal fact shape. Only `text` is required.
+/// </summary>
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedDocumentFactMinimal : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
-
     /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
+    /// The text of the fact.
     /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("text")]
+    public required string Text { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

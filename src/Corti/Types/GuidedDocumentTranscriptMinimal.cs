@@ -4,21 +4,22 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Minimal transcript shape accepted as guided-document input context. Decoupled from the transcript resource: only `transcripts` is required, and within each segment only `text` is required.
+/// </summary>
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedDocumentTranscriptMinimal : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    [JsonPropertyName("metadata")]
+    public GuidedDocumentTranscriptMetadataMinimal? Metadata { get; set; }
 
-    /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
-    /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("transcripts")]
+    public IEnumerable<GuidedDocumentTranscriptSegmentMinimal> Transcripts { get; set; } =
+        new List<GuidedDocumentTranscriptSegmentMinimal>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

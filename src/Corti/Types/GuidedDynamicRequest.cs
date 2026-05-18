@@ -4,21 +4,21 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Fully inline template definition. Sections and the wrapping template are created and immediately published as auto-generated resources.
+/// </summary>
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedDynamicRequest : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
 
-    /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
-    /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("generation")]
+    public required GuidedDynamicInline Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -1,11 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Corti;
 using Corti.Core;
 
-namespace Corti;
+namespace Corti.Documents.Templates;
 
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record CreateTemplateVersionRequestGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -14,11 +15,8 @@ public record TemplateGeneration : IJsonOnDeserialized
     [JsonPropertyName("instructions")]
     public required TemplateInstructions Instructions { get; set; }
 
-    /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
-    /// </summary>
     [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    public IEnumerable<TemplateVersionSectionRequest>? Sections { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -4,21 +4,18 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Optional transcript-level metadata. All fields optional.
+/// </summary>
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedDocumentTranscriptMetadataMinimal : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
-
-    /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
-    /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("participantsRoles")]
+    public IEnumerable<TranscriptsParticipant>? ParticipantsRoles { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

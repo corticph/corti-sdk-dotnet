@@ -4,21 +4,27 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Per-section reference for the assembly path.
+/// </summary>
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedAssemblySectionRef : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    [JsonPropertyName("sectionId")]
+    public required string SectionId { get; set; }
 
     /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
+    /// Optional explicit section version. Defaults to the section's published version when omitted.
     /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("sectionVersionId")]
+    public string? SectionVersionId { get; set; }
+
+    [JsonPropertyName("overrides")]
+    public SectionOverrides? Overrides { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

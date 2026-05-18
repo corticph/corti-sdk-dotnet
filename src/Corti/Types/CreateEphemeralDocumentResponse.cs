@@ -4,21 +4,21 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Response when a document is generated but not saved (retention policy `none`).
+/// </summary>
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record CreateEphemeralDocumentResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    [JsonPropertyName("document")]
+    public required EphemeralDocument Document { get; set; }
 
-    /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
-    /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("usageInfo")]
+    public required CommonUsageInfo UsageInfo { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

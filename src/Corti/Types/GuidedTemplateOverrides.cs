@@ -5,20 +5,23 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedTemplateOverrides : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// Replaces the template-level instructions for this call.
+    /// </summary>
     [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    public TemplateInstructions? Instructions { get; set; }
 
     /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
+    /// Per-section override patches. Each entry must reference a section already linked to the base template version.
     /// </summary>
     [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    public IEnumerable<GuidedSectionOverride>? Sections { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
