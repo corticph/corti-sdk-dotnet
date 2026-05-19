@@ -13,7 +13,7 @@ public record TranscriptsCreateRequest
     public required string RecordingId { get; set; }
 
     /// <summary>
-    /// The primary spoken language of the recording. Check https://docs.corti.ai/about/languages for more.
+    /// The primary spoken language of the recording. Check https://docs.corti.ai/stt/languages for more.
     /// </summary>
     [JsonPropertyName("primaryLanguage")]
     public required string PrimaryLanguage { get; set; }
