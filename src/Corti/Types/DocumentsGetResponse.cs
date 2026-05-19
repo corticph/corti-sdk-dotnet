@@ -51,7 +51,7 @@ public record DocumentsGetResponse : IJsonOnDeserialized
     public required DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// The language in which the document will be generated. Check https://docs.corti.ai/about/languages for more.
+    /// The language in which the document will be generated. Check https://docs.corti.ai/stt/languages for more.
     /// </summary>
     [JsonPropertyName("outputLanguage")]
     public required string OutputLanguage { get; set; }
