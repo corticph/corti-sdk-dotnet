@@ -385,7 +385,7 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     /// <example><code>
-    /// await client.Documents.Templates.ListAsync(new ListTemplatesRequest());
+    /// await client.Documents.Templates.ListAsync(new Corti.Documents.ListTemplatesRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<Template>> ListAsync(
         ListTemplatesRequest request,
