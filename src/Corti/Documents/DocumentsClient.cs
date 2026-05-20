@@ -454,7 +454,7 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     private async Task<WithRawResponse<CreateEphemeralDocumentResponse>> GenerateAsyncCore(
-        GenerateDocumentsRequest request,
+        GuidedDocumentRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -463,7 +463,6 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("X-Corti-Retention-Policy", request.CortiRetentionPolicy)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -476,7 +475,7 @@ public partial class DocumentsClient : IDocumentsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
                             Path = "documents/",
-                            Body = request.Body,
+                            Body = request,
                             Headers = _headers,
                             ContentType = "application/json",
                             Options = options,
@@ -738,18 +737,15 @@ public partial class DocumentsClient : IDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.GenerateAsync(
-    ///     new GenerateDocumentsRequest
+    ///     new GuidedDocumentByTemplateRef
     ///     {
-    ///         Body = new GuidedDocumentByTemplateRef
-    ///         {
-    ///             OutputLanguage = "outputLanguage",
-    ///             TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
-    ///         },
+    ///         OutputLanguage = "outputLanguage",
+    ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<CreateEphemeralDocumentResponse> GenerateAsync(
-        GenerateDocumentsRequest request,
+        GuidedDocumentRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

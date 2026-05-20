@@ -57,7 +57,7 @@ public partial interface IDocumentsClient
     /// With the exception of the plain `templateRef` path (no overrides), every call persists a new auto-generated template aggregate that snapshots the resolved content. The snapshot is drift-proof: subsequent edits to base templates or sections do not affect previously generated documents.
     /// </summary>
     WithRawResponseTask<CreateEphemeralDocumentResponse> GenerateAsync(
-        GenerateDocumentsRequest request,
+        GuidedDocumentRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
