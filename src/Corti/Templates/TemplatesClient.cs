@@ -21,7 +21,7 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     private async Task<WithRawResponse<TemplatesSectionListResponse>> SectionListAsyncCore(
-        TemplatesSectionListRequest request,
+        SectionListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -120,7 +120,7 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     private async Task<WithRawResponse<TemplatesListResponse>> ListAsyncCore(
-        TemplatesListRequest request,
+        ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -317,10 +317,10 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves a list of template sections with optional filters for organization and language.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.SectionListAsync(new TemplatesSectionListRequest());
+    /// await client.Templates.SectionListAsync(new SectionListTemplatesRequest());
     /// </code></example>
     public WithRawResponseTask<TemplatesSectionListResponse> SectionListAsync(
-        TemplatesSectionListRequest request,
+        SectionListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -334,10 +334,10 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves a list of templates with optional filters for organization, language, and status.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.ListAsync(new TemplatesListRequest());
+    /// await client.Templates.ListAsync(new Corti.ListTemplatesRequest());
     /// </code></example>
     public WithRawResponseTask<TemplatesListResponse> ListAsync(
-        TemplatesListRequest request,
+        ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
