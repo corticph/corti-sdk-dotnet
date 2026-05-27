@@ -10,7 +10,7 @@ public record FactsExtractRequest
     public IEnumerable<CommonTextContext> Context { get; set; } = new List<CommonTextContext>();
 
     /// <summary>
-    /// The desired output language code for extracted facts. Check [languages page](/about/languages) for more.
+    /// The desired output language code for extracted facts. Check [languages page](/stt/languages) for more.
     /// </summary>
     [JsonPropertyName("outputLanguage")]
     public required string OutputLanguage { get; set; }
