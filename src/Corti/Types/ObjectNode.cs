@@ -28,16 +28,10 @@ public record ObjectNode : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// Controls how subheadings are rendered in the generated output. Use `inline` (default) for `{key}: {value}\n` or `block` for `{key}\n{value}\n`, or provide a custom format string containing both `{key}` and `{value}` placeholders. Mutually exclusive with `objectFormat`.
+    /// Format string used to render each field in the generated string output. For example use `{key}` and `{value}` placeholders for the field key and its value respectively to programmatically control inline or block subheadings or other use cases.
     /// </summary>
-    [JsonPropertyName("subheadingFormat")]
-    public string? SubheadingFormat { get; set; }
-
-    /// <summary>
-    /// A format string referencing field keys as placeholders (e.g. `{fieldKey}`). All placeholders must correspond to defined field keys. Mutually exclusive with `subheadingFormat`.
-    /// </summary>
-    [JsonPropertyName("objectFormat")]
-    public string? ObjectFormat { get; set; }
+    [JsonPropertyName("fieldFormat")]
+    public string? FieldFormat { get; set; }
 
     /// <summary>
     /// Define what fields are possible to return in the object.
