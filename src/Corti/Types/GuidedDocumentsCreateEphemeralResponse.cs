@@ -4,18 +4,21 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Response when a document is generated but not saved (retention policy `none`).
+/// </summary>
 [Serializable]
-public record AgentsValidationErrorErrorsItem : IJsonOnDeserialized
+public record GuidedDocumentsCreateEphemeralResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("location")]
-    public string? Location { get; set; }
+    [JsonPropertyName("document")]
+    public required EphemeralDocument Document { get; set; }
 
-    [JsonPropertyName("reason")]
-    public string? Reason { get; set; }
+    [JsonPropertyName("usageInfo")]
+    public required CommonUsageInfo UsageInfo { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

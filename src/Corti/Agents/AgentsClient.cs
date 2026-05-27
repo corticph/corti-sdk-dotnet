@@ -204,9 +204,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -411,9 +409,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -622,9 +618,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -944,9 +938,7 @@ public partial class AgentsClient : IAgentsClient
                                 );
                             case 422:
                                 throw new UnprocessableEntityError(
-                                    JsonUtils.Deserialize<AgentsValidationErrorResponse>(
-                                        responseBody
-                                    )
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -1206,6 +1198,85 @@ public partial class AgentsClient : IAgentsClient
         return new WithRawResponseTask<AgentsContext>(
             GetContextAsyncCore(id, contextId, request, options, cancellationToken)
         );
+    }
+
+    /// <summary>
+    /// This endpoint deletes a context (thread) and scrubs all associated data including messages, memories, and memory chunks for the given agent. Thread and task metadata is soft-deleted for audit purposes, while content columns are irreversibly overwritten.
+    /// </summary>
+    /// <example><code>
+    /// await client.Agents.DeleteContextAsync("12345678-90ab-cdef-gh12-34567890abc", "contextId");
+    /// </code></example>
+    public async Task DeleteContextAsync(
+        string id,
+        string contextId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Agents,
+                            Method = HttpMethod.Delete,
+                            Path = string.Format(
+                                "agents/{0}/v1/contexts/{1}",
+                                ValueConvert.ToPathParameterString(id),
+                                ValueConvert.ToPathParameterString(contextId)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    return;
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 401:
+                                throw new UnauthorizedError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
     /// <summary>

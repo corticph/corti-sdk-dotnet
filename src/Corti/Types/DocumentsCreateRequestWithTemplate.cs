@@ -30,7 +30,7 @@ public record DocumentsCreateRequestWithTemplate : IJsonOnDeserialized
     public string? Name { get; set; }
 
     /// <summary>
-    /// The language in which the document will be generated. Check [languages page](/about/languages) for more.
+    /// The language in which the document will be generated. Check [languages page](/stt/languages) for more.
     /// </summary>
     [JsonPropertyName("outputLanguage")]
     public required string OutputLanguage { get; set; }

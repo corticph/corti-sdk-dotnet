@@ -73,6 +73,12 @@ public partial class TranscribeApi
     public readonly Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage = new();
 
     /// <summary>
+    /// Event handler for TranscribeAudioEventMessage.
+    /// Use TranscribeAudioEventMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public readonly Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage = new();
+
+    /// <summary>
     /// Event handler for unknown/unrecognized message types.
     /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
     /// </summary>
@@ -139,6 +145,7 @@ public partial class TranscribeApi
         TranscribeTranscriptMessage.Dispose();
         TranscribeCommandMessage.Dispose();
         TranscribeConfigStatusMessage.Dispose();
+        TranscribeAudioEventMessage.Dispose();
         UnknownMessage.Dispose();
     }
 
@@ -217,6 +224,14 @@ public partial class TranscribeApi
             if (JsonUtils.TryDeserialize(json, out TranscribeConfigStatusMessage? message))
             {
                 await TranscribeConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out TranscribeAudioEventMessage? message))
+            {
+                await TranscribeAudioEventMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
