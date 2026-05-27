@@ -90,6 +90,16 @@ public partial interface IAgentsClient
     );
 
     /// <summary>
+    /// This endpoint deletes a context (thread) and scrubs all associated data including messages, memories, and memory chunks for the given agent. Thread and task metadata is soft-deleted for audit purposes, while content columns are irreversibly overwritten.
+    /// </summary>
+    Task DeleteContextAsync(
+        string id,
+        string contextId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// This endpoint retrieves the experts registry, which contains information about all available experts that can be referenced when creating agents through the AgentsCreateExpertReference schema.
     /// </summary>
     WithRawResponseTask<AgentsRegistryExpertsResponse> GetRegistryExpertsAsync(
