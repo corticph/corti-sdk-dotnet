@@ -24,7 +24,7 @@ public partial interface ISectionsClient
     );
 
     /// <summary>
-    /// Delete section
+    /// Deletes a section and its versions. Returns 409 if other sections inherit from this section.
     /// </summary>
     Task DeleteAsync(
         string sectionId,

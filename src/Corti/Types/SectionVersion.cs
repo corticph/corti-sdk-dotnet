@@ -23,6 +23,12 @@ public record SectionVersion : IJsonOnDeserialized
     [JsonPropertyName("versionNumber")]
     public required int VersionNumber { get; set; }
 
+    /// <summary>
+    /// Present when the section version has been deleted.
+    /// </summary>
+    [JsonPropertyName("deletedAt")]
+    public DateTime? DeletedAt { get; set; }
+
     [JsonPropertyName("generation")]
     public required SectionGeneration Generation { get; set; }
 

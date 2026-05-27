@@ -132,7 +132,6 @@ public partial class TemplatesClient : ITemplatesClient
                             Path = "documents/templates/",
                             Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -436,7 +435,7 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     /// <summary>
-    /// Deletes a template and its versions.
+    /// Deletes a template and its versions. Returns 409 if other templates or sections inherit from this template.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.DeleteAsync("templateID");
@@ -487,6 +486,10 @@ public partial class TemplatesClient : ITemplatesClient
                             case 404:
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 409:
+                                throw new ConflictError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
                                 );
                         }
                     }

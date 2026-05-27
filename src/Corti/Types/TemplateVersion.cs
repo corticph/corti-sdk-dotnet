@@ -23,6 +23,12 @@ public record TemplateVersion : IJsonOnDeserialized
     [JsonPropertyName("versionNumber")]
     public required int VersionNumber { get; set; }
 
+    /// <summary>
+    /// Present when the template version has been deleted.
+    /// </summary>
+    [JsonPropertyName("deletedAt")]
+    public DateTime? DeletedAt { get; set; }
+
     [JsonPropertyName("generation")]
     public required TemplateGeneration Generation { get; set; }
 

@@ -132,7 +132,6 @@ public partial class SectionsClient : ISectionsClient
                             Path = "documents/sections/",
                             Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -438,7 +437,7 @@ public partial class SectionsClient : ISectionsClient
     }
 
     /// <summary>
-    /// Delete section
+    /// Deletes a section and its versions. Returns 409 if other sections inherit from this section.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.DeleteAsync("sectionID");
@@ -489,6 +488,10 @@ public partial class SectionsClient : ISectionsClient
                             case 404:
                                 throw new NotFoundError(
                                     JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 409:
+                                throw new ConflictError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
                                 );
                         }
                     }

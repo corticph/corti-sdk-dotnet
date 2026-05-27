@@ -159,7 +159,6 @@ public partial class DocumentsClient : IDocumentsClient
                             ),
                             Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -477,7 +476,6 @@ public partial class DocumentsClient : IDocumentsClient
                             Path = "documents/",
                             Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken

@@ -89,6 +89,12 @@ public record Section : IJsonOnDeserialized
     [JsonPropertyName("updatedAt")]
     public required DateTime UpdatedAt { get; set; }
 
+    /// <summary>
+    /// Present when the section has been deleted. GET by ID still returns the full resource with this field populated.
+    /// </summary>
+    [JsonPropertyName("deletedAt")]
+    public DateTime? DeletedAt { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

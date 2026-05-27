@@ -24,7 +24,7 @@ public partial interface ITemplatesClient
     );
 
     /// <summary>
-    /// Deletes a template and its versions.
+    /// Deletes a template and its versions. Returns 409 if other templates or sections inherit from this template.
     /// </summary>
     Task DeleteAsync(
         string templateId,
