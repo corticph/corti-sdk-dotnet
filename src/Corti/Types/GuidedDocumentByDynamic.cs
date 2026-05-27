@@ -33,7 +33,7 @@ public record GuidedDocumentByDynamic : IJsonOnDeserialized
     public IEnumerable<GuidedDocumentContext>? Context { get; set; }
 
     /// <summary>
-    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
+    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context. Facts with `isDiscarded: true` are not passed on.
     /// </summary>
     [JsonPropertyName("interactionId")]
     public string? InteractionId { get; set; }

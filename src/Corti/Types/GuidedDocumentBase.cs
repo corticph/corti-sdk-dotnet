@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Fields shared across all guided-document request variants.
+/// Fields shared across all guided-document request variants. `outputLanguage` is always required. Exactly one input mode must be supplied: provide context items inline, or reference an existing interaction whose attached facts and transcripts will be used.
 /// </summary>
 [Serializable]
 public record GuidedDocumentBase : IJsonOnDeserialized
@@ -27,7 +27,7 @@ public record GuidedDocumentBase : IJsonOnDeserialized
     public IEnumerable<GuidedDocumentContext>? Context { get; set; }
 
     /// <summary>
-    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
+    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context. Facts with `isDiscarded: true` are not passed on.
     /// </summary>
     [JsonPropertyName("interactionId")]
     public string? InteractionId { get; set; }
