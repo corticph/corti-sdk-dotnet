@@ -36,7 +36,7 @@ public record CreateSectionFromInheritanceRequest : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// BCP 47 language subtags this section has been tweaked for.
+    /// BCP 47 language tags this section has been tweaked for.
     /// </summary>
     [JsonPropertyName("languages")]
     public IEnumerable<string>? Languages { get; set; }
