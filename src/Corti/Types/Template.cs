@@ -75,7 +75,7 @@ public record Template : IJsonOnDeserialized
     /// Access policies for this template.
     /// </summary>
     [JsonPropertyName("policies")]
-    public IEnumerable<object>? Policies { get; set; }
+    public IEnumerable<TemplatePolicy>? Policies { get; set; }
 
     [JsonPropertyName("publishedVersion")]
     public TemplateVersion? PublishedVersion { get; set; }

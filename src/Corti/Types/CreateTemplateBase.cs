@@ -57,7 +57,7 @@ public record CreateTemplateBase : IJsonOnDeserialized
     /// Access policies to apply to the template on creation.
     /// </summary>
     [JsonPropertyName("policies")]
-    public IEnumerable<object>? Policies { get; set; }
+    public IEnumerable<CreateTemplatePolicyRequest>? Policies { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

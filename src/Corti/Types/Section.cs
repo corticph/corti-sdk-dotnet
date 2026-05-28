@@ -95,6 +95,12 @@ public record Section : IJsonOnDeserialized
     [JsonPropertyName("deletedAt")]
     public DateTime? DeletedAt { get; set; }
 
+    /// <summary>
+    /// Access policies for this section.
+    /// </summary>
+    [JsonPropertyName("policies")]
+    public IEnumerable<SectionPolicy>? Policies { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
