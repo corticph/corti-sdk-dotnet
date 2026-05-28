@@ -4,21 +4,25 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Template generation with section references (not fully resolved). Use the resolved TemplateGeneration for hydrated section data.
+/// </summary>
 [Serializable]
-public record GuidedTemplatesCreatePolicyRequest : IJsonOnDeserialized
+public record GuidedShallowTemplateGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("kind")]
-    public required GuidedTemplatePolicyKind Kind { get; set; }
+    [JsonPropertyName("instructions")]
+    public required GuidedTemplateInstructions Instructions { get; set; }
 
     /// <summary>
-    /// Required when `kind` is `customers`. List of customer tenant identifiers that should have access.
+    /// Section references linked to this version (not fully resolved).
     /// </summary>
-    [JsonPropertyName("customerIds")]
-    public IEnumerable<string>? CustomerIds { get; set; }
+    [JsonPropertyName("sections")]
+    public IEnumerable<GuidedTemplateVersionSectionRef> Sections { get; set; } =
+        new List<GuidedTemplateVersionSectionRef>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

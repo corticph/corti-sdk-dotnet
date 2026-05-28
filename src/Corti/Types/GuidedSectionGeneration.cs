@@ -24,7 +24,7 @@ public record GuidedSectionGeneration : IJsonOnDeserialized
     public required GuidedSectionInstructions Instructions { get; set; }
 
     [JsonPropertyName("outputSchema")]
-    public required OutputSchema OutputSchema { get; set; }
+    public required GuidedOutputSchema OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -30,11 +30,11 @@ public class GuidedDocumentsGenerateRequest
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedDocumentsGenerateByTemplateRef value.
+    /// Factory method to create a union from a Corti.GuidedDocumentByTemplateRef value.
     /// </summary>
-    public static GuidedDocumentsGenerateRequest FromGuidedDocumentsGenerateByTemplateRef(
-        Corti.GuidedDocumentsGenerateByTemplateRef value
-    ) => new("guidedDocumentsGenerateByTemplateRef", value);
+    public static GuidedDocumentsGenerateRequest FromGuidedDocumentByTemplateRef(
+        Corti.GuidedDocumentByTemplateRef value
+    ) => new("guidedDocumentByTemplateRef", value);
 
     /// <summary>
     /// Factory method to create a union from a Corti.GuidedDocumentsGenerateByAssembly value.
@@ -51,10 +51,9 @@ public class GuidedDocumentsGenerateRequest
     ) => new("guidedDocumentsGenerateByDynamic", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedDocumentsGenerateByTemplateRef"
+    /// Returns true if <see cref="Type"/> is "guidedDocumentByTemplateRef"
     /// </summary>
-    public bool IsGuidedDocumentsGenerateByTemplateRef() =>
-        Type == "guidedDocumentsGenerateByTemplateRef";
+    public bool IsGuidedDocumentByTemplateRef() => Type == "guidedDocumentByTemplateRef";
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "guidedDocumentsGenerateByAssembly"
@@ -68,15 +67,13 @@ public class GuidedDocumentsGenerateRequest
     public bool IsGuidedDocumentsGenerateByDynamic() => Type == "guidedDocumentsGenerateByDynamic";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedDocumentsGenerateByTemplateRef"/> if <see cref="Type"/> is 'guidedDocumentsGenerateByTemplateRef', otherwise throws an exception.
+    /// Returns the value as a <see cref="Corti.GuidedDocumentByTemplateRef"/> if <see cref="Type"/> is 'guidedDocumentByTemplateRef', otherwise throws an exception.
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentsGenerateByTemplateRef'.</exception>
-    public Corti.GuidedDocumentsGenerateByTemplateRef AsGuidedDocumentsGenerateByTemplateRef() =>
-        IsGuidedDocumentsGenerateByTemplateRef()
-            ? (Corti.GuidedDocumentsGenerateByTemplateRef)Value!
-            : throw new CortiClientException(
-                "Union type is not 'guidedDocumentsGenerateByTemplateRef'"
-            );
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedDocumentByTemplateRef'.</exception>
+    public Corti.GuidedDocumentByTemplateRef AsGuidedDocumentByTemplateRef() =>
+        IsGuidedDocumentByTemplateRef()
+            ? (Corti.GuidedDocumentByTemplateRef)Value!
+            : throw new CortiClientException("Union type is not 'guidedDocumentByTemplateRef'");
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.GuidedDocumentsGenerateByAssembly"/> if <see cref="Type"/> is 'guidedDocumentsGenerateByAssembly', otherwise throws an exception.
@@ -101,15 +98,13 @@ public class GuidedDocumentsGenerateRequest
             );
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentsGenerateByTemplateRef"/> and returns true if successful.
+    /// Attempts to cast the value to a <see cref="Corti.GuidedDocumentByTemplateRef"/> and returns true if successful.
     /// </summary>
-    public bool TryGetGuidedDocumentsGenerateByTemplateRef(
-        out Corti.GuidedDocumentsGenerateByTemplateRef? value
-    )
+    public bool TryGetGuidedDocumentByTemplateRef(out Corti.GuidedDocumentByTemplateRef? value)
     {
-        if (Type == "guidedDocumentsGenerateByTemplateRef")
+        if (Type == "guidedDocumentByTemplateRef")
         {
-            value = (Corti.GuidedDocumentsGenerateByTemplateRef)Value!;
+            value = (Corti.GuidedDocumentByTemplateRef)Value!;
             return true;
         }
         value = null;
@@ -149,15 +144,15 @@ public class GuidedDocumentsGenerateRequest
     }
 
     public T Match<T>(
-        Func<Corti.GuidedDocumentsGenerateByTemplateRef, T> onGuidedDocumentsGenerateByTemplateRef,
+        Func<Corti.GuidedDocumentByTemplateRef, T> onGuidedDocumentByTemplateRef,
         Func<Corti.GuidedDocumentsGenerateByAssembly, T> onGuidedDocumentsGenerateByAssembly,
         Func<Corti.GuidedDocumentsGenerateByDynamic, T> onGuidedDocumentsGenerateByDynamic
     )
     {
         return Type switch
         {
-            "guidedDocumentsGenerateByTemplateRef" => onGuidedDocumentsGenerateByTemplateRef(
-                AsGuidedDocumentsGenerateByTemplateRef()
+            "guidedDocumentByTemplateRef" => onGuidedDocumentByTemplateRef(
+                AsGuidedDocumentByTemplateRef()
             ),
             "guidedDocumentsGenerateByAssembly" => onGuidedDocumentsGenerateByAssembly(
                 AsGuidedDocumentsGenerateByAssembly()
@@ -170,15 +165,15 @@ public class GuidedDocumentsGenerateRequest
     }
 
     public void Visit(
-        Action<Corti.GuidedDocumentsGenerateByTemplateRef> onGuidedDocumentsGenerateByTemplateRef,
+        Action<Corti.GuidedDocumentByTemplateRef> onGuidedDocumentByTemplateRef,
         Action<Corti.GuidedDocumentsGenerateByAssembly> onGuidedDocumentsGenerateByAssembly,
         Action<Corti.GuidedDocumentsGenerateByDynamic> onGuidedDocumentsGenerateByDynamic
     )
     {
         switch (Type)
         {
-            case "guidedDocumentsGenerateByTemplateRef":
-                onGuidedDocumentsGenerateByTemplateRef(AsGuidedDocumentsGenerateByTemplateRef());
+            case "guidedDocumentByTemplateRef":
+                onGuidedDocumentByTemplateRef(AsGuidedDocumentByTemplateRef());
                 break;
             case "guidedDocumentsGenerateByAssembly":
                 onGuidedDocumentsGenerateByAssembly(AsGuidedDocumentsGenerateByAssembly());
@@ -227,8 +222,8 @@ public class GuidedDocumentsGenerateRequest
     public override string ToString() => JsonUtils.Serialize(this);
 
     public static implicit operator GuidedDocumentsGenerateRequest(
-        Corti.GuidedDocumentsGenerateByTemplateRef value
-    ) => new("guidedDocumentsGenerateByTemplateRef", value);
+        Corti.GuidedDocumentByTemplateRef value
+    ) => new("guidedDocumentByTemplateRef", value);
 
     public static implicit operator GuidedDocumentsGenerateRequest(
         Corti.GuidedDocumentsGenerateByAssembly value
@@ -258,10 +253,7 @@ public class GuidedDocumentsGenerateRequest
 
                 var types = new (string Key, System.Type Type)[]
                 {
-                    (
-                        "guidedDocumentsGenerateByTemplateRef",
-                        typeof(Corti.GuidedDocumentsGenerateByTemplateRef)
-                    ),
+                    ("guidedDocumentByTemplateRef", typeof(Corti.GuidedDocumentByTemplateRef)),
                     (
                         "guidedDocumentsGenerateByAssembly",
                         typeof(Corti.GuidedDocumentsGenerateByAssembly)

@@ -27,7 +27,7 @@ public record GuidedSectionOverrides : IJsonOnDeserialized
     /// When provided, fully replaces the parent's output schema.
     /// </summary>
     [JsonPropertyName("outputSchema")]
-    public OutputSchema? OutputSchema { get; set; }
+    public GuidedOutputSchema? OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

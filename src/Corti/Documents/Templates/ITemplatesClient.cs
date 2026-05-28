@@ -11,12 +11,22 @@ public partial interface ITemplatesClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Creates a new template with an initial version. When `publish` is true (default),
+    /// the response includes the published version with full inheritance resolution applied
+    /// (template-level and section-level inheritance walked).
+    /// </summary>
     WithRawResponseTask<GuidedTemplate> CreateAsync(
         GuidedTemplatesCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Returns the template with its published version fully resolved (inheritance walked,
+    /// sections expanded with their own inheritance applied). To see raw authored
+    /// values without inheritance, use GET /documents/templates/{templateID}/versions/{versionID}.
+    /// </summary>
     WithRawResponseTask<GuidedTemplate> GetAsync(
         string templateId,
         RequestOptions? options = null,

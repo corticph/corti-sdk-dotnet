@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record ArrayNode : IJsonOnDeserialized
+public record GuidedNumberNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record ArrayNode : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public ArrayNode.TypeLiteral Type { get;
+    public GuidedNumberNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -27,26 +27,29 @@ public record ArrayNode : IJsonOnDeserialized
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
-    [JsonPropertyName("items")]
-    public required OutputSchema Items { get; set; }
+    /// <summary>
+    /// The default to output if nothing to output.
+    /// </summary>
+    [JsonPropertyName("default")]
+    public double? Default { get; set; }
 
     /// <summary>
-    /// Controls how each array item is rendered in the generated output. Use `bullet` (default), `numbered`, or `plain`, or provide a custom format string containing the `{item}` placeholder.
+    /// Can be used to prompt the LLM for specifically allowed numeric values to output.
     /// </summary>
-    [JsonPropertyName("itemFormat")]
-    public string? ItemFormat { get; set; }
+    [JsonPropertyName("enum")]
+    public IEnumerable<double>? Enum { get; set; }
 
     /// <summary>
-    /// Minimum number of array items to generate.
+    /// Use if a minimum value applies.
     /// </summary>
-    [JsonPropertyName("minItems")]
-    public int? MinItems { get; set; }
+    [JsonPropertyName("minimum")]
+    public double? Minimum { get; set; }
 
     /// <summary>
-    /// Maximum number of array items to generate.
+    /// Use if a maximum value applies.
     /// </summary>
-    [JsonPropertyName("maxItems")]
-    public int? MaxItems { get; set; }
+    [JsonPropertyName("maximum")]
+    public double? Maximum { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -63,7 +66,7 @@ public record ArrayNode : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "array";
+        public const string Value = "number";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

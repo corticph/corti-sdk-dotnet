@@ -69,10 +69,10 @@ public record GuidedSection : IJsonOnDeserialized
     /// The labels available to use as query param filter in the LIST /sections endpoint.
     /// </summary>
     [JsonPropertyName("labels")]
-    public IEnumerable<Label> Labels { get; set; } = new List<Label>();
+    public IEnumerable<GuidedLabel> Labels { get; set; } = new List<GuidedLabel>();
 
     /// <summary>
-    /// Shows the currently published version of this section.
+    /// The currently published version with section inheritance fully resolved. Present when a version has been published.
     /// </summary>
     [JsonPropertyName("publishedVersion")]
     public GuidedSectionVersion? PublishedVersion { get; set; }
@@ -94,6 +94,12 @@ public record GuidedSection : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("deletedAt")]
     public DateTime? DeletedAt { get; set; }
+
+    /// <summary>
+    /// Access policies for this section.
+    /// </summary>
+    [JsonPropertyName("policies")]
+    public IEnumerable<GuidedSectionPolicy>? Policies { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

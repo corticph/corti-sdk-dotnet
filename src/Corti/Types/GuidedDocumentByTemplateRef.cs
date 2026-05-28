@@ -8,7 +8,7 @@ namespace Corti;
 /// Generate a document using a stored template. Optionally supply runtime overrides to patch instructions or sections without mutating the base template. At least one of `context` or `interactionId` must be supplied as input context for the model.
 /// </summary>
 [Serializable]
-public record GuidedDocumentsGenerateByTemplateRef : IJsonOnDeserialized
+public record GuidedDocumentByTemplateRef : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -33,7 +33,7 @@ public record GuidedDocumentsGenerateByTemplateRef : IJsonOnDeserialized
     public IEnumerable<GuidedDocumentContext>? Context { get; set; }
 
     /// <summary>
-    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context.
+    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context. Facts with `isDiscarded: true` are not passed on.
     /// </summary>
     [JsonPropertyName("interactionId")]
     public string? InteractionId { get; set; }

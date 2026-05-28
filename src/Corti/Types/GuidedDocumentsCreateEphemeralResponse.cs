@@ -15,7 +15,7 @@ public record GuidedDocumentsCreateEphemeralResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("document")]
-    public required EphemeralDocument Document { get; set; }
+    public required GuidedEphemeralDocument Document { get; set; }
 
     [JsonPropertyName("usageInfo")]
     public required CommonUsageInfo UsageInfo { get; set; }

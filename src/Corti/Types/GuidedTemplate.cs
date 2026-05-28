@@ -48,7 +48,7 @@ public record GuidedTemplate : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// BCP 47 language subtags this template has been tweaked for (e.g. `["fr", "de"]`). Empty means no language-specific tweaks.
+    /// BCP 47 language tags this template has been tweaked for (e.g. `["fr", "de", "en-GB"]`). Empty means no language-specific tweaks.
     /// </summary>
     [JsonPropertyName("languages")]
     public IEnumerable<string> Languages { get; set; } = new List<string>();
@@ -69,7 +69,7 @@ public record GuidedTemplate : IJsonOnDeserialized
     /// The available labels to use as query param filter in the LIST /templates endpoint.
     /// </summary>
     [JsonPropertyName("labels")]
-    public IEnumerable<Label> Labels { get; set; } = new List<Label>();
+    public IEnumerable<GuidedLabel> Labels { get; set; } = new List<GuidedLabel>();
 
     /// <summary>
     /// Access policies for this template.
@@ -77,6 +77,9 @@ public record GuidedTemplate : IJsonOnDeserialized
     [JsonPropertyName("policies")]
     public IEnumerable<GuidedTemplatePolicy>? Policies { get; set; }
 
+    /// <summary>
+    /// The currently published version with inheritance fully resolved. Present when a version has been published.
+    /// </summary>
     [JsonPropertyName("publishedVersion")]
     public GuidedTemplateVersion? PublishedVersion { get; set; }
 

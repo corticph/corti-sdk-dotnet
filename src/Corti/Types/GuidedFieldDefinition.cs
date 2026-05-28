@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record FieldDefinition : IJsonOnDeserialized
+public record GuidedFieldDefinition : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -24,7 +24,7 @@ public record FieldDefinition : IJsonOnDeserialized
     public required string Description { get; set; }
 
     [JsonPropertyName("value")]
-    public required OutputSchema Value { get; set; }
+    public required GuidedOutputSchema Value { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

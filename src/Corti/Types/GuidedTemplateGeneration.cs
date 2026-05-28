@@ -4,6 +4,9 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Fully resolved template generation. Sections are expanded with their own inheritance applied.
+/// </summary>
 [Serializable]
 public record GuidedTemplateGeneration : IJsonOnDeserialized
 {
@@ -15,7 +18,7 @@ public record GuidedTemplateGeneration : IJsonOnDeserialized
     public required GuidedTemplateInstructions Instructions { get; set; }
 
     /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
+    /// Fully resolved sections with inheritance applied.
     /// </summary>
     [JsonPropertyName("sections")]
     public IEnumerable<GuidedSection>? Sections { get; set; }

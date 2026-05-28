@@ -4,8 +4,11 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// A single fact provided as input context to the model.
+/// </summary>
 [Serializable]
-public record ObjectNode : IJsonOnDeserialized
+public record CommonFactsContext : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +16,7 @@ public record ObjectNode : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public ObjectNode.TypeLiteral Type { get;
+    public CommonFactsContext.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -21,29 +24,8 @@ public record ObjectNode : IJsonOnDeserialized
 #endif
     } = new();
 
-    /// <summary>
-    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
-    /// </summary>
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    /// <summary>
-    /// Controls how subheadings are rendered in the generated output. Use `inline` (default) for `{key}: {value}\n` or `block` for `{key}\n{value}\n`, or provide a custom format string containing both `{key}` and `{value}` placeholders. Mutually exclusive with `objectFormat`.
-    /// </summary>
-    [JsonPropertyName("subheadingFormat")]
-    public string? SubheadingFormat { get; set; }
-
-    /// <summary>
-    /// A format string referencing field keys as placeholders (e.g. `{fieldKey}`). All placeholders must correspond to defined field keys. Mutually exclusive with `subheadingFormat`.
-    /// </summary>
-    [JsonPropertyName("objectFormat")]
-    public string? ObjectFormat { get; set; }
-
-    /// <summary>
-    /// Define what fields are possible to return in the object.
-    /// </summary>
-    [JsonPropertyName("fields")]
-    public IEnumerable<FieldDefinition>? Fields { get; set; }
+    [JsonPropertyName("fact")]
+    public required GuidedDocumentFactMinimal Fact { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -60,7 +42,7 @@ public record ObjectNode : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "object";
+        public const string Value = "facts";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

@@ -5,17 +5,23 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record Label : IJsonOnDeserialized
+public record GuidedTemplateVersionSectionRef : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("key")]
-    public required string Key { get; set; }
+    /// <summary>
+    /// The UUID of the section linked to this template version.
+    /// </summary>
+    [JsonPropertyName("sectionId")]
+    public required string SectionId { get; set; }
 
-    [JsonPropertyName("value")]
-    public required string Value { get; set; }
+    /// <summary>
+    /// The ordering position of the section within the template version.
+    /// </summary>
+    [JsonPropertyName("orderIndex")]
+    public required int OrderIndex { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

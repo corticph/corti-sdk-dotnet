@@ -11,12 +11,22 @@ public partial interface ISectionsClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Creates a new section with an initial version. When `publish` is true (default),
+    /// the response includes the published version with full inheritance resolution applied
+    /// (section inheritance chain walked to fill missing fields).
+    /// </summary>
     WithRawResponseTask<GuidedSection> CreateAsync(
         GuidedSectionsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Returns the section with its published version fully resolved (inheritance chain walked
+    /// to fill missing fields). To see raw authored values without inheritance, use
+    /// GET /documents/sections/{sectionID}/versions/{versionID}.
+    /// </summary>
     WithRawResponseTask<GuidedSection> GetAsync(
         string sectionId,
         RequestOptions? options = null,

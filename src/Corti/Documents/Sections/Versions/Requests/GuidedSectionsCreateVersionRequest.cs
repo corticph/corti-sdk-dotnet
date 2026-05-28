@@ -8,7 +8,7 @@ namespace Corti.Documents.Sections;
 public record GuidedSectionsCreateVersionRequest
 {
     [JsonPropertyName("generation")]
-    public required GuidedSectionGeneration Generation { get; set; }
+    public required GuidedSectionGenerationPartial Generation { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

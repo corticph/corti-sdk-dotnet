@@ -397,6 +397,11 @@ public partial class SectionsClient : ISectionsClient
         );
     }
 
+    /// <summary>
+    /// Creates a new section with an initial version. When `publish` is true (default),
+    /// the response includes the published version with full inheritance resolution applied
+    /// (section inheritance chain walked to fill missing fields).
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.CreateAsync(
     ///     new GuidedSectionsCreateFromScratchRequest
@@ -406,7 +411,7 @@ public partial class SectionsClient : ISectionsClient
     ///         {
     ///             Heading = "heading",
     ///             Instructions = new GuidedSectionInstructions { ContentPrompt = "contentPrompt" },
-    ///             OutputSchema = new StringNode { Type = "string" },
+    ///             OutputSchema = new GuidedStringNode { Type = "string" },
     ///         },
     ///     }
     /// );
@@ -422,6 +427,11 @@ public partial class SectionsClient : ISectionsClient
         );
     }
 
+    /// <summary>
+    /// Returns the section with its published version fully resolved (inheritance chain walked
+    /// to fill missing fields). To see raw authored values without inheritance, use
+    /// GET /documents/sections/{sectionID}/versions/{versionID}.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.GetAsync("sectionID");
     /// </code></example>

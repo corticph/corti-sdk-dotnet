@@ -30,7 +30,7 @@ public record GuidedSectionsCreateFromScratchRequest : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// BCP 47 language subtags this section has been tweaked for.
+    /// BCP 47 language tags this section has been tweaked for.
     /// </summary>
     [JsonPropertyName("languages")]
     public IEnumerable<string>? Languages { get; set; }
@@ -51,13 +51,19 @@ public record GuidedSectionsCreateFromScratchRequest : IJsonOnDeserialized
     /// Labels work as query param filter in the LIST /sections endpoint.
     /// </summary>
     [JsonPropertyName("labels")]
-    public IEnumerable<Label>? Labels { get; set; }
+    public IEnumerable<GuidedLabel>? Labels { get; set; }
 
     /// <summary>
     /// Defaults to true when omitted. Set this to false if you do not want the section to automatically show up in LIST /sections.
     /// </summary>
     [JsonPropertyName("publish")]
     public bool? Publish { get; set; }
+
+    /// <summary>
+    /// Access policies to apply to the section on creation.
+    /// </summary>
+    [JsonPropertyName("policies")]
+    public IEnumerable<GuidedSectionsCreatePolicyRequest>? Policies { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

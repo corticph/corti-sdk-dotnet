@@ -21,7 +21,7 @@ public partial class VersionsClient : IVersionsClient
         }
     }
 
-    private async Task<WithRawResponse<IEnumerable<GuidedTemplateVersion>>> ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<GuidedShallowTemplateVersion>>> ListAsyncCore(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -60,9 +60,9 @@ public partial class VersionsClient : IVersionsClient
                     try
                     {
                         var responseData = JsonUtils.Deserialize<
-                            IEnumerable<GuidedTemplateVersion>
+                            IEnumerable<GuidedShallowTemplateVersion>
                         >(responseBody)!;
-                        return new WithRawResponse<IEnumerable<GuidedTemplateVersion>>()
+                        return new WithRawResponse<IEnumerable<GuidedShallowTemplateVersion>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -113,7 +113,7 @@ public partial class VersionsClient : IVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<GuidedTemplateVersion>> CreateAsyncCore(
+    private async Task<WithRawResponse<GuidedShallowTemplateVersion>> CreateAsyncCore(
         string templateId,
         GuidedTemplatesCreateVersionRequest request,
         RequestOptions? options = null,
@@ -154,10 +154,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<GuidedTemplateVersion>(
+                        var responseData = JsonUtils.Deserialize<GuidedShallowTemplateVersion>(
                             responseBody
                         )!;
-                        return new WithRawResponse<GuidedTemplateVersion>()
+                        return new WithRawResponse<GuidedShallowTemplateVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -212,7 +212,7 @@ public partial class VersionsClient : IVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<GuidedTemplateVersion>> GetAsyncCore(
+    private async Task<WithRawResponse<GuidedShallowTemplateVersion>> GetAsyncCore(
         string templateId,
         string versionId,
         RequestOptions? options = null,
@@ -252,10 +252,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<GuidedTemplateVersion>(
+                        var responseData = JsonUtils.Deserialize<GuidedShallowTemplateVersion>(
                             responseBody
                         )!;
-                        return new WithRawResponse<GuidedTemplateVersion>()
+                        return new WithRawResponse<GuidedShallowTemplateVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -403,37 +403,37 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Templates.Versions.ListAsync("templateID");
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<GuidedTemplateVersion>> ListAsync(
+    public WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersion>> ListAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<GuidedTemplateVersion>>(
+        return new WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersion>>(
             ListAsyncCore(templateId, options, cancellationToken)
         );
     }
 
+    /// <summary>
+    /// Creates a new template version. Returns raw authored values without inheritance resolution or section expansion.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.Versions.CreateAsync(
     ///     "templateID",
     ///     new GuidedTemplatesCreateVersionRequest
     ///     {
-    ///         Generation = new GuidedTemplatesCreateVersionRequestGeneration
-    ///         {
-    ///             Instructions = new GuidedTemplateInstructions { Prompt = "prompt" },
-    ///         },
+    ///         Generation = new GuidedTemplatesCreateVersionRequestGeneration(),
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<GuidedTemplateVersion> CreateAsync(
+    public WithRawResponseTask<GuidedShallowTemplateVersion> CreateAsync(
         string templateId,
         GuidedTemplatesCreateVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<GuidedTemplateVersion>(
+        return new WithRawResponseTask<GuidedShallowTemplateVersion>(
             CreateAsyncCore(templateId, request, options, cancellationToken)
         );
     }
@@ -441,14 +441,14 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Templates.Versions.GetAsync("templateID", "versionID");
     /// </code></example>
-    public WithRawResponseTask<GuidedTemplateVersion> GetAsync(
+    public WithRawResponseTask<GuidedShallowTemplateVersion> GetAsync(
         string templateId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<GuidedTemplateVersion>(
+        return new WithRawResponseTask<GuidedShallowTemplateVersion>(
             GetAsyncCore(templateId, versionId, options, cancellationToken)
         );
     }

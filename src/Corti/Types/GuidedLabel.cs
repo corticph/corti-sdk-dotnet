@@ -5,20 +5,17 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record GuidedTemplatesCreatePolicyRequest : IJsonOnDeserialized
+public record GuidedLabel : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("kind")]
-    public required GuidedTemplatePolicyKind Kind { get; set; }
+    [JsonPropertyName("key")]
+    public required string Key { get; set; }
 
-    /// <summary>
-    /// Required when `kind` is `customers`. List of customer tenant identifiers that should have access.
-    /// </summary>
-    [JsonPropertyName("customerIds")]
-    public IEnumerable<string>? CustomerIds { get; set; }
+    [JsonPropertyName("value")]
+    public required string Value { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

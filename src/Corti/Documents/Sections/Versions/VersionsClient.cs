@@ -400,6 +400,9 @@ public partial class VersionsClient : IVersionsClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Returns raw authored section versions without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.Versions.ListAsync("sectionID");
     /// </code></example>
@@ -414,18 +417,13 @@ public partial class VersionsClient : IVersionsClient
         );
     }
 
+    /// <summary>
+    /// Creates a new section version. Returns raw authored values without inheritance resolution.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.Versions.CreateAsync(
     ///     "sectionID",
-    ///     new GuidedSectionsCreateVersionRequest
-    ///     {
-    ///         Generation = new GuidedSectionGeneration
-    ///         {
-    ///             Heading = "heading",
-    ///             Instructions = new GuidedSectionInstructions { ContentPrompt = "contentPrompt" },
-    ///             OutputSchema = new StringNode { Type = "string" },
-    ///         },
-    ///     }
+    ///     new GuidedSectionsCreateVersionRequest { Generation = new GuidedSectionGenerationPartial() }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedSectionVersion> CreateAsync(
@@ -440,6 +438,9 @@ public partial class VersionsClient : IVersionsClient
         );
     }
 
+    /// <summary>
+    /// Returns raw authored section version without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.Versions.GetAsync("sectionID", "versionID");
     /// </code></example>

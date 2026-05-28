@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record GuidedTemplatePolicy : IJsonOnDeserialized
+public record GuidedSectionPolicy : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -27,10 +27,10 @@ public record GuidedTemplatePolicy : IJsonOnDeserialized
     public IEnumerable<string>? CustomerIds { get; set; }
 
     /// <summary>
-    /// The UUID of the template this policy belongs to.
+    /// The UUID of the section this policy belongs to.
     /// </summary>
-    [JsonPropertyName("templateId")]
-    public required string TemplateId { get; set; }
+    [JsonPropertyName("sectionId")]
+    public required string SectionId { get; set; }
 
     /// <summary>
     /// The UUID of the user who created this policy.

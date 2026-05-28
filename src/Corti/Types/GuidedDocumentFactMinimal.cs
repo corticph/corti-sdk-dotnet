@@ -20,6 +20,12 @@ public record GuidedDocumentFactMinimal : IJsonOnDeserialized
     [JsonPropertyName("text")]
     public required string Text { get; set; }
 
+    /// <summary>
+    /// The group to which the fact belongs.
+    /// </summary>
+    [JsonPropertyName("group")]
+    public string? Group { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

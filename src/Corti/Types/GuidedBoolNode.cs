@@ -4,11 +4,8 @@ using Corti.Core;
 
 namespace Corti;
 
-/// <summary>
-/// A transcript provided as input context to the model.
-/// </summary>
 [Serializable]
-public record ContextTranscript : IJsonOnDeserialized
+public record GuidedBoolNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -16,7 +13,7 @@ public record ContextTranscript : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public ContextTranscript.TypeLiteral Type { get;
+    public GuidedBoolNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -24,8 +21,17 @@ public record ContextTranscript : IJsonOnDeserialized
 #endif
     } = new();
 
-    [JsonPropertyName("transcript")]
-    public required GuidedDocumentTranscriptMinimal Transcript { get; set; }
+    /// <summary>
+    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
+    /// </summary>
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// The default to output if nothing to output.
+    /// </summary>
+    [JsonPropertyName("default")]
+    public bool? Default { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -42,7 +48,7 @@ public record ContextTranscript : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "transcript";
+        public const string Value = "boolean";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

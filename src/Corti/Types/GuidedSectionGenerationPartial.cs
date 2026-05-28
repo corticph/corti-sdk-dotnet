@@ -30,7 +30,7 @@ public record GuidedSectionGenerationPartial : IJsonOnDeserialized
     /// Override the inherited output schema.
     /// </summary>
     [JsonPropertyName("outputSchema")]
-    public OutputSchema? OutputSchema { get; set; }
+    public GuidedOutputSchema? OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

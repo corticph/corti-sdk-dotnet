@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record GuidedTemplatesCreatePolicyRequest : IJsonOnDeserialized
+public record GuidedSectionsCreatePolicyRequest : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

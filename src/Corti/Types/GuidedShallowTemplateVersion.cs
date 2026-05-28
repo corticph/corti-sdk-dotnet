@@ -5,12 +5,13 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Template version with fully resolved (inherited) values. Template-level and section-level
-/// inheritance chains are walked. Used in Template.publishedVersion
-/// on resource-level endpoints (GET/POST template).
+/// Template version with raw authored values — no inheritance resolution applied.
+/// Sections are returned as references (IDs), not fully resolved objects.
+/// Use this to inspect what was explicitly set on this version versus inherited.
+/// Returned by GET, LIST, and POST version endpoints.
 /// </summary>
 [Serializable]
-public record GuidedTemplateVersion : IJsonOnDeserialized
+public record GuidedShallowTemplateVersion : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -35,7 +36,7 @@ public record GuidedTemplateVersion : IJsonOnDeserialized
     public DateTime? DeletedAt { get; set; }
 
     [JsonPropertyName("generation")]
-    public required GuidedTemplateGeneration Generation { get; set; }
+    public required GuidedShallowTemplateGeneration Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

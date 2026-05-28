@@ -8,7 +8,7 @@ namespace Corti;
 /// A generated document that was not saved to the database.
 /// </summary>
 [Serializable]
-public record EphemeralDocument : IJsonOnDeserialized
+public record GuidedEphemeralDocument : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
