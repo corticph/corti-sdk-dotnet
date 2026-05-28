@@ -44,6 +44,9 @@ public record TranscribeConfig : IJsonOnDeserialized
     [JsonPropertyName("formatting")]
     public TranscribeFormatting? Formatting { get; set; }
 
+    [JsonPropertyName("audioEvents")]
+    public TranscribeAudioEventsConfig? AudioEvents { get; set; }
+
     /// <summary>
     /// The audio format of the incoming audio stream
     /// </summary>
