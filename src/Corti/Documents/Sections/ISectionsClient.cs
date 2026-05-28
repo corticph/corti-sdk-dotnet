@@ -5,19 +5,19 @@ namespace Corti.Documents;
 public partial interface ISectionsClient
 {
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
-    WithRawResponseTask<IEnumerable<Section>> ListAsync(
+    WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
         ListSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Section> CreateAsync(
+    WithRawResponseTask<GuidedSection> CreateAsync(
         GuidedSectionsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Section> GetAsync(
+    WithRawResponseTask<GuidedSection> GetAsync(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -32,7 +32,7 @@ public partial interface ISectionsClient
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Section> UpdateAsync(
+    WithRawResponseTask<GuidedSection> UpdateAsync(
         string sectionId,
         GuidedSectionsUpdateRequest request,
         RequestOptions? options = null,

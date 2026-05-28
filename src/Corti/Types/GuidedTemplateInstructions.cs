@@ -5,20 +5,17 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record GuidedTemplateInstructions : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
-
     /// <summary>
-    /// Populated only on GET /documents/templates/{templateID}/versions/{versionID}; omitted from list responses.
+    /// Template-level prompt instructions that apply generally to all sections.
     /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("prompt")]
+    public required string Prompt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

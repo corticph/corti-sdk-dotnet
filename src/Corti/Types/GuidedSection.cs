@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record Section : IJsonOnDeserialized
+public record GuidedSection : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -33,7 +33,7 @@ public record Section : IJsonOnDeserialized
     /// Whether this section was created by the user or from the Corti standard resources.
     /// </summary>
     [JsonPropertyName("source")]
-    public SectionSource? Source { get; set; }
+    public GuidedSectionSource? Source { get; set; }
 
     /// <summary>
     /// The name of the section.
@@ -75,7 +75,7 @@ public record Section : IJsonOnDeserialized
     /// Shows the currently published version of this section.
     /// </summary>
     [JsonPropertyName("publishedVersion")]
-    public SectionVersion? PublishedVersion { get; set; }
+    public GuidedSectionVersion? PublishedVersion { get; set; }
 
     /// <summary>
     /// The original timestamp when the section was created.

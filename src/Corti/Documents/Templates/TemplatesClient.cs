@@ -24,7 +24,7 @@ public partial class TemplatesClient : ITemplatesClient
 
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
 
-    private async Task<WithRawResponse<IEnumerable<Template>>> ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<GuidedTemplate>>> ListAsyncCore(
         ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -68,10 +68,10 @@ public partial class TemplatesClient : ITemplatesClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<Template>>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<GuidedTemplate>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<IEnumerable<Template>>()
+                        return new WithRawResponse<IEnumerable<GuidedTemplate>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -108,7 +108,7 @@ public partial class TemplatesClient : ITemplatesClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Template>> CreateAsyncCore(
+    private async Task<WithRawResponse<GuidedTemplate>> CreateAsyncCore(
         GuidedTemplatesCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -144,8 +144,8 @@ public partial class TemplatesClient : ITemplatesClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Template>(responseBody)!;
-                        return new WithRawResponse<Template>()
+                        var responseData = JsonUtils.Deserialize<GuidedTemplate>(responseBody)!;
+                        return new WithRawResponse<GuidedTemplate>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -196,7 +196,7 @@ public partial class TemplatesClient : ITemplatesClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Template>> GetAsyncCore(
+    private async Task<WithRawResponse<GuidedTemplate>> GetAsyncCore(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -234,8 +234,8 @@ public partial class TemplatesClient : ITemplatesClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Template>(responseBody)!;
-                        return new WithRawResponse<Template>()
+                        var responseData = JsonUtils.Deserialize<GuidedTemplate>(responseBody)!;
+                        return new WithRawResponse<GuidedTemplate>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -286,7 +286,7 @@ public partial class TemplatesClient : ITemplatesClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Template>> UpdateAsyncCore(
+    private async Task<WithRawResponse<GuidedTemplate>> UpdateAsyncCore(
         string templateId,
         GuidedTemplatesUpdateRequest request,
         RequestOptions? options = null,
@@ -327,8 +327,8 @@ public partial class TemplatesClient : ITemplatesClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Template>(responseBody)!;
-                        return new WithRawResponse<Template>()
+                        var responseData = JsonUtils.Deserialize<GuidedTemplate>(responseBody)!;
+                        return new WithRawResponse<GuidedTemplate>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -386,13 +386,13 @@ public partial class TemplatesClient : ITemplatesClient
     /// <example><code>
     /// await client.Documents.Templates.ListAsync(new Corti.Documents.ListTemplatesRequest());
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<Template>> ListAsync(
+    public WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
         ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<Template>>(
+        return new WithRawResponseTask<IEnumerable<GuidedTemplate>>(
             ListAsyncCore(request, options, cancellationToken)
         );
     }
@@ -404,18 +404,18 @@ public partial class TemplatesClient : ITemplatesClient
     ///         Name = "name",
     ///         Generation = new GuidedTemplatesCreateFromScratchRequestGeneration
     ///         {
-    ///             Instructions = new TemplateInstructions { Prompt = "prompt" },
+    ///             Instructions = new GuidedTemplateInstructions { Prompt = "prompt" },
     ///         },
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<Template> CreateAsync(
+    public WithRawResponseTask<GuidedTemplate> CreateAsync(
         GuidedTemplatesCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Template>(
+        return new WithRawResponseTask<GuidedTemplate>(
             CreateAsyncCore(request, options, cancellationToken)
         );
     }
@@ -423,13 +423,13 @@ public partial class TemplatesClient : ITemplatesClient
     /// <example><code>
     /// await client.Documents.Templates.GetAsync("templateID");
     /// </code></example>
-    public WithRawResponseTask<Template> GetAsync(
+    public WithRawResponseTask<GuidedTemplate> GetAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Template>(
+        return new WithRawResponseTask<GuidedTemplate>(
             GetAsyncCore(templateId, options, cancellationToken)
         );
     }
@@ -510,14 +510,14 @@ public partial class TemplatesClient : ITemplatesClient
     /// <example><code>
     /// await client.Documents.Templates.UpdateAsync("templateID", new GuidedTemplatesUpdateRequest());
     /// </code></example>
-    public WithRawResponseTask<Template> UpdateAsync(
+    public WithRawResponseTask<GuidedTemplate> UpdateAsync(
         string templateId,
         GuidedTemplatesUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Template>(
+        return new WithRawResponseTask<GuidedTemplate>(
             UpdateAsyncCore(templateId, request, options, cancellationToken)
         );
     }

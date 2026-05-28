@@ -24,7 +24,7 @@ public partial class SectionsClient : ISectionsClient
 
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
 
-    private async Task<WithRawResponse<IEnumerable<Section>>> ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<GuidedSection>>> ListAsyncCore(
         ListSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -68,10 +68,10 @@ public partial class SectionsClient : ISectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<Section>>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<GuidedSection>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<IEnumerable<Section>>()
+                        return new WithRawResponse<IEnumerable<GuidedSection>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -108,7 +108,7 @@ public partial class SectionsClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Section>> CreateAsyncCore(
+    private async Task<WithRawResponse<GuidedSection>> CreateAsyncCore(
         GuidedSectionsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -144,8 +144,8 @@ public partial class SectionsClient : ISectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
-                        return new WithRawResponse<Section>()
+                        var responseData = JsonUtils.Deserialize<GuidedSection>(responseBody)!;
+                        return new WithRawResponse<GuidedSection>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -196,7 +196,7 @@ public partial class SectionsClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Section>> GetAsyncCore(
+    private async Task<WithRawResponse<GuidedSection>> GetAsyncCore(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -234,8 +234,8 @@ public partial class SectionsClient : ISectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
-                        return new WithRawResponse<Section>()
+                        var responseData = JsonUtils.Deserialize<GuidedSection>(responseBody)!;
+                        return new WithRawResponse<GuidedSection>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -286,7 +286,7 @@ public partial class SectionsClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<Section>> UpdateAsyncCore(
+    private async Task<WithRawResponse<GuidedSection>> UpdateAsyncCore(
         string sectionId,
         GuidedSectionsUpdateRequest request,
         RequestOptions? options = null,
@@ -327,8 +327,8 @@ public partial class SectionsClient : ISectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<Section>(responseBody)!;
-                        return new WithRawResponse<Section>()
+                        var responseData = JsonUtils.Deserialize<GuidedSection>(responseBody)!;
+                        return new WithRawResponse<GuidedSection>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -386,13 +386,13 @@ public partial class SectionsClient : ISectionsClient
     /// <example><code>
     /// await client.Documents.Sections.ListAsync(new ListSectionsRequest());
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<Section>> ListAsync(
+    public WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
         ListSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<Section>>(
+        return new WithRawResponseTask<IEnumerable<GuidedSection>>(
             ListAsyncCore(request, options, cancellationToken)
         );
     }
@@ -402,22 +402,22 @@ public partial class SectionsClient : ISectionsClient
     ///     new GuidedSectionsCreateFromScratchRequest
     ///     {
     ///         Name = "name",
-    ///         Generation = new SectionGeneration
+    ///         Generation = new GuidedSectionGeneration
     ///         {
     ///             Heading = "heading",
-    ///             Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
+    ///             Instructions = new GuidedSectionInstructions { ContentPrompt = "contentPrompt" },
     ///             OutputSchema = new StringNode { Type = "string" },
     ///         },
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<Section> CreateAsync(
+    public WithRawResponseTask<GuidedSection> CreateAsync(
         GuidedSectionsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Section>(
+        return new WithRawResponseTask<GuidedSection>(
             CreateAsyncCore(request, options, cancellationToken)
         );
     }
@@ -425,13 +425,13 @@ public partial class SectionsClient : ISectionsClient
     /// <example><code>
     /// await client.Documents.Sections.GetAsync("sectionID");
     /// </code></example>
-    public WithRawResponseTask<Section> GetAsync(
+    public WithRawResponseTask<GuidedSection> GetAsync(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Section>(
+        return new WithRawResponseTask<GuidedSection>(
             GetAsyncCore(sectionId, options, cancellationToken)
         );
     }
@@ -512,14 +512,14 @@ public partial class SectionsClient : ISectionsClient
     /// <example><code>
     /// await client.Documents.Sections.UpdateAsync("sectionID", new GuidedSectionsUpdateRequest());
     /// </code></example>
-    public WithRawResponseTask<Section> UpdateAsync(
+    public WithRawResponseTask<GuidedSection> UpdateAsync(
         string sectionId,
         GuidedSectionsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Section>(
+        return new WithRawResponseTask<GuidedSection>(
             UpdateAsyncCore(sectionId, request, options, cancellationToken)
         );
     }

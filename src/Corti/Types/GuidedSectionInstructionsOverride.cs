@@ -8,7 +8,7 @@ namespace Corti;
 /// Partial section-instructions patch used in override and fork contexts. Each field is independent: provide only the fields you want to replace, and any field you omit is inherited from the parent's published version.
 /// </summary>
 [Serializable]
-public record SectionInstructionsOverride : IJsonOnDeserialized
+public record GuidedSectionInstructionsOverride : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

@@ -4,20 +4,20 @@ namespace Corti.Documents.Templates;
 
 public partial interface IVersionsClient
 {
-    WithRawResponseTask<IEnumerable<TemplateVersion>> ListAsync(
+    WithRawResponseTask<IEnumerable<GuidedTemplateVersion>> ListAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<TemplateVersion> CreateAsync(
+    WithRawResponseTask<GuidedTemplateVersion> CreateAsync(
         string templateId,
         GuidedTemplatesCreateVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<TemplateVersion> GetAsync(
+    WithRawResponseTask<GuidedTemplateVersion> GetAsync(
         string templateId,
         string versionId,
         RequestOptions? options = null,

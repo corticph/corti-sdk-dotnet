@@ -4,33 +4,33 @@ using Corti.Core;
 
 namespace Corti;
 
-/// <summary>
-/// Partial form of SectionGeneration used when inheriting from another section. Any field omitted is inherited from the referenced section.
-/// </summary>
 [Serializable]
-public record SectionGenerationPartial : IJsonOnDeserialized
+public record GuidedSectionVersion : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Override the inherited section title. Passed to the LLM.
+    /// The UUID of the section version.
     /// </summary>
-    [JsonPropertyName("heading")]
-    public string? Heading { get; set; }
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
 
     /// <summary>
-    /// Override the inherited prompt instructions for this section. Any field omitted is inherited.
+    /// Starts at 0 and auto-increments.
     /// </summary>
-    [JsonPropertyName("instructions")]
-    public SectionInstructionsPartial? Instructions { get; set; }
+    [JsonPropertyName("versionNumber")]
+    public required int VersionNumber { get; set; }
 
     /// <summary>
-    /// Override the inherited output schema.
+    /// Present when the section version has been deleted.
     /// </summary>
-    [JsonPropertyName("outputSchema")]
-    public OutputSchema? OutputSchema { get; set; }
+    [JsonPropertyName("deletedAt")]
+    public DateTime? DeletedAt { get; set; }
+
+    [JsonPropertyName("generation")]
+    public required GuidedSectionGeneration Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

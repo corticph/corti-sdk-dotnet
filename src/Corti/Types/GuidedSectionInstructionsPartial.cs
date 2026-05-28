@@ -4,33 +4,33 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Partial form of SectionInstructions used when inheriting from another section. Any field omitted is inherited.
+/// </summary>
 [Serializable]
-public record TemplateVersion : IJsonOnDeserialized
+public record GuidedSectionInstructionsPartial : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The UUID of the version.
+    /// Override the inherited content prompt.
     /// </summary>
-    [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    [JsonPropertyName("contentPrompt")]
+    public string? ContentPrompt { get; set; }
 
     /// <summary>
-    /// Starts at 0 and auto-increments.
+    /// Override the inherited writing style prompt.
     /// </summary>
-    [JsonPropertyName("versionNumber")]
-    public required int VersionNumber { get; set; }
+    [JsonPropertyName("writingStylePrompt")]
+    public string? WritingStylePrompt { get; set; }
 
     /// <summary>
-    /// Present when the template version has been deleted.
+    /// Override the inherited misc prompt.
     /// </summary>
-    [JsonPropertyName("deletedAt")]
-    public DateTime? DeletedAt { get; set; }
-
-    [JsonPropertyName("generation")]
-    public required TemplateGeneration Generation { get; set; }
+    [JsonPropertyName("miscPrompt")]
+    public string? MiscPrompt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

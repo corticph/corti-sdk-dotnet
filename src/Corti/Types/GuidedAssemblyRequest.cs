@@ -24,7 +24,7 @@ public record GuidedAssemblyRequest : IJsonOnDeserialized
     /// Template-level instructions for the assembled template.
     /// </summary>
     [JsonPropertyName("instructions")]
-    public TemplateInstructions? Instructions { get; set; }
+    public GuidedTemplateInstructions? Instructions { get; set; }
 
     [JsonPropertyName("sectionRefs")]
     public IEnumerable<GuidedAssemblySectionRef> SectionRefs { get; set; } =

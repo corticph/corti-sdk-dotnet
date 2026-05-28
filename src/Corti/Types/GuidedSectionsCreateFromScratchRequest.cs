@@ -15,7 +15,7 @@ public record GuidedSectionsCreateFromScratchRequest : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("generation")]
-    public required SectionGeneration Generation { get; set; }
+    public required GuidedSectionGeneration Generation { get; set; }
 
     /// <summary>
     /// A human-readable identifier for this section. Not passed to the LLM.

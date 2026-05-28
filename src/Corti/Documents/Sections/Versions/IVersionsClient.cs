@@ -4,20 +4,20 @@ namespace Corti.Documents.Sections;
 
 public partial interface IVersionsClient
 {
-    WithRawResponseTask<IEnumerable<SectionVersion>> ListAsync(
+    WithRawResponseTask<IEnumerable<GuidedSectionVersion>> ListAsync(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<SectionVersion> CreateAsync(
+    WithRawResponseTask<GuidedSectionVersion> CreateAsync(
         string sectionId,
         GuidedSectionsCreateVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<SectionVersion> GetAsync(
+    WithRawResponseTask<GuidedSectionVersion> GetAsync(
         string sectionId,
         string versionId,
         RequestOptions? options = null,

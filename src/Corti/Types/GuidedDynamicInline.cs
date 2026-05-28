@@ -12,10 +12,11 @@ public record GuidedDynamicInline : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    public required GuidedTemplateInstructions Instructions { get; set; }
 
     [JsonPropertyName("sections")]
-    public IEnumerable<SectionGeneration> Sections { get; set; } = new List<SectionGeneration>();
+    public IEnumerable<GuidedSectionGeneration> Sections { get; set; } =
+        new List<GuidedSectionGeneration>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -8,7 +8,7 @@ namespace Corti;
 /// Patches a section's content at link time without mutating the underlying section. Override semantics are per-field for instructions (any field you omit is inherited from the parent's published version) and wholesale for `outputSchema` (whatever you submit fully replaces the parent schema). The same applies when a section is forked via `inheritFromId`.
 /// </summary>
 [Serializable]
-public record SectionOverrides : IJsonOnDeserialized
+public record GuidedSectionOverrides : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -21,7 +21,7 @@ public record SectionOverrides : IJsonOnDeserialized
     public string? Heading { get; set; }
 
     [JsonPropertyName("instructions")]
-    public SectionInstructionsOverride? Instructions { get; set; }
+    public GuidedSectionInstructionsOverride? Instructions { get; set; }
 
     /// <summary>
     /// When provided, fully replaces the parent's output schema.

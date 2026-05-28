@@ -21,7 +21,7 @@ public partial class VersionsClient : IVersionsClient
         }
     }
 
-    private async Task<WithRawResponse<IEnumerable<SectionVersion>>> ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<GuidedSectionVersion>>> ListAsyncCore(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -59,10 +59,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<SectionVersion>>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<GuidedSectionVersion>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<IEnumerable<SectionVersion>>()
+                        return new WithRawResponse<IEnumerable<GuidedSectionVersion>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -113,7 +113,7 @@ public partial class VersionsClient : IVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<SectionVersion>> CreateAsyncCore(
+    private async Task<WithRawResponse<GuidedSectionVersion>> CreateAsyncCore(
         string sectionId,
         GuidedSectionsCreateVersionRequest request,
         RequestOptions? options = null,
@@ -154,8 +154,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<SectionVersion>(responseBody)!;
-                        return new WithRawResponse<SectionVersion>()
+                        var responseData = JsonUtils.Deserialize<GuidedSectionVersion>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<GuidedSectionVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -210,7 +212,7 @@ public partial class VersionsClient : IVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<SectionVersion>> GetAsyncCore(
+    private async Task<WithRawResponse<GuidedSectionVersion>> GetAsyncCore(
         string sectionId,
         string versionId,
         RequestOptions? options = null,
@@ -250,8 +252,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<SectionVersion>(responseBody)!;
-                        return new WithRawResponse<SectionVersion>()
+                        var responseData = JsonUtils.Deserialize<GuidedSectionVersion>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<GuidedSectionVersion>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -399,13 +403,13 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Sections.Versions.ListAsync("sectionID");
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<SectionVersion>> ListAsync(
+    public WithRawResponseTask<IEnumerable<GuidedSectionVersion>> ListAsync(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<SectionVersion>>(
+        return new WithRawResponseTask<IEnumerable<GuidedSectionVersion>>(
             ListAsyncCore(sectionId, options, cancellationToken)
         );
     }
@@ -415,23 +419,23 @@ public partial class VersionsClient : IVersionsClient
     ///     "sectionID",
     ///     new GuidedSectionsCreateVersionRequest
     ///     {
-    ///         Generation = new SectionGeneration
+    ///         Generation = new GuidedSectionGeneration
     ///         {
     ///             Heading = "heading",
-    ///             Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
+    ///             Instructions = new GuidedSectionInstructions { ContentPrompt = "contentPrompt" },
     ///             OutputSchema = new StringNode { Type = "string" },
     ///         },
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<SectionVersion> CreateAsync(
+    public WithRawResponseTask<GuidedSectionVersion> CreateAsync(
         string sectionId,
         GuidedSectionsCreateVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<SectionVersion>(
+        return new WithRawResponseTask<GuidedSectionVersion>(
             CreateAsyncCore(sectionId, request, options, cancellationToken)
         );
     }
@@ -439,14 +443,14 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Sections.Versions.GetAsync("sectionID", "versionID");
     /// </code></example>
-    public WithRawResponseTask<SectionVersion> GetAsync(
+    public WithRawResponseTask<GuidedSectionVersion> GetAsync(
         string sectionId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<SectionVersion>(
+        return new WithRawResponseTask<GuidedSectionVersion>(
             GetAsyncCore(sectionId, versionId, options, cancellationToken)
         );
     }

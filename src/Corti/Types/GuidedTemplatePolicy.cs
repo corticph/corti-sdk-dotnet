@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TemplatePolicy : IJsonOnDeserialized
+public record GuidedTemplatePolicy : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -18,7 +18,7 @@ public record TemplatePolicy : IJsonOnDeserialized
     /// The kind of access policy. `project` means all users in the project can access, `customers` restricts to specific customer IDs.
     /// </summary>
     [JsonPropertyName("kind")]
-    public required TemplatePolicyKind Kind { get; set; }
+    public required GuidedTemplatePolicyKind Kind { get; set; }
 
     /// <summary>
     /// Required when kind is `customers`. The list of customer IDs that can access this template.

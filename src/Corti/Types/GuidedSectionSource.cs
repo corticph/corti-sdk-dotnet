@@ -4,15 +4,15 @@ using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(SectionSource.SectionSourceSerializer))]
+[JsonConverter(typeof(GuidedSectionSource.GuidedSectionSourceSerializer))]
 [Serializable]
-public readonly record struct SectionSource : IStringEnum
+public readonly record struct GuidedSectionSource : IStringEnum
 {
-    public static readonly SectionSource User = new(Values.User);
+    public static readonly GuidedSectionSource User = new(Values.User);
 
-    public static readonly SectionSource Corti = new(Values.Corti);
+    public static readonly GuidedSectionSource Corti = new(Values.Corti);
 
-    public SectionSource(string value)
+    public GuidedSectionSource(string value)
     {
         Value = value;
     }
@@ -25,9 +25,9 @@ public readonly record struct SectionSource : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static SectionSource FromCustom(string value)
+    public static GuidedSectionSource FromCustom(string value)
     {
-        return new SectionSource(value);
+        return new GuidedSectionSource(value);
     }
 
     public bool Equals(string? other)
@@ -43,19 +43,19 @@ public readonly record struct SectionSource : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(SectionSource value1, string value2) =>
+    public static bool operator ==(GuidedSectionSource value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(SectionSource value1, string value2) =>
+    public static bool operator !=(GuidedSectionSource value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(SectionSource value) => value.Value;
+    public static explicit operator string(GuidedSectionSource value) => value.Value;
 
-    public static explicit operator SectionSource(string value) => new(value);
+    public static explicit operator GuidedSectionSource(string value) => new(value);
 
-    internal class SectionSourceSerializer : JsonConverter<SectionSource>
+    internal class GuidedSectionSourceSerializer : JsonConverter<GuidedSectionSource>
     {
-        public override SectionSource Read(
+        public override GuidedSectionSource Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -66,19 +66,19 @@ public readonly record struct SectionSource : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new SectionSource(stringValue);
+            return new GuidedSectionSource(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            SectionSource value,
+            GuidedSectionSource value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override SectionSource ReadAsPropertyName(
+        public override GuidedSectionSource ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -89,12 +89,12 @@ public readonly record struct SectionSource : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new SectionSource(stringValue);
+            return new GuidedSectionSource(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            SectionSource value,
+            GuidedSectionSource value,
             JsonSerializerOptions options
         )
         {

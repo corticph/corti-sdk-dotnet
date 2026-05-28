@@ -21,7 +21,7 @@ public record GuidedSectionsCreateFromInheritanceRequest : IJsonOnDeserialized
     public required string InheritFromId { get; set; }
 
     [JsonPropertyName("generation")]
-    public SectionGenerationPartial? Generation { get; set; }
+    public GuidedSectionGenerationPartial? Generation { get; set; }
 
     /// <summary>
     /// A human-readable identifier for this section. Not passed to the LLM.

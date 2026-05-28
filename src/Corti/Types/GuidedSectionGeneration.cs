@@ -4,21 +4,27 @@ using Corti.Core;
 
 namespace Corti;
 
-/// <summary>
-/// Partial form of TemplateInstructions used when inheriting from another template. Any field omitted is inherited.
-/// </summary>
 [Serializable]
-public record TemplateInstructionsPartial : IJsonOnDeserialized
+public record GuidedSectionGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Override the inherited template-level prompt instructions.
+    /// The heading of this section. Passed to the LLM.
     /// </summary>
-    [JsonPropertyName("prompt")]
-    public string? Prompt { get; set; }
+    [JsonPropertyName("heading")]
+    public required string Heading { get; set; }
+
+    /// <summary>
+    /// The prompt instructions for this section.
+    /// </summary>
+    [JsonPropertyName("instructions")]
+    public required GuidedSectionInstructions Instructions { get; set; }
+
+    [JsonPropertyName("outputSchema")]
+    public required OutputSchema OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -5,32 +5,32 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Partial form of SectionInstructions used when inheriting from another section. Any field omitted is inherited.
+/// Partial form of SectionGeneration used when inheriting from another section. Any field omitted is inherited from the referenced section.
 /// </summary>
 [Serializable]
-public record SectionInstructionsPartial : IJsonOnDeserialized
+public record GuidedSectionGenerationPartial : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Override the inherited content prompt.
+    /// Override the inherited section title. Passed to the LLM.
     /// </summary>
-    [JsonPropertyName("contentPrompt")]
-    public string? ContentPrompt { get; set; }
+    [JsonPropertyName("heading")]
+    public string? Heading { get; set; }
 
     /// <summary>
-    /// Override the inherited writing style prompt.
+    /// Override the inherited prompt instructions for this section. Any field omitted is inherited.
     /// </summary>
-    [JsonPropertyName("writingStylePrompt")]
-    public string? WritingStylePrompt { get; set; }
+    [JsonPropertyName("instructions")]
+    public GuidedSectionInstructionsPartial? Instructions { get; set; }
 
     /// <summary>
-    /// Override the inherited misc prompt.
+    /// Override the inherited output schema.
     /// </summary>
-    [JsonPropertyName("miscPrompt")]
-    public string? MiscPrompt { get; set; }
+    [JsonPropertyName("outputSchema")]
+    public OutputSchema? OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

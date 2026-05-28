@@ -15,7 +15,7 @@ public record GuidedTemplatesCreateFromInheritanceRequestGeneration : IJsonOnDes
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("instructions")]
-    public TemplateInstructionsPartial? Instructions { get; set; }
+    public GuidedTemplateInstructionsPartial? Instructions { get; set; }
 
     [JsonPropertyName("sections")]
     public IEnumerable<GuidedTemplatesVersionSectionRequest>? Sections { get; set; }

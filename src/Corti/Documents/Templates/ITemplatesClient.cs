@@ -5,19 +5,19 @@ namespace Corti.Documents;
 public partial interface ITemplatesClient
 {
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
-    WithRawResponseTask<IEnumerable<Template>> ListAsync(
+    WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
         ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Template> CreateAsync(
+    WithRawResponseTask<GuidedTemplate> CreateAsync(
         GuidedTemplatesCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Template> GetAsync(
+    WithRawResponseTask<GuidedTemplate> GetAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -32,7 +32,7 @@ public partial interface ITemplatesClient
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<Template> UpdateAsync(
+    WithRawResponseTask<GuidedTemplate> UpdateAsync(
         string templateId,
         GuidedTemplatesUpdateRequest request,
         RequestOptions? options = null,

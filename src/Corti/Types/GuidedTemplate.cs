@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record Template : IJsonOnDeserialized
+public record GuidedTemplate : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -33,7 +33,7 @@ public record Template : IJsonOnDeserialized
     /// Whether this template was created by the user or is a Corti standard resource.
     /// </summary>
     [JsonPropertyName("source")]
-    public TemplateSource? Source { get; set; }
+    public GuidedTemplateSource? Source { get; set; }
 
     /// <summary>
     /// The name of this template. Not passed to the LLM.
@@ -75,10 +75,10 @@ public record Template : IJsonOnDeserialized
     /// Access policies for this template.
     /// </summary>
     [JsonPropertyName("policies")]
-    public IEnumerable<TemplatePolicy>? Policies { get; set; }
+    public IEnumerable<GuidedTemplatePolicy>? Policies { get; set; }
 
     [JsonPropertyName("publishedVersion")]
-    public TemplateVersion? PublishedVersion { get; set; }
+    public GuidedTemplateVersion? PublishedVersion { get; set; }
 
     /// <summary>
     /// The original timestamp when the template was created.

@@ -15,7 +15,7 @@ public record GuidedTemplateOverrides : IJsonOnDeserialized
     /// Replaces the template-level instructions for this call.
     /// </summary>
     [JsonPropertyName("instructions")]
-    public TemplateInstructions? Instructions { get; set; }
+    public GuidedTemplateInstructions? Instructions { get; set; }
 
     /// <summary>
     /// Per-section override patches. Each entry must reference a section already linked to the base template version.

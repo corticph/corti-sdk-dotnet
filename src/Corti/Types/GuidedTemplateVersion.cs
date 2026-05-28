@@ -5,17 +5,32 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TemplateInstructions : IJsonOnDeserialized
+public record GuidedTemplateVersion : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Template-level prompt instructions that apply generally to all sections.
+    /// The UUID of the version.
     /// </summary>
-    [JsonPropertyName("prompt")]
-    public required string Prompt { get; set; }
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    /// <summary>
+    /// Starts at 0 and auto-increments.
+    /// </summary>
+    [JsonPropertyName("versionNumber")]
+    public required int VersionNumber { get; set; }
+
+    /// <summary>
+    /// Present when the template version has been deleted.
+    /// </summary>
+    [JsonPropertyName("deletedAt")]
+    public DateTime? DeletedAt { get; set; }
+
+    [JsonPropertyName("generation")]
+    public required GuidedTemplateGeneration Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

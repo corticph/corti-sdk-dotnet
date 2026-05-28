@@ -21,7 +21,7 @@ public record GuidedSectionOverride : IJsonOnDeserialized
     public required string SectionId { get; set; }
 
     [JsonPropertyName("generation")]
-    public SectionOverrides? Generation { get; set; }
+    public GuidedSectionOverrides? Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

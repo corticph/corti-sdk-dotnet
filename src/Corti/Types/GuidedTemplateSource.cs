@@ -4,15 +4,15 @@ using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(TemplatePolicyKind.TemplatePolicyKindSerializer))]
+[JsonConverter(typeof(GuidedTemplateSource.GuidedTemplateSourceSerializer))]
 [Serializable]
-public readonly record struct TemplatePolicyKind : IStringEnum
+public readonly record struct GuidedTemplateSource : IStringEnum
 {
-    public static readonly TemplatePolicyKind Project = new(Values.Project);
+    public static readonly GuidedTemplateSource User = new(Values.User);
 
-    public static readonly TemplatePolicyKind Customers = new(Values.Customers);
+    public static readonly GuidedTemplateSource Corti = new(Values.Corti);
 
-    public TemplatePolicyKind(string value)
+    public GuidedTemplateSource(string value)
     {
         Value = value;
     }
@@ -25,9 +25,9 @@ public readonly record struct TemplatePolicyKind : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static TemplatePolicyKind FromCustom(string value)
+    public static GuidedTemplateSource FromCustom(string value)
     {
-        return new TemplatePolicyKind(value);
+        return new GuidedTemplateSource(value);
     }
 
     public bool Equals(string? other)
@@ -43,19 +43,19 @@ public readonly record struct TemplatePolicyKind : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(TemplatePolicyKind value1, string value2) =>
+    public static bool operator ==(GuidedTemplateSource value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(TemplatePolicyKind value1, string value2) =>
+    public static bool operator !=(GuidedTemplateSource value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(TemplatePolicyKind value) => value.Value;
+    public static explicit operator string(GuidedTemplateSource value) => value.Value;
 
-    public static explicit operator TemplatePolicyKind(string value) => new(value);
+    public static explicit operator GuidedTemplateSource(string value) => new(value);
 
-    internal class TemplatePolicyKindSerializer : JsonConverter<TemplatePolicyKind>
+    internal class GuidedTemplateSourceSerializer : JsonConverter<GuidedTemplateSource>
     {
-        public override TemplatePolicyKind Read(
+        public override GuidedTemplateSource Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -66,19 +66,19 @@ public readonly record struct TemplatePolicyKind : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new TemplatePolicyKind(stringValue);
+            return new GuidedTemplateSource(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            TemplatePolicyKind value,
+            GuidedTemplateSource value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override TemplatePolicyKind ReadAsPropertyName(
+        public override GuidedTemplateSource ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -89,12 +89,12 @@ public readonly record struct TemplatePolicyKind : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new TemplatePolicyKind(stringValue);
+            return new GuidedTemplateSource(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            TemplatePolicyKind value,
+            GuidedTemplateSource value,
             JsonSerializerOptions options
         )
         {
@@ -108,8 +108,8 @@ public readonly record struct TemplatePolicyKind : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string Project = "project";
+        public const string User = "user";
 
-        public const string Customers = "customers";
+        public const string Corti = "corti";
     }
 }

@@ -24,7 +24,7 @@ public record GuidedAssemblySectionRef : IJsonOnDeserialized
     public string? SectionVersionId { get; set; }
 
     [JsonPropertyName("overrides")]
-    public SectionOverrides? Overrides { get; set; }
+    public GuidedSectionOverrides? Overrides { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
