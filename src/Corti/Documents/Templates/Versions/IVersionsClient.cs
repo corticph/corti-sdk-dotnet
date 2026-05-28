@@ -4,7 +4,7 @@ namespace Corti.Documents.Templates;
 
 public partial interface IVersionsClient
 {
-    WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersion>> ListAsync(
+    WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersionResponse>> ListAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -13,14 +13,14 @@ public partial interface IVersionsClient
     /// <summary>
     /// Creates a new template version. Returns raw authored values without inheritance resolution or section expansion.
     /// </summary>
-    WithRawResponseTask<GuidedShallowTemplateVersion> CreateAsync(
+    WithRawResponseTask<GuidedShallowTemplateVersionResponse> CreateAsync(
         string templateId,
         GuidedTemplatesCreateVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<GuidedShallowTemplateVersion> GetAsync(
+    WithRawResponseTask<GuidedShallowTemplateVersionResponse> GetAsync(
         string templateId,
         string versionId,
         RequestOptions? options = null,

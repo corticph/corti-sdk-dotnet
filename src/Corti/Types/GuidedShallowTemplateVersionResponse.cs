@@ -11,7 +11,7 @@ namespace Corti;
 /// Returned by GET, LIST, and POST version endpoints.
 /// </summary>
 [Serializable]
-public record GuidedShallowTemplateVersion : IJsonOnDeserialized
+public record GuidedShallowTemplateVersionResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
