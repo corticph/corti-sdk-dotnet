@@ -4,19 +4,25 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TemplatesSectionListRequest
+public record ListTemplatesRequest
 {
     /// <summary>
-    /// Filter template sections by organization.
+    /// Filter templates by organization.
     /// </summary>
     [JsonIgnore]
     public IEnumerable<string> Org { get; set; } = new List<string>();
 
     /// <summary>
-    /// Filter template sections by language.
+    /// Filter templates by language.
     /// </summary>
     [JsonIgnore]
     public IEnumerable<string> Lang { get; set; } = new List<string>();
+
+    /// <summary>
+    /// Filter templates by their status.
+    /// </summary>
+    [JsonIgnore]
+    public IEnumerable<string> Status { get; set; } = new List<string>();
 
     /// <inheritdoc />
     public override string ToString()
