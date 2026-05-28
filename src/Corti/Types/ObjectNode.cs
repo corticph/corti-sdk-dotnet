@@ -28,7 +28,13 @@ public record ObjectNode : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// Format string used to render each field in the generated string output. For example use `{key}` and `{value}` placeholders for the field key and its value respectively to programmatically control inline or block subheadings or other use cases.
+    /// Free-form format string that controls how an object's fields are rendered into the final text output. Operates in one of two modes determined by which placeholders appear:
+    ///
+    /// **Subheading mode** (default: `"{key}: {value}\n"`): triggered when the format contains both `{key}` and `{value}`. Applied per field — each field becomes a key/value line. Fields that render to null are skipped.
+    ///
+    /// **Object mode** (e.g. `"{name} ({age})"`): triggered when `{key}` and `{value}` are absent. Placeholders must be actual field keys defined in `fields`. Applied once for the whole object, composing all fields into a single string. Fields rendering to null become empty string.
+    ///
+    /// Validation rules: format must not be empty; if either `{key}` or `{value}` appears, both must be present; in subheading mode no extra placeholders are allowed; in object mode every placeholder must match a defined field key.
     /// </summary>
     [JsonPropertyName("fieldFormat")]
     public string? FieldFormat { get; set; }
