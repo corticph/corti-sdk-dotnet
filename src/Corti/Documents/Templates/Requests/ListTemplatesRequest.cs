@@ -7,7 +7,7 @@ namespace Corti.Documents;
 public record ListTemplatesRequest
 {
     /// <summary>
-    /// Filter templates by BCP 47 language subtag (e.g. `fr`, `de`). Repeatable.
+    /// Filter templates by BCP 47 language tag (e.g. `fr`, `de`, or `en-GB`). Repeatable.
     /// </summary>
     [JsonIgnore]
     public IEnumerable<string> Lang { get; set; } = new List<string>();

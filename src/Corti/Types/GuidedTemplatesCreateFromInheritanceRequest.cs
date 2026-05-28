@@ -39,7 +39,7 @@ public record GuidedTemplatesCreateFromInheritanceRequest : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// BCP 47 language subtags this template has been tweaked for (e.g. `["fr", "de"]`).
+    /// BCP 47 language tags this template has been tweaked for (e.g. `["fr", "de", "en-GB"]`).
     /// </summary>
     [JsonPropertyName("languages")]
     public IEnumerable<string>? Languages { get; set; }

@@ -132,7 +132,6 @@ public partial class SectionsClient : ISectionsClient
                             Path = "documents/sections/",
                             Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken

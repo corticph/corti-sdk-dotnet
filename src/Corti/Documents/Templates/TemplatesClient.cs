@@ -132,7 +132,6 @@ public partial class TemplatesClient : ITemplatesClient
                             Path = "documents/templates/",
                             Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken

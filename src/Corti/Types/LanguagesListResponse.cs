@@ -4,27 +4,15 @@ using Corti.Core;
 
 namespace Corti;
 
-/// <summary>
-/// Minimal fact shape. Only `text` is required.
-/// </summary>
 [Serializable]
-public record GuidedDocumentFactMinimal : IJsonOnDeserialized
+public record LanguagesListResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// The text of the fact.
-    /// </summary>
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
-
-    /// <summary>
-    /// The group to which the fact belongs.
-    /// </summary>
-    [JsonPropertyName("group")]
-    public string? Group { get; set; }
+    [JsonPropertyName("languages")]
+    public Dictionary<string, object?> Languages { get; set; } = new Dictionary<string, object?>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
