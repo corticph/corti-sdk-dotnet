@@ -736,7 +736,7 @@ public partial class DocumentsClient : IDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.GenerateAsync(
-    ///     new GuidedDocumentByTemplateRef
+    ///     new GuidedDocumentsGenerateByTemplateRef
     ///     {
     ///         OutputLanguage = "outputLanguage",
     ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },

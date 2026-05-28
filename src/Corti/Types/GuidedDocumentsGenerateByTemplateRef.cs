@@ -8,7 +8,7 @@ namespace Corti;
 /// Generate a document using a stored template. Optionally supply runtime overrides to patch instructions or sections without mutating the base template. At least one of `context` or `interactionId` must be supplied as input context for the model.
 /// </summary>
 [Serializable]
-public record GuidedDocumentByTemplateRef : IJsonOnDeserialized
+public record GuidedDocumentsGenerateByTemplateRef : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
