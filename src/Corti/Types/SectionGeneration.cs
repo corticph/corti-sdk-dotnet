@@ -5,26 +5,26 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record AgentsValidationError : IJsonOnDeserialized
+public record SectionGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("msg")]
-    public required string Msg { get; set; }
+    /// <summary>
+    /// The heading of this section. Passed to the LLM.
+    /// </summary>
+    [JsonPropertyName("heading")]
+    public required string Heading { get; set; }
 
-    [JsonPropertyName("type")]
-    public required string Type { get; set; }
+    /// <summary>
+    /// The prompt instructions for this section.
+    /// </summary>
+    [JsonPropertyName("instructions")]
+    public required SectionInstructions Instructions { get; set; }
 
-    [JsonPropertyName("reason")]
-    public required string Reason { get; set; }
-
-    [JsonPropertyName("howToFix")]
-    public required string HowToFix { get; set; }
-
-    [JsonPropertyName("errors")]
-    public IEnumerable<AgentsValidationErrorErrorsItem>? Errors { get; set; }
+    [JsonPropertyName("outputSchema")]
+    public required OutputSchema OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
