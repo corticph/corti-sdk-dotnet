@@ -6,7 +6,7 @@ public partial interface ISectionsClient
 {
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
     WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
-        ListSectionsRequest request,
+        GuidedSectionsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

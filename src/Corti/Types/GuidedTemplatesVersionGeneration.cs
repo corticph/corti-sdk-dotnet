@@ -4,21 +4,21 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// When the template inherits from another template, all inner fields are optional. Any field omitted is inherited from the parent's published version.
+/// </summary>
 [Serializable]
-public record DocumentationEvidence : IJsonOnDeserialized
+public record GuidedTemplatesVersionGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("evidenceId")]
-    public string? EvidenceId { get; set; }
+    [JsonPropertyName("instructions")]
+    public GuidedTemplateInstructionsPartial? Instructions { get; set; }
 
-    [JsonPropertyName("type")]
-    public string? Type { get; set; }
-
-    [JsonPropertyName("quote")]
-    public string? Quote { get; set; }
+    [JsonPropertyName("sections")]
+    public IEnumerable<GuidedTemplatesVersionSectionRequest>? Sections { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

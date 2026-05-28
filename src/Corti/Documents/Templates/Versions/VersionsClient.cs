@@ -426,10 +426,7 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Templates.Versions.CreateAsync(
     ///     "templateID",
-    ///     new GuidedTemplatesCreateVersionRequest
-    ///     {
-    ///         Generation = new GuidedTemplatesCreateVersionRequestGeneration(),
-    ///     }
+    ///     new GuidedTemplatesCreateVersionRequest { Generation = new GuidedTemplatesVersionGeneration() }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedShallowTemplateVersionResponse> CreateAsync(

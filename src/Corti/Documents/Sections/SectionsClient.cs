@@ -25,7 +25,7 @@ public partial class SectionsClient : ISectionsClient
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
 
     private async Task<WithRawResponse<IEnumerable<GuidedSection>>> ListAsyncCore(
-        ListSectionsRequest request,
+        GuidedSectionsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -384,10 +384,10 @@ public partial class SectionsClient : ISectionsClient
     }
 
     /// <example><code>
-    /// await client.Documents.Sections.ListAsync(new ListSectionsRequest());
+    /// await client.Documents.Sections.ListAsync(new GuidedSectionsListRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
-        ListSectionsRequest request,
+        GuidedSectionsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

@@ -15,7 +15,7 @@ public record CommonStatusResponse : IJsonOnDeserialized
     public required string Status { get; set; }
 
     [JsonPropertyName("evidence")]
-    public DocumentationEvidence? Evidence { get; set; }
+    public CommonDocumentationEvidence? Evidence { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

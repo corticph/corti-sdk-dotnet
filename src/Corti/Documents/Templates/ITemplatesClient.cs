@@ -6,7 +6,7 @@ public partial interface ITemplatesClient
 {
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
     WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
-        ListTemplatesRequest request,
+        GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

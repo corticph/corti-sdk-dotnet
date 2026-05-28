@@ -4,7 +4,7 @@ using Corti.Core;
 namespace Corti.Documents;
 
 [Serializable]
-public record ListSectionsRequest
+public record GuidedSectionsListRequest
 {
     /// <summary>
     /// Filter sections by BCP 47 language tag (e.g. `fr`, `de`, or `en-GB`). Repeatable.

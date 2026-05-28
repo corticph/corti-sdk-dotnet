@@ -1,25 +1,24 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Corti;
 using Corti.Core;
 
-namespace Corti.Documents.Templates;
+namespace Corti;
 
-/// <summary>
-/// When the template inherits from another template, all inner fields are optional. Any field omitted is inherited from the parent's published version.
-/// </summary>
 [Serializable]
-public record GuidedTemplatesCreateVersionRequestGeneration : IJsonOnDeserialized
+public record CommonDocumentationEvidence : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public GuidedTemplateInstructionsPartial? Instructions { get; set; }
+    [JsonPropertyName("evidenceId")]
+    public string? EvidenceId { get; set; }
 
-    [JsonPropertyName("sections")]
-    public IEnumerable<GuidedTemplatesVersionSectionRequest>? Sections { get; set; }
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
+
+    [JsonPropertyName("quote")]
+    public string? Quote { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

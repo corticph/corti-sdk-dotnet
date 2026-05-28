@@ -25,7 +25,7 @@ public partial class TemplatesClient : ITemplatesClient
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
 
     private async Task<WithRawResponse<IEnumerable<GuidedTemplate>>> ListAsyncCore(
-        ListTemplatesRequest request,
+        GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -384,10 +384,10 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     /// <example><code>
-    /// await client.Documents.Templates.ListAsync(new ListTemplatesRequest());
+    /// await client.Documents.Templates.ListAsync(new GuidedTemplatesListRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
-        ListTemplatesRequest request,
+        GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
