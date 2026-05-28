@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Template generation with section references (not fully resolved). Use the resolved TemplateGeneration for hydrated section data.
+/// Template generation with section references (not fully resolved). Use the resolved GuidedTemplateGeneration for hydrated section data.
 /// </summary>
 [Serializable]
 public record GuidedShallowTemplateGeneration : IJsonOnDeserialized

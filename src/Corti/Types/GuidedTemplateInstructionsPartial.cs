@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Partial form of TemplateInstructions used when inheriting from another template. Any field omitted is inherited.
+/// Partial form of GuidedTemplateInstructions used when inheriting from another template. Any field omitted is inherited.
 /// </summary>
 [Serializable]
 public record GuidedTemplateInstructionsPartial : IJsonOnDeserialized

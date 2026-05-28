@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Partial form of SectionGeneration used when inheriting from another section. Any field omitted is inherited from the referenced section.
+/// Partial form of GuidedSectionGeneration used when inheriting from another section. Any field omitted is inherited from the referenced section.
 /// </summary>
 [Serializable]
 public record GuidedSectionGenerationPartial : IJsonOnDeserialized
