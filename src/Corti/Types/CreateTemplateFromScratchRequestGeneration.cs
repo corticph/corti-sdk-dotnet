@@ -5,17 +5,17 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record AgentsValidationErrorErrorsItem : IJsonOnDeserialized
+public record CreateTemplateFromScratchRequestGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("location")]
-    public string? Location { get; set; }
+    [JsonPropertyName("instructions")]
+    public required TemplateInstructions Instructions { get; set; }
 
-    [JsonPropertyName("reason")]
-    public string? Reason { get; set; }
+    [JsonPropertyName("sections")]
+    public IEnumerable<TemplateVersionSectionRequest>? Sections { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
