@@ -6,7 +6,7 @@ public partial interface ITemplatesClient
     /// Retrieves a list of template sections with optional filters for organization and language.
     /// </summary>
     WithRawResponseTask<TemplatesSectionListResponse> SectionListAsync(
-        TemplatesSectionListRequest request,
+        SectionListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -15,7 +15,7 @@ public partial interface ITemplatesClient
     /// Retrieves a list of templates with optional filters for organization, language, and status.
     /// </summary>
     WithRawResponseTask<TemplatesListResponse> ListAsync(
-        TemplatesListRequest request,
+        ListTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
