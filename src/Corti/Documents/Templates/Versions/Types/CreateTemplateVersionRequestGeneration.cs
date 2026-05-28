@@ -5,6 +5,9 @@ using Corti.Core;
 
 namespace Corti.Documents.Templates;
 
+/// <summary>
+/// When the template inherits from another template, all inner fields are optional. Any field omitted is inherited from the parent's published version.
+/// </summary>
 [Serializable]
 public record CreateTemplateVersionRequestGeneration : IJsonOnDeserialized
 {
@@ -13,7 +16,7 @@ public record CreateTemplateVersionRequestGeneration : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    public TemplateInstructionsPartial? Instructions { get; set; }
 
     [JsonPropertyName("sections")]
     public IEnumerable<TemplateVersionSectionRequest>? Sections { get; set; }

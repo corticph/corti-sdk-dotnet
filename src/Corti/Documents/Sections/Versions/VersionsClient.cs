@@ -417,15 +417,7 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Sections.Versions.CreateAsync(
     ///     "sectionID",
-    ///     new CreateSectionVersionRequest
-    ///     {
-    ///         Generation = new SectionGeneration
-    ///         {
-    ///             Heading = "heading",
-    ///             Instructions = new SectionInstructions { ContentPrompt = "contentPrompt" },
-    ///             OutputSchema = new StringNode { Type = "string" },
-    ///         },
-    ///     }
+    ///     new CreateSectionVersionRequest { Generation = new SectionGenerationPartial() }
     /// );
     /// </code></example>
     public WithRawResponseTask<SectionVersion> CreateAsync(
