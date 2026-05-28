@@ -4,6 +4,9 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Fully resolved template generation. Sections are expanded with their own inheritance applied.
+/// </summary>
 [Serializable]
 public record TemplateGeneration : IJsonOnDeserialized
 {

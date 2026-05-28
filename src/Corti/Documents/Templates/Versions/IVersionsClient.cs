@@ -10,7 +10,10 @@ public partial interface IVersionsClient
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<TemplateVersion> CreateAsync(
+    /// <summary>
+    /// Creates a new template version. Returns raw authored values without inheritance resolution or section expansion.
+    /// </summary>
+    WithRawResponseTask<ShallowTemplateVersionResponse> CreateAsync(
         string templateId,
         CreateTemplateVersionRequest request,
         RequestOptions? options = null,

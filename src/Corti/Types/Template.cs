@@ -77,6 +77,9 @@ public record Template : IJsonOnDeserialized
     [JsonPropertyName("policies")]
     public IEnumerable<TemplatePolicy>? Policies { get; set; }
 
+    /// <summary>
+    /// The currently published version with inheritance fully resolved. Present when a version has been published.
+    /// </summary>
     [JsonPropertyName("publishedVersion")]
     public TemplateVersion? PublishedVersion { get; set; }
 

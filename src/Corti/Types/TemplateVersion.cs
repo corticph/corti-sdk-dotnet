@@ -5,7 +5,9 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Template version with fully resolved (inherited) values. Used in Template.publishedVersion.
+/// Template version with fully resolved (inherited) values. Template-level and section-level
+/// inheritance chains are walked. Used in Template.publishedVersion
+/// on resource-level endpoints (GET/POST template).
 /// </summary>
 [Serializable]
 public record TemplateVersion : IJsonOnDeserialized

@@ -397,6 +397,11 @@ public partial class TemplatesClient : ITemplatesClient
         );
     }
 
+    /// <summary>
+    /// Creates a new template with an initial version. When `publish` is true (default),
+    /// the response includes the published version with full inheritance resolution applied
+    /// (template-level and section-level inheritance walked).
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.CreateAsync(
     ///     new CreateTemplateFromScratchRequest
@@ -420,6 +425,11 @@ public partial class TemplatesClient : ITemplatesClient
         );
     }
 
+    /// <summary>
+    /// Returns the template with its published version fully resolved (inheritance walked,
+    /// sections expanded with their own inheritance applied). To see raw authored
+    /// values without inheritance, use GET /documents/templates/{templateID}/versions/{versionID}.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.GetAsync("templateID");
     /// </code></example>

@@ -5,7 +5,10 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Template version with shallow (unresolved) values. Sections are returned as references, not fully resolved objects. Returned by GET and LIST version endpoints.
+/// Template version with raw authored values — no inheritance resolution applied.
+/// Sections are returned as references (IDs), not fully resolved objects.
+/// Use this to inspect what was explicitly set on this version versus inherited.
+/// Returned by GET, LIST, and POST version endpoints.
 /// </summary>
 [Serializable]
 public record ShallowTemplateVersionResponse : IJsonOnDeserialized

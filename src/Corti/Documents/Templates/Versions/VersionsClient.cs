@@ -113,7 +113,7 @@ public partial class VersionsClient : IVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplateVersion>> CreateAsyncCore(
+    private async Task<WithRawResponse<ShallowTemplateVersionResponse>> CreateAsyncCore(
         string templateId,
         CreateTemplateVersionRequest request,
         RequestOptions? options = null,
@@ -154,8 +154,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<TemplateVersion>(responseBody)!;
-                        return new WithRawResponse<TemplateVersion>()
+                        var responseData = JsonUtils.Deserialize<ShallowTemplateVersionResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<ShallowTemplateVersionResponse>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -410,6 +412,9 @@ public partial class VersionsClient : IVersionsClient
         );
     }
 
+    /// <summary>
+    /// Creates a new template version. Returns raw authored values without inheritance resolution or section expansion.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.Versions.CreateAsync(
     ///     "templateID",
@@ -422,14 +427,14 @@ public partial class VersionsClient : IVersionsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<TemplateVersion> CreateAsync(
+    public WithRawResponseTask<ShallowTemplateVersionResponse> CreateAsync(
         string templateId,
         CreateTemplateVersionRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<TemplateVersion>(
+        return new WithRawResponseTask<ShallowTemplateVersionResponse>(
             CreateAsyncCore(templateId, request, options, cancellationToken)
         );
     }

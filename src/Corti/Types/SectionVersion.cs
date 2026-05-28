@@ -4,6 +4,11 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// A section version. When embedded inside a Section resource (e.g. GET /sections/:id),
+/// inheritance is fully resolved. When returned directly from version endpoints
+/// (GET/LIST/POST .../versions/...), contains raw authored values without inheritance.
+/// </summary>
 [Serializable]
 public record SectionVersion : IJsonOnDeserialized
 {

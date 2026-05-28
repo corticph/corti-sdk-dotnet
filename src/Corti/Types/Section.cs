@@ -72,7 +72,7 @@ public record Section : IJsonOnDeserialized
     public IEnumerable<Label> Labels { get; set; } = new List<Label>();
 
     /// <summary>
-    /// Shows the currently published version of this section.
+    /// The currently published version with section inheritance fully resolved. Present when a version has been published.
     /// </summary>
     [JsonPropertyName("publishedVersion")]
     public SectionVersion? PublishedVersion { get; set; }
