@@ -20,6 +20,24 @@ public record GuidedDocumentByTemplateRef : IJsonOnDeserialized
     [JsonPropertyName("templateRef")]
     public required GuidedTemplateRef TemplateRef { get; set; }
 
+    /// <summary>
+    /// The language in which the document will be generated as a BCP 47 tag.
+    /// </summary>
+    [JsonPropertyName("outputLanguage")]
+    public required string OutputLanguage { get; set; }
+
+    /// <summary>
+    /// Ordered list of context items the model reasons over. Each item is one of text, a transcript (with optional metadata and segments), or a single fact. Items are interleaved by timestamps where present on transcript segments; otherwise array order is preserved.
+    /// </summary>
+    [JsonPropertyName("context")]
+    public IEnumerable<GuidedDocumentContext>? Context { get; set; }
+
+    /// <summary>
+    /// When supplied, all facts and transcripts already attached to the referenced interaction are passed implicitly as input context. Facts with `isDiscarded: true` are not passed on.
+    /// </summary>
+    [JsonPropertyName("interactionId")]
+    public string? InteractionId { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

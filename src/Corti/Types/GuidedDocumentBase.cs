@@ -5,20 +5,14 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Generate a document by assembling a template from existing stored sections. The resulting template aggregate is auto-saved and can be referenced in future calls. At least one of `context` or `interactionId` must be supplied as input context for the model.
+/// Fields shared across all guided-document request variants. `outputLanguage` is always required. Exactly one of `context` (possible to combine different context types) or `interactionId` (API auto-fetches existing facts, transcripts) must be supplied as input for the model.
 /// </summary>
 [Serializable]
-public record GuidedDocumentByAssembly : IJsonOnDeserialized
+public record GuidedDocumentBase : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
-
-    /// <summary>
-    /// Assemble a template from existing stored sections.
-    /// </summary>
-    [JsonPropertyName("assemblyTemplate")]
-    public required GuidedAssemblyRequest AssemblyTemplate { get; set; }
 
     /// <summary>
     /// The language in which the document will be generated as a BCP 47 tag.
