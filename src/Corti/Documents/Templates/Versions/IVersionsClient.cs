@@ -4,7 +4,7 @@ namespace Corti.Documents.Templates;
 
 public partial interface IVersionsClient
 {
-    WithRawResponseTask<IEnumerable<TemplateVersion>> ListAsync(
+    WithRawResponseTask<IEnumerable<ShallowTemplateVersionResponse>> ListAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -17,7 +17,7 @@ public partial interface IVersionsClient
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<TemplateVersion> GetAsync(
+    WithRawResponseTask<ShallowTemplateVersionResponse> GetAsync(
         string templateId,
         string versionId,
         RequestOptions? options = null,

@@ -5,10 +5,10 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Template version with fully resolved (inherited) values. Used in Template.publishedVersion.
+/// Template version with shallow (unresolved) values. Sections are returned as references, not fully resolved objects. Returned by GET and LIST version endpoints.
 /// </summary>
 [Serializable]
-public record TemplateVersion : IJsonOnDeserialized
+public record ShallowTemplateVersionResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -33,7 +33,7 @@ public record TemplateVersion : IJsonOnDeserialized
     public DateTime? DeletedAt { get; set; }
 
     [JsonPropertyName("generation")]
-    public required TemplateGeneration Generation { get; set; }
+    public required ShallowTemplateGeneration Generation { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

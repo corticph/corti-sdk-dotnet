@@ -5,20 +5,23 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record TemplateVersionSectionRef : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public required TemplateInstructions Instructions { get; set; }
+    /// <summary>
+    /// The UUID of the section linked to this template version.
+    /// </summary>
+    [JsonPropertyName("sectionId")]
+    public required string SectionId { get; set; }
 
     /// <summary>
-    /// Fully resolved sections with inheritance applied.
+    /// The ordering position of the section within the template version.
     /// </summary>
-    [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    [JsonPropertyName("orderIndex")]
+    public required int OrderIndex { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

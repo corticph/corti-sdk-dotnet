@@ -21,7 +21,7 @@ public partial class VersionsClient : IVersionsClient
         }
     }
 
-    private async Task<WithRawResponse<IEnumerable<TemplateVersion>>> ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<ShallowTemplateVersionResponse>>> ListAsyncCore(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -59,10 +59,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<TemplateVersion>>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<IEnumerable<TemplateVersion>>()
+                        var responseData = JsonUtils.Deserialize<
+                            IEnumerable<ShallowTemplateVersionResponse>
+                        >(responseBody)!;
+                        return new WithRawResponse<IEnumerable<ShallowTemplateVersionResponse>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -210,7 +210,7 @@ public partial class VersionsClient : IVersionsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<TemplateVersion>> GetAsyncCore(
+    private async Task<WithRawResponse<ShallowTemplateVersionResponse>> GetAsyncCore(
         string templateId,
         string versionId,
         RequestOptions? options = null,
@@ -250,8 +250,10 @@ public partial class VersionsClient : IVersionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<TemplateVersion>(responseBody)!;
-                        return new WithRawResponse<TemplateVersion>()
+                        var responseData = JsonUtils.Deserialize<ShallowTemplateVersionResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<ShallowTemplateVersionResponse>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -397,13 +399,13 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Templates.Versions.ListAsync("templateID");
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<TemplateVersion>> ListAsync(
+    public WithRawResponseTask<IEnumerable<ShallowTemplateVersionResponse>> ListAsync(
         string templateId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<TemplateVersion>>(
+        return new WithRawResponseTask<IEnumerable<ShallowTemplateVersionResponse>>(
             ListAsyncCore(templateId, options, cancellationToken)
         );
     }
@@ -435,14 +437,14 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Templates.Versions.GetAsync("templateID", "versionID");
     /// </code></example>
-    public WithRawResponseTask<TemplateVersion> GetAsync(
+    public WithRawResponseTask<ShallowTemplateVersionResponse> GetAsync(
         string templateId,
         string versionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<TemplateVersion>(
+        return new WithRawResponseTask<ShallowTemplateVersionResponse>(
             GetAsyncCore(templateId, versionId, options, cancellationToken)
         );
     }

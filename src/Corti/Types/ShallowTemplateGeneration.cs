@@ -4,8 +4,11 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Template generation with section references (not fully resolved). Use the resolved TemplateGeneration for hydrated section data.
+/// </summary>
 [Serializable]
-public record TemplateGeneration : IJsonOnDeserialized
+public record ShallowTemplateGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -15,10 +18,11 @@ public record TemplateGeneration : IJsonOnDeserialized
     public required TemplateInstructions Instructions { get; set; }
 
     /// <summary>
-    /// Fully resolved sections with inheritance applied.
+    /// Section references linked to this version (not fully resolved).
     /// </summary>
     [JsonPropertyName("sections")]
-    public IEnumerable<Section>? Sections { get; set; }
+    public IEnumerable<TemplateVersionSectionRef> Sections { get; set; } =
+        new List<TemplateVersionSectionRef>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
