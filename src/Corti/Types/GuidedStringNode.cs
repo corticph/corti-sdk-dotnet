@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record CommonTextContext : IJsonOnDeserialized
+public record GuidedStringNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record CommonTextContext : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public CommonTextContext.TypeLiteral Type { get;
+    public GuidedStringNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -22,10 +22,28 @@ public record CommonTextContext : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// A text string to be used as input to the model.
+    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
     /// </summary>
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// The default to output if nothing to output.
+    /// </summary>
+    [JsonPropertyName("default")]
+    public string? Default { get; set; }
+
+    /// <summary>
+    /// Can be used to prompt the LLM with specific values to output.
+    /// </summary>
+    [JsonPropertyName("enum")]
+    public IEnumerable<string>? Enum { get; set; }
+
+    /// <summary>
+    /// Can be used to prompt the LLM for a specific output pattern.
+    /// </summary>
+    [JsonPropertyName("pattern")]
+    public string? Pattern { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -42,7 +60,7 @@ public record CommonTextContext : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "text";
+        public const string Value = "string";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record CommonTextContext : IJsonOnDeserialized
+public record GuidedArrayNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record CommonTextContext : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public CommonTextContext.TypeLiteral Type { get;
+    public GuidedArrayNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -22,10 +22,31 @@ public record CommonTextContext : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// A text string to be used as input to the model.
+    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
     /// </summary>
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("items")]
+    public required GuidedOutputSchema Items { get; set; }
+
+    /// <summary>
+    /// Controls how each array item is rendered in the generated output. Use `bullet` (default), `numbered`, or `plain`, or provide a custom format string containing the `{item}` placeholder.
+    /// </summary>
+    [JsonPropertyName("itemFormat")]
+    public string? ItemFormat { get; set; }
+
+    /// <summary>
+    /// Minimum number of array items to generate.
+    /// </summary>
+    [JsonPropertyName("minItems")]
+    public int? MinItems { get; set; }
+
+    /// <summary>
+    /// Maximum number of array items to generate.
+    /// </summary>
+    [JsonPropertyName("maxItems")]
+    public int? MaxItems { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -42,7 +63,7 @@ public record CommonTextContext : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "text";
+        public const string Value = "array";
 
         public static implicit operator string(TypeLiteral _) => Value;
 
