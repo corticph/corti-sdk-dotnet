@@ -18,19 +18,19 @@ public record TranscribeConfig : IJsonOnDeserialized
     public required string PrimaryLanguage { get; set; }
 
     /// <summary>
-    /// When true, returns interim results for reduced latency
+    /// When true, returns interim (preview) transcript results (`isFinal=false`) for reduced latency than final transcripts. Defaults to false.
     /// </summary>
     [JsonPropertyName("interimResults")]
     public bool? InterimResults { get; set; }
 
     /// <summary>
-    /// When true, converts spoken punctuation such as 'period' or 'slash' into '.' or '/'
+    /// When true, converts spoken punctuation such as 'period' or 'slash' into '.' or '/'. Defaults to false. Overrides automaticPunctuation when both are enabled.
     /// </summary>
     [JsonPropertyName("spokenPunctuation")]
     public bool? SpokenPunctuation { get; set; }
 
     /// <summary>
-    /// When true, automatically punctuates and capitalizes in the final transcript
+    /// When true, automatically punctuates and capitalizes in the final transcript. Defaults to false. Overridden by spokenPunctuation when both are enabled.
     /// </summary>
     [JsonPropertyName("automaticPunctuation")]
     public bool? AutomaticPunctuation { get; set; }
@@ -52,6 +52,12 @@ public record TranscribeConfig : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("audioFormat")]
     public string? AudioFormat { get; set; }
+
+    /// <summary>
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily".
+    /// </summary>
+    [JsonPropertyName("replacements")]
+    public IEnumerable<TranscribeConfigReplacementsItem>? Replacements { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
