@@ -4,13 +4,15 @@ using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(CommonTextContextType.CommonTextContextTypeSerializer))]
+[JsonConverter(typeof(GuidedSourceFilter.GuidedSourceFilterSerializer))]
 [Serializable]
-public readonly record struct CommonTextContextType : IStringEnum
+public readonly record struct GuidedSourceFilter : IStringEnum
 {
-    public static readonly CommonTextContextType Text = new(Values.Text);
+    public static readonly GuidedSourceFilter User = new(Values.User);
 
-    public CommonTextContextType(string value)
+    public static readonly GuidedSourceFilter Corti = new(Values.Corti);
+
+    public GuidedSourceFilter(string value)
     {
         Value = value;
     }
@@ -23,9 +25,9 @@ public readonly record struct CommonTextContextType : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static CommonTextContextType FromCustom(string value)
+    public static GuidedSourceFilter FromCustom(string value)
     {
-        return new CommonTextContextType(value);
+        return new GuidedSourceFilter(value);
     }
 
     public bool Equals(string? other)
@@ -41,19 +43,19 @@ public readonly record struct CommonTextContextType : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(CommonTextContextType value1, string value2) =>
+    public static bool operator ==(GuidedSourceFilter value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(CommonTextContextType value1, string value2) =>
+    public static bool operator !=(GuidedSourceFilter value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(CommonTextContextType value) => value.Value;
+    public static explicit operator string(GuidedSourceFilter value) => value.Value;
 
-    public static explicit operator CommonTextContextType(string value) => new(value);
+    public static explicit operator GuidedSourceFilter(string value) => new(value);
 
-    internal class CommonTextContextTypeSerializer : JsonConverter<CommonTextContextType>
+    internal class GuidedSourceFilterSerializer : JsonConverter<GuidedSourceFilter>
     {
-        public override CommonTextContextType Read(
+        public override GuidedSourceFilter Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -64,19 +66,19 @@ public readonly record struct CommonTextContextType : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new CommonTextContextType(stringValue);
+            return new GuidedSourceFilter(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            CommonTextContextType value,
+            GuidedSourceFilter value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override CommonTextContextType ReadAsPropertyName(
+        public override GuidedSourceFilter ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -87,12 +89,12 @@ public readonly record struct CommonTextContextType : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new CommonTextContextType(stringValue);
+            return new GuidedSourceFilter(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            CommonTextContextType value,
+            GuidedSourceFilter value,
             JsonSerializerOptions options
         )
         {
@@ -106,6 +108,8 @@ public readonly record struct CommonTextContextType : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string Text = "text";
+        public const string User = "user";
+
+        public const string Corti = "corti";
     }
 }

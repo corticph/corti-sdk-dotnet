@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record CommonTextContext : IJsonOnDeserialized
+public record GuidedNumberNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record CommonTextContext : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public CommonTextContext.TypeLiteral Type { get;
+    public GuidedNumberNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -22,10 +22,34 @@ public record CommonTextContext : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// A text string to be used as input to the model.
+    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
     /// </summary>
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// The default to output if nothing to output.
+    /// </summary>
+    [JsonPropertyName("default")]
+    public double? Default { get; set; }
+
+    /// <summary>
+    /// Can be used to prompt the LLM for specifically allowed numeric values to output.
+    /// </summary>
+    [JsonPropertyName("enum")]
+    public IEnumerable<double>? Enum { get; set; }
+
+    /// <summary>
+    /// Use if a minimum value applies.
+    /// </summary>
+    [JsonPropertyName("minimum")]
+    public double? Minimum { get; set; }
+
+    /// <summary>
+    /// Use if a maximum value applies.
+    /// </summary>
+    [JsonPropertyName("maximum")]
+    public double? Maximum { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -42,7 +66,7 @@ public record CommonTextContext : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "text";
+        public const string Value = "number";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

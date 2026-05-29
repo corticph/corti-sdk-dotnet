@@ -1,17 +1,19 @@
 using System.Text.Json;
+using Corti;
 using Corti.Core;
 
-namespace Corti;
+namespace Corti.Documents;
 
-public partial class FactsClient : IFactsClient
+public partial class TemplatesClient : ITemplatesClient
 {
     private readonly RawClient _client;
 
-    internal FactsClient(RawClient client)
+    internal TemplatesClient(RawClient client)
     {
         try
         {
             _client = client;
+            Versions = new Corti.Documents.Templates.VersionsClient(_client);
         }
         catch (Exception ex)
         {
@@ -20,7 +22,10 @@ public partial class FactsClient : IFactsClient
         }
     }
 
-    private async Task<WithRawResponse<FactsFactGroupsListResponse>> FactGroupsListAsyncCore(
+    public Corti.Documents.Templates.IVersionsClient Versions { get; }
+
+    private async Task<WithRawResponse<IEnumerable<GuidedTemplate>>> ListAsyncCore(
+        GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -28,6 +33,15 @@ public partial class FactsClient : IFactsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 6)
+                    .Add("lang", request.Lang)
+                    .Add("region", request.Region)
+                    .Add("specialty", request.Specialty)
+                    .Add("label", request.Label)
+                    .Add("published", request.Published)
+                    .Add("source", request.Source)
+                    .MergeAdditional(options?.AdditionalQueryParameters)
+                    .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
@@ -40,7 +54,8 @@ public partial class FactsClient : IFactsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
-                            Path = "factgroups/",
+                            Path = "documents/templates/",
+                            QueryString = _queryString,
                             Headers = _headers,
                             Options = options,
                         },
@@ -54,10 +69,10 @@ public partial class FactsClient : IFactsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<FactsFactGroupsListResponse>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<GuidedTemplate>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<FactsFactGroupsListResponse>()
+                        return new WithRawResponse<IEnumerable<GuidedTemplate>>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -84,20 +99,6 @@ public partial class FactsClient : IFactsClient
                     var responseBody = await response
                         .Raw.Content.ReadAsStringAsync(cancellationToken)
                         .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
@@ -108,99 +109,8 @@ public partial class FactsClient : IFactsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<FactsListResponse>> ListAsyncCore(
-        string id,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Get,
-                            Path = string.Format(
-                                "interactions/{0}/facts/",
-                                ValueConvert.ToPathParameterString(id)
-                            ),
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<FactsListResponse>(responseBody)!;
-                        return new WithRawResponse<FactsListResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    private async Task<WithRawResponse<FactsCreateResponse>> CreateAsyncCore(
-        string id,
-        FactsCreateRequest request,
+    private async Task<WithRawResponse<GuidedTemplate>> CreateAsyncCore(
+        GuidedTemplatesCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -220,13 +130,9 @@ public partial class FactsClient : IFactsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
-                            Path = string.Format(
-                                "interactions/{0}/facts/",
-                                ValueConvert.ToPathParameterString(id)
-                            ),
+                            Path = "documents/templates/",
                             Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -239,10 +145,8 @@ public partial class FactsClient : IFactsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<FactsCreateResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<FactsCreateResponse>()
+                        var responseData = JsonUtils.Deserialize<GuidedTemplate>(responseBody)!;
+                        return new WithRawResponse<GuidedTemplate>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -273,9 +177,9 @@ public partial class FactsClient : IFactsClient
                     {
                         switch (response.StatusCode)
                         {
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -293,9 +197,99 @@ public partial class FactsClient : IFactsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<FactsBatchUpdateResponse>> BatchUpdateAsyncCore(
-        string id,
-        FactsBatchUpdateRequest request,
+    private async Task<WithRawResponse<GuidedTemplate>> GetAsyncCore(
+        string templateId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Get,
+                            Path = string.Format(
+                                "documents/templates/{0}",
+                                ValueConvert.ToPathParameterString(templateId)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<GuidedTemplate>(responseBody)!;
+                        return new WithRawResponse<GuidedTemplate>()
+                        {
+                            Data = responseData,
+                            RawResponse = new RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
+    private async Task<WithRawResponse<GuidedTemplate>> UpdateAsyncCore(
+        string templateId,
+        GuidedTemplatesUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -316,8 +310,8 @@ public partial class FactsClient : IFactsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethodExtensions.Patch,
                             Path = string.Format(
-                                "interactions/{0}/facts/",
-                                ValueConvert.ToPathParameterString(id)
+                                "documents/templates/{0}",
+                                ValueConvert.ToPathParameterString(templateId)
                             ),
                             Body = request,
                             Headers = _headers,
@@ -334,10 +328,8 @@ public partial class FactsClient : IFactsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<FactsBatchUpdateResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<FactsBatchUpdateResponse>()
+                        var responseData = JsonUtils.Deserialize<GuidedTemplate>(responseBody)!;
+                        return new WithRawResponse<GuidedTemplate>()
                         {
                             Data = responseData,
                             RawResponse = new RawResponse()
@@ -368,9 +360,13 @@ public partial class FactsClient : IFactsClient
                     {
                         switch (response.StatusCode)
                         {
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody)
                                 );
                         }
                     }
@@ -388,15 +384,80 @@ public partial class FactsClient : IFactsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<FactsUpdateResponse>> UpdateAsyncCore(
-        string id,
-        string factId,
-        FactsUpdateRequest request,
+    /// <example><code>
+    /// await client.Documents.Templates.ListAsync(new GuidedTemplatesListRequest());
+    /// </code></example>
+    public WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
+        GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return await _client
+        return new WithRawResponseTask<IEnumerable<GuidedTemplate>>(
+            ListAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Creates a new template with an initial version. When `publish` is true (default),
+    /// the response includes the published version with full inheritance resolution applied
+    /// (template-level and section-level inheritance walked).
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.Templates.CreateAsync(
+    ///     new GuidedTemplatesCreateFromScratchRequest
+    ///     {
+    ///         Name = "name",
+    ///         Generation = new GuidedTemplatesCreateFromScratchRequestGeneration
+    ///         {
+    ///             Instructions = new GuidedTemplateInstructions { Prompt = "prompt" },
+    ///         },
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<GuidedTemplate> CreateAsync(
+        GuidedTemplatesCreateRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<GuidedTemplate>(
+            CreateAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Returns the template with its published version fully resolved (inheritance walked,
+    /// sections expanded with their own inheritance applied). To see raw authored
+    /// values without inheritance, use GET /documents/templates/{templateID}/versions/{versionID}.
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.Templates.GetAsync("templateID");
+    /// </code></example>
+    public WithRawResponseTask<GuidedTemplate> GetAsync(
+        string templateId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<GuidedTemplate>(
+            GetAsyncCore(templateId, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Deletes a template and its versions. Returns 409 if other templates or sections inherit from this template.
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.Templates.DeleteAsync("templateID");
+    /// </code></example>
+    public async Task DeleteAsync(
+        string templateId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
@@ -410,15 +471,12 @@ public partial class FactsClient : IFactsClient
                         new JsonRequest
                         {
                             BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethodExtensions.Patch,
+                            Method = HttpMethod.Delete,
                             Path = string.Format(
-                                "interactions/{0}/facts/{1}",
-                                ValueConvert.ToPathParameterString(id),
-                                ValueConvert.ToPathParameterString(factId)
+                                "documents/templates/{0}",
+                                ValueConvert.ToPathParameterString(templateId)
                             ),
-                            Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -426,36 +484,7 @@ public partial class FactsClient : IFactsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<FactsUpdateResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<FactsUpdateResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e
-                        );
-                    }
+                    return;
                 }
                 {
                     var responseBody = await response
@@ -465,8 +494,12 @@ public partial class FactsClient : IFactsClient
                     {
                         switch (response.StatusCode)
                         {
-                            case 504:
-                                throw new GatewayTimeoutError(
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody)
+                                );
+                            case 409:
+                                throw new ConflictError(
                                     JsonUtils.Deserialize<ErrorResponse>(responseBody)
                                 );
                         }
@@ -485,230 +518,18 @@ public partial class FactsClient : IFactsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<FactsExtractResponse>> ExtractAsyncCore(
-        FactsExtractRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Post,
-                            Path = "tools/extract-facts",
-                            Body = request,
-                            Headers = _headers,
-                            ContentType = "application/json",
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<FactsExtractResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<FactsExtractResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    /// <summary>
-    /// Returns a list of available fact groups, used to categorize facts associated with an interaction.
-    /// </summary>
     /// <example><code>
-    /// await client.Facts.FactGroupsListAsync();
+    /// await client.Documents.Templates.UpdateAsync("templateID", new GuidedTemplatesUpdateRequest());
     /// </code></example>
-    public WithRawResponseTask<FactsFactGroupsListResponse> FactGroupsListAsync(
+    public WithRawResponseTask<GuidedTemplate> UpdateAsync(
+        string templateId,
+        GuidedTemplatesUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<FactsFactGroupsListResponse>(
-            FactGroupsListAsyncCore(options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Retrieves a list of facts for a given interaction.
-    /// </summary>
-    /// <example><code>
-    /// await client.Facts.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
-    /// </code></example>
-    public WithRawResponseTask<FactsListResponse> ListAsync(
-        string id,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<FactsListResponse>(
-            ListAsyncCore(id, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Adds new facts to an interaction.
-    /// </summary>
-    /// <example><code>
-    /// await client.Facts.CreateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new FactsCreateRequest
-    ///     {
-    ///         Facts = new List&lt;FactsCreateInput&gt;()
-    ///         {
-    ///             new FactsCreateInput { Text = "text", Group = "other" },
-    ///         },
-    ///     }
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<FactsCreateResponse> CreateAsync(
-        string id,
-        FactsCreateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<FactsCreateResponse>(
-            CreateAsyncCore(id, request, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Updates multiple facts associated with an interaction.
-    /// </summary>
-    /// <example><code>
-    /// await client.Facts.BatchUpdateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new FactsBatchUpdateRequest
-    ///     {
-    ///         Facts = new List&lt;FactsBatchUpdateInput&gt;()
-    ///         {
-    ///             new FactsBatchUpdateInput { FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08" },
-    ///         },
-    ///     }
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<FactsBatchUpdateResponse> BatchUpdateAsync(
-        string id,
-        FactsBatchUpdateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<FactsBatchUpdateResponse>(
-            BatchUpdateAsyncCore(id, request, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Updates an existing fact associated with a specific interaction.
-    /// </summary>
-    /// <example><code>
-    /// await client.Facts.UpdateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
-    ///     new FactsUpdateRequest()
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<FactsUpdateResponse> UpdateAsync(
-        string id,
-        string factId,
-        FactsUpdateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<FactsUpdateResponse>(
-            UpdateAsyncCore(id, factId, request, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Extract facts from provided text, without storing them.
-    /// </summary>
-    /// <example><code>
-    /// await client.Facts.ExtractAsync(
-    ///     new FactsExtractRequest
-    ///     {
-    ///         Context = new List&lt;CommonTextContext&gt;()
-    ///         {
-    ///             new CommonTextContext { Type = "text", Text = "text" },
-    ///         },
-    ///         OutputLanguage = "outputLanguage",
-    ///     }
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<FactsExtractResponse> ExtractAsync(
-        FactsExtractRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<FactsExtractResponse>(
-            ExtractAsyncCore(request, options, cancellationToken)
+        return new WithRawResponseTask<GuidedTemplate>(
+            UpdateAsyncCore(templateId, request, options, cancellationToken)
         );
     }
 }

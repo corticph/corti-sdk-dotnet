@@ -143,7 +143,7 @@ public partial class CodesClient : ICodesClient
     ///         {
     ///             new CommonTextContext
     ///             {
-    ///                 Type = CommonTextContextType.Text,
+    ///                 Type = "text",
     ///                 Text = "Short arm splint applied in ED for pain control.",
     ///             },
     ///         },
