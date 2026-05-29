@@ -2,17 +2,17 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Corti.Core;
 
-namespace Corti.Documents;
+namespace Corti;
 
-[JsonConverter(typeof(ListTemplatesRequestSource.ListTemplatesRequestSourceSerializer))]
+[JsonConverter(typeof(GuidedSourceFilter.GuidedSourceFilterSerializer))]
 [Serializable]
-public readonly record struct ListTemplatesRequestSource : IStringEnum
+public readonly record struct GuidedSourceFilter : IStringEnum
 {
-    public static readonly ListTemplatesRequestSource User = new(Values.User);
+    public static readonly GuidedSourceFilter User = new(Values.User);
 
-    public static readonly ListTemplatesRequestSource Corti = new(Values.Corti);
+    public static readonly GuidedSourceFilter Corti = new(Values.Corti);
 
-    public ListTemplatesRequestSource(string value)
+    public GuidedSourceFilter(string value)
     {
         Value = value;
     }
@@ -25,9 +25,9 @@ public readonly record struct ListTemplatesRequestSource : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static ListTemplatesRequestSource FromCustom(string value)
+    public static GuidedSourceFilter FromCustom(string value)
     {
-        return new ListTemplatesRequestSource(value);
+        return new GuidedSourceFilter(value);
     }
 
     public bool Equals(string? other)
@@ -43,19 +43,19 @@ public readonly record struct ListTemplatesRequestSource : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(ListTemplatesRequestSource value1, string value2) =>
+    public static bool operator ==(GuidedSourceFilter value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(ListTemplatesRequestSource value1, string value2) =>
+    public static bool operator !=(GuidedSourceFilter value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(ListTemplatesRequestSource value) => value.Value;
+    public static explicit operator string(GuidedSourceFilter value) => value.Value;
 
-    public static explicit operator ListTemplatesRequestSource(string value) => new(value);
+    public static explicit operator GuidedSourceFilter(string value) => new(value);
 
-    internal class ListTemplatesRequestSourceSerializer : JsonConverter<ListTemplatesRequestSource>
+    internal class GuidedSourceFilterSerializer : JsonConverter<GuidedSourceFilter>
     {
-        public override ListTemplatesRequestSource Read(
+        public override GuidedSourceFilter Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -66,19 +66,19 @@ public readonly record struct ListTemplatesRequestSource : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new ListTemplatesRequestSource(stringValue);
+            return new GuidedSourceFilter(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            ListTemplatesRequestSource value,
+            GuidedSourceFilter value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override ListTemplatesRequestSource ReadAsPropertyName(
+        public override GuidedSourceFilter ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -89,12 +89,12 @@ public readonly record struct ListTemplatesRequestSource : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new ListTemplatesRequestSource(stringValue);
+            return new GuidedSourceFilter(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            ListTemplatesRequestSource value,
+            GuidedSourceFilter value,
             JsonSerializerOptions options
         )
         {

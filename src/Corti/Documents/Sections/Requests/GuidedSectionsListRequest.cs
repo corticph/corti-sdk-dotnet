@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Corti;
 using Corti.Core;
 
 namespace Corti.Documents;
@@ -40,7 +41,7 @@ public record GuidedSectionsListRequest
     /// Filter by source. Omit to return both. `user` returns only user-created sections; `corti` returns only Corti standard sections.
     /// </summary>
     [JsonIgnore]
-    public ListSectionsRequestSource? Source { get; set; }
+    public GuidedSourceFilter? Source { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
