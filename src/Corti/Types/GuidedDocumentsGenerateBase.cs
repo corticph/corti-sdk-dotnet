@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// Fields shared across all guided-document request variants. `outputLanguage` is always required. Exactly one input mode must be supplied: provide context items inline, or reference an existing interaction whose attached facts and transcripts will be used.
+/// Fields shared across all guided-document request variants. `outputLanguage` is always required. Exactly one of `context` (possible to combine different context types) or `interactionId` (API auto-fetches existing facts, transcripts) must be supplied as input for the model.
 /// </summary>
 [Serializable]
 public record GuidedDocumentsGenerateBase : IJsonOnDeserialized

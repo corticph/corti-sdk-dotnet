@@ -36,6 +36,12 @@ public record GuidedSectionsListRequest
     [JsonIgnore]
     public bool? Published { get; set; }
 
+    /// <summary>
+    /// Filter by source. Omit to return both. `user` returns only user-created sections; `corti` returns only Corti standard sections.
+    /// </summary>
+    [JsonIgnore]
+    public ListSectionsRequestSource? Source { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

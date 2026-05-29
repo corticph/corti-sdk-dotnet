@@ -33,12 +33,13 @@ public partial class TemplatesClient : ITemplatesClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 5)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 6)
                     .Add("lang", request.Lang)
                     .Add("region", request.Region)
                     .Add("specialty", request.Specialty)
                     .Add("label", request.Label)
                     .Add("published", request.Published)
+                    .Add("source", request.Source)
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()

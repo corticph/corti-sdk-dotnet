@@ -36,6 +36,12 @@ public record GuidedTemplatesListRequest
     [JsonIgnore]
     public bool? Published { get; set; }
 
+    /// <summary>
+    /// Filter by source. Omit to return both. `user` returns only user/client-created templates; `corti` returns only Corti standard templates.
+    /// </summary>
+    [JsonIgnore]
+    public ListTemplatesRequestSource? Source { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {
