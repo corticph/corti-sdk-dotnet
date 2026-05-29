@@ -4,8 +4,11 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// A single fact provided as input context to the model.
+/// </summary>
 [Serializable]
-public record CommonTextContext : IJsonOnDeserialized
+public record CommonFactsContext : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +16,7 @@ public record CommonTextContext : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public CommonTextContext.TypeLiteral Type { get;
+    public CommonFactsContext.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -21,11 +24,8 @@ public record CommonTextContext : IJsonOnDeserialized
 #endif
     } = new();
 
-    /// <summary>
-    /// A text string to be used as input to the model.
-    /// </summary>
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    [JsonPropertyName("fact")]
+    public required GuidedDocumentFactMinimal Fact { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -42,7 +42,7 @@ public record CommonTextContext : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "text";
+        public const string Value = "facts";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

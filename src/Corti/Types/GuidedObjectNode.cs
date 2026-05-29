@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record CommonTextContext : IJsonOnDeserialized
+public record GuidedObjectNode : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +13,7 @@ public record CommonTextContext : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public CommonTextContext.TypeLiteral Type { get;
+    public GuidedObjectNode.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -22,10 +22,28 @@ public record CommonTextContext : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// A text string to be used as input to the model.
+    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
     /// </summary>
-    [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Free-form format string that controls how an object's fields are rendered into the final text output. Operates in one of two modes determined by which placeholders appear:
+    ///
+    /// **Subheading mode** (default: `"{key}: {value}\n"`): triggered when the format contains both `{key}` and `{value}`. Applied per field — each field becomes a key/value line. Fields that render to null are skipped.
+    ///
+    /// **Object mode** (e.g. `"{name} ({age})"`): triggered when `{key}` and `{value}` are absent. Placeholders must be actual field keys defined in `fields`. Applied once for the whole object, composing all fields into a single string. Fields rendering to null become empty string.
+    ///
+    /// Validation rules: format must not be empty; if either `{key}` or `{value}` appears, both must be present; in subheading mode no extra placeholders are allowed; in object mode every placeholder must match a defined field key.
+    /// </summary>
+    [JsonPropertyName("fieldFormat")]
+    public string? FieldFormat { get; set; }
+
+    /// <summary>
+    /// Define what fields are possible to return in the object.
+    /// </summary>
+    [JsonPropertyName("fields")]
+    public IEnumerable<GuidedFieldDefinition>? Fields { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -42,7 +60,7 @@ public record CommonTextContext : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "text";
+        public const string Value = "object";
 
         public static implicit operator string(TypeLiteral _) => Value;
 
