@@ -54,7 +54,7 @@ public record TranscribeConfig : IJsonOnDeserialized
     public string? AudioFormat { get; set; }
 
     /// <summary>
-    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily".
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is limited to 1,000 replacements per stream.
     /// </summary>
     [JsonPropertyName("replacements")]
     public IEnumerable<TranscribeConfigReplacementsItem>? Replacements { get; set; }
