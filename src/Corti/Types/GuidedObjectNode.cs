@@ -22,7 +22,7 @@ public record GuidedObjectNode : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
+    /// Guide the LLM in what to output for this node. Supplements the section-level instructions.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
