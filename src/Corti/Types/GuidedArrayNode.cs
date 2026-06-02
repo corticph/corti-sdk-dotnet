@@ -31,7 +31,7 @@ public record GuidedArrayNode : IJsonOnDeserialized
     public required GuidedOutputSchema Items { get; set; }
 
     /// <summary>
-    /// Controls how each array item is rendered in the generated output. Use `bullet` (default), `numbered`, or `plain`, or provide a custom format string containing the `{item}` placeholder.
+    /// Format string used to render each array item in the generated output. Use the `{item}` placeholder for the item value.
     /// </summary>
     [JsonPropertyName("itemFormat")]
     public string? ItemFormat { get; set; }

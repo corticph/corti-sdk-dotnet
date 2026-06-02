@@ -5,17 +5,23 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TranscribeAudioEventsConfig : IJsonOnDeserialized
+public record TranscribeConfigReplacementsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// When true, enables audio quality and speech activity events to be sent over the WebSocket. Disabled by default.
+    /// The term to be replaced, such as "BID".
     /// </summary>
-    [JsonPropertyName("enabled")]
-    public required bool Enabled { get; set; }
+    [JsonPropertyName("find")]
+    public required string Find { get; set; }
+
+    /// <summary>
+    /// The preferred replacement for the term, such as "twice daily".
+    /// </summary>
+    [JsonPropertyName("replace")]
+    public required string Replace { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
