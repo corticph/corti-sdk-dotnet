@@ -14,6 +14,7 @@ public partial class TemplatesClient : ITemplatesClient
         {
             _client = client;
             Versions = new Corti.Documents.Templates.VersionsClient(_client);
+            Policies = new Corti.Documents.Templates.PoliciesClient(_client);
         }
         catch (Exception ex)
         {
@@ -23,6 +24,8 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
+
+    public Corti.Documents.Templates.IPoliciesClient Policies { get; }
 
     private async Task<WithRawResponse<IEnumerable<GuidedTemplate>>> ListAsyncCore(
         GuidedTemplatesListRequest request,

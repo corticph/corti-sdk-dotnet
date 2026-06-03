@@ -14,6 +14,7 @@ public partial class SectionsClient : ISectionsClient
         {
             _client = client;
             Versions = new Corti.Documents.Sections.VersionsClient(_client);
+            Policies = new Corti.Documents.Sections.PoliciesClient(_client);
         }
         catch (Exception ex)
         {
@@ -23,6 +24,8 @@ public partial class SectionsClient : ISectionsClient
     }
 
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
+
+    public Corti.Documents.Sections.IPoliciesClient Policies { get; }
 
     private async Task<WithRawResponse<IEnumerable<GuidedSection>>> ListAsyncCore(
         GuidedSectionsListRequest request,

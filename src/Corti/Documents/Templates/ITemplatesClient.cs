@@ -5,6 +5,7 @@ namespace Corti.Documents;
 public partial interface ITemplatesClient
 {
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
+    public Corti.Documents.Templates.IPoliciesClient Policies { get; }
     WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
         GuidedTemplatesListRequest request,
         RequestOptions? options = null,

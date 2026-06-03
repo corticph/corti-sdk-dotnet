@@ -5,6 +5,7 @@ namespace Corti.Documents;
 public partial interface ISectionsClient
 {
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
+    public Corti.Documents.Sections.IPoliciesClient Policies { get; }
     WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
         GuidedSectionsListRequest request,
         RequestOptions? options = null,
