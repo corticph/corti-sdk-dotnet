@@ -1,11 +1,11 @@
 namespace Corti;
 
-public partial interface IDocumentsClient
+public partial interface IDocumentsClassicClient
 {
     /// <summary>
     /// List Documents
     /// </summary>
-    WithRawResponseTask<DocumentsListResponse> ListAsync(
+    WithRawResponseTask<DocumentsListResponse> DocumentsListAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -14,7 +14,7 @@ public partial interface IDocumentsClient
     /// <summary>
     /// This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
     /// </summary>
-    WithRawResponseTask<DocumentsGetResponse> CreateAsync(
+    WithRawResponseTask<DocumentsGetResponse> DocumentsCreateAsync(
         string id,
         DocumentsCreateRequest request,
         RequestOptions? options = null,
@@ -24,21 +24,21 @@ public partial interface IDocumentsClient
     /// <summary>
     /// Get Document.
     /// </summary>
-    WithRawResponseTask<DocumentsGetResponse> GetAsync(
+    WithRawResponseTask<DocumentsGetResponse> DocumentsGetAsync(
         string id,
         string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    Task DeleteAsync(
+    Task DocumentsDeleteAsync(
         string id,
         string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
+    WithRawResponseTask<DocumentsGetResponse> DocumentsUpdateAsync(
         string id,
         string documentId,
         DocumentsUpdateRequest request,

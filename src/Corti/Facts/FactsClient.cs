@@ -695,7 +695,7 @@ public partial class FactsClient : IFactsClient
     ///     {
     ///         Context = new List&lt;CommonTextContext&gt;()
     ///         {
-    ///             new CommonTextContext { Type = CommonTextContextType.Text, Text = "text" },
+    ///             new CommonTextContext { Type = "text", Text = "text" },
     ///         },
     ///         OutputLanguage = "outputLanguage",
     ///     }
