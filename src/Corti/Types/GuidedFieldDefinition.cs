@@ -18,11 +18,14 @@ public record GuidedFieldDefinition : IJsonOnDeserialized
     public required string Key { get; set; }
 
     /// <summary>
-    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
+    /// Guide the LLM in what to output for this node. Supplements the section-level instructions.
     /// </summary>
     [JsonPropertyName("description")]
     public required string Description { get; set; }
 
+    /// <summary>
+    /// Must be another output schema node (string, number, boolean, array, or object).
+    /// </summary>
     [JsonPropertyName("value")]
     public required GuidedOutputSchema Value { get; set; }
 
