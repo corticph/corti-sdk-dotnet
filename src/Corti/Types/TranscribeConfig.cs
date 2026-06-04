@@ -18,19 +18,19 @@ public record TranscribeConfig : IJsonOnDeserialized
     public required string PrimaryLanguage { get; set; }
 
     /// <summary>
-    /// When true, returns interim results for reduced latency
+    /// When true, returns interim (preview) transcript results (`isFinal=false`) for reduced latency than final transcripts. Defaults to false.
     /// </summary>
     [JsonPropertyName("interimResults")]
     public bool? InterimResults { get; set; }
 
     /// <summary>
-    /// When true, converts spoken punctuation such as 'period' or 'slash' into '.' or '/'
+    /// When true, converts spoken punctuation such as 'period' or 'slash' into '.' or '/'. Defaults to false. Overrides automaticPunctuation when both are enabled.
     /// </summary>
     [JsonPropertyName("spokenPunctuation")]
     public bool? SpokenPunctuation { get; set; }
 
     /// <summary>
-    /// When true, automatically punctuates and capitalizes in the final transcript
+    /// When true, automatically punctuates and capitalizes in the final transcript. Defaults to false. Overridden by spokenPunctuation when both are enabled.
     /// </summary>
     [JsonPropertyName("automaticPunctuation")]
     public bool? AutomaticPunctuation { get; set; }
@@ -48,10 +48,16 @@ public record TranscribeConfig : IJsonOnDeserialized
     public TranscribeAudioEventsConfig? AudioEvents { get; set; }
 
     /// <summary>
-    /// The audio format of the incoming audio stream
+    /// Define the audio format of the incoming audio stream - optional but recommended. When omitted, the server auto-detects the format from the first audio chunk using ffprobe. Supported audio will be processed. Unsupported return an error but might in some cases error silently. If provided (recommended), the provided MIME type must be supported and the audio must match the MIME type. An unsupported MIME type results in `CONFIG_REJECTED`. Audio that differs from the MIME type will return audio validation errors on the socket. See full list of supported MIME types [here](/stt/audio).
     /// </summary>
     [JsonPropertyName("audioFormat")]
     public string? AudioFormat { get; set; }
+
+    /// <summary>
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is limited to 1,000 replacements per stream.
+    /// </summary>
+    [JsonPropertyName("replacements")]
+    public IEnumerable<TranscribeConfigReplacementsItem>? Replacements { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

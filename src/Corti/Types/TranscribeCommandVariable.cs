@@ -12,7 +12,7 @@ public record TranscribeCommandVariable : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Variable key identifier
+    /// Define the variable used in command phrases.
     /// </summary>
     [JsonPropertyName("key")]
     public required string Key { get; set; }
@@ -31,7 +31,7 @@ public record TranscribeCommandVariable : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Enum values for the variable
+    /// List of values that should be recognized for the defined variable.
     /// </summary>
     [JsonPropertyName("enum")]
     public IEnumerable<string> Enum { get; set; } = new List<string>();
