@@ -12,7 +12,7 @@ public record FactsContext : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The .
+    /// The text of the fact.
     /// </summary>
     [JsonPropertyName("text")]
     public required string Text { get; set; }
