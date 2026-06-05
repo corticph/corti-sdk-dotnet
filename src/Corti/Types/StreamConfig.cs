@@ -27,7 +27,7 @@ public record StreamConfig : IJsonOnDeserialized
     public StreamAudioEventsConfig? AudioEvents { get; set; }
 
     /// <summary>
-    /// The audio format of the incoming audio stream
+    /// Define the audio format of the incoming audio stream - optional but recommended. When omitted, the server auto-detects the format from the first audio chunk using ffprobe. Supported audio will be processed. Unsupported return an error but might in some cases error silently. If provided (recommended), the provided MIME type must be supported and the audio must match the MIME type. An unsupported MIME type results in `CONFIG_REJECTED`. Audio that differs from the MIME type will return audio validation errors on the socket. See full list of supported MIME types [here](/stt/audio).
     /// </summary>
     [JsonPropertyName("audioFormat")]
     public string? AudioFormat { get; set; }
