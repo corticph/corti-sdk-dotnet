@@ -1,3 +1,4 @@
+using Corti;
 using NUnit.Framework;
 
 namespace Corti.Test.Custom.Transcribe;
@@ -138,15 +139,16 @@ public class DictationTranscriptTests
     }
 
     [Test]
-    public void DuplicateFinal_InterimCleared()
+    public void DuplicateFinal_InterimForNewerSpanPreserved()
     {
-        // Interim in flight, then two finals for the same span.
-        var snap = DictationTranscript.Apply(null, Msg("pa", 0, 0.5, isFinal: false));
-        snap = DictationTranscript.Apply(snap, Msg("pain.", 0, 1, isFinal: true));
-        snap = DictationTranscript.Apply(snap, Msg("pain.", 0, 1, isFinal: true));
+        // Interim for span 2 is in flight; duplicate final for the earlier span 0 arrives.
+        // The newer interim must not be wiped.
+        var snap = DictationTranscript.Apply(null, Msg("pain.", 0, 1, isFinal: true));
+        snap = DictationTranscript.Apply(snap, Msg("mild", 2, 2.5, isFinal: false));
+        snap = DictationTranscript.Apply(snap, Msg("pain.", 0, 1, isFinal: true)); // duplicate
 
         Assert.That(snap.CommittedText, Is.EqualTo("pain."));
-        Assert.That(snap.InterimText, Is.EqualTo(string.Empty));
+        Assert.That(snap.InterimText, Is.EqualTo(" mild"));
     }
 
     // -------------------------------------------------------------------------

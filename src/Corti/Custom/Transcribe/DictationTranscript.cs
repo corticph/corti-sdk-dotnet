@@ -1,7 +1,3 @@
-#if NET8_0_OR_GREATER
-using System.Collections.Frozen;
-#endif
-
 namespace Corti;
 
 /// <summary>
@@ -24,7 +20,7 @@ public sealed record DictationTranscriptSnapshot
     public required string InterimText { get; init; }
 
     /// <summary>Internal: set of start values that have been finalized.</summary>
-    internal HashSet<double> FinalizedStarts { get; init; } = new HashSet<double>();
+    internal HashSet<double> FinalizedStarts { get; init; } = new();
 
     /// <summary>Internal: maximum end value over all finalized segments.</summary>
     internal double LatestFinalEnd { get; init; } = double.NegativeInfinity;
@@ -36,27 +32,15 @@ public sealed record DictationTranscriptSnapshot
 /// </summary>
 public static class DictationTranscript
 {
-#if NET8_0_OR_GREATER
-    private static readonly FrozenSet<char> NoSpaceAfter = new[]
-    {
-        '(', '[', '{', '"', '\'', '\u2018', '\u201c',
-    }.ToFrozenSet();
-
-    private static readonly FrozenSet<char> LeftAttach = new[]
-    {
-        ',', '.', ':', ';', '!', '?', ')', ']', '}', '%',
-    }.ToFrozenSet();
-#else
-    private static readonly HashSet<char> NoSpaceAfter = new HashSet<char>
+    private static readonly HashSet<char> NoSpaceAfter = new()
     {
         '(', '[', '{', '"', '\'', '\u2018', '\u201c',
     };
 
-    private static readonly HashSet<char> LeftAttach = new HashSet<char>
+    private static readonly HashSet<char> LeftAttach = new()
     {
         ',', '.', ':', ';', '!', '?', ')', ']', '}', '%',
     };
-#endif
 
     /// <summary>
     /// Applies a single transcript message to the previous snapshot and returns a new
@@ -76,7 +60,9 @@ public static class DictationTranscript
         {
             if (finalizedStarts.Contains(message.Start))
             {
-                return previous! with { InterimText = string.Empty };
+                // R5: duplicate final — fully idempotent; do not touch interim (a newer
+                // interim for a different span may be in flight).
+                return previous!;
             }
 
             var nextFinalizedStarts = new HashSet<double>(finalizedStarts) { message.Start };
@@ -138,7 +124,5 @@ public static class DictationTranscript
         {
             CommittedText = string.Empty,
             InterimText = string.Empty,
-            FinalizedStarts = new HashSet<double>(),
-            LatestFinalEnd = double.NegativeInfinity,
         };
 }
