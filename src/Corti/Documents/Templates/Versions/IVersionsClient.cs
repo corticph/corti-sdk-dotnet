@@ -4,6 +4,10 @@ namespace Corti.Documents.Templates;
 
 public partial interface IVersionsClient
 {
+    /// <summary>
+    /// Returns raw authored template versions without inheritance resolution or section expansion.
+    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// </summary>
     WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersionResponse>> ListAsync(
         string templateId,
         RequestOptions? options = null,
@@ -20,6 +24,10 @@ public partial interface IVersionsClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Returns the raw authored template version without inheritance resolution or section expansion.
+    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// </summary>
     WithRawResponseTask<GuidedShallowTemplateVersionResponse> GetAsync(
         string templateId,
         string versionId,
