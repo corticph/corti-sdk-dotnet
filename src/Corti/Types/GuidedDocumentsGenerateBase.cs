@@ -32,6 +32,12 @@ public record GuidedDocumentsGenerateBase : IJsonOnDeserialized
     [JsonPropertyName("interactionId")]
     public string? InteractionId { get; set; }
 
+    /// <summary>
+    /// Key/value labels attached to the document. Used for filtering in the LIST /documents endpoint.
+    /// </summary>
+    [JsonPropertyName("labels")]
+    public IEnumerable<GuidedLabel>? Labels { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
