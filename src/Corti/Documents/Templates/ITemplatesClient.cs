@@ -5,6 +5,11 @@ namespace Corti.Documents;
 public partial interface ITemplatesClient
 {
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
+
+    /// <summary>
+    /// Returns a list of templates and their metadata. Fetch a specific templateId to get the expanded sections.
+    /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
+    /// </summary>
     WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
         GuidedTemplatesListRequest request,
         RequestOptions? options = null,
@@ -42,6 +47,11 @@ public partial interface ITemplatesClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Updates the template's metadata fields (name, description, languages, regions, specialties, labels).
+    /// Generation content (template instructions, section composition) is managed through versions
+    /// and cannot be updated here.
+    /// </summary>
     WithRawResponseTask<GuidedTemplate> UpdateAsync(
         string templateId,
         GuidedTemplatesUpdateRequest request,

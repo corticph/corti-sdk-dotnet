@@ -19,7 +19,19 @@ public record TranscriptsCreateRequest
     public required string PrimaryLanguage { get; set; }
 
     /// <summary>
-    /// Indicates whether spoken dictation commands should be converted to punctuation (e.g., 'comma' → ',').
+    /// When true, converts spoken punctuation such as 'period' or 'slash' into symbols (e.g., '.', '/'). When enabled, automatic punctuation is turned off. Takes precedence over `automaticPunctuation` when both are enabled.
+    /// </summary>
+    [JsonPropertyName("spokenPunctuation")]
+    public bool? SpokenPunctuation { get; set; }
+
+    /// <summary>
+    /// When true, automatically punctuates and capitalizes the transcript. Defaults to true. Overridden by `spokenPunctuation` when both are enabled.
+    /// </summary>
+    [JsonPropertyName("automaticPunctuation")]
+    public bool? AutomaticPunctuation { get; set; }
+
+    /// <summary>
+    /// **Deprecated** — replaced by `spokenPunctuation` and `automaticPunctuation`. Ignored when either of those fields is provided. When `true` and neither new field is provided, it is treated as `spokenPunctuation: true` (automatic punctuation off). No removal date is currently planned.
     /// </summary>
     [JsonPropertyName("isDictation")]
     public bool? IsDictation { get; set; }
@@ -41,6 +53,12 @@ public record TranscriptsCreateRequest
     /// </summary>
     [JsonPropertyName("participants")]
     public IEnumerable<TranscriptsParticipant>? Participants { get; set; }
+
+    /// <summary>
+    /// If true, the request will return immediately with a 202 status and the transcript will be processed asynchronously. Poll [Get Transcript Status](/api-reference/transcripts/get-transcript-status) to check transcript processing status - `processing`, `completed`, `failed`.
+    /// </summary>
+    [JsonPropertyName("async")]
+    public bool? Async { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

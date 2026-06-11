@@ -22,25 +22,25 @@ public record GuidedStringNode : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
+    /// Guide the LLM in what to output for this node. Supplements the section-level instructions.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
     /// <summary>
-    /// The default to output if nothing to output.
+    /// If nothing is outputted, this default is used. When `enum` is set, the default must be one of the enum values.
     /// </summary>
     [JsonPropertyName("default")]
     public string? Default { get; set; }
 
     /// <summary>
-    /// Can be used to prompt the LLM with specific values to output.
+    /// Can be used to guide the LLM with specific values to output.
     /// </summary>
     [JsonPropertyName("enum")]
     public IEnumerable<string>? Enum { get; set; }
 
     /// <summary>
-    /// Can be used to prompt the LLM for a specific output pattern.
+    /// Can be used to constrain the LLM to output a specific pattern.
     /// </summary>
     [JsonPropertyName("pattern")]
     public string? Pattern { get; set; }
