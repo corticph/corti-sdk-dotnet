@@ -72,12 +72,6 @@ public record GuidedTemplate : IJsonOnDeserialized
     public IEnumerable<GuidedLabel> Labels { get; set; } = new List<GuidedLabel>();
 
     /// <summary>
-    /// Access policies for this template.
-    /// </summary>
-    [JsonPropertyName("policies")]
-    public IEnumerable<GuidedTemplatePolicy>? Policies { get; set; }
-
-    /// <summary>
     /// The currently published version with inheritance fully resolved. Present when a version has been published.
     /// </summary>
     [JsonPropertyName("publishedVersion")]

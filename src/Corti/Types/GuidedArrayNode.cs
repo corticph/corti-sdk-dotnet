@@ -22,16 +22,19 @@ public record GuidedArrayNode : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
+    /// Guide the LLM in what to output for this node. Supplements the section-level instructions.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
+    /// <summary>
+    /// Must be another output schema node (string, number, boolean, array, or object).
+    /// </summary>
     [JsonPropertyName("items")]
     public required GuidedOutputSchema Items { get; set; }
 
     /// <summary>
-    /// Controls how each array item is rendered in the generated output. Use `bullet` (default), `numbered`, or `plain`, or provide a custom format string containing the `{item}` placeholder.
+    /// Format string used to render each array item in the generated output. Use the `{item}` placeholder for the item value.
     /// </summary>
     [JsonPropertyName("itemFormat")]
     public string? ItemFormat { get; set; }

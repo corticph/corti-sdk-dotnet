@@ -95,12 +95,6 @@ public record GuidedSection : IJsonOnDeserialized
     [JsonPropertyName("deletedAt")]
     public DateTime? DeletedAt { get; set; }
 
-    /// <summary>
-    /// Access policies for this section.
-    /// </summary>
-    [JsonPropertyName("policies")]
-    public IEnumerable<GuidedSectionPolicy>? Policies { get; set; }
-
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

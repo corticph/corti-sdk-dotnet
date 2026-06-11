@@ -384,6 +384,10 @@ public partial class SectionsClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Returns a list of sections and their metadata. Fetch a sectionId to get the full generation content.
+    /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.ListAsync(new GuidedSectionsListRequest());
     /// </code></example>
@@ -520,6 +524,10 @@ public partial class SectionsClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Updates the section's metadata fields (name, description, languages, regions, specialties, labels).
+    /// Generation content (instructions, output schema) is managed through versions and cannot be updated here.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.UpdateAsync("sectionID", new GuidedSectionsUpdateRequest());
     /// </code></example>
