@@ -4,15 +4,15 @@ using Corti.Core;
 
 namespace Corti;
 
-[JsonConverter(typeof(GuidedTemplatePolicyKind.GuidedTemplatePolicyKindSerializer))]
+[JsonConverter(typeof(TranscribeCommandVariableType.TranscribeCommandVariableTypeSerializer))]
 [Serializable]
-public readonly record struct GuidedTemplatePolicyKind : IStringEnum
+public readonly record struct TranscribeCommandVariableType : IStringEnum
 {
-    public static readonly GuidedTemplatePolicyKind Project = new(Values.Project);
+    public static readonly TranscribeCommandVariableType Enum = new(Values.Enum);
 
-    public static readonly GuidedTemplatePolicyKind Customers = new(Values.Customers);
+    public static readonly TranscribeCommandVariableType Wildcard = new(Values.Wildcard);
 
-    public GuidedTemplatePolicyKind(string value)
+    public TranscribeCommandVariableType(string value)
     {
         Value = value;
     }
@@ -25,9 +25,9 @@ public readonly record struct GuidedTemplatePolicyKind : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static GuidedTemplatePolicyKind FromCustom(string value)
+    public static TranscribeCommandVariableType FromCustom(string value)
     {
-        return new GuidedTemplatePolicyKind(value);
+        return new TranscribeCommandVariableType(value);
     }
 
     public bool Equals(string? other)
@@ -43,19 +43,20 @@ public readonly record struct GuidedTemplatePolicyKind : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(GuidedTemplatePolicyKind value1, string value2) =>
+    public static bool operator ==(TranscribeCommandVariableType value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(GuidedTemplatePolicyKind value1, string value2) =>
+    public static bool operator !=(TranscribeCommandVariableType value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(GuidedTemplatePolicyKind value) => value.Value;
+    public static explicit operator string(TranscribeCommandVariableType value) => value.Value;
 
-    public static explicit operator GuidedTemplatePolicyKind(string value) => new(value);
+    public static explicit operator TranscribeCommandVariableType(string value) => new(value);
 
-    internal class GuidedTemplatePolicyKindSerializer : JsonConverter<GuidedTemplatePolicyKind>
+    internal class TranscribeCommandVariableTypeSerializer
+        : JsonConverter<TranscribeCommandVariableType>
     {
-        public override GuidedTemplatePolicyKind Read(
+        public override TranscribeCommandVariableType Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -66,19 +67,19 @@ public readonly record struct GuidedTemplatePolicyKind : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new GuidedTemplatePolicyKind(stringValue);
+            return new TranscribeCommandVariableType(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            GuidedTemplatePolicyKind value,
+            TranscribeCommandVariableType value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override GuidedTemplatePolicyKind ReadAsPropertyName(
+        public override TranscribeCommandVariableType ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -89,12 +90,12 @@ public readonly record struct GuidedTemplatePolicyKind : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new GuidedTemplatePolicyKind(stringValue);
+            return new TranscribeCommandVariableType(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            GuidedTemplatePolicyKind value,
+            TranscribeCommandVariableType value,
             JsonSerializerOptions options
         )
         {
@@ -108,8 +109,8 @@ public readonly record struct GuidedTemplatePolicyKind : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string Project = "project";
+        public const string Enum = "enum";
 
-        public const string Customers = "customers";
+        public const string Wildcard = "wildcard";
     }
 }

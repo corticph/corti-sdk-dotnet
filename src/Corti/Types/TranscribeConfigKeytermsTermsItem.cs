@@ -5,17 +5,17 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record TranscribeAudioEventsConfig : IJsonOnDeserialized
+public record TranscribeConfigKeytermsTermsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// When true, enables audio quality and speech activity events to be sent over the WebSocket. Disabled by default.
+    /// The word to be recognized, defined in its expected written form.
     /// </summary>
-    [JsonPropertyName("enabled")]
-    public required bool Enabled { get; set; }
+    [JsonPropertyName("term")]
+    public required string Term { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

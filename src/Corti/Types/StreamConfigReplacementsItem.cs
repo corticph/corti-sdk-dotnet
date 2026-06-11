@@ -5,20 +5,23 @@ using Corti.Core;
 namespace Corti;
 
 [Serializable]
-public record GuidedSectionsCreatePolicyRequest : IJsonOnDeserialized
+public record StreamConfigReplacementsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("kind")]
-    public required GuidedTemplatePolicyKind Kind { get; set; }
+    /// <summary>
+    /// The term to be replaced, such as "BID".
+    /// </summary>
+    [JsonPropertyName("find")]
+    public required string Find { get; set; }
 
     /// <summary>
-    /// Required when `kind` is `customers`. List of customer tenant identifiers that should have access.
+    /// The preferred replacement for the term, such as "twice daily".
     /// </summary>
-    [JsonPropertyName("customerIds")]
-    public IEnumerable<string>? CustomerIds { get; set; }
+    [JsonPropertyName("replace")]
+    public required string Replace { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

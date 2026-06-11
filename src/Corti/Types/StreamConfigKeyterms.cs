@@ -4,18 +4,21 @@ using Corti.Core;
 
 namespace Corti;
 
+/// <summary>
+/// Define words, terms, and phrases to be recognized by Corti speech-to-text. Especially useful for proper nouns (e.g., surnames), but also supportive of words not being recognized consistently. Configuration is case sensitive and limited to 1,000 key terms per stream.
+/// </summary>
 [Serializable]
-public record TranscribeAudioEventsConfig : IJsonOnDeserialized
+public record StreamConfigKeyterms : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// When true, enables audio quality and speech activity events to be sent over the WebSocket. Disabled by default.
+    /// Ordered list of words to be recognized.
     /// </summary>
-    [JsonPropertyName("enabled")]
-    public required bool Enabled { get; set; }
+    [JsonPropertyName("terms")]
+    public IEnumerable<StreamConfigKeytermsTermsItem>? Terms { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
