@@ -59,12 +59,6 @@ public record GuidedSectionsCreateFromScratchRequest : IJsonOnDeserialized
     [JsonPropertyName("publish")]
     public bool? Publish { get; set; }
 
-    /// <summary>
-    /// Access policies to apply to the section on creation.
-    /// </summary>
-    [JsonPropertyName("policies")]
-    public IEnumerable<GuidedSectionsCreatePolicyRequest>? Policies { get; set; }
-
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
