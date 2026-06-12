@@ -10,7 +10,7 @@
     "include-exception-handler": true,
     "inline-path-parameters": true,
     "generate-literals": true,
-    "experimental-enable-forward-compatible-enums": false,
+    "enable-forward-compatible-enums": false,
     "experimental-enable-websockets": true,
     "temporary-websocket-environments": {
       "/interactions/": {
@@ -27,7 +27,7 @@
       }
     }
   },
-  "originGitCommit": "96c7b069d9bcfa9e9199a4e88cf51f9b933f2cdd",
+  "originGitCommit": "8bd15165cac89873136419ee148664b72dbc9a93",
   "originGitCommitIsDirty": false,
   "invokedBy": "ci",
   "requestedVersion": "0.0.0-dev",
