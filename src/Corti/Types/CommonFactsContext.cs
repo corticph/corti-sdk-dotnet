@@ -5,7 +5,7 @@ using Corti.Core;
 namespace Corti;
 
 /// <summary>
-/// A single fact provided as input context to the model.
+/// A list of facts provided as input context to the model.
 /// </summary>
 [Serializable]
 public record CommonFactsContext : IJsonOnDeserialized
@@ -24,8 +24,9 @@ public record CommonFactsContext : IJsonOnDeserialized
 #endif
     } = new();
 
-    [JsonPropertyName("fact")]
-    public required GuidedDocumentFactMinimal Fact { get; set; }
+    [JsonPropertyName("facts")]
+    public IEnumerable<GuidedDocumentFactMinimal> Facts { get; set; } =
+        new List<GuidedDocumentFactMinimal>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
