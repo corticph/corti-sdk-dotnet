@@ -16,8 +16,8 @@ public partial interface ITranscribeApi : IAsyncDisposable, IDisposable
     public Event<TranscribeErrorMessage> TranscribeErrorMessage { get; }
     public Event<TranscribeTranscriptMessage> TranscribeTranscriptMessage { get; }
     public Event<TranscribeCommandMessage> TranscribeCommandMessage { get; }
-    public Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage { get; }
     public Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage { get; }
+    public Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage { get; }
     public Event<JsonElement> UnknownMessage { get; }
     public ConnectionStatus Status { get; }
     Task ConnectAsync(CancellationToken cancellationToken = default);

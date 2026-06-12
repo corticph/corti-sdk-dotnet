@@ -113,16 +113,16 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     public Event<StreamErrorMessage> StreamErrorMessage { get; } = new();
 
     /// <summary>
-    /// Event handler for StreamConfigStatusMessage.
-    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public Event<StreamConfigStatusMessage> StreamConfigStatusMessage { get; } = new();
-
-    /// <summary>
     /// Event handler for StreamAudioEventMessage.
     /// Use StreamAudioEventMessage.Subscribe(...) to receive messages.
     /// </summary>
     public Event<StreamAudioEventMessage> StreamAudioEventMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamConfigStatusMessage.
+    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamConfigStatusMessage> StreamConfigStatusMessage { get; } = new();
 
     /// <summary>
     /// Event handler for unknown/unrecognized message types.
@@ -142,8 +142,8 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
         StreamEndedMessage.Dispose();
         StreamUsageMessage.Dispose();
         StreamErrorMessage.Dispose();
-        StreamConfigStatusMessage.Dispose();
         StreamAudioEventMessage.Dispose();
+        StreamConfigStatusMessage.Dispose();
         UnknownMessage.Dispose();
     }
 
@@ -219,17 +219,17 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
         }
 
         {
-            if (JsonUtils.TryDeserialize(json, out StreamConfigStatusMessage? message))
+            if (JsonUtils.TryDeserialize(json, out StreamAudioEventMessage? message))
             {
-                await StreamConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
+                await StreamAudioEventMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
 
         {
-            if (JsonUtils.TryDeserialize(json, out StreamAudioEventMessage? message))
+            if (JsonUtils.TryDeserialize(json, out StreamConfigStatusMessage? message))
             {
-                await StreamAudioEventMessage.RaiseEvent(message!).ConfigureAwait(false);
+                await StreamConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
