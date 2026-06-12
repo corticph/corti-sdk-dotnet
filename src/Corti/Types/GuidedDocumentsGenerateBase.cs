@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -31,6 +31,12 @@ public record GuidedDocumentsGenerateBase : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("interactionId")]
     public string? InteractionId { get; set; }
+
+    /// <summary>
+    /// Key/value labels attached to the document. Used for filtering in the LIST /documents endpoint.
+    /// </summary>
+    [JsonPropertyName("labels")]
+    public IEnumerable<GuidedLabel>? Labels { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

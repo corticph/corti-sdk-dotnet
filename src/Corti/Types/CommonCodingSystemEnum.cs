@@ -1,169 +1,149 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(CommonCodingSystemEnum.CommonCodingSystemEnumSerializer))]
-[Serializable]
-public readonly record struct CommonCodingSystemEnum : IStringEnum
+[JsonConverter(typeof(CommonCodingSystemEnumSerializer))]
+public enum CommonCodingSystemEnum
 {
-    public static readonly CommonCodingSystemEnum Icd10CmInpatient = new(Values.Icd10CmInpatient);
+    [EnumMember(Value = "icd10cm-inpatient")]
+    Icd10CmInpatient,
 
-    public static readonly CommonCodingSystemEnum Icd10CmOutpatient = new(Values.Icd10CmOutpatient);
+    [EnumMember(Value = "icd10cm-outpatient")]
+    Icd10CmOutpatient,
 
-    public static readonly CommonCodingSystemEnum Icd10Pcs = new(Values.Icd10Pcs);
+    [EnumMember(Value = "icd10pcs")]
+    Icd10Pcs,
 
-    public static readonly CommonCodingSystemEnum Cpt = new(Values.Cpt);
+    [EnumMember(Value = "cpt")]
+    Cpt,
 
-    public static readonly CommonCodingSystemEnum Icd10IntInpatient = new(Values.Icd10IntInpatient);
+    [EnumMember(Value = "icd10int-inpatient")]
+    Icd10IntInpatient,
 
-    public static readonly CommonCodingSystemEnum Icd10IntOutpatient = new(
-        Values.Icd10IntOutpatient
-    );
+    [EnumMember(Value = "icd10int-outpatient")]
+    Icd10IntOutpatient,
 
-    public static readonly CommonCodingSystemEnum Icd10UkInpatient = new(Values.Icd10UkInpatient);
+    [EnumMember(Value = "icd10uk-inpatient")]
+    Icd10UkInpatient,
 
-    public static readonly CommonCodingSystemEnum Icd10UkOutpatient = new(Values.Icd10UkOutpatient);
+    [EnumMember(Value = "icd10uk-outpatient")]
+    Icd10UkOutpatient,
 
-    public static readonly CommonCodingSystemEnum Cim10FrInpatient = new(Values.Cim10FrInpatient);
+    [EnumMember(Value = "cim10fr-inpatient")]
+    Cim10FrInpatient,
 
-    public static readonly CommonCodingSystemEnum Cim10FrOutpatient = new(Values.Cim10FrOutpatient);
+    [EnumMember(Value = "cim10fr-outpatient")]
+    Cim10FrOutpatient,
 
-    public static readonly CommonCodingSystemEnum Icd10GmInpatient = new(Values.Icd10GmInpatient);
+    [EnumMember(Value = "icd10gm-inpatient")]
+    Icd10GmInpatient,
 
-    public static readonly CommonCodingSystemEnum Icd10GmOutpatient = new(Values.Icd10GmOutpatient);
+    [EnumMember(Value = "icd10gm-outpatient")]
+    Icd10GmOutpatient,
 
-    public static readonly CommonCodingSystemEnum Opcs4 = new(Values.Opcs4);
+    [EnumMember(Value = "opcs4")]
+    Opcs4,
 
-    public static readonly CommonCodingSystemEnum Ops = new(Values.Ops);
+    [EnumMember(Value = "ops")]
+    Ops,
 
-    public static readonly CommonCodingSystemEnum Ccam = new(Values.Ccam);
+    [EnumMember(Value = "ccam")]
+    Ccam,
+}
 
-    public CommonCodingSystemEnum(string value)
+internal class CommonCodingSystemEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<CommonCodingSystemEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        CommonCodingSystemEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "icd10cm-inpatient", CommonCodingSystemEnum.Icd10CmInpatient },
+        { "icd10cm-outpatient", CommonCodingSystemEnum.Icd10CmOutpatient },
+        { "icd10pcs", CommonCodingSystemEnum.Icd10Pcs },
+        { "cpt", CommonCodingSystemEnum.Cpt },
+        { "icd10int-inpatient", CommonCodingSystemEnum.Icd10IntInpatient },
+        { "icd10int-outpatient", CommonCodingSystemEnum.Icd10IntOutpatient },
+        { "icd10uk-inpatient", CommonCodingSystemEnum.Icd10UkInpatient },
+        { "icd10uk-outpatient", CommonCodingSystemEnum.Icd10UkOutpatient },
+        { "cim10fr-inpatient", CommonCodingSystemEnum.Cim10FrInpatient },
+        { "cim10fr-outpatient", CommonCodingSystemEnum.Cim10FrOutpatient },
+        { "icd10gm-inpatient", CommonCodingSystemEnum.Icd10GmInpatient },
+        { "icd10gm-outpatient", CommonCodingSystemEnum.Icd10GmOutpatient },
+        { "opcs4", CommonCodingSystemEnum.Opcs4 },
+        { "ops", CommonCodingSystemEnum.Ops },
+        { "ccam", CommonCodingSystemEnum.Ccam },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        CommonCodingSystemEnum,
+        string
+    > _enumToString = new()
+    {
+        { CommonCodingSystemEnum.Icd10CmInpatient, "icd10cm-inpatient" },
+        { CommonCodingSystemEnum.Icd10CmOutpatient, "icd10cm-outpatient" },
+        { CommonCodingSystemEnum.Icd10Pcs, "icd10pcs" },
+        { CommonCodingSystemEnum.Cpt, "cpt" },
+        { CommonCodingSystemEnum.Icd10IntInpatient, "icd10int-inpatient" },
+        { CommonCodingSystemEnum.Icd10IntOutpatient, "icd10int-outpatient" },
+        { CommonCodingSystemEnum.Icd10UkInpatient, "icd10uk-inpatient" },
+        { CommonCodingSystemEnum.Icd10UkOutpatient, "icd10uk-outpatient" },
+        { CommonCodingSystemEnum.Cim10FrInpatient, "cim10fr-inpatient" },
+        { CommonCodingSystemEnum.Cim10FrOutpatient, "cim10fr-outpatient" },
+        { CommonCodingSystemEnum.Icd10GmInpatient, "icd10gm-inpatient" },
+        { CommonCodingSystemEnum.Icd10GmOutpatient, "icd10gm-outpatient" },
+        { CommonCodingSystemEnum.Opcs4, "opcs4" },
+        { CommonCodingSystemEnum.Ops, "ops" },
+        { CommonCodingSystemEnum.Ccam, "ccam" },
+    };
+
+    public override CommonCodingSystemEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static CommonCodingSystemEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonCodingSystemEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new CommonCodingSystemEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override CommonCodingSystemEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonCodingSystemEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(CommonCodingSystemEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(CommonCodingSystemEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(CommonCodingSystemEnum value) => value.Value;
-
-    public static explicit operator CommonCodingSystemEnum(string value) => new(value);
-
-    internal class CommonCodingSystemEnumSerializer : JsonConverter<CommonCodingSystemEnum>
-    {
-        public override CommonCodingSystemEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new CommonCodingSystemEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            CommonCodingSystemEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override CommonCodingSystemEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new CommonCodingSystemEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            CommonCodingSystemEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Icd10CmInpatient = "icd10cm-inpatient";
-
-        public const string Icd10CmOutpatient = "icd10cm-outpatient";
-
-        public const string Icd10Pcs = "icd10pcs";
-
-        public const string Cpt = "cpt";
-
-        public const string Icd10IntInpatient = "icd10int-inpatient";
-
-        public const string Icd10IntOutpatient = "icd10int-outpatient";
-
-        public const string Icd10UkInpatient = "icd10uk-inpatient";
-
-        public const string Icd10UkOutpatient = "icd10uk-outpatient";
-
-        public const string Cim10FrInpatient = "cim10fr-inpatient";
-
-        public const string Cim10FrOutpatient = "cim10fr-outpatient";
-
-        public const string Icd10GmInpatient = "icd10gm-inpatient";
-
-        public const string Icd10GmOutpatient = "icd10gm-outpatient";
-
-        public const string Opcs4 = "opcs4";
-
-        public const string Ops = "ops";
-
-        public const string Ccam = "ccam";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

@@ -4,8 +4,8 @@ namespace Corti;
 /// This exception type will be thrown for any non-2XX API responses.
 /// </summary>
 [Serializable]
-public class BadGatewayError(ErrorResponse body)
-    : CortiClientApiException("BadGatewayError", 502, body)
+public class BadGatewayError(ErrorResponse body, Corti.RawResponse? rawResponse = null)
+    : CortiClientApiException("BadGatewayError", 502, body, rawResponse: rawResponse)
 {
     /// <summary>
     /// The body of the response that triggered the exception.

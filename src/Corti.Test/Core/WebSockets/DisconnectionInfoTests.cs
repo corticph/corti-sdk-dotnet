@@ -1,5 +1,5 @@
-using System.Net.WebSockets;
 using Corti.Core.WebSockets;
+using global::System.Net.WebSockets;
 using NUnit.Framework;
 
 namespace Corti.Test.Core.WebSockets;
