@@ -384,6 +384,10 @@ public partial class TemplatesClient : ITemplatesClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Returns a list of templates and their metadata. Fetch a specific templateId to get the expanded sections.
+    /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.ListAsync(new GuidedTemplatesListRequest());
     /// </code></example>
@@ -518,6 +522,11 @@ public partial class TemplatesClient : ITemplatesClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Updates the template's metadata fields (name, description, languages, regions, specialties, labels).
+    /// Generation content (template instructions, section composition) is managed through versions
+    /// and cannot be updated here.
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.UpdateAsync("templateID", new GuidedTemplatesUpdateRequest());
     /// </code></example>

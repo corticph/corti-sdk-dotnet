@@ -5,6 +5,11 @@ namespace Corti.Documents;
 public partial interface ISectionsClient
 {
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
+
+    /// <summary>
+    /// Returns a list of sections and their metadata. Fetch a sectionId to get the full generation content.
+    /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
+    /// </summary>
     WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
         GuidedSectionsListRequest request,
         RequestOptions? options = null,
@@ -42,6 +47,10 @@ public partial interface ISectionsClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Updates the section's metadata fields (name, description, languages, regions, specialties, labels).
+    /// Generation content (instructions, output schema) is managed through versions and cannot be updated here.
+    /// </summary>
     WithRawResponseTask<GuidedSection> UpdateAsync(
         string sectionId,
         GuidedSectionsUpdateRequest request,
