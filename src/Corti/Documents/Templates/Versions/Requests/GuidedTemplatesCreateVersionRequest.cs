@@ -1,6 +1,6 @@
-using System.Text.Json.Serialization;
 using Corti;
 using Corti.Core;
+using global::System.Text.Json.Serialization;
 
 namespace Corti.Documents.Templates;
 

@@ -1,120 +1,89 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(LanguagesListRequestEndpoint.LanguagesListRequestEndpointSerializer))]
-[Serializable]
-public readonly record struct LanguagesListRequestEndpoint : IStringEnum
+[JsonConverter(typeof(LanguagesListRequestEndpointSerializer))]
+public enum LanguagesListRequestEndpoint
 {
-    public static readonly LanguagesListRequestEndpoint Streams = new(Values.Streams);
+    [EnumMember(Value = "streams")]
+    Streams,
 
-    public static readonly LanguagesListRequestEndpoint Transcribe = new(Values.Transcribe);
+    [EnumMember(Value = "transcribe")]
+    Transcribe,
 
-    public static readonly LanguagesListRequestEndpoint Transcripts = new(Values.Transcripts);
+    [EnumMember(Value = "transcripts")]
+    Transcripts,
+}
 
-    public LanguagesListRequestEndpoint(string value)
+internal class LanguagesListRequestEndpointSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<LanguagesListRequestEndpoint>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        LanguagesListRequestEndpoint
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "streams", LanguagesListRequestEndpoint.Streams },
+        { "transcribe", LanguagesListRequestEndpoint.Transcribe },
+        { "transcripts", LanguagesListRequestEndpoint.Transcripts },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        LanguagesListRequestEndpoint,
+        string
+    > _enumToString = new()
+    {
+        { LanguagesListRequestEndpoint.Streams, "streams" },
+        { LanguagesListRequestEndpoint.Transcribe, "transcribe" },
+        { LanguagesListRequestEndpoint.Transcripts, "transcripts" },
+    };
+
+    public override LanguagesListRequestEndpoint Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static LanguagesListRequestEndpoint FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        LanguagesListRequestEndpoint value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new LanguagesListRequestEndpoint(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override LanguagesListRequestEndpoint ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        LanguagesListRequestEndpoint value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(LanguagesListRequestEndpoint value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(LanguagesListRequestEndpoint value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(LanguagesListRequestEndpoint value) => value.Value;
-
-    public static explicit operator LanguagesListRequestEndpoint(string value) => new(value);
-
-    internal class LanguagesListRequestEndpointSerializer
-        : JsonConverter<LanguagesListRequestEndpoint>
-    {
-        public override LanguagesListRequestEndpoint Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new LanguagesListRequestEndpoint(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            LanguagesListRequestEndpoint value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override LanguagesListRequestEndpoint ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new LanguagesListRequestEndpoint(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            LanguagesListRequestEndpoint value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Streams = "streams";
-
-        public const string Transcribe = "transcribe";
-
-        public const string Transcripts = "transcripts";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

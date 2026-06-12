@@ -35,7 +35,7 @@ public partial interface ITranscriptsClient
     /// <summary>
     /// Deletes a specific transcript associated with an interaction.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string id,
         string transcriptId,
         RequestOptions? options = null,

@@ -1,116 +1,84 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(StreamConfigRetentionPolicy.StreamConfigRetentionPolicySerializer))]
-[Serializable]
-public readonly record struct StreamConfigRetentionPolicy : IStringEnum
+[JsonConverter(typeof(StreamConfigRetentionPolicySerializer))]
+public enum StreamConfigRetentionPolicy
 {
-    public static readonly StreamConfigRetentionPolicy Retain = new(Values.Retain);
+    [EnumMember(Value = "retain")]
+    Retain,
 
-    public static readonly StreamConfigRetentionPolicy None = new(Values.None);
+    [EnumMember(Value = "none")]
+    None,
+}
 
-    public StreamConfigRetentionPolicy(string value)
+internal class StreamConfigRetentionPolicySerializer
+    : global::System.Text.Json.Serialization.JsonConverter<StreamConfigRetentionPolicy>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        StreamConfigRetentionPolicy
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "retain", StreamConfigRetentionPolicy.Retain },
+        { "none", StreamConfigRetentionPolicy.None },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        StreamConfigRetentionPolicy,
+        string
+    > _enumToString = new()
+    {
+        { StreamConfigRetentionPolicy.Retain, "retain" },
+        { StreamConfigRetentionPolicy.None, "none" },
+    };
+
+    public override StreamConfigRetentionPolicy Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static StreamConfigRetentionPolicy FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamConfigRetentionPolicy value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new StreamConfigRetentionPolicy(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override StreamConfigRetentionPolicy ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamConfigRetentionPolicy value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(StreamConfigRetentionPolicy value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(StreamConfigRetentionPolicy value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(StreamConfigRetentionPolicy value) => value.Value;
-
-    public static explicit operator StreamConfigRetentionPolicy(string value) => new(value);
-
-    internal class StreamConfigRetentionPolicySerializer
-        : JsonConverter<StreamConfigRetentionPolicy>
-    {
-        public override StreamConfigRetentionPolicy Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new StreamConfigRetentionPolicy(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            StreamConfigRetentionPolicy value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override StreamConfigRetentionPolicy ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new StreamConfigRetentionPolicy(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            StreamConfigRetentionPolicy value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Retain = "retain";
-
-        public const string None = "none";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

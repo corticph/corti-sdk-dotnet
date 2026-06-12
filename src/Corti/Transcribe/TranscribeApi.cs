@@ -1,7 +1,8 @@
-using System.ComponentModel;
-using System.Text.Json;
 using Corti.Core;
 using Corti.Core.WebSockets;
+using global::System.ComponentModel;
+using global::System.Text;
+using global::System.Text.Json;
 
 namespace Corti;
 
@@ -23,66 +24,6 @@ public partial class TranscribeApi
         add => _client.PropertyChanged += value;
         remove => _client.PropertyChanged -= value;
     }
-
-    /// <summary>
-    /// Event handler for TranscribeUsageMessage.
-    /// Use TranscribeUsageMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeUsageMessage> TranscribeUsageMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeFlushedMessage.
-    /// Use TranscribeFlushedMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeFlushedMessage> TranscribeFlushedMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeDeltaUsageMessage.
-    /// Use TranscribeDeltaUsageMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeDeltaUsageMessage> TranscribeDeltaUsageMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeEndedMessage.
-    /// Use TranscribeEndedMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeEndedMessage> TranscribeEndedMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeErrorMessage.
-    /// Use TranscribeErrorMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeErrorMessage> TranscribeErrorMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeTranscriptMessage.
-    /// Use TranscribeTranscriptMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeTranscriptMessage> TranscribeTranscriptMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeCommandMessage.
-    /// Use TranscribeCommandMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeCommandMessage> TranscribeCommandMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeConfigStatusMessage.
-    /// Use TranscribeConfigStatusMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage = new();
-
-    /// <summary>
-    /// Event handler for TranscribeAudioEventMessage.
-    /// Use TranscribeAudioEventMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage = new();
-
-    /// <summary>
-    /// Event handler for unknown/unrecognized message types.
-    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
-    /// </summary>
-    public readonly Event<JsonElement> UnknownMessage = new();
 
     /// <summary>
     /// Constructor with options
@@ -131,6 +72,66 @@ public partial class TranscribeApi
     /// Event raised when the WebSocket connection is re-established after a disconnect.
     /// </summary>
     public Event<ReconnectionInfo> Reconnecting => _client.Reconnecting;
+
+    /// <summary>
+    /// Event handler for TranscribeUsageMessage.
+    /// Use TranscribeUsageMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeUsageMessage> TranscribeUsageMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeFlushedMessage.
+    /// Use TranscribeFlushedMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeFlushedMessage> TranscribeFlushedMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeDeltaUsageMessage.
+    /// Use TranscribeDeltaUsageMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeDeltaUsageMessage> TranscribeDeltaUsageMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeEndedMessage.
+    /// Use TranscribeEndedMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeEndedMessage> TranscribeEndedMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeErrorMessage.
+    /// Use TranscribeErrorMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeErrorMessage> TranscribeErrorMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeTranscriptMessage.
+    /// Use TranscribeTranscriptMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeTranscriptMessage> TranscribeTranscriptMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeCommandMessage.
+    /// Use TranscribeCommandMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeCommandMessage> TranscribeCommandMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeConfigStatusMessage.
+    /// Use TranscribeConfigStatusMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeAudioEventMessage.
+    /// Use TranscribeAudioEventMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for unknown/unrecognized message types.
+    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
+    /// </summary>
+    public Event<JsonElement> UnknownMessage { get; } = new();
 
     /// <summary>
     /// Disposes of event subscriptions
@@ -265,7 +266,7 @@ public partial class TranscribeApi
     /// </summary>
     internal async Task InjectTestMessage(string rawJson)
     {
-        using var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(rawJson));
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(rawJson));
         await OnTextMessage(stream).ConfigureAwait(false);
     }
 

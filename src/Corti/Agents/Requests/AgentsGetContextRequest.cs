@@ -1,5 +1,5 @@
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 

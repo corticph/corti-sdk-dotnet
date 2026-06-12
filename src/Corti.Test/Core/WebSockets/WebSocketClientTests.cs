@@ -1,6 +1,6 @@
-using System.Net.WebSockets;
-using System.Text;
 using Corti.Core.WebSockets;
+using global::System.Net.WebSockets;
+using global::System.Text;
 using NUnit.Framework;
 
 namespace Corti.Test.Core.WebSockets;

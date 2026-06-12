@@ -1,115 +1,84 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgentsMessageRole.AgentsMessageRoleSerializer))]
-[Serializable]
-public readonly record struct AgentsMessageRole : IStringEnum
+[JsonConverter(typeof(AgentsMessageRoleSerializer))]
+public enum AgentsMessageRole
 {
-    public static readonly AgentsMessageRole User = new(Values.User);
+    [EnumMember(Value = "user")]
+    User,
 
-    public static readonly AgentsMessageRole Agent = new(Values.Agent);
+    [EnumMember(Value = "agent")]
+    Agent,
+}
 
-    public AgentsMessageRole(string value)
+internal class AgentsMessageRoleSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsMessageRole>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        AgentsMessageRole
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "user", AgentsMessageRole.User },
+        { "agent", AgentsMessageRole.Agent },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        AgentsMessageRole,
+        string
+    > _enumToString = new()
+    {
+        { AgentsMessageRole.User, "user" },
+        { AgentsMessageRole.Agent, "agent" },
+    };
+
+    public override AgentsMessageRole Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static AgentsMessageRole FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsMessageRole value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new AgentsMessageRole(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override AgentsMessageRole ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsMessageRole value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(AgentsMessageRole value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(AgentsMessageRole value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(AgentsMessageRole value) => value.Value;
-
-    public static explicit operator AgentsMessageRole(string value) => new(value);
-
-    internal class AgentsMessageRoleSerializer : JsonConverter<AgentsMessageRole>
-    {
-        public override AgentsMessageRole Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new AgentsMessageRole(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            AgentsMessageRole value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override AgentsMessageRole ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new AgentsMessageRole(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            AgentsMessageRole value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string User = "user";
-
-        public const string Agent = "agent";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }
