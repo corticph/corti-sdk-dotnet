@@ -116,16 +116,16 @@ public partial class TranscribeApi
     public Event<TranscribeCommandMessage> TranscribeCommandMessage { get; } = new();
 
     /// <summary>
-    /// Event handler for TranscribeAudioEventMessage.
-    /// Use TranscribeAudioEventMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage { get; } = new();
-
-    /// <summary>
     /// Event handler for TranscribeConfigStatusMessage.
     /// Use TranscribeConfigStatusMessage.Subscribe(...) to receive messages.
     /// </summary>
     public Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for TranscribeAudioEventMessage.
+    /// Use TranscribeAudioEventMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage { get; } = new();
 
     /// <summary>
     /// Event handler for unknown/unrecognized message types.
@@ -145,8 +145,8 @@ public partial class TranscribeApi
         TranscribeErrorMessage.Dispose();
         TranscribeTranscriptMessage.Dispose();
         TranscribeCommandMessage.Dispose();
-        TranscribeAudioEventMessage.Dispose();
         TranscribeConfigStatusMessage.Dispose();
+        TranscribeAudioEventMessage.Dispose();
         UnknownMessage.Dispose();
     }
 
@@ -222,17 +222,17 @@ public partial class TranscribeApi
         }
 
         {
-            if (JsonUtils.TryDeserialize(json, out TranscribeAudioEventMessage? message))
+            if (JsonUtils.TryDeserialize(json, out TranscribeConfigStatusMessage? message))
             {
-                await TranscribeAudioEventMessage.RaiseEvent(message!).ConfigureAwait(false);
+                await TranscribeConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }
 
         {
-            if (JsonUtils.TryDeserialize(json, out TranscribeConfigStatusMessage? message))
+            if (JsonUtils.TryDeserialize(json, out TranscribeAudioEventMessage? message))
             {
-                await TranscribeConfigStatusMessage.RaiseEvent(message!).ConfigureAwait(false);
+                await TranscribeAudioEventMessage.RaiseEvent(message!).ConfigureAwait(false);
                 return;
             }
         }

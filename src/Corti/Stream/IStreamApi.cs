@@ -16,8 +16,8 @@ public partial interface IStreamApi : IAsyncDisposable, IDisposable
     public Event<StreamEndedMessage> StreamEndedMessage { get; }
     public Event<StreamUsageMessage> StreamUsageMessage { get; }
     public Event<StreamErrorMessage> StreamErrorMessage { get; }
-    public Event<StreamAudioEventMessage> StreamAudioEventMessage { get; }
     public Event<StreamConfigStatusMessage> StreamConfigStatusMessage { get; }
+    public Event<StreamAudioEventMessage> StreamAudioEventMessage { get; }
     public Event<JsonElement> UnknownMessage { get; }
     public ConnectionStatus Status { get; }
     Task ConnectAsync(CancellationToken cancellationToken = default);
