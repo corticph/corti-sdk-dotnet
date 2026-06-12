@@ -41,7 +41,7 @@ public partial interface ISectionsClient
     /// <summary>
     /// Deletes a section and its versions. Returns 409 if other sections inherit from this section.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

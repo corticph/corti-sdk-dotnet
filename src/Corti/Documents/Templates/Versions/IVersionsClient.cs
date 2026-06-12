@@ -38,7 +38,7 @@ public partial interface IVersionsClient
     /// <summary>
     /// A published version cannot be deleted. When deleting a last remaining version of a template, simply create a new version again if needed.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string templateId,
         string versionId,
         RequestOptions? options = null,

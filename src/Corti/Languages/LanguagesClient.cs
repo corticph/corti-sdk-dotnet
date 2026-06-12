@@ -1,5 +1,5 @@
-using System.Text.Json;
 using Corti.Core;
+using global::System.Text.Json;
 
 namespace Corti;
 
@@ -66,7 +66,7 @@ public partial class LanguagesClient : ILanguagesClient
                         return new WithRawResponse<LanguagesListResponse>()
                         {
                             Data = responseData,
-                            RawResponse = new RawResponse()
+                            RawResponse = new Corti.RawResponse()
                             {
                                 StatusCode = response.Raw.StatusCode,
                                 Url =
@@ -82,7 +82,15 @@ public partial class LanguagesClient : ILanguagesClient
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
-                            e
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
                         );
                     }
                 }
@@ -96,11 +104,31 @@ public partial class LanguagesClient : ILanguagesClient
                         {
                             case 400:
                                 throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                             case 500:
                                 throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                         }
                     }
@@ -111,7 +139,13 @@ public partial class LanguagesClient : ILanguagesClient
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
-                        responseBody
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
                     );
                 }
             })

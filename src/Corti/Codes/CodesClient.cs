@@ -1,5 +1,5 @@
-using System.Text.Json;
 using Corti.Core;
+using global::System.Text.Json;
 
 namespace Corti;
 
@@ -63,7 +63,7 @@ public partial class CodesClient : ICodesClient
                         return new WithRawResponse<CodesGeneralResponse>()
                         {
                             Data = responseData,
-                            RawResponse = new RawResponse()
+                            RawResponse = new Corti.RawResponse()
                             {
                                 StatusCode = response.Raw.StatusCode,
                                 Url =
@@ -79,7 +79,15 @@ public partial class CodesClient : ICodesClient
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
-                            e
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
                         );
                     }
                 }
@@ -93,23 +101,73 @@ public partial class CodesClient : ICodesClient
                         {
                             case 400:
                                 throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                             case 403:
                                 throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                             case 500:
                                 throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                             case 502:
                                 throw new BadGatewayError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                             case 504:
                                 throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                         }
                     }
@@ -120,7 +178,13 @@ public partial class CodesClient : ICodesClient
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
-                        responseBody
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
                     );
                 }
             })
@@ -141,11 +205,7 @@ public partial class CodesClient : ICodesClient
     ///         },
     ///         Context = new List&lt;CommonAiContext&gt;()
     ///         {
-    ///             new CommonTextContext
-    ///             {
-    ///                 Type = "text",
-    ///                 Text = "Short arm splint applied in ED for pain control.",
-    ///             },
+    ///             new CommonTextContext { Text = "Short arm splint applied in ED for pain control." },
     ///         },
     ///     }
     /// );

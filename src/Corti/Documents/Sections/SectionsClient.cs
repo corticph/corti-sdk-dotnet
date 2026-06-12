@@ -1,6 +1,6 @@
-using System.Text.Json;
 using Corti;
 using Corti.Core;
+using global::System.Text.Json;
 
 namespace Corti.Documents;
 
@@ -75,7 +75,7 @@ public partial class SectionsClient : ISectionsClient
                         return new WithRawResponse<IEnumerable<GuidedSection>>()
                         {
                             Data = responseData,
-                            RawResponse = new RawResponse()
+                            RawResponse = new Corti.RawResponse()
                             {
                                 StatusCode = response.Raw.StatusCode,
                                 Url =
@@ -91,7 +91,15 @@ public partial class SectionsClient : ISectionsClient
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
-                            e
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
                         );
                     }
                 }
@@ -102,7 +110,13 @@ public partial class SectionsClient : ISectionsClient
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
-                        responseBody
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
                     );
                 }
             })
@@ -149,7 +163,7 @@ public partial class SectionsClient : ISectionsClient
                         return new WithRawResponse<GuidedSection>()
                         {
                             Data = responseData,
-                            RawResponse = new RawResponse()
+                            RawResponse = new Corti.RawResponse()
                             {
                                 StatusCode = response.Raw.StatusCode,
                                 Url =
@@ -165,7 +179,15 @@ public partial class SectionsClient : ISectionsClient
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
-                            e
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
                         );
                     }
                 }
@@ -179,7 +201,17 @@ public partial class SectionsClient : ISectionsClient
                         {
                             case 400:
                                 throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                         }
                     }
@@ -190,7 +222,13 @@ public partial class SectionsClient : ISectionsClient
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
-                        responseBody
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
                     );
                 }
             })
@@ -239,7 +277,7 @@ public partial class SectionsClient : ISectionsClient
                         return new WithRawResponse<GuidedSection>()
                         {
                             Data = responseData,
-                            RawResponse = new RawResponse()
+                            RawResponse = new Corti.RawResponse()
                             {
                                 StatusCode = response.Raw.StatusCode,
                                 Url =
@@ -255,7 +293,15 @@ public partial class SectionsClient : ISectionsClient
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
-                            e
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
                         );
                     }
                 }
@@ -269,7 +315,17 @@ public partial class SectionsClient : ISectionsClient
                         {
                             case 404:
                                 throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                         }
                     }
@@ -280,7 +336,111 @@ public partial class SectionsClient : ISectionsClient
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
-                        responseBody
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
+    private async Task<RawResponse> DeleteAsyncCore(
+        string sectionId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Delete,
+                            Path = string.Format(
+                                "documents/sections/{0}",
+                                ValueConvert.ToPathParameterString(sectionId)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    return new Corti.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    };
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 409:
+                                throw new ConflictError(
+                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
                     );
                 }
             })
@@ -332,7 +492,7 @@ public partial class SectionsClient : ISectionsClient
                         return new WithRawResponse<GuidedSection>()
                         {
                             Data = responseData,
-                            RawResponse = new RawResponse()
+                            RawResponse = new Corti.RawResponse()
                             {
                                 StatusCode = response.Raw.StatusCode,
                                 Url =
@@ -348,7 +508,15 @@ public partial class SectionsClient : ISectionsClient
                             "Failed to deserialize response",
                             response.StatusCode,
                             responseBody,
-                            e
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
                         );
                     }
                 }
@@ -362,11 +530,31 @@ public partial class SectionsClient : ISectionsClient
                         {
                             case 400:
                                 throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                             case 404:
                                 throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody)
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
                                 );
                         }
                     }
@@ -377,7 +565,13 @@ public partial class SectionsClient : ISectionsClient
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
-                        responseBody
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
                     );
                 }
             })
@@ -416,7 +610,7 @@ public partial class SectionsClient : ISectionsClient
     ///         {
     ///             Heading = "heading",
     ///             Instructions = new GuidedSectionInstructions { ContentPrompt = "contentPrompt" },
-    ///             OutputSchema = new GuidedStringNode { Type = "string" },
+    ///             OutputSchema = new GuidedStringNode(),
     ///         },
     ///     }
     /// );
@@ -457,71 +651,13 @@ public partial class SectionsClient : ISectionsClient
     /// <example><code>
     /// await client.Documents.Sections.DeleteAsync("sectionID");
     /// </code></example>
-    public async Task DeleteAsync(
+    public WithRawResponseTask DeleteAsync(
         string sectionId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Delete,
-                            Path = string.Format(
-                                "documents/sections/{0}",
-                                ValueConvert.ToPathParameterString(sectionId)
-                            ),
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    return;
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 404:
-                                throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody)
-                                );
-                            case 409:
-                                throw new ConflictError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody)
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody
-                    );
-                }
-            })
-            .ConfigureAwait(false);
+        return new WithRawResponseTask(DeleteAsyncCore(sectionId, options, cancellationToken));
     }
 
     /// <summary>

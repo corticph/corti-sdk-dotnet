@@ -32,7 +32,7 @@ public partial interface IAgentsClient
     /// <summary>
     /// This endpoint deletes an agent by its identifier. Once deleted, the agent can no longer be used in threads.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -92,7 +92,7 @@ public partial interface IAgentsClient
     /// <summary>
     /// This endpoint deletes a context (thread) and scrubs all associated data including messages, memories, and memory chunks for the given agent. Thread and task metadata is soft-deleted for audit purposes, while content columns are irreversibly overwritten.
     /// </summary>
-    Task DeleteContextAsync(
+    WithRawResponseTask DeleteContextAsync(
         string id,
         string contextId,
         RequestOptions? options = null,

@@ -1,9 +1,9 @@
 // ReSharper disable NullableWarningSuppressionIsUsed
 // ReSharper disable InconsistentNaming
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -174,7 +174,7 @@ public class AgentsFilePartFile
     {
         public override AgentsFilePartFile? Read(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
@@ -236,7 +236,7 @@ public class AgentsFilePartFile
 
         public override AgentsFilePartFile ReadAsPropertyName(
             ref Utf8JsonReader reader,
-            System.Type typeToConvert,
+            global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {

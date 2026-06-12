@@ -34,7 +34,7 @@ public partial interface IInteractionsClient
     /// <summary>
     /// Deletes an existing interaction.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string id,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

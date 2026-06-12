@@ -1,7 +1,8 @@
-using System.ComponentModel;
-using System.Text.Json;
 using Corti.Core;
 using Corti.Core.WebSockets;
+using global::System.ComponentModel;
+using global::System.Text;
+using global::System.Text.Json;
 
 namespace Corti;
 
@@ -19,66 +20,6 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
         add => _client.PropertyChanged += value;
         remove => _client.PropertyChanged -= value;
     }
-
-    /// <summary>
-    /// Event handler for StreamTranscriptMessage.
-    /// Use StreamTranscriptMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamTranscriptMessage> StreamTranscriptMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamFactsMessage.
-    /// Use StreamFactsMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamFactsMessage> StreamFactsMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamFlushedMessage.
-    /// Use StreamFlushedMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamFlushedMessage> StreamFlushedMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamDeltaUsageMessage.
-    /// Use StreamDeltaUsageMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamDeltaUsageMessage> StreamDeltaUsageMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamEndedMessage.
-    /// Use StreamEndedMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamEndedMessage> StreamEndedMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamUsageMessage.
-    /// Use StreamUsageMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamUsageMessage> StreamUsageMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamErrorMessage.
-    /// Use StreamErrorMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamErrorMessage> StreamErrorMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamConfigStatusMessage.
-    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamConfigStatusMessage> StreamConfigStatusMessage = new();
-
-    /// <summary>
-    /// Event handler for StreamAudioEventMessage.
-    /// Use StreamAudioEventMessage.Subscribe(...) to receive messages.
-    /// </summary>
-    public readonly Event<StreamAudioEventMessage> StreamAudioEventMessage = new();
-
-    /// <summary>
-    /// Event handler for unknown/unrecognized message types.
-    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
-    /// </summary>
-    public readonly Event<JsonElement> UnknownMessage = new();
 
     /// <summary>
     /// Constructor with options
@@ -128,6 +69,66 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     /// Event raised when the WebSocket connection is re-established after a disconnect.
     /// </summary>
     public Event<ReconnectionInfo> Reconnecting => _client.Reconnecting;
+
+    /// <summary>
+    /// Event handler for StreamTranscriptMessage.
+    /// Use StreamTranscriptMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamTranscriptMessage> StreamTranscriptMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamFactsMessage.
+    /// Use StreamFactsMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamFactsMessage> StreamFactsMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamFlushedMessage.
+    /// Use StreamFlushedMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamFlushedMessage> StreamFlushedMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamDeltaUsageMessage.
+    /// Use StreamDeltaUsageMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamDeltaUsageMessage> StreamDeltaUsageMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamEndedMessage.
+    /// Use StreamEndedMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamEndedMessage> StreamEndedMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamUsageMessage.
+    /// Use StreamUsageMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamUsageMessage> StreamUsageMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamErrorMessage.
+    /// Use StreamErrorMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamErrorMessage> StreamErrorMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamConfigStatusMessage.
+    /// Use StreamConfigStatusMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamConfigStatusMessage> StreamConfigStatusMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for StreamAudioEventMessage.
+    /// Use StreamAudioEventMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<StreamAudioEventMessage> StreamAudioEventMessage { get; } = new();
+
+    /// <summary>
+    /// Event handler for unknown/unrecognized message types.
+    /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
+    /// </summary>
+    public Event<JsonElement> UnknownMessage { get; } = new();
 
     /// <summary>
     /// Disposes of event subscriptions
@@ -262,7 +263,7 @@ public partial class StreamApi : IStreamApi, IAsyncDisposable, IDisposable, INot
     /// </summary>
     internal async Task InjectTestMessage(string rawJson)
     {
-        using var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(rawJson));
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(rawJson));
         await OnTextMessage(stream).ConfigureAwait(false);
     }
 
