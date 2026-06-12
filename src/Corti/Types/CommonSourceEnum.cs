@@ -1,119 +1,89 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(CommonSourceEnum.CommonSourceEnumSerializer))]
-[Serializable]
-public readonly record struct CommonSourceEnum : IStringEnum
+[JsonConverter(typeof(CommonSourceEnumSerializer))]
+public enum CommonSourceEnum
 {
-    public static readonly CommonSourceEnum Core = new(Values.Core);
+    [EnumMember(Value = "core")]
+    Core,
 
-    public static readonly CommonSourceEnum System = new(Values.System);
+    [EnumMember(Value = "system")]
+    System,
 
-    public static readonly CommonSourceEnum User = new(Values.User);
+    [EnumMember(Value = "user")]
+    User,
+}
 
-    public CommonSourceEnum(string value)
+internal class CommonSourceEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<CommonSourceEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        CommonSourceEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "core", CommonSourceEnum.Core },
+        { "system", CommonSourceEnum.System },
+        { "user", CommonSourceEnum.User },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        CommonSourceEnum,
+        string
+    > _enumToString = new()
+    {
+        { CommonSourceEnum.Core, "core" },
+        { CommonSourceEnum.System, "system" },
+        { CommonSourceEnum.User, "user" },
+    };
+
+    public override CommonSourceEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static CommonSourceEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonSourceEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new CommonSourceEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override CommonSourceEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonSourceEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(CommonSourceEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(CommonSourceEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(CommonSourceEnum value) => value.Value;
-
-    public static explicit operator CommonSourceEnum(string value) => new(value);
-
-    internal class CommonSourceEnumSerializer : JsonConverter<CommonSourceEnum>
-    {
-        public override CommonSourceEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new CommonSourceEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            CommonSourceEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override CommonSourceEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new CommonSourceEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            CommonSourceEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Core = "core";
-
-        public const string System = "system";
-
-        public const string User = "user";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

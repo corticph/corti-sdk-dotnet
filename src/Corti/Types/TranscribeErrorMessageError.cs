@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -12,34 +12,40 @@ public record TranscribeErrorMessageError : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Unique identifier for the request, for support and debugging.
+    /// </summary>
+    [JsonPropertyName("requestid")]
+    public string? Requestid { get; set; }
+
+    /// <summary>
     /// Unique error identifier
     /// </summary>
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public string? Id { get; set; }
 
     /// <summary>
     /// Error title
     /// </summary>
     [JsonPropertyName("title")]
-    public required string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// HTTP status code
     /// </summary>
     [JsonPropertyName("status")]
-    public required int Status { get; set; }
+    public int? Status { get; set; }
 
     /// <summary>
     /// Detailed error description
     /// </summary>
     [JsonPropertyName("details")]
-    public required string Details { get; set; }
+    public string? Details { get; set; }
 
     /// <summary>
     /// Link to documentation
     /// </summary>
     [JsonPropertyName("doc")]
-    public required string Doc { get; set; }
+    public string? Doc { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

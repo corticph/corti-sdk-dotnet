@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -70,12 +70,6 @@ public record GuidedTemplate : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("labels")]
     public IEnumerable<GuidedLabel> Labels { get; set; } = new List<GuidedLabel>();
-
-    /// <summary>
-    /// Access policies for this template.
-    /// </summary>
-    [JsonPropertyName("policies")]
-    public IEnumerable<GuidedTemplatePolicy>? Policies { get; set; }
 
     /// <summary>
     /// The currently published version with inheritance fully resolved. Present when a version has been published.

@@ -1,143 +1,119 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgentsTaskStatusState.AgentsTaskStatusStateSerializer))]
-[Serializable]
-public readonly record struct AgentsTaskStatusState : IStringEnum
+[JsonConverter(typeof(AgentsTaskStatusStateSerializer))]
+public enum AgentsTaskStatusState
 {
-    public static readonly AgentsTaskStatusState Submitted = new(Values.Submitted);
+    [EnumMember(Value = "submitted")]
+    Submitted,
 
-    public static readonly AgentsTaskStatusState Working = new(Values.Working);
+    [EnumMember(Value = "working")]
+    Working,
 
-    public static readonly AgentsTaskStatusState InputRequired = new(Values.InputRequired);
+    [EnumMember(Value = "input-required")]
+    InputRequired,
 
-    public static readonly AgentsTaskStatusState Completed = new(Values.Completed);
+    [EnumMember(Value = "completed")]
+    Completed,
 
-    public static readonly AgentsTaskStatusState Canceled = new(Values.Canceled);
+    [EnumMember(Value = "canceled")]
+    Canceled,
 
-    public static readonly AgentsTaskStatusState Failed = new(Values.Failed);
+    [EnumMember(Value = "failed")]
+    Failed,
 
-    public static readonly AgentsTaskStatusState Rejected = new(Values.Rejected);
+    [EnumMember(Value = "rejected")]
+    Rejected,
 
-    public static readonly AgentsTaskStatusState AuthRequired = new(Values.AuthRequired);
+    [EnumMember(Value = "auth-required")]
+    AuthRequired,
 
-    public static readonly AgentsTaskStatusState Unknown = new(Values.Unknown);
+    [EnumMember(Value = "unknown")]
+    Unknown,
+}
 
-    public AgentsTaskStatusState(string value)
+internal class AgentsTaskStatusStateSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsTaskStatusState>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        AgentsTaskStatusState
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "submitted", AgentsTaskStatusState.Submitted },
+        { "working", AgentsTaskStatusState.Working },
+        { "input-required", AgentsTaskStatusState.InputRequired },
+        { "completed", AgentsTaskStatusState.Completed },
+        { "canceled", AgentsTaskStatusState.Canceled },
+        { "failed", AgentsTaskStatusState.Failed },
+        { "rejected", AgentsTaskStatusState.Rejected },
+        { "auth-required", AgentsTaskStatusState.AuthRequired },
+        { "unknown", AgentsTaskStatusState.Unknown },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        AgentsTaskStatusState,
+        string
+    > _enumToString = new()
+    {
+        { AgentsTaskStatusState.Submitted, "submitted" },
+        { AgentsTaskStatusState.Working, "working" },
+        { AgentsTaskStatusState.InputRequired, "input-required" },
+        { AgentsTaskStatusState.Completed, "completed" },
+        { AgentsTaskStatusState.Canceled, "canceled" },
+        { AgentsTaskStatusState.Failed, "failed" },
+        { AgentsTaskStatusState.Rejected, "rejected" },
+        { AgentsTaskStatusState.AuthRequired, "auth-required" },
+        { AgentsTaskStatusState.Unknown, "unknown" },
+    };
+
+    public override AgentsTaskStatusState Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static AgentsTaskStatusState FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsTaskStatusState value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new AgentsTaskStatusState(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override AgentsTaskStatusState ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsTaskStatusState value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(AgentsTaskStatusState value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(AgentsTaskStatusState value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(AgentsTaskStatusState value) => value.Value;
-
-    public static explicit operator AgentsTaskStatusState(string value) => new(value);
-
-    internal class AgentsTaskStatusStateSerializer : JsonConverter<AgentsTaskStatusState>
-    {
-        public override AgentsTaskStatusState Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new AgentsTaskStatusState(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            AgentsTaskStatusState value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override AgentsTaskStatusState ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new AgentsTaskStatusState(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            AgentsTaskStatusState value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Submitted = "submitted";
-
-        public const string Working = "working";
-
-        public const string InputRequired = "input-required";
-
-        public const string Completed = "completed";
-
-        public const string Canceled = "canceled";
-
-        public const string Failed = "failed";
-
-        public const string Rejected = "rejected";
-
-        public const string AuthRequired = "auth-required";
-
-        public const string Unknown = "unknown";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

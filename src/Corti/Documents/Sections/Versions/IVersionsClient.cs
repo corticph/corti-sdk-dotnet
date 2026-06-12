@@ -36,7 +36,7 @@ public partial interface IVersionsClient
     /// <summary>
     /// Currently published version cannot be deleted. Last remaining version can be deleted, simply create a new section version again if needed.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string sectionId,
         string versionId,
         RequestOptions? options = null,

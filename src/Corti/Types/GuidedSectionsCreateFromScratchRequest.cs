@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -58,12 +58,6 @@ public record GuidedSectionsCreateFromScratchRequest : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("publish")]
     public bool? Publish { get; set; }
-
-    /// <summary>
-    /// Access policies to apply to the section on creation.
-    /// </summary>
-    [JsonPropertyName("policies")]
-    public IEnumerable<GuidedSectionsCreatePolicyRequest>? Policies { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -22,19 +22,19 @@ public record GuidedNumberNode : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Can be used to prompt the LLM with more guidance in addition to the section.instructions
+    /// Guide the LLM in what to output for this node. Supplements the section-level instructions.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
     /// <summary>
-    /// The default to output if nothing to output.
+    /// If nothing is outputted, this default is used.
     /// </summary>
     [JsonPropertyName("default")]
     public double? Default { get; set; }
 
     /// <summary>
-    /// Can be used to prompt the LLM for specifically allowed numeric values to output.
+    /// Can be used to guide the LLM with specific values to output.
     /// </summary>
     [JsonPropertyName("enum")]
     public IEnumerable<double>? Enum { get; set; }

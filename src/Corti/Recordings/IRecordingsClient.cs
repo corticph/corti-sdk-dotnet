@@ -24,7 +24,7 @@ public partial interface IRecordingsClient
     /// <summary>
     /// Retrieve a specific recording for a given interaction.
     /// </summary>
-    WithRawResponseTask<System.IO.Stream> GetAsync(
+    WithRawResponseTask<global::System.IO.Stream> GetAsync(
         string id,
         string recordingId,
         RequestOptions? options = null,
@@ -34,7 +34,7 @@ public partial interface IRecordingsClient
     /// <summary>
     /// Delete a specific recording for a given interaction.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string id,
         string recordingId,
         RequestOptions? options = null,

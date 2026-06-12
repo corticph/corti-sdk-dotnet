@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -15,7 +15,7 @@ public record TranscribeAudioEventsConfig : IJsonOnDeserialized
     /// When true, enables audio quality and speech activity events to be sent over the WebSocket. Disabled by default.
     /// </summary>
     [JsonPropertyName("enabled")]
-    public bool? Enabled { get; set; }
+    public required bool Enabled { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -1,132 +1,104 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(InteractionsEncounterStatusEnum.InteractionsEncounterStatusEnumSerializer))]
-[Serializable]
-public readonly record struct InteractionsEncounterStatusEnum : IStringEnum
+[JsonConverter(typeof(InteractionsEncounterStatusEnumSerializer))]
+public enum InteractionsEncounterStatusEnum
 {
-    public static readonly InteractionsEncounterStatusEnum Planned = new(Values.Planned);
+    [EnumMember(Value = "planned")]
+    Planned,
 
-    public static readonly InteractionsEncounterStatusEnum InProgress = new(Values.InProgress);
+    [EnumMember(Value = "in-progress")]
+    InProgress,
 
-    public static readonly InteractionsEncounterStatusEnum OnHold = new(Values.OnHold);
+    [EnumMember(Value = "on-hold")]
+    OnHold,
 
-    public static readonly InteractionsEncounterStatusEnum Completed = new(Values.Completed);
+    [EnumMember(Value = "completed")]
+    Completed,
 
-    public static readonly InteractionsEncounterStatusEnum Cancelled = new(Values.Cancelled);
+    [EnumMember(Value = "cancelled")]
+    Cancelled,
 
-    public static readonly InteractionsEncounterStatusEnum Deleted = new(Values.Deleted);
+    [EnumMember(Value = "deleted")]
+    Deleted,
+}
 
-    public InteractionsEncounterStatusEnum(string value)
+internal class InteractionsEncounterStatusEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<InteractionsEncounterStatusEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        InteractionsEncounterStatusEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "planned", InteractionsEncounterStatusEnum.Planned },
+        { "in-progress", InteractionsEncounterStatusEnum.InProgress },
+        { "on-hold", InteractionsEncounterStatusEnum.OnHold },
+        { "completed", InteractionsEncounterStatusEnum.Completed },
+        { "cancelled", InteractionsEncounterStatusEnum.Cancelled },
+        { "deleted", InteractionsEncounterStatusEnum.Deleted },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        InteractionsEncounterStatusEnum,
+        string
+    > _enumToString = new()
+    {
+        { InteractionsEncounterStatusEnum.Planned, "planned" },
+        { InteractionsEncounterStatusEnum.InProgress, "in-progress" },
+        { InteractionsEncounterStatusEnum.OnHold, "on-hold" },
+        { InteractionsEncounterStatusEnum.Completed, "completed" },
+        { InteractionsEncounterStatusEnum.Cancelled, "cancelled" },
+        { InteractionsEncounterStatusEnum.Deleted, "deleted" },
+    };
+
+    public override InteractionsEncounterStatusEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static InteractionsEncounterStatusEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        InteractionsEncounterStatusEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new InteractionsEncounterStatusEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override InteractionsEncounterStatusEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        InteractionsEncounterStatusEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(InteractionsEncounterStatusEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(InteractionsEncounterStatusEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(InteractionsEncounterStatusEnum value) => value.Value;
-
-    public static explicit operator InteractionsEncounterStatusEnum(string value) => new(value);
-
-    internal class InteractionsEncounterStatusEnumSerializer
-        : JsonConverter<InteractionsEncounterStatusEnum>
-    {
-        public override InteractionsEncounterStatusEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new InteractionsEncounterStatusEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            InteractionsEncounterStatusEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override InteractionsEncounterStatusEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new InteractionsEncounterStatusEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            InteractionsEncounterStatusEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Planned = "planned";
-
-        public const string InProgress = "in-progress";
-
-        public const string OnHold = "on-hold";
-
-        public const string Completed = "completed";
-
-        public const string Cancelled = "cancelled";
-
-        public const string Deleted = "deleted";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

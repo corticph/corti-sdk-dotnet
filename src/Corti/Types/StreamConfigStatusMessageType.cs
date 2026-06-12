@@ -1,134 +1,99 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(StreamConfigStatusMessageType.StreamConfigStatusMessageTypeSerializer))]
-[Serializable]
-public readonly record struct StreamConfigStatusMessageType : IStringEnum
+[JsonConverter(typeof(StreamConfigStatusMessageTypeSerializer))]
+public enum StreamConfigStatusMessageType
 {
-    public static readonly StreamConfigStatusMessageType ConfigAccepted = new(
-        Values.ConfigAccepted
-    );
+    [EnumMember(Value = "CONFIG_ACCEPTED")]
+    ConfigAccepted,
 
-    public static readonly StreamConfigStatusMessageType ConfigDenied = new(Values.ConfigDenied);
+    [EnumMember(Value = "CONFIG_DENIED")]
+    ConfigDenied,
 
-    public static readonly StreamConfigStatusMessageType ConfigMissing = new(Values.ConfigMissing);
+    [EnumMember(Value = "CONFIG_MISSING")]
+    ConfigMissing,
 
-    public static readonly StreamConfigStatusMessageType ConfigNotProvided = new(
-        Values.ConfigNotProvided
-    );
+    [EnumMember(Value = "CONFIG_NOT_PROVIDED")]
+    ConfigNotProvided,
 
-    public static readonly StreamConfigStatusMessageType ConfigAlreadyReceived = new(
-        Values.ConfigAlreadyReceived
-    );
+    [EnumMember(Value = "CONFIG_ALREADY_RECEIVED")]
+    ConfigAlreadyReceived,
+}
 
-    public StreamConfigStatusMessageType(string value)
+internal class StreamConfigStatusMessageTypeSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<StreamConfigStatusMessageType>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        StreamConfigStatusMessageType
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "CONFIG_ACCEPTED", StreamConfigStatusMessageType.ConfigAccepted },
+        { "CONFIG_DENIED", StreamConfigStatusMessageType.ConfigDenied },
+        { "CONFIG_MISSING", StreamConfigStatusMessageType.ConfigMissing },
+        { "CONFIG_NOT_PROVIDED", StreamConfigStatusMessageType.ConfigNotProvided },
+        { "CONFIG_ALREADY_RECEIVED", StreamConfigStatusMessageType.ConfigAlreadyReceived },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        StreamConfigStatusMessageType,
+        string
+    > _enumToString = new()
+    {
+        { StreamConfigStatusMessageType.ConfigAccepted, "CONFIG_ACCEPTED" },
+        { StreamConfigStatusMessageType.ConfigDenied, "CONFIG_DENIED" },
+        { StreamConfigStatusMessageType.ConfigMissing, "CONFIG_MISSING" },
+        { StreamConfigStatusMessageType.ConfigNotProvided, "CONFIG_NOT_PROVIDED" },
+        { StreamConfigStatusMessageType.ConfigAlreadyReceived, "CONFIG_ALREADY_RECEIVED" },
+    };
+
+    public override StreamConfigStatusMessageType Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static StreamConfigStatusMessageType FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamConfigStatusMessageType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new StreamConfigStatusMessageType(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override StreamConfigStatusMessageType ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamConfigStatusMessageType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(StreamConfigStatusMessageType value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(StreamConfigStatusMessageType value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(StreamConfigStatusMessageType value) => value.Value;
-
-    public static explicit operator StreamConfigStatusMessageType(string value) => new(value);
-
-    internal class StreamConfigStatusMessageTypeSerializer
-        : JsonConverter<StreamConfigStatusMessageType>
-    {
-        public override StreamConfigStatusMessageType Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new StreamConfigStatusMessageType(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            StreamConfigStatusMessageType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override StreamConfigStatusMessageType ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new StreamConfigStatusMessageType(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            StreamConfigStatusMessageType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string ConfigAccepted = "CONFIG_ACCEPTED";
-
-        public const string ConfigDenied = "CONFIG_DENIED";
-
-        public const string ConfigMissing = "CONFIG_MISSING";
-
-        public const string ConfigNotProvided = "CONFIG_NOT_PROVIDED";
-
-        public const string ConfigAlreadyReceived = "CONFIG_ALREADY_RECEIVED";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

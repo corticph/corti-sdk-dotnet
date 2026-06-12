@@ -1,24 +1,21 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
 [Serializable]
-public record GuidedTemplatesCreatePolicyRequest : IJsonOnDeserialized
+public record StreamConfigKeytermsTermsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("kind")]
-    public required GuidedTemplatePolicyKind Kind { get; set; }
-
     /// <summary>
-    /// Required when `kind` is `customers`. List of customer tenant identifiers that should have access.
+    /// The word to be recognized, defined in its expected written form.
     /// </summary>
-    [JsonPropertyName("customerIds")]
-    public IEnumerable<string>? CustomerIds { get; set; }
+    [JsonPropertyName("term")]
+    public required string Term { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
