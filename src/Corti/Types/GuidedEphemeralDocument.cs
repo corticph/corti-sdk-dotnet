@@ -29,12 +29,24 @@ public record GuidedEphemeralDocument : IJsonOnDeserialized
     [JsonPropertyName("language")]
     public required string Language { get; set; }
 
+    /// <summary>
+    /// The interaction whose context was used to generate this document, if supplied.
+    /// </summary>
+    [JsonPropertyName("interactionId")]
+    public string? InteractionId { get; set; }
+
     [JsonPropertyName("stringDocument")]
     public Dictionary<string, string> StringDocument { get; set; } =
         new Dictionary<string, string>();
 
     [JsonPropertyName("structuredDocument")]
     public Dictionary<string, object?>? StructuredDocument { get; set; }
+
+    /// <summary>
+    /// Key/value labels attached to this document.
+    /// </summary>
+    [JsonPropertyName("labels")]
+    public IEnumerable<GuidedLabel> Labels { get; set; } = new List<GuidedLabel>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
