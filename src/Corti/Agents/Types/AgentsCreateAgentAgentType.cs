@@ -1,121 +1,89 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgentsCreateAgentAgentType.AgentsCreateAgentAgentTypeSerializer))]
-[Serializable]
-public readonly record struct AgentsCreateAgentAgentType : IStringEnum
+[JsonConverter(typeof(AgentsCreateAgentAgentTypeSerializer))]
+public enum AgentsCreateAgentAgentType
 {
-    public static readonly AgentsCreateAgentAgentType Expert = new(Values.Expert);
+    [EnumMember(Value = "expert")]
+    Expert,
 
-    public static readonly AgentsCreateAgentAgentType Orchestrator = new(Values.Orchestrator);
+    [EnumMember(Value = "orchestrator")]
+    Orchestrator,
 
-    public static readonly AgentsCreateAgentAgentType InterviewingExpert = new(
-        Values.InterviewingExpert
-    );
+    [EnumMember(Value = "interviewing-expert")]
+    InterviewingExpert,
+}
 
-    public AgentsCreateAgentAgentType(string value)
+internal class AgentsCreateAgentAgentTypeSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsCreateAgentAgentType>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        AgentsCreateAgentAgentType
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "expert", AgentsCreateAgentAgentType.Expert },
+        { "orchestrator", AgentsCreateAgentAgentType.Orchestrator },
+        { "interviewing-expert", AgentsCreateAgentAgentType.InterviewingExpert },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        AgentsCreateAgentAgentType,
+        string
+    > _enumToString = new()
+    {
+        { AgentsCreateAgentAgentType.Expert, "expert" },
+        { AgentsCreateAgentAgentType.Orchestrator, "orchestrator" },
+        { AgentsCreateAgentAgentType.InterviewingExpert, "interviewing-expert" },
+    };
+
+    public override AgentsCreateAgentAgentType Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static AgentsCreateAgentAgentType FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsCreateAgentAgentType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new AgentsCreateAgentAgentType(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override AgentsCreateAgentAgentType ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsCreateAgentAgentType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(AgentsCreateAgentAgentType value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(AgentsCreateAgentAgentType value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(AgentsCreateAgentAgentType value) => value.Value;
-
-    public static explicit operator AgentsCreateAgentAgentType(string value) => new(value);
-
-    internal class AgentsCreateAgentAgentTypeSerializer : JsonConverter<AgentsCreateAgentAgentType>
-    {
-        public override AgentsCreateAgentAgentType Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new AgentsCreateAgentAgentType(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            AgentsCreateAgentAgentType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override AgentsCreateAgentAgentType ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new AgentsCreateAgentAgentType(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            AgentsCreateAgentAgentType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Expert = "expert";
-
-        public const string Orchestrator = "orchestrator";
-
-        public const string InterviewingExpert = "interviewing-expert";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

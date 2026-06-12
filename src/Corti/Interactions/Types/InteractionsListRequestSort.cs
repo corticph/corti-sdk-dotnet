@@ -1,132 +1,104 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(InteractionsListRequestSort.InteractionsListRequestSortSerializer))]
-[Serializable]
-public readonly record struct InteractionsListRequestSort : IStringEnum
+[JsonConverter(typeof(InteractionsListRequestSortSerializer))]
+public enum InteractionsListRequestSort
 {
-    public static readonly InteractionsListRequestSort Id = new(Values.Id);
+    [EnumMember(Value = "id")]
+    Id,
 
-    public static readonly InteractionsListRequestSort AssignedUserId = new(Values.AssignedUserId);
+    [EnumMember(Value = "assignedUserId")]
+    AssignedUserId,
 
-    public static readonly InteractionsListRequestSort Patient = new(Values.Patient);
+    [EnumMember(Value = "patient")]
+    Patient,
 
-    public static readonly InteractionsListRequestSort CreatedAt = new(Values.CreatedAt);
+    [EnumMember(Value = "createdAt")]
+    CreatedAt,
 
-    public static readonly InteractionsListRequestSort EndedAt = new(Values.EndedAt);
+    [EnumMember(Value = "endedAt")]
+    EndedAt,
 
-    public static readonly InteractionsListRequestSort UpdatedAt = new(Values.UpdatedAt);
+    [EnumMember(Value = "updatedAt")]
+    UpdatedAt,
+}
 
-    public InteractionsListRequestSort(string value)
+internal class InteractionsListRequestSortSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<InteractionsListRequestSort>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        InteractionsListRequestSort
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "id", InteractionsListRequestSort.Id },
+        { "assignedUserId", InteractionsListRequestSort.AssignedUserId },
+        { "patient", InteractionsListRequestSort.Patient },
+        { "createdAt", InteractionsListRequestSort.CreatedAt },
+        { "endedAt", InteractionsListRequestSort.EndedAt },
+        { "updatedAt", InteractionsListRequestSort.UpdatedAt },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        InteractionsListRequestSort,
+        string
+    > _enumToString = new()
+    {
+        { InteractionsListRequestSort.Id, "id" },
+        { InteractionsListRequestSort.AssignedUserId, "assignedUserId" },
+        { InteractionsListRequestSort.Patient, "patient" },
+        { InteractionsListRequestSort.CreatedAt, "createdAt" },
+        { InteractionsListRequestSort.EndedAt, "endedAt" },
+        { InteractionsListRequestSort.UpdatedAt, "updatedAt" },
+    };
+
+    public override InteractionsListRequestSort Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static InteractionsListRequestSort FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        InteractionsListRequestSort value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new InteractionsListRequestSort(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override InteractionsListRequestSort ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        InteractionsListRequestSort value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(InteractionsListRequestSort value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(InteractionsListRequestSort value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(InteractionsListRequestSort value) => value.Value;
-
-    public static explicit operator InteractionsListRequestSort(string value) => new(value);
-
-    internal class InteractionsListRequestSortSerializer
-        : JsonConverter<InteractionsListRequestSort>
-    {
-        public override InteractionsListRequestSort Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new InteractionsListRequestSort(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            InteractionsListRequestSort value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override InteractionsListRequestSort ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new InteractionsListRequestSort(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            InteractionsListRequestSort value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Id = "id";
-
-        public const string AssignedUserId = "assignedUserId";
-
-        public const string Patient = "patient";
-
-        public const string CreatedAt = "createdAt";
-
-        public const string EndedAt = "endedAt";
-
-        public const string UpdatedAt = "updatedAt";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

@@ -1,122 +1,89 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TranscribeFormattingOrdinals.TranscribeFormattingOrdinalsSerializer))]
-[Serializable]
-public readonly record struct TranscribeFormattingOrdinals : IStringEnum
+[JsonConverter(typeof(TranscribeFormattingOrdinalsSerializer))]
+public enum TranscribeFormattingOrdinals
 {
-    public static readonly TranscribeFormattingOrdinals NumeralsAboveNine = new(
-        Values.NumeralsAboveNine
-    );
+    [EnumMember(Value = "numerals_above_nine")]
+    NumeralsAboveNine,
 
-    public static readonly TranscribeFormattingOrdinals AsDictated = new(Values.AsDictated);
+    [EnumMember(Value = "as_dictated")]
+    AsDictated,
 
-    public static readonly TranscribeFormattingOrdinals Numerals = new(Values.Numerals);
+    [EnumMember(Value = "numerals")]
+    Numerals,
+}
 
-    public TranscribeFormattingOrdinals(string value)
+internal class TranscribeFormattingOrdinalsSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TranscribeFormattingOrdinals>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        TranscribeFormattingOrdinals
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "numerals_above_nine", TranscribeFormattingOrdinals.NumeralsAboveNine },
+        { "as_dictated", TranscribeFormattingOrdinals.AsDictated },
+        { "numerals", TranscribeFormattingOrdinals.Numerals },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        TranscribeFormattingOrdinals,
+        string
+    > _enumToString = new()
+    {
+        { TranscribeFormattingOrdinals.NumeralsAboveNine, "numerals_above_nine" },
+        { TranscribeFormattingOrdinals.AsDictated, "as_dictated" },
+        { TranscribeFormattingOrdinals.Numerals, "numerals" },
+    };
+
+    public override TranscribeFormattingOrdinals Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static TranscribeFormattingOrdinals FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscribeFormattingOrdinals value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new TranscribeFormattingOrdinals(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override TranscribeFormattingOrdinals ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscribeFormattingOrdinals value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(TranscribeFormattingOrdinals value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(TranscribeFormattingOrdinals value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(TranscribeFormattingOrdinals value) => value.Value;
-
-    public static explicit operator TranscribeFormattingOrdinals(string value) => new(value);
-
-    internal class TranscribeFormattingOrdinalsSerializer
-        : JsonConverter<TranscribeFormattingOrdinals>
-    {
-        public override TranscribeFormattingOrdinals Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new TranscribeFormattingOrdinals(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            TranscribeFormattingOrdinals value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override TranscribeFormattingOrdinals ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new TranscribeFormattingOrdinals(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            TranscribeFormattingOrdinals value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string NumeralsAboveNine = "numerals_above_nine";
-
-        public const string AsDictated = "as_dictated";
-
-        public const string Numerals = "numerals";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

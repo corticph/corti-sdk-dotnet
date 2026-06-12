@@ -1,120 +1,89 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TranscriptsParticipantRoleEnum.TranscriptsParticipantRoleEnumSerializer))]
-[Serializable]
-public readonly record struct TranscriptsParticipantRoleEnum : IStringEnum
+[JsonConverter(typeof(TranscriptsParticipantRoleEnumSerializer))]
+public enum TranscriptsParticipantRoleEnum
 {
-    public static readonly TranscriptsParticipantRoleEnum Doctor = new(Values.Doctor);
+    [EnumMember(Value = "doctor")]
+    Doctor,
 
-    public static readonly TranscriptsParticipantRoleEnum Patient = new(Values.Patient);
+    [EnumMember(Value = "patient")]
+    Patient,
 
-    public static readonly TranscriptsParticipantRoleEnum Multiple = new(Values.Multiple);
+    [EnumMember(Value = "multiple")]
+    Multiple,
+}
 
-    public TranscriptsParticipantRoleEnum(string value)
+internal class TranscriptsParticipantRoleEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TranscriptsParticipantRoleEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        TranscriptsParticipantRoleEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "doctor", TranscriptsParticipantRoleEnum.Doctor },
+        { "patient", TranscriptsParticipantRoleEnum.Patient },
+        { "multiple", TranscriptsParticipantRoleEnum.Multiple },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        TranscriptsParticipantRoleEnum,
+        string
+    > _enumToString = new()
+    {
+        { TranscriptsParticipantRoleEnum.Doctor, "doctor" },
+        { TranscriptsParticipantRoleEnum.Patient, "patient" },
+        { TranscriptsParticipantRoleEnum.Multiple, "multiple" },
+    };
+
+    public override TranscriptsParticipantRoleEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static TranscriptsParticipantRoleEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscriptsParticipantRoleEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new TranscriptsParticipantRoleEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override TranscriptsParticipantRoleEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscriptsParticipantRoleEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(TranscriptsParticipantRoleEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(TranscriptsParticipantRoleEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(TranscriptsParticipantRoleEnum value) => value.Value;
-
-    public static explicit operator TranscriptsParticipantRoleEnum(string value) => new(value);
-
-    internal class TranscriptsParticipantRoleEnumSerializer
-        : JsonConverter<TranscriptsParticipantRoleEnum>
-    {
-        public override TranscriptsParticipantRoleEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new TranscriptsParticipantRoleEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            TranscriptsParticipantRoleEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override TranscriptsParticipantRoleEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new TranscriptsParticipantRoleEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            TranscriptsParticipantRoleEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Doctor = "doctor";
-
-        public const string Patient = "patient";
-
-        public const string Multiple = "multiple";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

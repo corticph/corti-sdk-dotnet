@@ -1,128 +1,94 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(
-    typeof(AgentsCreateMcpServerAuthorizationType.AgentsCreateMcpServerAuthorizationTypeSerializer)
-)]
-[Serializable]
-public readonly record struct AgentsCreateMcpServerAuthorizationType : IStringEnum
+[JsonConverter(typeof(AgentsCreateMcpServerAuthorizationTypeSerializer))]
+public enum AgentsCreateMcpServerAuthorizationType
 {
-    public static readonly AgentsCreateMcpServerAuthorizationType None = new(Values.None);
+    [EnumMember(Value = "none")]
+    None,
 
-    public static readonly AgentsCreateMcpServerAuthorizationType Bearer = new(Values.Bearer);
+    [EnumMember(Value = "bearer")]
+    Bearer,
 
-    public static readonly AgentsCreateMcpServerAuthorizationType Inherit = new(Values.Inherit);
+    [EnumMember(Value = "inherit")]
+    Inherit,
 
-    public static readonly AgentsCreateMcpServerAuthorizationType Oauth20 = new(Values.Oauth20);
+    [EnumMember(Value = "oauth2.0")]
+    Oauth20,
+}
 
-    public AgentsCreateMcpServerAuthorizationType(string value)
+internal class AgentsCreateMcpServerAuthorizationTypeSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsCreateMcpServerAuthorizationType>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        AgentsCreateMcpServerAuthorizationType
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "none", AgentsCreateMcpServerAuthorizationType.None },
+        { "bearer", AgentsCreateMcpServerAuthorizationType.Bearer },
+        { "inherit", AgentsCreateMcpServerAuthorizationType.Inherit },
+        { "oauth2.0", AgentsCreateMcpServerAuthorizationType.Oauth20 },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        AgentsCreateMcpServerAuthorizationType,
+        string
+    > _enumToString = new()
+    {
+        { AgentsCreateMcpServerAuthorizationType.None, "none" },
+        { AgentsCreateMcpServerAuthorizationType.Bearer, "bearer" },
+        { AgentsCreateMcpServerAuthorizationType.Inherit, "inherit" },
+        { AgentsCreateMcpServerAuthorizationType.Oauth20, "oauth2.0" },
+    };
+
+    public override AgentsCreateMcpServerAuthorizationType Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static AgentsCreateMcpServerAuthorizationType FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsCreateMcpServerAuthorizationType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new AgentsCreateMcpServerAuthorizationType(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override AgentsCreateMcpServerAuthorizationType ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsCreateMcpServerAuthorizationType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(AgentsCreateMcpServerAuthorizationType value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(AgentsCreateMcpServerAuthorizationType value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(AgentsCreateMcpServerAuthorizationType value) =>
-        value.Value;
-
-    public static explicit operator AgentsCreateMcpServerAuthorizationType(string value) =>
-        new(value);
-
-    internal class AgentsCreateMcpServerAuthorizationTypeSerializer
-        : JsonConverter<AgentsCreateMcpServerAuthorizationType>
-    {
-        public override AgentsCreateMcpServerAuthorizationType Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new AgentsCreateMcpServerAuthorizationType(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            AgentsCreateMcpServerAuthorizationType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override AgentsCreateMcpServerAuthorizationType ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new AgentsCreateMcpServerAuthorizationType(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            AgentsCreateMcpServerAuthorizationType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string None = "none";
-
-        public const string Bearer = "bearer";
-
-        public const string Inherit = "inherit";
-
-        public const string Oauth20 = "oauth2.0";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

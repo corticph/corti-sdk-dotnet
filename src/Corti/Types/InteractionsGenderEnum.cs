@@ -1,123 +1,94 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(InteractionsGenderEnum.InteractionsGenderEnumSerializer))]
-[Serializable]
-public readonly record struct InteractionsGenderEnum : IStringEnum
+[JsonConverter(typeof(InteractionsGenderEnumSerializer))]
+public enum InteractionsGenderEnum
 {
-    public static readonly InteractionsGenderEnum Male = new(Values.Male);
+    [EnumMember(Value = "male")]
+    Male,
 
-    public static readonly InteractionsGenderEnum Female = new(Values.Female);
+    [EnumMember(Value = "female")]
+    Female,
 
-    public static readonly InteractionsGenderEnum Unknown = new(Values.Unknown);
+    [EnumMember(Value = "unknown")]
+    Unknown,
 
-    public static readonly InteractionsGenderEnum Other = new(Values.Other);
+    [EnumMember(Value = "other")]
+    Other,
+}
 
-    public InteractionsGenderEnum(string value)
+internal class InteractionsGenderEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<InteractionsGenderEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        InteractionsGenderEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "male", InteractionsGenderEnum.Male },
+        { "female", InteractionsGenderEnum.Female },
+        { "unknown", InteractionsGenderEnum.Unknown },
+        { "other", InteractionsGenderEnum.Other },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        InteractionsGenderEnum,
+        string
+    > _enumToString = new()
+    {
+        { InteractionsGenderEnum.Male, "male" },
+        { InteractionsGenderEnum.Female, "female" },
+        { InteractionsGenderEnum.Unknown, "unknown" },
+        { InteractionsGenderEnum.Other, "other" },
+    };
+
+    public override InteractionsGenderEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static InteractionsGenderEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        InteractionsGenderEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new InteractionsGenderEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override InteractionsGenderEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        InteractionsGenderEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(InteractionsGenderEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(InteractionsGenderEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(InteractionsGenderEnum value) => value.Value;
-
-    public static explicit operator InteractionsGenderEnum(string value) => new(value);
-
-    internal class InteractionsGenderEnumSerializer : JsonConverter<InteractionsGenderEnum>
-    {
-        public override InteractionsGenderEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new InteractionsGenderEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            InteractionsGenderEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override InteractionsGenderEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new InteractionsGenderEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            InteractionsGenderEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Male = "male";
-
-        public const string Female = "female";
-
-        public const string Unknown = "unknown";
-
-        public const string Other = "other";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

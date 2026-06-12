@@ -1,119 +1,89 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TranscriptsStatusEnum.TranscriptsStatusEnumSerializer))]
-[Serializable]
-public readonly record struct TranscriptsStatusEnum : IStringEnum
+[JsonConverter(typeof(TranscriptsStatusEnumSerializer))]
+public enum TranscriptsStatusEnum
 {
-    public static readonly TranscriptsStatusEnum Completed = new(Values.Completed);
+    [EnumMember(Value = "completed")]
+    Completed,
 
-    public static readonly TranscriptsStatusEnum Processing = new(Values.Processing);
+    [EnumMember(Value = "processing")]
+    Processing,
 
-    public static readonly TranscriptsStatusEnum Failed = new(Values.Failed);
+    [EnumMember(Value = "failed")]
+    Failed,
+}
 
-    public TranscriptsStatusEnum(string value)
+internal class TranscriptsStatusEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TranscriptsStatusEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        TranscriptsStatusEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "completed", TranscriptsStatusEnum.Completed },
+        { "processing", TranscriptsStatusEnum.Processing },
+        { "failed", TranscriptsStatusEnum.Failed },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        TranscriptsStatusEnum,
+        string
+    > _enumToString = new()
+    {
+        { TranscriptsStatusEnum.Completed, "completed" },
+        { TranscriptsStatusEnum.Processing, "processing" },
+        { TranscriptsStatusEnum.Failed, "failed" },
+    };
+
+    public override TranscriptsStatusEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static TranscriptsStatusEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscriptsStatusEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new TranscriptsStatusEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override TranscriptsStatusEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscriptsStatusEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(TranscriptsStatusEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(TranscriptsStatusEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(TranscriptsStatusEnum value) => value.Value;
-
-    public static explicit operator TranscriptsStatusEnum(string value) => new(value);
-
-    internal class TranscriptsStatusEnumSerializer : JsonConverter<TranscriptsStatusEnum>
-    {
-        public override TranscriptsStatusEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new TranscriptsStatusEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            TranscriptsStatusEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override TranscriptsStatusEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new TranscriptsStatusEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            TranscriptsStatusEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Completed = "completed";
-
-        public const string Processing = "processing";
-
-        public const string Failed = "failed";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

@@ -1,116 +1,84 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TranscribeFormattingMeasurements.TranscribeFormattingMeasurementsSerializer))]
-[Serializable]
-public readonly record struct TranscribeFormattingMeasurements : IStringEnum
+[JsonConverter(typeof(TranscribeFormattingMeasurementsSerializer))]
+public enum TranscribeFormattingMeasurements
 {
-    public static readonly TranscribeFormattingMeasurements Abbreviated = new(Values.Abbreviated);
+    [EnumMember(Value = "abbreviated")]
+    Abbreviated,
 
-    public static readonly TranscribeFormattingMeasurements AsDictated = new(Values.AsDictated);
+    [EnumMember(Value = "as_dictated")]
+    AsDictated,
+}
 
-    public TranscribeFormattingMeasurements(string value)
+internal class TranscribeFormattingMeasurementsSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TranscribeFormattingMeasurements>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        TranscribeFormattingMeasurements
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "abbreviated", TranscribeFormattingMeasurements.Abbreviated },
+        { "as_dictated", TranscribeFormattingMeasurements.AsDictated },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        TranscribeFormattingMeasurements,
+        string
+    > _enumToString = new()
+    {
+        { TranscribeFormattingMeasurements.Abbreviated, "abbreviated" },
+        { TranscribeFormattingMeasurements.AsDictated, "as_dictated" },
+    };
+
+    public override TranscribeFormattingMeasurements Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static TranscribeFormattingMeasurements FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscribeFormattingMeasurements value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new TranscribeFormattingMeasurements(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override TranscribeFormattingMeasurements ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscribeFormattingMeasurements value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(TranscribeFormattingMeasurements value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(TranscribeFormattingMeasurements value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(TranscribeFormattingMeasurements value) => value.Value;
-
-    public static explicit operator TranscribeFormattingMeasurements(string value) => new(value);
-
-    internal class TranscribeFormattingMeasurementsSerializer
-        : JsonConverter<TranscribeFormattingMeasurements>
-    {
-        public override TranscribeFormattingMeasurements Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new TranscribeFormattingMeasurements(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            TranscribeFormattingMeasurements value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override TranscribeFormattingMeasurements ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new TranscribeFormattingMeasurements(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            TranscribeFormattingMeasurements value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Abbreviated = "abbreviated";
-
-        public const string AsDictated = "as_dictated";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

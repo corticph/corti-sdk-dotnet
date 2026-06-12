@@ -1,111 +1,73 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgentsTaskKind.AgentsTaskKindSerializer))]
-[Serializable]
-public readonly record struct AgentsTaskKind : IStringEnum
+[JsonConverter(typeof(AgentsTaskKindSerializer))]
+public enum AgentsTaskKind
 {
-    public static readonly AgentsTaskKind Task = new(Values.Task);
+    [EnumMember(Value = "task")]
+    Task,
+}
 
-    public AgentsTaskKind(string value)
+internal class AgentsTaskKindSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsTaskKind>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        AgentsTaskKind
+    > _stringToEnum = new() { { "task", AgentsTaskKind.Task } };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        AgentsTaskKind,
+        string
+    > _enumToString = new() { { AgentsTaskKind.Task, "task" } };
+
+    public override AgentsTaskKind Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        Value = value;
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static AgentsTaskKind FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsTaskKind value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new AgentsTaskKind(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override AgentsTaskKind ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsTaskKind value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(AgentsTaskKind value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(AgentsTaskKind value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(AgentsTaskKind value) => value.Value;
-
-    public static explicit operator AgentsTaskKind(string value) => new(value);
-
-    internal class AgentsTaskKindSerializer : JsonConverter<AgentsTaskKind>
-    {
-        public override AgentsTaskKind Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new AgentsTaskKind(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            AgentsTaskKind value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override AgentsTaskKind ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new AgentsTaskKind(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            AgentsTaskKind value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Task = "task";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

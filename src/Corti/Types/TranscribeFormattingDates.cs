@@ -1,127 +1,99 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TranscribeFormattingDates.TranscribeFormattingDatesSerializer))]
-[Serializable]
-public readonly record struct TranscribeFormattingDates : IStringEnum
+[JsonConverter(typeof(TranscribeFormattingDatesSerializer))]
+public enum TranscribeFormattingDates
 {
-    public static readonly TranscribeFormattingDates LocaleLong = new(Values.LocaleLong);
+    [EnumMember(Value = "locale:long")]
+    LocaleLong,
 
-    public static readonly TranscribeFormattingDates LocaleMedium = new(Values.LocaleMedium);
+    [EnumMember(Value = "locale:medium")]
+    LocaleMedium,
 
-    public static readonly TranscribeFormattingDates LocaleShort = new(Values.LocaleShort);
+    [EnumMember(Value = "locale:short")]
+    LocaleShort,
 
-    public static readonly TranscribeFormattingDates AsDictated = new(Values.AsDictated);
+    [EnumMember(Value = "as_dictated")]
+    AsDictated,
 
-    public static readonly TranscribeFormattingDates Iso = new(Values.Iso);
+    [EnumMember(Value = "iso")]
+    Iso,
+}
 
-    public TranscribeFormattingDates(string value)
+internal class TranscribeFormattingDatesSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TranscribeFormattingDates>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        TranscribeFormattingDates
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "locale:long", TranscribeFormattingDates.LocaleLong },
+        { "locale:medium", TranscribeFormattingDates.LocaleMedium },
+        { "locale:short", TranscribeFormattingDates.LocaleShort },
+        { "as_dictated", TranscribeFormattingDates.AsDictated },
+        { "iso", TranscribeFormattingDates.Iso },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        TranscribeFormattingDates,
+        string
+    > _enumToString = new()
+    {
+        { TranscribeFormattingDates.LocaleLong, "locale:long" },
+        { TranscribeFormattingDates.LocaleMedium, "locale:medium" },
+        { TranscribeFormattingDates.LocaleShort, "locale:short" },
+        { TranscribeFormattingDates.AsDictated, "as_dictated" },
+        { TranscribeFormattingDates.Iso, "iso" },
+    };
+
+    public override TranscribeFormattingDates Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static TranscribeFormattingDates FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscribeFormattingDates value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new TranscribeFormattingDates(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override TranscribeFormattingDates ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TranscribeFormattingDates value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(TranscribeFormattingDates value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(TranscribeFormattingDates value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(TranscribeFormattingDates value) => value.Value;
-
-    public static explicit operator TranscribeFormattingDates(string value) => new(value);
-
-    internal class TranscribeFormattingDatesSerializer : JsonConverter<TranscribeFormattingDates>
-    {
-        public override TranscribeFormattingDates Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new TranscribeFormattingDates(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            TranscribeFormattingDates value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override TranscribeFormattingDates ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new TranscribeFormattingDates(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            TranscribeFormattingDates value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string LocaleLong = "locale:long";
-
-        public const string LocaleMedium = "locale:medium";
-
-        public const string LocaleShort = "locale:short";
-
-        public const string AsDictated = "as_dictated";
-
-        public const string Iso = "iso";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

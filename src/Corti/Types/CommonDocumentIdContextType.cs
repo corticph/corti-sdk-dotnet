@@ -1,112 +1,73 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(CommonDocumentIdContextType.CommonDocumentIdContextTypeSerializer))]
-[Serializable]
-public readonly record struct CommonDocumentIdContextType : IStringEnum
+[JsonConverter(typeof(CommonDocumentIdContextTypeSerializer))]
+public enum CommonDocumentIdContextType
 {
-    public static readonly CommonDocumentIdContextType DocumentId = new(Values.DocumentId);
+    [EnumMember(Value = "documentId")]
+    DocumentId,
+}
 
-    public CommonDocumentIdContextType(string value)
+internal class CommonDocumentIdContextTypeSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<CommonDocumentIdContextType>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        CommonDocumentIdContextType
+    > _stringToEnum = new() { { "documentId", CommonDocumentIdContextType.DocumentId } };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        CommonDocumentIdContextType,
+        string
+    > _enumToString = new() { { CommonDocumentIdContextType.DocumentId, "documentId" } };
+
+    public override CommonDocumentIdContextType Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        Value = value;
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static CommonDocumentIdContextType FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonDocumentIdContextType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new CommonDocumentIdContextType(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override CommonDocumentIdContextType ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonDocumentIdContextType value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(CommonDocumentIdContextType value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(CommonDocumentIdContextType value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(CommonDocumentIdContextType value) => value.Value;
-
-    public static explicit operator CommonDocumentIdContextType(string value) => new(value);
-
-    internal class CommonDocumentIdContextTypeSerializer
-        : JsonConverter<CommonDocumentIdContextType>
-    {
-        public override CommonDocumentIdContextType Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new CommonDocumentIdContextType(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            CommonDocumentIdContextType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override CommonDocumentIdContextType ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new CommonDocumentIdContextType(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            CommonDocumentIdContextType value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string DocumentId = "documentId";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

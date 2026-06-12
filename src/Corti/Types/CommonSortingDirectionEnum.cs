@@ -1,115 +1,84 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(CommonSortingDirectionEnum.CommonSortingDirectionEnumSerializer))]
-[Serializable]
-public readonly record struct CommonSortingDirectionEnum : IStringEnum
+[JsonConverter(typeof(CommonSortingDirectionEnumSerializer))]
+public enum CommonSortingDirectionEnum
 {
-    public static readonly CommonSortingDirectionEnum Asc = new(Values.Asc);
+    [EnumMember(Value = "asc")]
+    Asc,
 
-    public static readonly CommonSortingDirectionEnum Desc = new(Values.Desc);
+    [EnumMember(Value = "desc")]
+    Desc,
+}
 
-    public CommonSortingDirectionEnum(string value)
+internal class CommonSortingDirectionEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<CommonSortingDirectionEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        CommonSortingDirectionEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "asc", CommonSortingDirectionEnum.Asc },
+        { "desc", CommonSortingDirectionEnum.Desc },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        CommonSortingDirectionEnum,
+        string
+    > _enumToString = new()
+    {
+        { CommonSortingDirectionEnum.Asc, "asc" },
+        { CommonSortingDirectionEnum.Desc, "desc" },
+    };
+
+    public override CommonSortingDirectionEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static CommonSortingDirectionEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonSortingDirectionEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new CommonSortingDirectionEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override CommonSortingDirectionEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        CommonSortingDirectionEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(CommonSortingDirectionEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(CommonSortingDirectionEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(CommonSortingDirectionEnum value) => value.Value;
-
-    public static explicit operator CommonSortingDirectionEnum(string value) => new(value);
-
-    internal class CommonSortingDirectionEnumSerializer : JsonConverter<CommonSortingDirectionEnum>
-    {
-        public override CommonSortingDirectionEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new CommonSortingDirectionEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            CommonSortingDirectionEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override CommonSortingDirectionEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new CommonSortingDirectionEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            CommonSortingDirectionEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Asc = "asc";
-
-        public const string Desc = "desc";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

@@ -1,111 +1,73 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgentsMessageKind.AgentsMessageKindSerializer))]
-[Serializable]
-public readonly record struct AgentsMessageKind : IStringEnum
+[JsonConverter(typeof(AgentsMessageKindSerializer))]
+public enum AgentsMessageKind
 {
-    public static readonly AgentsMessageKind Message = new(Values.Message);
+    [EnumMember(Value = "message")]
+    Message,
+}
 
-    public AgentsMessageKind(string value)
+internal class AgentsMessageKindSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsMessageKind>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        AgentsMessageKind
+    > _stringToEnum = new() { { "message", AgentsMessageKind.Message } };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        AgentsMessageKind,
+        string
+    > _enumToString = new() { { AgentsMessageKind.Message, "message" } };
+
+    public override AgentsMessageKind Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        Value = value;
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static AgentsMessageKind FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsMessageKind value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new AgentsMessageKind(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override AgentsMessageKind ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        AgentsMessageKind value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(AgentsMessageKind value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(AgentsMessageKind value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(AgentsMessageKind value) => value.Value;
-
-    public static explicit operator AgentsMessageKind(string value) => new(value);
-
-    internal class AgentsMessageKindSerializer : JsonConverter<AgentsMessageKind>
-    {
-        public override AgentsMessageKind Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new AgentsMessageKind(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            AgentsMessageKind value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override AgentsMessageKind ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new AgentsMessageKind(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            AgentsMessageKind value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string Message = "message";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

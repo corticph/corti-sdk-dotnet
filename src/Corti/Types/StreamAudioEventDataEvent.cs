@@ -1,131 +1,94 @@
-using Corti.Core;
-using global::System.Text.Json;
+using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(StreamAudioEventDataEvent.StreamAudioEventDataEventSerializer))]
-[Serializable]
-public readonly record struct StreamAudioEventDataEvent : IStringEnum
+[JsonConverter(typeof(StreamAudioEventDataEventSerializer))]
+public enum StreamAudioEventDataEvent
 {
-    public static readonly StreamAudioEventDataEvent SpeechQualityIssueDetected = new(
-        Values.SpeechQualityIssueDetected
-    );
+    [EnumMember(Value = "speechQualityIssueDetected")]
+    SpeechQualityIssueDetected,
 
-    public static readonly StreamAudioEventDataEvent SpeechQualityIssueRecovered = new(
-        Values.SpeechQualityIssueRecovered
-    );
+    [EnumMember(Value = "speechQualityIssueRecovered")]
+    SpeechQualityIssueRecovered,
 
-    public static readonly StreamAudioEventDataEvent LongSilenceDetected = new(
-        Values.LongSilenceDetected
-    );
+    [EnumMember(Value = "longSilenceDetected")]
+    LongSilenceDetected,
 
-    public static readonly StreamAudioEventDataEvent LongSilenceRecovered = new(
-        Values.LongSilenceRecovered
-    );
+    [EnumMember(Value = "longSilenceRecovered")]
+    LongSilenceRecovered,
+}
 
-    public StreamAudioEventDataEvent(string value)
+internal class StreamAudioEventDataEventSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<StreamAudioEventDataEvent>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        StreamAudioEventDataEvent
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "speechQualityIssueDetected", StreamAudioEventDataEvent.SpeechQualityIssueDetected },
+        { "speechQualityIssueRecovered", StreamAudioEventDataEvent.SpeechQualityIssueRecovered },
+        { "longSilenceDetected", StreamAudioEventDataEvent.LongSilenceDetected },
+        { "longSilenceRecovered", StreamAudioEventDataEvent.LongSilenceRecovered },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        StreamAudioEventDataEvent,
+        string
+    > _enumToString = new()
+    {
+        { StreamAudioEventDataEvent.SpeechQualityIssueDetected, "speechQualityIssueDetected" },
+        { StreamAudioEventDataEvent.SpeechQualityIssueRecovered, "speechQualityIssueRecovered" },
+        { StreamAudioEventDataEvent.LongSilenceDetected, "longSilenceDetected" },
+        { StreamAudioEventDataEvent.LongSilenceRecovered, "longSilenceRecovered" },
+    };
+
+    public override StreamAudioEventDataEvent Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static StreamAudioEventDataEvent FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamAudioEventDataEvent value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new StreamAudioEventDataEvent(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override StreamAudioEventDataEvent ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamAudioEventDataEvent value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(StreamAudioEventDataEvent value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(StreamAudioEventDataEvent value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(StreamAudioEventDataEvent value) => value.Value;
-
-    public static explicit operator StreamAudioEventDataEvent(string value) => new(value);
-
-    internal class StreamAudioEventDataEventSerializer : JsonConverter<StreamAudioEventDataEvent>
-    {
-        public override StreamAudioEventDataEvent Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new StreamAudioEventDataEvent(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            StreamAudioEventDataEvent value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override StreamAudioEventDataEvent ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new StreamAudioEventDataEvent(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            StreamAudioEventDataEvent value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string SpeechQualityIssueDetected = "speechQualityIssueDetected";
-
-        public const string SpeechQualityIssueRecovered = "speechQualityIssueRecovered";
-
-        public const string LongSilenceDetected = "longSilenceDetected";
-
-        public const string LongSilenceRecovered = "longSilenceRecovered";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }
