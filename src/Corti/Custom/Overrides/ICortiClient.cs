@@ -11,6 +11,7 @@ public partial interface ICortiClient
     public IDocumentsClient Documents { get; }
     public ITemplatesClient Templates { get; }
     public ICodesClient Codes { get; }
+    public ILanguagesClient Languages { get; }
     public IAgentsClient Agents { get; }
     Task<IStreamApi> CreateStreamApiAsync(string interactionId);
     Task<ITranscribeApi> CreateTranscribeApiAsync();

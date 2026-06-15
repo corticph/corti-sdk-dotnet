@@ -108,6 +108,7 @@ public partial class CortiClient : ICortiClient
             Documents = new DocumentsClient(_client);
             Templates = new TemplatesClient(_client);
             Codes = new CodesClient(_client);
+            Languages = new LanguagesClient(_client);
             Agents = new AgentsClient(_client);
         }
         catch (Exception ex)
@@ -248,6 +249,8 @@ public partial class CortiClient : ICortiClient
     public ITemplatesClient Templates { get; }
 
     public ICodesClient Codes { get; }
+
+    public ILanguagesClient Languages { get; }
 
     public IAgentsClient Agents { get; }
 

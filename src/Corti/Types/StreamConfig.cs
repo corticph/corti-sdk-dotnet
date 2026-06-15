@@ -32,6 +32,18 @@ public record StreamConfig : IJsonOnDeserialized
     [JsonPropertyName("audioFormat")]
     public string? AudioFormat { get; set; }
 
+    /// <summary>
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream.
+    /// </summary>
+    [JsonPropertyName("replacements")]
+    public IEnumerable<StreamConfigReplacementsItem>? Replacements { get; set; }
+
+    /// <summary>
+    /// Define words, terms, and phrases to be recognized by Corti speech-to-text. Especially useful for proper nouns (e.g., surnames), but also supportive of words not being recognized consistently. Configuration is case sensitive and limited to 1,000 key terms per stream.
+    /// </summary>
+    [JsonPropertyName("keyterms")]
+    public StreamConfigKeyterms? Keyterms { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
