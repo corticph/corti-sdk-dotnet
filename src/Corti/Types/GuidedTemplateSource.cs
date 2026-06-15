@@ -1,115 +1,84 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(GuidedTemplateSource.GuidedTemplateSourceSerializer))]
-[Serializable]
-public readonly record struct GuidedTemplateSource : IStringEnum
+[JsonConverter(typeof(GuidedTemplateSourceSerializer))]
+public enum GuidedTemplateSource
 {
-    public static readonly GuidedTemplateSource User = new(Values.User);
+    [EnumMember(Value = "user")]
+    User,
 
-    public static readonly GuidedTemplateSource Corti = new(Values.Corti);
+    [EnumMember(Value = "corti")]
+    Corti,
+}
 
-    public GuidedTemplateSource(string value)
+internal class GuidedTemplateSourceSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<GuidedTemplateSource>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        GuidedTemplateSource
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "user", GuidedTemplateSource.User },
+        { "corti", GuidedTemplateSource.Corti },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        GuidedTemplateSource,
+        string
+    > _enumToString = new()
+    {
+        { GuidedTemplateSource.User, "user" },
+        { GuidedTemplateSource.Corti, "corti" },
+    };
+
+    public override GuidedTemplateSource Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static GuidedTemplateSource FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        GuidedTemplateSource value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new GuidedTemplateSource(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override GuidedTemplateSource ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        GuidedTemplateSource value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(GuidedTemplateSource value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(GuidedTemplateSource value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(GuidedTemplateSource value) => value.Value;
-
-    public static explicit operator GuidedTemplateSource(string value) => new(value);
-
-    internal class GuidedTemplateSourceSerializer : JsonConverter<GuidedTemplateSource>
-    {
-        public override GuidedTemplateSource Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new GuidedTemplateSource(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            GuidedTemplateSource value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override GuidedTemplateSource ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new GuidedTemplateSource(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            GuidedTemplateSource value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string User = "user";
-
-        public const string Corti = "corti";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

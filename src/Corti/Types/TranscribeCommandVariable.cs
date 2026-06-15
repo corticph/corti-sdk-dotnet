@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -12,29 +12,22 @@ public record TranscribeCommandVariable : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Variable key identifier
+    /// Define the variable used in command phrases.
     /// </summary>
     [JsonPropertyName("key")]
     public required string Key { get; set; }
 
     /// <summary>
-    /// Variable type
+    /// Variable type. Use `enum` to define a fixed list of values that can be recognized for the variable. Use `wildcard` to recognize any undefined, open-ended free-text utterance. When using `wildcard`, the phrase must include a literal trigger word before the wildcard variable (a phrase may not begin with a wildcard variable), and multiple wildcard variables in a single phrase must be separated by a non-empty literal string (e.g. `select {text1} end select {text2}` is valid; `{text1} {text2}` is not).
     /// </summary>
-    [JsonRequired]
     [JsonPropertyName("type")]
-    public TranscribeCommandVariable.TypeLiteral Type { get;
-#if NET5_0_OR_GREATER
-        init;
-#else
-        set;
-#endif
-    } = new();
+    public required TranscribeCommandVariableType Type { get; set; }
 
     /// <summary>
-    /// Enum values for the variable
+    /// List of values that should be recognized for the defined variable. Required when `type` is `enum`. Not used (and ignored) when `type` is `wildcard`.
     /// </summary>
     [JsonPropertyName("enum")]
-    public IEnumerable<string> Enum { get; set; } = new List<string>();
+    public IEnumerable<string>? Enum { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -46,79 +39,5 @@ public record TranscribeCommandVariable : IJsonOnDeserialized
     public override string ToString()
     {
         return JsonUtils.Serialize(this);
-    }
-
-    [JsonConverter(typeof(TypeLiteralConverter))]
-    public readonly struct TypeLiteral
-    {
-        public const string Value = "enum";
-
-        public static implicit operator string(TypeLiteral _) => Value;
-
-        public override string ToString() => Value;
-
-        public override int GetHashCode() =>
-            global::System.StringComparer.Ordinal.GetHashCode(Value);
-
-        public override bool Equals(object? obj) => obj is TypeLiteral;
-
-        public static bool operator ==(TypeLiteral _, TypeLiteral __) => true;
-
-        public static bool operator !=(TypeLiteral _, TypeLiteral __) => false;
-
-        internal sealed class TypeLiteralConverter : JsonConverter<TypeLiteral>
-        {
-            public override TypeLiteral Read(
-                ref Utf8JsonReader reader,
-                global::System.Type typeToConvert,
-                JsonSerializerOptions options
-            )
-            {
-                var value = reader.GetString();
-                if (value != TypeLiteral.Value)
-                {
-                    throw new JsonException(
-                        "Expected \""
-                            + TypeLiteral.Value
-                            + "\" for type discriminator but got \""
-                            + value
-                            + "\"."
-                    );
-                }
-                return new TypeLiteral();
-            }
-
-            public override void Write(
-                Utf8JsonWriter writer,
-                TypeLiteral value,
-                JsonSerializerOptions options
-            ) => writer.WriteStringValue(TypeLiteral.Value);
-
-            public override TypeLiteral ReadAsPropertyName(
-                ref Utf8JsonReader reader,
-                global::System.Type typeToConvert,
-                JsonSerializerOptions options
-            )
-            {
-                var value = reader.GetString();
-                if (value != TypeLiteral.Value)
-                {
-                    throw new JsonException(
-                        "Expected \""
-                            + TypeLiteral.Value
-                            + "\" for type discriminator but got \""
-                            + value
-                            + "\"."
-                    );
-                }
-                return new TypeLiteral();
-            }
-
-            public override void WriteAsPropertyName(
-                Utf8JsonWriter writer,
-                TypeLiteral value,
-                JsonSerializerOptions options
-            ) => writer.WritePropertyName(TypeLiteral.Value);
-        }
     }
 }

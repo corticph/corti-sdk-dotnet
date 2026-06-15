@@ -1,5 +1,5 @@
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -19,7 +19,7 @@ public record TranscriptsCreateRequest
     public required string PrimaryLanguage { get; set; }
 
     /// <summary>
-    /// Indicates whether spoken dictation commands should be converted to punctuation (e.g., 'comma' → ',').
+    /// If true, spoken punctuation will be converted to symbols (e.g., 'comma' → ',').
     /// </summary>
     [JsonPropertyName("isDictation")]
     public bool? IsDictation { get; set; }
@@ -41,6 +41,12 @@ public record TranscriptsCreateRequest
     /// </summary>
     [JsonPropertyName("participants")]
     public IEnumerable<TranscriptsParticipant>? Participants { get; set; }
+
+    /// <summary>
+    /// If true, the request will return immediately with a 202 status and the transcript will be processed asynchronously. Poll [Get Transcript Status](/api-reference/transcripts/get-transcript-status) to check transcript processing status - `processing`, `completed`, `failed`.
+    /// </summary>
+    [JsonPropertyName("async")]
+    public bool? Async { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

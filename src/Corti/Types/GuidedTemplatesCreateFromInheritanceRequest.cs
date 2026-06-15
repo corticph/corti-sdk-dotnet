@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -67,12 +67,6 @@ public record GuidedTemplatesCreateFromInheritanceRequest : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("publish")]
     public bool? Publish { get; set; }
-
-    /// <summary>
-    /// Access policies to apply to the template on creation.
-    /// </summary>
-    [JsonPropertyName("policies")]
-    public IEnumerable<GuidedTemplatesCreatePolicyRequest>? Policies { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

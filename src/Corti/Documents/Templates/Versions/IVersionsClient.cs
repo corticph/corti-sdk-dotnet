@@ -4,6 +4,10 @@ namespace Corti.Documents.Templates;
 
 public partial interface IVersionsClient
 {
+    /// <summary>
+    /// Returns raw authored template versions without inheritance resolution or section expansion.
+    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// </summary>
     WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersionResponse>> ListAsync(
         string templateId,
         RequestOptions? options = null,
@@ -20,6 +24,10 @@ public partial interface IVersionsClient
         CancellationToken cancellationToken = default
     );
 
+    /// <summary>
+    /// Returns the raw authored template version without inheritance resolution or section expansion.
+    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// </summary>
     WithRawResponseTask<GuidedShallowTemplateVersionResponse> GetAsync(
         string templateId,
         string versionId,
@@ -30,7 +38,7 @@ public partial interface IVersionsClient
     /// <summary>
     /// A published version cannot be deleted. When deleting a last remaining version of a template, simply create a new version again if needed.
     /// </summary>
-    Task DeleteAsync(
+    WithRawResponseTask DeleteAsync(
         string templateId,
         string versionId,
         RequestOptions? options = null,

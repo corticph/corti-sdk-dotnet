@@ -1,120 +1,84 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Corti.Core;
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TemplatesDocumentationModeEnum.TemplatesDocumentationModeEnumSerializer))]
-[Serializable]
-public readonly record struct TemplatesDocumentationModeEnum : IStringEnum
+[JsonConverter(typeof(TemplatesDocumentationModeEnumSerializer))]
+public enum TemplatesDocumentationModeEnum
 {
-    public static readonly TemplatesDocumentationModeEnum GlobalSequential = new(
-        Values.GlobalSequential
-    );
+    [EnumMember(Value = "global_sequential")]
+    GlobalSequential,
 
-    public static readonly TemplatesDocumentationModeEnum RoutedParallel = new(
-        Values.RoutedParallel
-    );
+    [EnumMember(Value = "routed_parallel")]
+    RoutedParallel,
+}
 
-    public TemplatesDocumentationModeEnum(string value)
+internal class TemplatesDocumentationModeEnumSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TemplatesDocumentationModeEnum>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        TemplatesDocumentationModeEnum
+    > _stringToEnum = new()
     {
-        Value = value;
+        { "global_sequential", TemplatesDocumentationModeEnum.GlobalSequential },
+        { "routed_parallel", TemplatesDocumentationModeEnum.RoutedParallel },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        TemplatesDocumentationModeEnum,
+        string
+    > _enumToString = new()
+    {
+        { TemplatesDocumentationModeEnum.GlobalSequential, "global_sequential" },
+        { TemplatesDocumentationModeEnum.RoutedParallel, "routed_parallel" },
+    };
+
+    public override TemplatesDocumentationModeEnum Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// The string value of the enum.
-    /// </summary>
-    public string Value { get; }
-
-    /// <summary>
-    /// Create a string enum with the given value.
-    /// </summary>
-    public static TemplatesDocumentationModeEnum FromCustom(string value)
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TemplatesDocumentationModeEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return new TemplatesDocumentationModeEnum(value);
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
     }
 
-    public bool Equals(string? other)
+    public override TemplatesDocumentationModeEnum ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value.Equals(other);
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
     }
 
-    /// <summary>
-    /// Returns the string value of the enum.
-    /// </summary>
-    public override string ToString()
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        TemplatesDocumentationModeEnum value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
     {
-        return Value;
-    }
-
-    public static bool operator ==(TemplatesDocumentationModeEnum value1, string value2) =>
-        value1.Value.Equals(value2);
-
-    public static bool operator !=(TemplatesDocumentationModeEnum value1, string value2) =>
-        !value1.Value.Equals(value2);
-
-    public static explicit operator string(TemplatesDocumentationModeEnum value) => value.Value;
-
-    public static explicit operator TemplatesDocumentationModeEnum(string value) => new(value);
-
-    internal class TemplatesDocumentationModeEnumSerializer
-        : JsonConverter<TemplatesDocumentationModeEnum>
-    {
-        public override TemplatesDocumentationModeEnum Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON value could not be read as a string."
-                );
-            return new TemplatesDocumentationModeEnum(stringValue);
-        }
-
-        public override void Write(
-            Utf8JsonWriter writer,
-            TemplatesDocumentationModeEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WriteStringValue(value.Value);
-        }
-
-        public override TemplatesDocumentationModeEnum ReadAsPropertyName(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options
-        )
-        {
-            var stringValue =
-                reader.GetString()
-                ?? throw new global::System.Exception(
-                    "The JSON property name could not be read as a string."
-                );
-            return new TemplatesDocumentationModeEnum(stringValue);
-        }
-
-        public override void WriteAsPropertyName(
-            Utf8JsonWriter writer,
-            TemplatesDocumentationModeEnum value,
-            JsonSerializerOptions options
-        )
-        {
-            writer.WritePropertyName(value.Value);
-        }
-    }
-
-    /// <summary>
-    /// Constant strings for enum values
-    /// </summary>
-    [Serializable]
-    public static class Values
-    {
-        public const string GlobalSequential = "global_sequential";
-
-        public const string RoutedParallel = "routed_parallel";
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
     }
 }

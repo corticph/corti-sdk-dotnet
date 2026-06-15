@@ -1,6 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Corti.Core;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
@@ -94,12 +94,6 @@ public record GuidedSection : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("deletedAt")]
     public DateTime? DeletedAt { get; set; }
-
-    /// <summary>
-    /// Access policies for this section.
-    /// </summary>
-    [JsonPropertyName("policies")]
-    public IEnumerable<GuidedSectionPolicy>? Policies { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
