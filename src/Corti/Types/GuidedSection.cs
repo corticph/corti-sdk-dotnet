@@ -78,6 +78,12 @@ public record GuidedSection : IJsonOnDeserialized
     public GuidedSectionVersion? PublishedVersion { get; set; }
 
     /// <summary>
+    /// The UUID of the creator of this section.
+    /// </summary>
+    [JsonPropertyName("createdBy")]
+    public string? CreatedBy { get; set; }
+
+    /// <summary>
     /// The original timestamp when the section was created.
     /// </summary>
     [JsonPropertyName("createdAt")]

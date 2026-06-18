@@ -78,6 +78,12 @@ public record GuidedTemplate : IJsonOnDeserialized
     public GuidedTemplateVersion? PublishedVersion { get; set; }
 
     /// <summary>
+    /// The UUID of the creator of this template.
+    /// </summary>
+    [JsonPropertyName("createdBy")]
+    public string? CreatedBy { get; set; }
+
+    /// <summary>
     /// The original timestamp when the template was created.
     /// </summary>
     [JsonPropertyName("createdAt")]

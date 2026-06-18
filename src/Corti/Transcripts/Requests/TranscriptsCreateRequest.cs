@@ -19,7 +19,19 @@ public record TranscriptsCreateRequest
     public required string PrimaryLanguage { get; set; }
 
     /// <summary>
-    /// If true, spoken punctuation will be converted to symbols (e.g., 'comma' → ',').
+    /// When true, converts spoken punctuation such as 'period' or 'slash' into symbols (e.g., '.', '/'). When enabled, automatic punctuation is turned off. Takes precedence over `automaticPunctuation` when both are enabled.
+    /// </summary>
+    [JsonPropertyName("spokenPunctuation")]
+    public bool? SpokenPunctuation { get; set; }
+
+    /// <summary>
+    /// When true, automatically punctuates and capitalizes the transcript. Defaults to true. Overridden by `spokenPunctuation` when both are enabled.
+    /// </summary>
+    [JsonPropertyName("automaticPunctuation")]
+    public bool? AutomaticPunctuation { get; set; }
+
+    /// <summary>
+    /// **Deprecated** — replaced by `spokenPunctuation` and `automaticPunctuation`. Ignored when either of those fields is provided. When `true` and neither new field is provided, it is treated as `spokenPunctuation: true` (automatic punctuation off). No removal date is currently planned.
     /// </summary>
     [JsonPropertyName("isDictation")]
     public bool? IsDictation { get; set; }
@@ -47,6 +59,18 @@ public record TranscriptsCreateRequest
     /// </summary>
     [JsonPropertyName("async")]
     public bool? Async { get; set; }
+
+    /// <summary>
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream.
+    /// </summary>
+    [JsonPropertyName("replacements")]
+    public IEnumerable<TranscriptsCreateRequestReplacementsItem>? Replacements { get; set; }
+
+    /// <summary>
+    /// Define words, terms, and phrases to be recognized by Corti speech-to-text. Especially useful for proper nouns (e.g., surnames), but also supportive of words not being recognized consistently. Configuration is case sensitive and limited to 1,000 key terms per stream.
+    /// </summary>
+    [JsonPropertyName("keyterms")]
+    public TranscriptsCreateRequestKeyterms? Keyterms { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
