@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Creates a template from scratch. The template fully specifies its own instructions and sections.
+/// Creates a template from scratch. The template fully specifies its own sections and optional template-level instructions.
 /// </summary>
 [Serializable]
 public record GuidedTemplatesCreateFromScratchRequest : IJsonOnDeserialized
