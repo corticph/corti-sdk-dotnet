@@ -606,10 +606,7 @@ public partial class TemplatesClient : ITemplatesClient
     ///     new GuidedTemplatesCreateFromScratchRequest
     ///     {
     ///         Name = "name",
-    ///         Generation = new GuidedTemplatesCreateFromScratchRequestGeneration
-    ///         {
-    ///             Instructions = new GuidedTemplateInstructions { Prompt = "prompt" },
-    ///         },
+    ///         Generation = new GuidedTemplatesCreateFromScratchRequestGeneration(),
     ///     }
     /// );
     /// </code></example>
