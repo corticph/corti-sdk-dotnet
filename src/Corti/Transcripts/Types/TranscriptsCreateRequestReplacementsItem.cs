@@ -5,17 +5,23 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record GuidedTemplatesCreateFromScratchRequestGeneration : IJsonOnDeserialized
+public record TranscriptsCreateRequestReplacementsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public GuidedTemplateInstructions? Instructions { get; set; }
+    /// <summary>
+    /// The term to be replaced, such as "BID".
+    /// </summary>
+    [JsonPropertyName("find")]
+    public required string Find { get; set; }
 
-    [JsonPropertyName("sections")]
-    public IEnumerable<GuidedTemplatesVersionSectionRequest>? Sections { get; set; }
+    /// <summary>
+    /// The preferred replacement for the term, such as "twice daily".
+    /// </summary>
+    [JsonPropertyName("replace")]
+    public required string Replace { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

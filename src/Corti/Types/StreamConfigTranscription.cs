@@ -18,7 +18,13 @@ public record StreamConfigTranscription : IJsonOnDeserialized
     public required string PrimaryLanguage { get; set; }
 
     /// <summary>
-    /// Enable speaker diarization
+    /// Enable speaker diarization.
+    /// </summary>
+    [JsonPropertyName("diarize")]
+    public bool? Diarize { get; set; }
+
+    /// <summary>
+    /// **Deprecated** — renamed to `diarize`. Still accepted for backward compatibility; `diarize` takes precedence when both are provided. `CONFIG_ACCEPTED` echoes both fields during the deprecation period. No removal date is currently planned.
     /// </summary>
     [JsonPropertyName("isDiarization")]
     public bool? IsDiarization { get; set; }

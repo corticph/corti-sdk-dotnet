@@ -11,6 +11,9 @@ public enum GuidedTemplateSource
 
     [EnumMember(Value = "corti")]
     Corti,
+
+    [EnumMember(Value = "project")]
+    Project,
 }
 
 internal class GuidedTemplateSourceSerializer
@@ -23,6 +26,7 @@ internal class GuidedTemplateSourceSerializer
     {
         { "user", GuidedTemplateSource.User },
         { "corti", GuidedTemplateSource.Corti },
+        { "project", GuidedTemplateSource.Project },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -32,6 +36,7 @@ internal class GuidedTemplateSourceSerializer
     {
         { GuidedTemplateSource.User, "user" },
         { GuidedTemplateSource.Corti, "corti" },
+        { GuidedTemplateSource.Project, "project" },
     };
 
     public override GuidedTemplateSource Read(

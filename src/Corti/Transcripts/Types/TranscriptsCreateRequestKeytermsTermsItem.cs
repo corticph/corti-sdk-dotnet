@@ -5,17 +5,17 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record GuidedTemplatesCreateFromScratchRequestGeneration : IJsonOnDeserialized
+public record TranscriptsCreateRequestKeytermsTermsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("instructions")]
-    public GuidedTemplateInstructions? Instructions { get; set; }
-
-    [JsonPropertyName("sections")]
-    public IEnumerable<GuidedTemplatesVersionSectionRequest>? Sections { get; set; }
+    /// <summary>
+    /// The word to be recognized, defined in its expected written form.
+    /// </summary>
+    [JsonPropertyName("term")]
+    public required string Term { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

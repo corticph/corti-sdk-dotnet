@@ -11,6 +11,9 @@ public enum GuidedSectionSource
 
     [EnumMember(Value = "corti")]
     Corti,
+
+    [EnumMember(Value = "project")]
+    Project,
 }
 
 internal class GuidedSectionSourceSerializer
@@ -23,6 +26,7 @@ internal class GuidedSectionSourceSerializer
     {
         { "user", GuidedSectionSource.User },
         { "corti", GuidedSectionSource.Corti },
+        { "project", GuidedSectionSource.Project },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -32,6 +36,7 @@ internal class GuidedSectionSourceSerializer
     {
         { GuidedSectionSource.User, "user" },
         { GuidedSectionSource.Corti, "corti" },
+        { GuidedSectionSource.Project, "project" },
     };
 
     public override GuidedSectionSource Read(
