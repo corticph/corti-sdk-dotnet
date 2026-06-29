@@ -12,7 +12,7 @@ public record TranscribeConfigKeytermsTermsItem : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The word to be recognized, defined in its expected written form.
+    /// The word to be recognized, defined in its expected written form. A defined `term` is limited to a length of 50 characters.
     /// </summary>
     [JsonPropertyName("term")]
     public required string Term { get; set; }

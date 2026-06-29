@@ -4,18 +4,21 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
+/// <summary>
+/// Define words, terms, and phrases to be recognized by Corti speech-to-text. Especially useful for proper nouns (e.g., surnames), but also supportive of words not being recognized consistently.
+/// </summary>
 [Serializable]
-public record StreamConfigKeytermsTermsItem : IJsonOnDeserialized
+public record TranscriptsCreateRequestKeyterms : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The word to be recognized, defined in its expected written form. A defined `term` is limited to a length of 50 characters.
+    /// Ordered list of words to be recognized. Configuration is case sensitive and limited to 1,000 key terms per stream.
     /// </summary>
-    [JsonPropertyName("term")]
-    public required string Term { get; set; }
+    [JsonPropertyName("terms")]
+    public IEnumerable<TranscriptsCreateRequestKeytermsTermsItem>? Terms { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

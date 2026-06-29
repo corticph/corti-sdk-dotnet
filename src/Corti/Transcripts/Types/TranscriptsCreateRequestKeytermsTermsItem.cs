@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record StreamConfigKeytermsTermsItem : IJsonOnDeserialized
+public record TranscriptsCreateRequestKeytermsTermsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
