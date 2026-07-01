@@ -10,7 +10,7 @@ public partial interface ITemplatesClient
     /// Returns a list of templates and their metadata. Fetch a specific templateId to get the expanded sections.
     /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
     /// </summary>
-    WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
+    WithRawResponseTask<IEnumerable<GuidedTemplateListItem>> ListAsync(
         GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
