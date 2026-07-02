@@ -5,17 +5,23 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record StreamConfigKeytermsTermsItem : IJsonOnDeserialized
+public record TranscriptsCreateRequestReplacementsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The word to be recognized, defined in its expected written form. A defined `term` is limited to a length of 50 characters.
+    /// The term to be replaced, such as "BID".
     /// </summary>
-    [JsonPropertyName("term")]
-    public required string Term { get; set; }
+    [JsonPropertyName("find")]
+    public required string Find { get; set; }
+
+    /// <summary>
+    /// The preferred replacement for the term, such as "twice daily".
+    /// </summary>
+    [JsonPropertyName("replace")]
+    public required string Replace { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
