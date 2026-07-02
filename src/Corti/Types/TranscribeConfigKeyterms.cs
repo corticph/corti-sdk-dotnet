@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Define words, terms, and phrases to be recognized by Corti speech-to-text. Especially useful for proper nouns (e.g., surnames), but also supportive of words not being recognized consistently. Configuration is case sensitive and limited to 1,000 key terms per stream.
+/// Define words, terms, and phrases to be recognized by Corti speech-to-text. Especially useful for proper nouns (e.g., surnames), but also supportive of words not being recognized consistently.
 /// </summary>
 [Serializable]
 public record TranscribeConfigKeyterms : IJsonOnDeserialized
@@ -15,7 +15,7 @@ public record TranscribeConfigKeyterms : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Ordered list of words to be recognized.
+    /// Ordered list of words to be recognized. Configuration is case sensitive and limited to 1,000 key terms per stream.
     /// </summary>
     [JsonPropertyName("terms")]
     public IEnumerable<TranscribeConfigKeytermsTermsItem>? Terms { get; set; }

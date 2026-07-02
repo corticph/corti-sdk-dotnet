@@ -5,22 +5,16 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Section as returned by single-resource endpoints (GET, POST, PATCH on
-/// `/documents/sections/{sectionID}`) and when embedded inside a resolved template
-/// version. Extends `GuidedSectionListItem` with the resolved `publishedVersion`.
+/// Section metadata as returned by the LIST /documents/sections endpoint. Does not
+/// include the resolved `publishedVersion` — use GET /documents/sections/{sectionID}
+/// to fetch a single section with its published version resolved.
 /// </summary>
 [Serializable]
-public record GuidedSection : IJsonOnDeserialized
+public record GuidedSectionListItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
-
-    /// <summary>
-    /// The currently published version with section inheritance fully resolved. Present when a version has been published.
-    /// </summary>
-    [JsonPropertyName("publishedVersion")]
-    public GuidedSectionVersion? PublishedVersion { get; set; }
 
     /// <summary>
     /// The UUID of the section.
