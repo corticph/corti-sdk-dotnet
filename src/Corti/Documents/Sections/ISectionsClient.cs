@@ -10,7 +10,7 @@ public partial interface ISectionsClient
     /// Returns a list of sections and their metadata. Fetch a sectionId to get the full generation content.
     /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
     /// </summary>
-    WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
+    WithRawResponseTask<IEnumerable<GuidedSectionListItem>> ListAsync(
         GuidedSectionsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
