@@ -3,38 +3,43 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(GuidedTemplateSourceSerializer))]
-public enum GuidedTemplateSource
+[JsonConverter(typeof(GuidedTemplateListItemSourceSerializer))]
+public enum GuidedTemplateListItemSource
 {
     [EnumMember(Value = "user")]
     User,
 
     [EnumMember(Value = "corti")]
     Corti,
+
+    [EnumMember(Value = "project")]
+    Project,
 }
 
-internal class GuidedTemplateSourceSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<GuidedTemplateSource>
+internal class GuidedTemplateListItemSourceSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<GuidedTemplateListItemSource>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        GuidedTemplateSource
+        GuidedTemplateListItemSource
     > _stringToEnum = new()
     {
-        { "user", GuidedTemplateSource.User },
-        { "corti", GuidedTemplateSource.Corti },
+        { "user", GuidedTemplateListItemSource.User },
+        { "corti", GuidedTemplateListItemSource.Corti },
+        { "project", GuidedTemplateListItemSource.Project },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        GuidedTemplateSource,
+        GuidedTemplateListItemSource,
         string
     > _enumToString = new()
     {
-        { GuidedTemplateSource.User, "user" },
-        { GuidedTemplateSource.Corti, "corti" },
+        { GuidedTemplateListItemSource.User, "user" },
+        { GuidedTemplateListItemSource.Corti, "corti" },
+        { GuidedTemplateListItemSource.Project, "project" },
     };
 
-    public override GuidedTemplateSource Read(
+    public override GuidedTemplateListItemSource Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -48,7 +53,7 @@ internal class GuidedTemplateSourceSerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        GuidedTemplateSource value,
+        GuidedTemplateListItemSource value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -57,7 +62,7 @@ internal class GuidedTemplateSourceSerializer
         );
     }
 
-    public override GuidedTemplateSource ReadAsPropertyName(
+    public override GuidedTemplateListItemSource ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -73,7 +78,7 @@ internal class GuidedTemplateSourceSerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        GuidedTemplateSource value,
+        GuidedTemplateListItemSource value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

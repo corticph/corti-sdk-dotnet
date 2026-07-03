@@ -51,6 +51,12 @@ public record GuidedArrayNode : IJsonOnDeserialized
     [JsonPropertyName("maxItems")]
     public int? MaxItems { get; set; }
 
+    /// <summary>
+    /// If nothing is outputted, this default is used.
+    /// </summary>
+    [JsonPropertyName("default")]
+    public IEnumerable<object>? Default { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

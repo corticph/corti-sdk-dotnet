@@ -12,7 +12,7 @@ public record GuidedTemplatesCreateFromScratchRequestGeneration : IJsonOnDeseria
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("instructions")]
-    public required GuidedTemplateInstructions Instructions { get; set; }
+    public GuidedTemplateInstructions? Instructions { get; set; }
 
     [JsonPropertyName("sections")]
     public IEnumerable<GuidedTemplatesVersionSectionRequest>? Sections { get; set; }
