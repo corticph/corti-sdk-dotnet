@@ -30,13 +30,6 @@ public class GuidedSectionsCreateRequest
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedSectionsCreateFromScratchRequest value.
-    /// </summary>
-    public static GuidedSectionsCreateRequest FromGuidedSectionsCreateFromScratchRequest(
-        Corti.GuidedSectionsCreateFromScratchRequest value
-    ) => new("guidedSectionsCreateFromScratchRequest", value);
-
-    /// <summary>
     /// Factory method to create a union from a Corti.GuidedSectionsCreateFromInheritanceRequest value.
     /// </summary>
     public static GuidedSectionsCreateRequest FromGuidedSectionsCreateFromInheritanceRequest(
@@ -44,10 +37,11 @@ public class GuidedSectionsCreateRequest
     ) => new("guidedSectionsCreateFromInheritanceRequest", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedSectionsCreateFromScratchRequest"
+    /// Factory method to create a union from a Corti.GuidedSectionsCreateFromScratchRequest value.
     /// </summary>
-    public bool IsGuidedSectionsCreateFromScratchRequest() =>
-        Type == "guidedSectionsCreateFromScratchRequest";
+    public static GuidedSectionsCreateRequest FromGuidedSectionsCreateFromScratchRequest(
+        Corti.GuidedSectionsCreateFromScratchRequest value
+    ) => new("guidedSectionsCreateFromScratchRequest", value);
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "guidedSectionsCreateFromInheritanceRequest"
@@ -56,15 +50,10 @@ public class GuidedSectionsCreateRequest
         Type == "guidedSectionsCreateFromInheritanceRequest";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedSectionsCreateFromScratchRequest"/> if <see cref="Type"/> is 'guidedSectionsCreateFromScratchRequest', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "guidedSectionsCreateFromScratchRequest"
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedSectionsCreateFromScratchRequest'.</exception>
-    public Corti.GuidedSectionsCreateFromScratchRequest AsGuidedSectionsCreateFromScratchRequest() =>
-        IsGuidedSectionsCreateFromScratchRequest()
-            ? (Corti.GuidedSectionsCreateFromScratchRequest)Value!
-            : throw new CortiClientException(
-                "Union type is not 'guidedSectionsCreateFromScratchRequest'"
-            );
+    public bool IsGuidedSectionsCreateFromScratchRequest() =>
+        Type == "guidedSectionsCreateFromScratchRequest";
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.GuidedSectionsCreateFromInheritanceRequest"/> if <see cref="Type"/> is 'guidedSectionsCreateFromInheritanceRequest', otherwise throws an exception.
@@ -78,20 +67,15 @@ public class GuidedSectionsCreateRequest
             );
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedSectionsCreateFromScratchRequest"/> and returns true if successful.
+    /// Returns the value as a <see cref="Corti.GuidedSectionsCreateFromScratchRequest"/> if <see cref="Type"/> is 'guidedSectionsCreateFromScratchRequest', otherwise throws an exception.
     /// </summary>
-    public bool TryGetGuidedSectionsCreateFromScratchRequest(
-        out Corti.GuidedSectionsCreateFromScratchRequest? value
-    )
-    {
-        if (Type == "guidedSectionsCreateFromScratchRequest")
-        {
-            value = (Corti.GuidedSectionsCreateFromScratchRequest)Value!;
-            return true;
-        }
-        value = null;
-        return false;
-    }
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedSectionsCreateFromScratchRequest'.</exception>
+    public Corti.GuidedSectionsCreateFromScratchRequest AsGuidedSectionsCreateFromScratchRequest() =>
+        IsGuidedSectionsCreateFromScratchRequest()
+            ? (Corti.GuidedSectionsCreateFromScratchRequest)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedSectionsCreateFromScratchRequest'"
+            );
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.GuidedSectionsCreateFromInheritanceRequest"/> and returns true if successful.
@@ -109,45 +93,61 @@ public class GuidedSectionsCreateRequest
         return false;
     }
 
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.GuidedSectionsCreateFromScratchRequest"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetGuidedSectionsCreateFromScratchRequest(
+        out Corti.GuidedSectionsCreateFromScratchRequest? value
+    )
+    {
+        if (Type == "guidedSectionsCreateFromScratchRequest")
+        {
+            value = (Corti.GuidedSectionsCreateFromScratchRequest)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
     public T Match<T>(
-        Func<
-            Corti.GuidedSectionsCreateFromScratchRequest,
-            T
-        > onGuidedSectionsCreateFromScratchRequest,
         Func<
             Corti.GuidedSectionsCreateFromInheritanceRequest,
             T
-        > onGuidedSectionsCreateFromInheritanceRequest
+        > onGuidedSectionsCreateFromInheritanceRequest,
+        Func<
+            Corti.GuidedSectionsCreateFromScratchRequest,
+            T
+        > onGuidedSectionsCreateFromScratchRequest
     )
     {
         return Type switch
         {
-            "guidedSectionsCreateFromScratchRequest" => onGuidedSectionsCreateFromScratchRequest(
-                AsGuidedSectionsCreateFromScratchRequest()
-            ),
             "guidedSectionsCreateFromInheritanceRequest" =>
                 onGuidedSectionsCreateFromInheritanceRequest(
                     AsGuidedSectionsCreateFromInheritanceRequest()
                 ),
+            "guidedSectionsCreateFromScratchRequest" => onGuidedSectionsCreateFromScratchRequest(
+                AsGuidedSectionsCreateFromScratchRequest()
+            ),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
     public void Visit(
-        Action<Corti.GuidedSectionsCreateFromScratchRequest> onGuidedSectionsCreateFromScratchRequest,
-        Action<Corti.GuidedSectionsCreateFromInheritanceRequest> onGuidedSectionsCreateFromInheritanceRequest
+        Action<Corti.GuidedSectionsCreateFromInheritanceRequest> onGuidedSectionsCreateFromInheritanceRequest,
+        Action<Corti.GuidedSectionsCreateFromScratchRequest> onGuidedSectionsCreateFromScratchRequest
     )
     {
         switch (Type)
         {
-            case "guidedSectionsCreateFromScratchRequest":
-                onGuidedSectionsCreateFromScratchRequest(
-                    AsGuidedSectionsCreateFromScratchRequest()
-                );
-                break;
             case "guidedSectionsCreateFromInheritanceRequest":
                 onGuidedSectionsCreateFromInheritanceRequest(
                     AsGuidedSectionsCreateFromInheritanceRequest()
+                );
+                break;
+            case "guidedSectionsCreateFromScratchRequest":
+                onGuidedSectionsCreateFromScratchRequest(
+                    AsGuidedSectionsCreateFromScratchRequest()
                 );
                 break;
             default:
@@ -191,12 +191,12 @@ public class GuidedSectionsCreateRequest
     public override string ToString() => JsonUtils.Serialize(this);
 
     public static implicit operator GuidedSectionsCreateRequest(
-        Corti.GuidedSectionsCreateFromScratchRequest value
-    ) => new("guidedSectionsCreateFromScratchRequest", value);
-
-    public static implicit operator GuidedSectionsCreateRequest(
         Corti.GuidedSectionsCreateFromInheritanceRequest value
     ) => new("guidedSectionsCreateFromInheritanceRequest", value);
+
+    public static implicit operator GuidedSectionsCreateRequest(
+        Corti.GuidedSectionsCreateFromScratchRequest value
+    ) => new("guidedSectionsCreateFromScratchRequest", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<GuidedSectionsCreateRequest>
@@ -219,12 +219,12 @@ public class GuidedSectionsCreateRequest
                 var types = new (string Key, System.Type Type)[]
                 {
                     (
-                        "guidedSectionsCreateFromScratchRequest",
-                        typeof(Corti.GuidedSectionsCreateFromScratchRequest)
-                    ),
-                    (
                         "guidedSectionsCreateFromInheritanceRequest",
                         typeof(Corti.GuidedSectionsCreateFromInheritanceRequest)
+                    ),
+                    (
+                        "guidedSectionsCreateFromScratchRequest",
+                        typeof(Corti.GuidedSectionsCreateFromScratchRequest)
                     ),
                 };
 

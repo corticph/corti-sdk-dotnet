@@ -24,7 +24,7 @@ public partial class SectionsClient : ISectionsClient
 
     public Corti.Documents.Sections.IVersionsClient Versions { get; }
 
-    private async Task<WithRawResponse<IEnumerable<GuidedSection>>> ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<GuidedSectionListItem>>> ListAsyncCore(
         GuidedSectionsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -69,10 +69,10 @@ public partial class SectionsClient : ISectionsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<GuidedSection>>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<IEnumerable<GuidedSection>>()
+                        var responseData = JsonUtils.Deserialize<
+                            IEnumerable<GuidedSectionListItem>
+                        >(responseBody)!;
+                        return new WithRawResponse<IEnumerable<GuidedSectionListItem>>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -585,13 +585,13 @@ public partial class SectionsClient : ISectionsClient
     /// <example><code>
     /// await client.Documents.Sections.ListAsync(new GuidedSectionsListRequest());
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<GuidedSection>> ListAsync(
+    public WithRawResponseTask<IEnumerable<GuidedSectionListItem>> ListAsync(
         GuidedSectionsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<GuidedSection>>(
+        return new WithRawResponseTask<IEnumerable<GuidedSectionListItem>>(
             ListAsyncCore(request, options, cancellationToken)
         );
     }
@@ -603,15 +603,10 @@ public partial class SectionsClient : ISectionsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.CreateAsync(
-    ///     new GuidedSectionsCreateFromScratchRequest
+    ///     new GuidedSectionsCreateFromInheritanceRequest
     ///     {
     ///         Name = "name",
-    ///         Generation = new GuidedSectionGeneration
-    ///         {
-    ///             Heading = "heading",
-    ///             Instructions = new GuidedSectionInstructions { ContentPrompt = "contentPrompt" },
-    ///             OutputSchema = new GuidedStringNode(),
-    ///         },
+    ///         InheritFromId = "inheritFromId",
     ///     }
     /// );
     /// </code></example>

@@ -24,7 +24,7 @@ public partial class TemplatesClient : ITemplatesClient
 
     public Corti.Documents.Templates.IVersionsClient Versions { get; }
 
-    private async Task<WithRawResponse<IEnumerable<GuidedTemplate>>> ListAsyncCore(
+    private async Task<WithRawResponse<IEnumerable<GuidedTemplateListItem>>> ListAsyncCore(
         GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -69,10 +69,10 @@ public partial class TemplatesClient : ITemplatesClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<IEnumerable<GuidedTemplate>>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<IEnumerable<GuidedTemplate>>()
+                        var responseData = JsonUtils.Deserialize<
+                            IEnumerable<GuidedTemplateListItem>
+                        >(responseBody)!;
+                        return new WithRawResponse<IEnumerable<GuidedTemplateListItem>>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -585,13 +585,13 @@ public partial class TemplatesClient : ITemplatesClient
     /// <example><code>
     /// await client.Documents.Templates.ListAsync(new GuidedTemplatesListRequest());
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<GuidedTemplate>> ListAsync(
+    public WithRawResponseTask<IEnumerable<GuidedTemplateListItem>> ListAsync(
         GuidedTemplatesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<GuidedTemplate>>(
+        return new WithRawResponseTask<IEnumerable<GuidedTemplateListItem>>(
             ListAsyncCore(request, options, cancellationToken)
         );
     }
@@ -603,13 +603,10 @@ public partial class TemplatesClient : ITemplatesClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.CreateAsync(
-    ///     new GuidedTemplatesCreateFromScratchRequest
+    ///     new GuidedTemplatesCreateFromInheritanceRequest
     ///     {
     ///         Name = "name",
-    ///         Generation = new GuidedTemplatesCreateFromScratchRequestGeneration
-    ///         {
-    ///             Instructions = new GuidedTemplateInstructions { Prompt = "prompt" },
-    ///         },
+    ///         InheritFromId = "inheritFromId",
     ///     }
     /// );
     /// </code></example>

@@ -30,13 +30,6 @@ public class GuidedTemplatesCreateRequest
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a Corti.GuidedTemplatesCreateFromScratchRequest value.
-    /// </summary>
-    public static GuidedTemplatesCreateRequest FromGuidedTemplatesCreateFromScratchRequest(
-        Corti.GuidedTemplatesCreateFromScratchRequest value
-    ) => new("guidedTemplatesCreateFromScratchRequest", value);
-
-    /// <summary>
     /// Factory method to create a union from a Corti.GuidedTemplatesCreateFromInheritanceRequest value.
     /// </summary>
     public static GuidedTemplatesCreateRequest FromGuidedTemplatesCreateFromInheritanceRequest(
@@ -44,10 +37,11 @@ public class GuidedTemplatesCreateRequest
     ) => new("guidedTemplatesCreateFromInheritanceRequest", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "guidedTemplatesCreateFromScratchRequest"
+    /// Factory method to create a union from a Corti.GuidedTemplatesCreateFromScratchRequest value.
     /// </summary>
-    public bool IsGuidedTemplatesCreateFromScratchRequest() =>
-        Type == "guidedTemplatesCreateFromScratchRequest";
+    public static GuidedTemplatesCreateRequest FromGuidedTemplatesCreateFromScratchRequest(
+        Corti.GuidedTemplatesCreateFromScratchRequest value
+    ) => new("guidedTemplatesCreateFromScratchRequest", value);
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "guidedTemplatesCreateFromInheritanceRequest"
@@ -56,15 +50,10 @@ public class GuidedTemplatesCreateRequest
         Type == "guidedTemplatesCreateFromInheritanceRequest";
 
     /// <summary>
-    /// Returns the value as a <see cref="Corti.GuidedTemplatesCreateFromScratchRequest"/> if <see cref="Type"/> is 'guidedTemplatesCreateFromScratchRequest', otherwise throws an exception.
+    /// Returns true if <see cref="Type"/> is "guidedTemplatesCreateFromScratchRequest"
     /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedTemplatesCreateFromScratchRequest'.</exception>
-    public Corti.GuidedTemplatesCreateFromScratchRequest AsGuidedTemplatesCreateFromScratchRequest() =>
-        IsGuidedTemplatesCreateFromScratchRequest()
-            ? (Corti.GuidedTemplatesCreateFromScratchRequest)Value!
-            : throw new CortiClientException(
-                "Union type is not 'guidedTemplatesCreateFromScratchRequest'"
-            );
+    public bool IsGuidedTemplatesCreateFromScratchRequest() =>
+        Type == "guidedTemplatesCreateFromScratchRequest";
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.GuidedTemplatesCreateFromInheritanceRequest"/> if <see cref="Type"/> is 'guidedTemplatesCreateFromInheritanceRequest', otherwise throws an exception.
@@ -78,20 +67,15 @@ public class GuidedTemplatesCreateRequest
             );
 
     /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.GuidedTemplatesCreateFromScratchRequest"/> and returns true if successful.
+    /// Returns the value as a <see cref="Corti.GuidedTemplatesCreateFromScratchRequest"/> if <see cref="Type"/> is 'guidedTemplatesCreateFromScratchRequest', otherwise throws an exception.
     /// </summary>
-    public bool TryGetGuidedTemplatesCreateFromScratchRequest(
-        out Corti.GuidedTemplatesCreateFromScratchRequest? value
-    )
-    {
-        if (Type == "guidedTemplatesCreateFromScratchRequest")
-        {
-            value = (Corti.GuidedTemplatesCreateFromScratchRequest)Value!;
-            return true;
-        }
-        value = null;
-        return false;
-    }
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'guidedTemplatesCreateFromScratchRequest'.</exception>
+    public Corti.GuidedTemplatesCreateFromScratchRequest AsGuidedTemplatesCreateFromScratchRequest() =>
+        IsGuidedTemplatesCreateFromScratchRequest()
+            ? (Corti.GuidedTemplatesCreateFromScratchRequest)Value!
+            : throw new CortiClientException(
+                "Union type is not 'guidedTemplatesCreateFromScratchRequest'"
+            );
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.GuidedTemplatesCreateFromInheritanceRequest"/> and returns true if successful.
@@ -109,45 +93,61 @@ public class GuidedTemplatesCreateRequest
         return false;
     }
 
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="Corti.GuidedTemplatesCreateFromScratchRequest"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetGuidedTemplatesCreateFromScratchRequest(
+        out Corti.GuidedTemplatesCreateFromScratchRequest? value
+    )
+    {
+        if (Type == "guidedTemplatesCreateFromScratchRequest")
+        {
+            value = (Corti.GuidedTemplatesCreateFromScratchRequest)Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
     public T Match<T>(
-        Func<
-            Corti.GuidedTemplatesCreateFromScratchRequest,
-            T
-        > onGuidedTemplatesCreateFromScratchRequest,
         Func<
             Corti.GuidedTemplatesCreateFromInheritanceRequest,
             T
-        > onGuidedTemplatesCreateFromInheritanceRequest
+        > onGuidedTemplatesCreateFromInheritanceRequest,
+        Func<
+            Corti.GuidedTemplatesCreateFromScratchRequest,
+            T
+        > onGuidedTemplatesCreateFromScratchRequest
     )
     {
         return Type switch
         {
-            "guidedTemplatesCreateFromScratchRequest" => onGuidedTemplatesCreateFromScratchRequest(
-                AsGuidedTemplatesCreateFromScratchRequest()
-            ),
             "guidedTemplatesCreateFromInheritanceRequest" =>
                 onGuidedTemplatesCreateFromInheritanceRequest(
                     AsGuidedTemplatesCreateFromInheritanceRequest()
                 ),
+            "guidedTemplatesCreateFromScratchRequest" => onGuidedTemplatesCreateFromScratchRequest(
+                AsGuidedTemplatesCreateFromScratchRequest()
+            ),
             _ => throw new CortiClientException($"Unknown union type: {Type}"),
         };
     }
 
     public void Visit(
-        Action<Corti.GuidedTemplatesCreateFromScratchRequest> onGuidedTemplatesCreateFromScratchRequest,
-        Action<Corti.GuidedTemplatesCreateFromInheritanceRequest> onGuidedTemplatesCreateFromInheritanceRequest
+        Action<Corti.GuidedTemplatesCreateFromInheritanceRequest> onGuidedTemplatesCreateFromInheritanceRequest,
+        Action<Corti.GuidedTemplatesCreateFromScratchRequest> onGuidedTemplatesCreateFromScratchRequest
     )
     {
         switch (Type)
         {
-            case "guidedTemplatesCreateFromScratchRequest":
-                onGuidedTemplatesCreateFromScratchRequest(
-                    AsGuidedTemplatesCreateFromScratchRequest()
-                );
-                break;
             case "guidedTemplatesCreateFromInheritanceRequest":
                 onGuidedTemplatesCreateFromInheritanceRequest(
                     AsGuidedTemplatesCreateFromInheritanceRequest()
+                );
+                break;
+            case "guidedTemplatesCreateFromScratchRequest":
+                onGuidedTemplatesCreateFromScratchRequest(
+                    AsGuidedTemplatesCreateFromScratchRequest()
                 );
                 break;
             default:
@@ -191,12 +191,12 @@ public class GuidedTemplatesCreateRequest
     public override string ToString() => JsonUtils.Serialize(this);
 
     public static implicit operator GuidedTemplatesCreateRequest(
-        Corti.GuidedTemplatesCreateFromScratchRequest value
-    ) => new("guidedTemplatesCreateFromScratchRequest", value);
-
-    public static implicit operator GuidedTemplatesCreateRequest(
         Corti.GuidedTemplatesCreateFromInheritanceRequest value
     ) => new("guidedTemplatesCreateFromInheritanceRequest", value);
+
+    public static implicit operator GuidedTemplatesCreateRequest(
+        Corti.GuidedTemplatesCreateFromScratchRequest value
+    ) => new("guidedTemplatesCreateFromScratchRequest", value);
 
     [Serializable]
     internal sealed class JsonConverter : JsonConverter<GuidedTemplatesCreateRequest>
@@ -219,12 +219,12 @@ public class GuidedTemplatesCreateRequest
                 var types = new (string Key, System.Type Type)[]
                 {
                     (
-                        "guidedTemplatesCreateFromScratchRequest",
-                        typeof(Corti.GuidedTemplatesCreateFromScratchRequest)
-                    ),
-                    (
                         "guidedTemplatesCreateFromInheritanceRequest",
                         typeof(Corti.GuidedTemplatesCreateFromInheritanceRequest)
+                    ),
+                    (
+                        "guidedTemplatesCreateFromScratchRequest",
+                        typeof(Corti.GuidedTemplatesCreateFromScratchRequest)
                     ),
                 };
 
