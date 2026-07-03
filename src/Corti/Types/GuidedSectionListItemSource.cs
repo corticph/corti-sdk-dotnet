@@ -3,38 +3,43 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(GuidedSectionSourceSerializer))]
-public enum GuidedSectionSource
+[JsonConverter(typeof(GuidedSectionListItemSourceSerializer))]
+public enum GuidedSectionListItemSource
 {
     [EnumMember(Value = "user")]
     User,
 
     [EnumMember(Value = "corti")]
     Corti,
+
+    [EnumMember(Value = "project")]
+    Project,
 }
 
-internal class GuidedSectionSourceSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<GuidedSectionSource>
+internal class GuidedSectionListItemSourceSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<GuidedSectionListItemSource>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        GuidedSectionSource
+        GuidedSectionListItemSource
     > _stringToEnum = new()
     {
-        { "user", GuidedSectionSource.User },
-        { "corti", GuidedSectionSource.Corti },
+        { "user", GuidedSectionListItemSource.User },
+        { "corti", GuidedSectionListItemSource.Corti },
+        { "project", GuidedSectionListItemSource.Project },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        GuidedSectionSource,
+        GuidedSectionListItemSource,
         string
     > _enumToString = new()
     {
-        { GuidedSectionSource.User, "user" },
-        { GuidedSectionSource.Corti, "corti" },
+        { GuidedSectionListItemSource.User, "user" },
+        { GuidedSectionListItemSource.Corti, "corti" },
+        { GuidedSectionListItemSource.Project, "project" },
     };
 
-    public override GuidedSectionSource Read(
+    public override GuidedSectionListItemSource Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -48,7 +53,7 @@ internal class GuidedSectionSourceSerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        GuidedSectionSource value,
+        GuidedSectionListItemSource value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -57,7 +62,7 @@ internal class GuidedSectionSourceSerializer
         );
     }
 
-    public override GuidedSectionSource ReadAsPropertyName(
+    public override GuidedSectionListItemSource ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -73,7 +78,7 @@ internal class GuidedSectionSourceSerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        GuidedSectionSource value,
+        GuidedSectionListItemSource value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

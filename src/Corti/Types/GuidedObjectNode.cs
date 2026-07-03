@@ -40,6 +40,12 @@ public record GuidedObjectNode : IJsonOnDeserialized
     public string? FieldFormat { get; set; }
 
     /// <summary>
+    /// If nothing is outputted, this default is used.
+    /// </summary>
+    [JsonPropertyName("default")]
+    public Dictionary<string, object?>? Default { get; set; }
+
+    /// <summary>
     /// Define what fields are possible to return in the object.
     /// </summary>
     [JsonPropertyName("fields")]
