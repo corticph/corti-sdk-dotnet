@@ -50,6 +50,9 @@ public enum CommonCodingSystemEnum
 
     [EnumMember(Value = "ccam")]
     Ccam,
+
+    [EnumMember(Value = "snomedctint")]
+    Snomedctint,
 }
 
 internal class CommonCodingSystemEnumSerializer
@@ -75,6 +78,7 @@ internal class CommonCodingSystemEnumSerializer
         { "opcs4", CommonCodingSystemEnum.Opcs4 },
         { "ops", CommonCodingSystemEnum.Ops },
         { "ccam", CommonCodingSystemEnum.Ccam },
+        { "snomedctint", CommonCodingSystemEnum.Snomedctint },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -97,6 +101,7 @@ internal class CommonCodingSystemEnumSerializer
         { CommonCodingSystemEnum.Opcs4, "opcs4" },
         { CommonCodingSystemEnum.Ops, "ops" },
         { CommonCodingSystemEnum.Ccam, "ccam" },
+        { CommonCodingSystemEnum.Snomedctint, "snomedctint" },
     };
 
     public override CommonCodingSystemEnum Read(
