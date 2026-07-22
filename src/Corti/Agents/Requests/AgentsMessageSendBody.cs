@@ -4,7 +4,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record AgentsMessageSendParams
+public record AgentsMessageSendBody
 {
     [JsonPropertyName("message")]
     public required AgentsMessage Message { get; set; }
