@@ -15,7 +15,7 @@ public record AgentsFilePart : IJsonOnDeserialized
     /// The kind of the part, always "file".
     /// </summary>
     [JsonPropertyName("kind")]
-    public required string Kind { get; set; }
+    public required AgentsFilePartKind Kind { get; set; }
 
     [JsonPropertyName("file")]
     public AgentsFilePartFile? File { get; set; }
