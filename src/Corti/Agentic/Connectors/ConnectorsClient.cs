@@ -543,6 +543,169 @@ public partial class ConnectorsClient : IConnectorsClient
             .ConfigureAwait(false);
     }
 
+    private async Task<WithRawResponse<CommonConnectorResponse>> UpdateAsyncCore(
+        string agentId,
+        string agentConnectorId,
+        ConnectorsPatchRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Agents,
+                            Method = HttpMethodExtensions.Patch,
+                            Path = string.Format(
+                                "v2/agentic/agents/{0}/connectors/{1}",
+                                ValueConvert.ToPathParameterString(agentId),
+                                ValueConvert.ToPathParameterString(agentConnectorId)
+                            ),
+                            Body = request,
+                            Headers = _headers,
+                            ContentType = "application/merge-patch+json",
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<CommonConnectorResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<CommonConnectorResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 401:
+                                throw new UnauthorizedError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 501:
+                                throw new NotImplementedError(
+                                    JsonUtils.Deserialize<CommonErrorResponse>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
     /// <example><code>
     /// await client.Agentic.Connectors.ListAsync("agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40");
     /// </code></example>
@@ -608,6 +771,31 @@ public partial class ConnectorsClient : IConnectorsClient
     {
         return new WithRawResponseTask(
             RemoveAsyncCore(agentId, agentConnectorId, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Partially updates an agent-scoped connector using JSON Merge Patch
+    /// (RFC 7386). `type` is immutable.
+    /// **Future scope**:  not yet implemented; the server returns `501`.
+    /// </summary>
+    /// <example><code>
+    /// await client.Agentic.Connectors.UpdateAsync(
+    ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
+    ///     "con.0192f4c8-7baf-7083-a46f-81d2bd70cf95",
+    ///     new ConnectorsPatchRequest { Enabled = false }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<CommonConnectorResponse> UpdateAsync(
+        string agentId,
+        string agentConnectorId,
+        ConnectorsPatchRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<CommonConnectorResponse>(
+            UpdateAsyncCore(agentId, agentConnectorId, request, options, cancellationToken)
         );
     }
 }

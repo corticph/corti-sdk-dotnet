@@ -1,5 +1,7 @@
 using Corti;
 using Corti.Core;
+using global::System.Net.ServerSentEvents;
+using global::System.Runtime.CompilerServices;
 using global::System.Text.Json;
 
 namespace Corti.Agentic.A2A;
@@ -439,7 +441,9 @@ public partial class TasksClient : ITasksClient
             .ConfigureAwait(false);
     }
 
-    private async Task<RawResponse> SubscribeAsyncCore(
+    private async Task<
+        WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>
+    > SubscribeAsyncCore(
         string agentId,
         string taskId,
         RequestOptions? options = null,
@@ -460,7 +464,7 @@ public partial class TasksClient : ITasksClient
                         new JsonRequest
                         {
                             BaseUrl = _client.Options.Environment.Agents,
-                            Method = HttpMethod.Get,
+                            Method = HttpMethod.Post,
                             Path = string.Format(
                                 "v2/agentic/agents/{0}/a2a/tasks/{1}:subscribe",
                                 ValueConvert.ToPathParameterString(agentId),
@@ -474,17 +478,59 @@ public partial class TasksClient : ITasksClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    return new Corti.RawResponse()
+                    return new WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>()
                     {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        Data = SubscribeAsyncBody(response, cancellationToken),
+                        RawResponse = new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        },
                     };
                 }
                 {
                     var responseBody = await response
                         .Raw.Content.ReadAsStringAsync(cancellationToken)
                         .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 401:
+                                throw new UnauthorizedError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
@@ -496,6 +542,40 @@ public partial class TasksClient : ITasksClient
                             Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
                         }
                     );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
+    private async IAsyncEnumerable<A2AStreamEventResponse> SubscribeAsyncBody(
+        ApiResponse response,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                await foreach (
+                    var item in SseParser
+                        .Create(await response.Raw.Content.ReadAsStreamAsync())
+                        .EnumerateAsync(cancellationToken)
+                )
+                {
+                    if (!string.IsNullOrEmpty(item.Data))
+                    {
+                        A2AStreamEventResponse? result;
+                        try
+                        {
+                            result = JsonUtils.Deserialize<A2AStreamEventResponse>(item.Data);
+                        }
+                        catch (JsonException)
+                        {
+                            throw new CortiClientException(
+                                $"Unable to deserialize JSON response 'item.Data'"
+                            );
+                        }
+                        yield return result!;
+                    }
                 }
             })
             .ConfigureAwait(false);
@@ -586,21 +666,25 @@ public partial class TasksClient : ITasksClient
         );
     }
 
+    /// <summary>
+    /// Resubscribe to an in-flight task's event stream over SSE.
+    /// </summary>
     /// <example><code>
-    /// await client.Agentic.A2A.Tasks.SubscribeAsync(
+    /// client.Agentic.A2A.Tasks.SubscribeAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
     ///     "task.0192f4c8-4e7c-7d50-b13c-5eaf8a4d9c62"
     /// );
     /// </code></example>
-    public WithRawResponseTask SubscribeAsync(
+    public WithRawResponseStream<A2AStreamEventResponse> SubscribeAsync(
         string agentId,
         string taskId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(
-            SubscribeAsyncCore(agentId, taskId, options, cancellationToken)
+        return new WithRawResponseStream<A2AStreamEventResponse>(
+            SubscribeAsyncCore(agentId, taskId, options, cancellationToken),
+            cancellationToken
         );
     }
 }

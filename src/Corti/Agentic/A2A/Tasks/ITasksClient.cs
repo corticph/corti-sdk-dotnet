@@ -27,7 +27,10 @@ public partial interface ITasksClient
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask SubscribeAsync(
+    /// <summary>
+    /// Resubscribe to an in-flight task's event stream over SSE.
+    /// </summary>
+    WithRawResponseStream<A2AStreamEventResponse> SubscribeAsync(
         string agentId,
         string taskId,
         RequestOptions? options = null,

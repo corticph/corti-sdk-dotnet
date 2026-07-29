@@ -30,4 +30,17 @@ public partial interface IConnectorsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Partially updates an agent-scoped connector using JSON Merge Patch
+    /// (RFC 7386). `type` is immutable.
+    /// **Future scope**:  not yet implemented; the server returns `501`.
+    /// </summary>
+    WithRawResponseTask<CommonConnectorResponse> UpdateAsync(
+        string agentId,
+        string agentConnectorId,
+        ConnectorsPatchRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }

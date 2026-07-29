@@ -8,6 +8,16 @@ public partial interface IContextsClient
     public Corti.Agentic.Contexts.ITasksClient Tasks { get; }
 
     /// <summary>
+    /// Lists contexts matching the filters.
+    /// **Future scope**: not yet implemented; the server currently returns an empty page and ignores all parameters.
+    /// </summary>
+    Task<Pager<Corti.Contexts>> ListAsync(
+        ListContextsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// Returns the context's metadata together with its `tasks`, oldest first.
     /// Each task carries its full message `history`; the user's prompt for a
     /// task is the `ROLE_USER` message within that task's history (there is no
