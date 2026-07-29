@@ -21,7 +21,7 @@ public partial interface IDocumentsClient
     /// </summary>
     WithRawResponseTask<DocumentsGetResponse> CreateAsync(
         string id,
-        DocumentsCreateRequest request,
+        CreateDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -57,7 +57,7 @@ public partial interface IDocumentsClient
     /// With the exception of the plain `templateRef` path (no overrides), every call creates a new auto-generated template aggregate that snapshots the resolved prompts as a drift-proof receipt, persisted for 30 days.
     /// </summary>
     WithRawResponseTask<GuidedDocumentsCreateEphemeralResponse> GenerateAsync(
-        GuidedDocumentsGenerateRequest request,
+        GenerateDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

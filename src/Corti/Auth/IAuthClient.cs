@@ -14,7 +14,7 @@ public partial interface IAuthClient
     /// </summary>
     WithRawResponseTask<AuthTokenResponse> TokenAsync(
         string tenantName,
-        AuthTokenRequestBody request,
+        AuthTokenRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
