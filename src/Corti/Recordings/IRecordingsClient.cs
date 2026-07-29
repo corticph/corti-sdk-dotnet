@@ -7,6 +7,7 @@ public partial interface IRecordingsClient
     /// </summary>
     WithRawResponseTask<RecordingsListResponse> ListAsync(
         string id,
+        RecordingsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -27,6 +28,7 @@ public partial interface IRecordingsClient
     WithRawResponseTask<global::System.IO.Stream> GetAsync(
         string id,
         string recordingId,
+        RecordingsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -37,6 +39,7 @@ public partial interface IRecordingsClient
     WithRawResponseTask DeleteAsync(
         string id,
         string recordingId,
+        RecordingsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

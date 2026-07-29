@@ -22,6 +22,7 @@ public partial class RecordingsClient : IRecordingsClient
 
     private async Task<WithRawResponse<RecordingsListResponse>> ListAsyncCore(
         string id,
+        RecordingsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -30,6 +31,7 @@ public partial class RecordingsClient : IRecordingsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -342,6 +344,7 @@ public partial class RecordingsClient : IRecordingsClient
     private async Task<WithRawResponse<global::System.IO.Stream>> GetAsyncCore(
         string id,
         string recordingId,
+        RecordingsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -350,6 +353,7 @@ public partial class RecordingsClient : IRecordingsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -489,6 +493,7 @@ public partial class RecordingsClient : IRecordingsClient
     private async Task<RawResponse> DeleteAsyncCore(
         string id,
         string recordingId,
+        RecordingsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -497,6 +502,7 @@ public partial class RecordingsClient : IRecordingsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -618,16 +624,20 @@ public partial class RecordingsClient : IRecordingsClient
     /// Retrieve a list of recordings for a given interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// await client.Recordings.ListAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new RecordingsListRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<RecordingsListResponse> ListAsync(
         string id,
+        RecordingsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<RecordingsListResponse>(
-            ListAsyncCore(id, options, cancellationToken)
+            ListAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -650,17 +660,22 @@ public partial class RecordingsClient : IRecordingsClient
     /// Retrieve a specific recording for a given interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Recordings.GetAsync("id", "recordingId");
+    /// await client.Recordings.GetAsync(
+    ///     "id",
+    ///     "recordingId",
+    ///     new RecordingsGetRequest { TenantName = "tenantName" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<global::System.IO.Stream> GetAsync(
         string id,
         string recordingId,
+        RecordingsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<global::System.IO.Stream>(
-            GetAsyncCore(id, recordingId, options, cancellationToken)
+            GetAsyncCore(id, recordingId, request, options, cancellationToken)
         );
     }
 
@@ -670,18 +685,20 @@ public partial class RecordingsClient : IRecordingsClient
     /// <example><code>
     /// await client.Recordings.DeleteAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new RecordingsDeleteRequest { TenantName = "base" }
     /// );
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string id,
         string recordingId,
+        RecordingsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask(
-            DeleteAsyncCore(id, recordingId, options, cancellationToken)
+            DeleteAsyncCore(id, recordingId, request, options, cancellationToken)
         );
     }
 }

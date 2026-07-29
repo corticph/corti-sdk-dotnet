@@ -21,6 +21,7 @@ public partial class FactsClient : IFactsClient
     }
 
     private async Task<WithRawResponse<FactsFactGroupsListResponse>> FactGroupsListAsyncCore(
+        FactsFactGroupsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -29,6 +30,7 @@ public partial class FactsClient : IFactsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -134,6 +136,7 @@ public partial class FactsClient : IFactsClient
 
     private async Task<WithRawResponse<FactsListResponse>> ListAsyncCore(
         string id,
+        FactsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -142,6 +145,7 @@ public partial class FactsClient : IFactsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -257,6 +261,7 @@ public partial class FactsClient : IFactsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -376,6 +381,7 @@ public partial class FactsClient : IFactsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -496,6 +502,7 @@ public partial class FactsClient : IFactsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -615,6 +622,7 @@ public partial class FactsClient : IFactsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -724,15 +732,16 @@ public partial class FactsClient : IFactsClient
     /// Returns a list of available fact groups, used to categorize facts associated with an interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Facts.FactGroupsListAsync();
+    /// await client.Facts.FactGroupsListAsync(new FactsFactGroupsListRequest { TenantName = "base" });
     /// </code></example>
     public WithRawResponseTask<FactsFactGroupsListResponse> FactGroupsListAsync(
+        FactsFactGroupsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<FactsFactGroupsListResponse>(
-            FactGroupsListAsyncCore(options, cancellationToken)
+            FactGroupsListAsyncCore(request, options, cancellationToken)
         );
     }
 
@@ -740,16 +749,20 @@ public partial class FactsClient : IFactsClient
     /// Retrieves a list of facts for a given interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Facts.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// await client.Facts.ListAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new FactsListRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<FactsListResponse> ListAsync(
         string id,
+        FactsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<FactsListResponse>(
-            ListAsyncCore(id, options, cancellationToken)
+            ListAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -761,6 +774,7 @@ public partial class FactsClient : IFactsClient
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new FactsCreateRequest
     ///     {
+    ///         TenantName = "base",
     ///         Facts = new List&lt;FactsCreateInput&gt;()
     ///         {
     ///             new FactsCreateInput { Text = "text", Group = "other" },
@@ -788,6 +802,7 @@ public partial class FactsClient : IFactsClient
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new FactsBatchUpdateRequest
     ///     {
+    ///         TenantName = "base",
     ///         Facts = new List&lt;FactsBatchUpdateInput&gt;()
     ///         {
     ///             new FactsBatchUpdateInput { FactId = "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08" },
@@ -814,7 +829,7 @@ public partial class FactsClient : IFactsClient
     /// await client.Facts.UpdateAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     "3c9d8a12-7f44-4b3e-9e6f-9271c2bbfa08",
-    ///     new FactsUpdateRequest()
+    ///     new FactsUpdateRequest { TenantName = "base" }
     /// );
     /// </code></example>
     public WithRawResponseTask<FactsUpdateResponse> UpdateAsync(
@@ -837,6 +852,7 @@ public partial class FactsClient : IFactsClient
     /// await client.Facts.ExtractAsync(
     ///     new FactsExtractRequest
     ///     {
+    ///         TenantName = "base",
     ///         Context = new List&lt;CommonTextContext&gt;() { new CommonTextContext { Text = "text" } },
     ///         OutputLanguage = "outputLanguage",
     ///     }

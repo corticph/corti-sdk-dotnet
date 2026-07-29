@@ -7,6 +7,12 @@ namespace Corti;
 public record DocumentsUpdateRequest
 {
     /// <summary>
+    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
+    /// </summary>
+    [JsonIgnore]
+    public required string TenantName { get; set; }
+
+    /// <summary>
     /// An optional name for the document.
     /// </summary>
     [JsonPropertyName("name")]

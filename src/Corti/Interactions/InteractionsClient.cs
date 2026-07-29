@@ -53,6 +53,7 @@ public partial class InteractionsClient : IInteractionsClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -181,6 +182,7 @@ public partial class InteractionsClient : IInteractionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -330,6 +332,7 @@ public partial class InteractionsClient : IInteractionsClient
 
     private async Task<WithRawResponse<InteractionsGetResponse>> GetAsyncCore(
         string id,
+        InteractionsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -338,6 +341,7 @@ public partial class InteractionsClient : IInteractionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -460,6 +464,7 @@ public partial class InteractionsClient : IInteractionsClient
 
     private async Task<RawResponse> DeleteAsyncCore(
         string id,
+        InteractionsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -468,6 +473,7 @@ public partial class InteractionsClient : IInteractionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -567,6 +573,7 @@ public partial class InteractionsClient : IInteractionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -693,7 +700,7 @@ public partial class InteractionsClient : IInteractionsClient
     /// Lists all existing interactions. Results can be filtered by encounter status and patient identifier.
     /// </summary>
     /// <example><code>
-    /// await client.Interactions.ListAsync(new InteractionsListRequest());
+    /// await client.Interactions.ListAsync(new InteractionsListRequest { TenantName = "base" });
     /// </code></example>
     public async Task<Pager<InteractionsGetResponse>> ListAsync(
         InteractionsListRequest request,
@@ -742,6 +749,7 @@ public partial class InteractionsClient : IInteractionsClient
     /// await client.Interactions.CreateAsync(
     ///     new InteractionsCreateRequest
     ///     {
+    ///         TenantName = "base",
     ///         Encounter = new InteractionsEncounterCreateRequest
     ///         {
     ///             Identifier = "identifier",
@@ -766,16 +774,20 @@ public partial class InteractionsClient : IInteractionsClient
     /// Retrieves a previously recorded interaction by its unique identifier (interaction ID).
     /// </summary>
     /// <example><code>
-    /// await client.Interactions.GetAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// await client.Interactions.GetAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new InteractionsGetRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<InteractionsGetResponse> GetAsync(
         string id,
+        InteractionsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<InteractionsGetResponse>(
-            GetAsyncCore(id, options, cancellationToken)
+            GetAsyncCore(id, request, options, cancellationToken)
         );
     }
 
@@ -783,15 +795,19 @@ public partial class InteractionsClient : IInteractionsClient
     /// Deletes an existing interaction.
     /// </summary>
     /// <example><code>
-    /// await client.Interactions.DeleteAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// await client.Interactions.DeleteAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new InteractionsDeleteRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string id,
+        InteractionsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(DeleteAsyncCore(id, options, cancellationToken));
+        return new WithRawResponseTask(DeleteAsyncCore(id, request, options, cancellationToken));
     }
 
     /// <summary>
@@ -800,7 +816,7 @@ public partial class InteractionsClient : IInteractionsClient
     /// <example><code>
     /// await client.Interactions.UpdateAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new InteractionsUpdateRequest()
+    ///     new InteractionsUpdateRequest { TenantName = "base" }
     /// );
     /// </code></example>
     public WithRawResponseTask<InteractionsGetResponse> UpdateAsync(

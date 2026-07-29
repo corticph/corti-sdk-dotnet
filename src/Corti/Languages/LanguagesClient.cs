@@ -34,6 +34,7 @@ public partial class LanguagesClient : ILanguagesClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -156,7 +157,7 @@ public partial class LanguagesClient : ILanguagesClient
     /// Returns a list of available languages with their enabled endpoints details.
     /// </summary>
     /// <example><code>
-    /// await client.Languages.ListAsync(new LanguagesListRequest());
+    /// await client.Languages.ListAsync(new LanguagesListRequest { TenantName = "base" });
     /// </code></example>
     public WithRawResponseTask<LanguagesListResponse> ListAsync(
         LanguagesListRequest request,

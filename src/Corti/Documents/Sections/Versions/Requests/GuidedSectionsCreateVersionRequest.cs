@@ -7,6 +7,12 @@ namespace Corti.Documents.Sections;
 [Serializable]
 public record GuidedSectionsCreateVersionRequest
 {
+    /// <summary>
+    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
+    /// </summary>
+    [JsonIgnore]
+    public required string TenantName { get; set; }
+
     [JsonPropertyName("generation")]
     public required GuidedSectionGenerationPartial Generation { get; set; }
 

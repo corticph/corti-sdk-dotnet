@@ -22,7 +22,7 @@ public partial interface ITemplatesClient
     /// (template-level and section-level inheritance walked).
     /// </summary>
     WithRawResponseTask<GuidedTemplate> CreateAsync(
-        GuidedTemplatesCreateRequest request,
+        CreateTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -34,6 +34,7 @@ public partial interface ITemplatesClient
     /// </summary>
     WithRawResponseTask<GuidedTemplate> GetAsync(
         string templateId,
+        GetTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -43,6 +44,7 @@ public partial interface ITemplatesClient
     /// </summary>
     WithRawResponseTask DeleteAsync(
         string templateId,
+        DeleteTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

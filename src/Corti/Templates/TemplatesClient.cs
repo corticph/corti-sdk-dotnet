@@ -35,6 +35,7 @@ public partial class TemplatesClient : ITemplatesClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -169,6 +170,7 @@ public partial class TemplatesClient : ITemplatesClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -289,6 +291,7 @@ public partial class TemplatesClient : ITemplatesClient
 
     private async Task<WithRawResponse<TemplatesItem>> GetAsyncCore(
         string key,
+        GetTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -297,6 +300,7 @@ public partial class TemplatesClient : ITemplatesClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -419,7 +423,7 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves a list of template sections with optional filters for organization and language.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.SectionListAsync(new TemplatesSectionListRequest());
+    /// await client.Templates.SectionListAsync(new TemplatesSectionListRequest { TenantName = "base" });
     /// </code></example>
     public WithRawResponseTask<TemplatesSectionListResponse> SectionListAsync(
         TemplatesSectionListRequest request,
@@ -436,7 +440,7 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves a list of templates with optional filters for organization, language, and status.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.ListAsync(new TemplatesListRequest());
+    /// await client.Templates.ListAsync(new TemplatesListRequest { TenantName = "base" });
     /// </code></example>
     public WithRawResponseTask<TemplatesListResponse> ListAsync(
         TemplatesListRequest request,
@@ -453,16 +457,17 @@ public partial class TemplatesClient : ITemplatesClient
     /// Retrieves template by key.
     /// </summary>
     /// <example><code>
-    /// await client.Templates.GetAsync("key");
+    /// await client.Templates.GetAsync("key", new Corti.GetTemplatesRequest { TenantName = "base" });
     /// </code></example>
     public WithRawResponseTask<TemplatesItem> GetAsync(
         string key,
+        GetTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TemplatesItem>(
-            GetAsyncCore(key, options, cancellationToken)
+            GetAsyncCore(key, request, options, cancellationToken)
         );
     }
 }

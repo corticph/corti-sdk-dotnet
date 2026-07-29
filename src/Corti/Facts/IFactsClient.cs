@@ -6,6 +6,7 @@ public partial interface IFactsClient
     /// Returns a list of available fact groups, used to categorize facts associated with an interaction.
     /// </summary>
     WithRawResponseTask<FactsFactGroupsListResponse> FactGroupsListAsync(
+        FactsFactGroupsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -15,6 +16,7 @@ public partial interface IFactsClient
     /// </summary>
     WithRawResponseTask<FactsListResponse> ListAsync(
         string id,
+        FactsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

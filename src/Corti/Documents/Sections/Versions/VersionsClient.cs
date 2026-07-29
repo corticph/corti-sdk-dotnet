@@ -23,6 +23,7 @@ public partial class VersionsClient : IVersionsClient
 
     private async Task<WithRawResponse<IEnumerable<GuidedSectionVersion>>> ListAsyncCore(
         string sectionId,
+        ListVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -31,6 +32,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -148,6 +150,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -273,6 +276,7 @@ public partial class VersionsClient : IVersionsClient
     private async Task<WithRawResponse<GuidedSectionVersion>> GetAsyncCore(
         string sectionId,
         string versionId,
+        GetVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -281,6 +285,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -391,6 +396,7 @@ public partial class VersionsClient : IVersionsClient
     private async Task<RawResponse> DeleteAsyncCore(
         string sectionId,
         string versionId,
+        DeleteVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -399,6 +405,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -477,6 +484,7 @@ public partial class VersionsClient : IVersionsClient
     private async Task<WithRawResponse<CommonStatusResponse>> PublishAsyncCore(
         string sectionId,
         string versionId,
+        PublishVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -485,6 +493,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -596,16 +605,20 @@ public partial class VersionsClient : IVersionsClient
     /// Returns raw authored section versions without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.Versions.ListAsync("sectionID");
+    /// await client.Documents.Sections.Versions.ListAsync(
+    ///     "sectionID",
+    ///     new Corti.Documents.Sections.ListVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<IEnumerable<GuidedSectionVersion>> ListAsync(
         string sectionId,
+        ListVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<IEnumerable<GuidedSectionVersion>>(
-            ListAsyncCore(sectionId, options, cancellationToken)
+            ListAsyncCore(sectionId, request, options, cancellationToken)
         );
     }
 
@@ -615,7 +628,11 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Sections.Versions.CreateAsync(
     ///     "sectionID",
-    ///     new GuidedSectionsCreateVersionRequest { Generation = new GuidedSectionGenerationPartial() }
+    ///     new GuidedSectionsCreateVersionRequest
+    ///     {
+    ///         TenantName = "base",
+    ///         Generation = new GuidedSectionGenerationPartial(),
+    ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedSectionVersion> CreateAsync(
@@ -634,17 +651,22 @@ public partial class VersionsClient : IVersionsClient
     /// Returns raw authored section version without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.Versions.GetAsync("sectionID", "versionID");
+    /// await client.Documents.Sections.Versions.GetAsync(
+    ///     "sectionID",
+    ///     "versionID",
+    ///     new Corti.Documents.Sections.GetVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<GuidedSectionVersion> GetAsync(
         string sectionId,
         string versionId,
+        GetVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<GuidedSectionVersion>(
-            GetAsyncCore(sectionId, versionId, options, cancellationToken)
+            GetAsyncCore(sectionId, versionId, request, options, cancellationToken)
         );
     }
 
@@ -652,17 +674,22 @@ public partial class VersionsClient : IVersionsClient
     /// Currently published version cannot be deleted. Last remaining version can be deleted, simply create a new section version again if needed.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.Versions.DeleteAsync("sectionID", "versionID");
+    /// await client.Documents.Sections.Versions.DeleteAsync(
+    ///     "sectionID",
+    ///     "versionID",
+    ///     new Corti.Documents.Sections.DeleteVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string sectionId,
         string versionId,
+        DeleteVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask(
-            DeleteAsyncCore(sectionId, versionId, options, cancellationToken)
+            DeleteAsyncCore(sectionId, versionId, request, options, cancellationToken)
         );
     }
 
@@ -670,17 +697,22 @@ public partial class VersionsClient : IVersionsClient
     /// Sets this version as the published version of the section.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.Versions.PublishAsync("sectionID", "versionID");
+    /// await client.Documents.Sections.Versions.PublishAsync(
+    ///     "sectionID",
+    ///     "versionID",
+    ///     new Corti.Documents.Sections.PublishVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<CommonStatusResponse> PublishAsync(
         string sectionId,
         string versionId,
+        PublishVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<CommonStatusResponse>(
-            PublishAsyncCore(sectionId, versionId, options, cancellationToken)
+            PublishAsyncCore(sectionId, versionId, request, options, cancellationToken)
         );
     }
 }

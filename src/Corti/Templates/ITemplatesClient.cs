@@ -25,6 +25,7 @@ public partial interface ITemplatesClient
     /// </summary>
     WithRawResponseTask<TemplatesItem> GetAsync(
         string key,
+        GetTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

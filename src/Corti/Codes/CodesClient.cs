@@ -30,6 +30,7 @@ public partial class CodesClient : ICodesClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -198,6 +199,7 @@ public partial class CodesClient : ICodesClient
     /// await client.Codes.PredictAsync(
     ///     new CodesGeneralPredictRequest
     ///     {
+    ///         TenantName = "base",
     ///         System = new List&lt;CommonCodingSystemEnum&gt;()
     ///         {
     ///             CommonCodingSystemEnum.Icd10CmOutpatient,

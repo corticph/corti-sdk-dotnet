@@ -18,6 +18,12 @@ public record TemplatesSectionListRequest
     [JsonIgnore]
     public IEnumerable<string> Lang { get; set; } = new List<string>();
 
+    /// <summary>
+    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
+    /// </summary>
+    [JsonIgnore]
+    public required string TenantName { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

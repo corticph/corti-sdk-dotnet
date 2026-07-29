@@ -25,6 +25,7 @@ public partial class VersionsClient : IVersionsClient
         WithRawResponse<IEnumerable<GuidedShallowTemplateVersionResponse>>
     > ListAsyncCore(
         string templateId,
+        ListVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -33,6 +34,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -152,6 +154,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -278,6 +281,7 @@ public partial class VersionsClient : IVersionsClient
     private async Task<WithRawResponse<GuidedShallowTemplateVersionResponse>> GetAsyncCore(
         string templateId,
         string versionId,
+        GetVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -286,6 +290,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -397,6 +402,7 @@ public partial class VersionsClient : IVersionsClient
     private async Task<RawResponse> DeleteAsyncCore(
         string templateId,
         string versionId,
+        DeleteVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -405,6 +411,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -483,6 +490,7 @@ public partial class VersionsClient : IVersionsClient
     private async Task<WithRawResponse<CommonStatusResponse>> PublishAsyncCore(
         string templateId,
         string versionId,
+        PublishVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -491,6 +499,7 @@ public partial class VersionsClient : IVersionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -603,16 +612,20 @@ public partial class VersionsClient : IVersionsClient
     /// To see resolved content, use GET /documents/templates/{templateID} instead.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.Versions.ListAsync("templateID");
+    /// await client.Documents.Templates.Versions.ListAsync(
+    ///     "templateID",
+    ///     new Corti.Documents.Templates.ListVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersionResponse>> ListAsync(
         string templateId,
+        ListVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersionResponse>>(
-            ListAsyncCore(templateId, options, cancellationToken)
+            ListAsyncCore(templateId, request, options, cancellationToken)
         );
     }
 
@@ -622,7 +635,11 @@ public partial class VersionsClient : IVersionsClient
     /// <example><code>
     /// await client.Documents.Templates.Versions.CreateAsync(
     ///     "templateID",
-    ///     new GuidedTemplatesCreateVersionRequest { Generation = new GuidedTemplatesVersionGeneration() }
+    ///     new GuidedTemplatesCreateVersionRequest
+    ///     {
+    ///         TenantName = "base",
+    ///         Generation = new GuidedTemplatesVersionGeneration(),
+    ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedShallowTemplateVersionResponse> CreateAsync(
@@ -642,17 +659,22 @@ public partial class VersionsClient : IVersionsClient
     /// To see resolved content, use GET /documents/templates/{templateID} instead.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.Versions.GetAsync("templateID", "versionID");
+    /// await client.Documents.Templates.Versions.GetAsync(
+    ///     "templateID",
+    ///     "versionID",
+    ///     new Corti.Documents.Templates.GetVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<GuidedShallowTemplateVersionResponse> GetAsync(
         string templateId,
         string versionId,
+        GetVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<GuidedShallowTemplateVersionResponse>(
-            GetAsyncCore(templateId, versionId, options, cancellationToken)
+            GetAsyncCore(templateId, versionId, request, options, cancellationToken)
         );
     }
 
@@ -660,17 +682,22 @@ public partial class VersionsClient : IVersionsClient
     /// A published version cannot be deleted. When deleting a last remaining version of a template, simply create a new version again if needed.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.Versions.DeleteAsync("templateID", "versionID");
+    /// await client.Documents.Templates.Versions.DeleteAsync(
+    ///     "templateID",
+    ///     "versionID",
+    ///     new Corti.Documents.Templates.DeleteVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string templateId,
         string versionId,
+        DeleteVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask(
-            DeleteAsyncCore(templateId, versionId, options, cancellationToken)
+            DeleteAsyncCore(templateId, versionId, request, options, cancellationToken)
         );
     }
 
@@ -678,17 +705,22 @@ public partial class VersionsClient : IVersionsClient
     /// Sets this version as the published version of the template.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.Versions.PublishAsync("templateID", "versionID");
+    /// await client.Documents.Templates.Versions.PublishAsync(
+    ///     "templateID",
+    ///     "versionID",
+    ///     new Corti.Documents.Templates.PublishVersionsRequest { TenantName = "base" }
+    /// );
     /// </code></example>
     public WithRawResponseTask<CommonStatusResponse> PublishAsync(
         string templateId,
         string versionId,
+        PublishVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<CommonStatusResponse>(
-            PublishAsyncCore(templateId, versionId, options, cancellationToken)
+            PublishAsyncCore(templateId, versionId, request, options, cancellationToken)
         );
     }
 }
