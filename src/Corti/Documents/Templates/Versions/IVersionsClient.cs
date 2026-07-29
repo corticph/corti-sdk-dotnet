@@ -10,7 +10,6 @@ public partial interface IVersionsClient
     /// </summary>
     WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersionResponse>> ListAsync(
         string templateId,
-        ListVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -32,7 +31,6 @@ public partial interface IVersionsClient
     WithRawResponseTask<GuidedShallowTemplateVersionResponse> GetAsync(
         string templateId,
         string versionId,
-        GetVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -43,7 +41,6 @@ public partial interface IVersionsClient
     WithRawResponseTask DeleteAsync(
         string templateId,
         string versionId,
-        DeleteVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -54,7 +51,6 @@ public partial interface IVersionsClient
     WithRawResponseTask<CommonStatusResponse> PublishAsync(
         string templateId,
         string versionId,
-        PublishVersionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

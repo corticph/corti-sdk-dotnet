@@ -35,7 +35,6 @@ public partial class TranscriptsClient : ITranscriptsClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -210,7 +209,6 @@ public partial class TranscriptsClient : ITranscriptsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -378,7 +376,6 @@ public partial class TranscriptsClient : ITranscriptsClient
     private async Task<WithRawResponse<TranscriptsResponse>> GetAsyncCore(
         string id,
         string transcriptId,
-        TranscriptsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -387,7 +384,6 @@ public partial class TranscriptsClient : ITranscriptsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -554,7 +550,6 @@ public partial class TranscriptsClient : ITranscriptsClient
     private async Task<RawResponse> DeleteAsyncCore(
         string id,
         string transcriptId,
-        TranscriptsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -563,7 +558,6 @@ public partial class TranscriptsClient : ITranscriptsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -698,7 +692,6 @@ public partial class TranscriptsClient : ITranscriptsClient
     private async Task<WithRawResponse<TranscriptsStatusResponse>> GetStatusAsyncCore(
         string id,
         string transcriptId,
-        TranscriptsGetStatusRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -707,7 +700,6 @@ public partial class TranscriptsClient : ITranscriptsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -821,7 +813,7 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// <example><code>
     /// await client.Transcripts.ListAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new TranscriptsListRequest { TenantName = "base" }
+    ///     new TranscriptsListRequest()
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsListResponse> ListAsync(
@@ -844,7 +836,6 @@ public partial class TranscriptsClient : ITranscriptsClient
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     new TranscriptsCreateRequest
     ///     {
-    ///         TenantName = "base",
     ///         RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///         PrimaryLanguage = "en",
     ///     }
@@ -868,20 +859,18 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// <example><code>
     /// await client.Transcripts.GetAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new TranscriptsGetRequest { TenantName = "base" }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsResponse> GetAsync(
         string id,
         string transcriptId,
-        TranscriptsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TranscriptsResponse>(
-            GetAsyncCore(id, transcriptId, request, options, cancellationToken)
+            GetAsyncCore(id, transcriptId, options, cancellationToken)
         );
     }
 
@@ -891,20 +880,18 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// <example><code>
     /// await client.Transcripts.DeleteAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new TranscriptsDeleteRequest { TenantName = "base" }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string id,
         string transcriptId,
-        TranscriptsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask(
-            DeleteAsyncCore(id, transcriptId, request, options, cancellationToken)
+            DeleteAsyncCore(id, transcriptId, options, cancellationToken)
         );
     }
 
@@ -914,20 +901,18 @@ public partial class TranscriptsClient : ITranscriptsClient
     /// <example><code>
     /// await client.Transcripts.GetStatusAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new TranscriptsGetStatusRequest { TenantName = "base" }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsStatusResponse> GetStatusAsync(
         string id,
         string transcriptId,
-        TranscriptsGetStatusRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<TranscriptsStatusResponse>(
-            GetStatusAsyncCore(id, transcriptId, request, options, cancellationToken)
+            GetStatusAsyncCore(id, transcriptId, options, cancellationToken)
         );
     }
 }

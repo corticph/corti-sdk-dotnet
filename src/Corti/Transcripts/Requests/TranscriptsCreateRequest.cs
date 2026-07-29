@@ -7,12 +7,6 @@ namespace Corti;
 public record TranscriptsCreateRequest
 {
     /// <summary>
-    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
-    /// </summary>
-    [JsonIgnore]
-    public required string TenantName { get; set; }
-
-    /// <summary>
     /// The unique identifier for the recording.
     /// </summary>
     [JsonPropertyName("recordingId")]

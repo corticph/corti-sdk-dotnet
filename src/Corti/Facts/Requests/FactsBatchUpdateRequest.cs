@@ -7,12 +7,6 @@ namespace Corti;
 public record FactsBatchUpdateRequest
 {
     /// <summary>
-    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
-    /// </summary>
-    [JsonIgnore]
-    public required string TenantName { get; set; }
-
-    /// <summary>
     /// A list of facts to be updated.
     /// </summary>
     [JsonPropertyName("facts")]

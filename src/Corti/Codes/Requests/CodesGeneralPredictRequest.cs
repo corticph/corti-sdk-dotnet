@@ -7,12 +7,6 @@ namespace Corti;
 public record CodesGeneralPredictRequest
 {
     /// <summary>
-    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
-    /// </summary>
-    [JsonIgnore]
-    public required string TenantName { get; set; }
-
-    /// <summary>
     /// List of coding systems for prediction
     /// </summary>
     [JsonPropertyName("system")]

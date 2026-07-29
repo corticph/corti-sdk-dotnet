@@ -43,7 +43,6 @@ public partial class TemplatesClient : ITemplatesClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -125,7 +124,7 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     private async Task<WithRawResponse<GuidedTemplate>> CreateAsyncCore(
-        CreateTemplatesRequest request,
+        GuidedTemplatesCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -134,7 +133,6 @@ public partial class TemplatesClient : ITemplatesClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -147,9 +145,8 @@ public partial class TemplatesClient : ITemplatesClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
                             Path = "documents/templates/",
-                            Body = request.Body,
+                            Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -240,7 +237,6 @@ public partial class TemplatesClient : ITemplatesClient
 
     private async Task<WithRawResponse<GuidedTemplate>> GetAsyncCore(
         string templateId,
-        GetTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -249,7 +245,6 @@ public partial class TemplatesClient : ITemplatesClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -356,7 +351,6 @@ public partial class TemplatesClient : ITemplatesClient
 
     private async Task<RawResponse> DeleteAsyncCore(
         string templateId,
-        DeleteTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -365,7 +359,6 @@ public partial class TemplatesClient : ITemplatesClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -465,7 +458,6 @@ public partial class TemplatesClient : ITemplatesClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -591,7 +583,7 @@ public partial class TemplatesClient : ITemplatesClient
     /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.ListAsync(new GuidedTemplatesListRequest { TenantName = "base" });
+    /// await client.Documents.Templates.ListAsync(new GuidedTemplatesListRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<GuidedTemplateListItem>> ListAsync(
         GuidedTemplatesListRequest request,
@@ -611,19 +603,15 @@ public partial class TemplatesClient : ITemplatesClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.CreateAsync(
-    ///     new CreateTemplatesRequest
+    ///     new GuidedTemplatesCreateFromInheritanceRequest
     ///     {
-    ///         TenantName = "base",
-    ///         Body = new GuidedTemplatesCreateFromInheritanceRequest
-    ///         {
-    ///             Name = "name",
-    ///             InheritFromId = "inheritFromId",
-    ///         },
+    ///         Name = "name",
+    ///         InheritFromId = "inheritFromId",
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedTemplate> CreateAsync(
-        CreateTemplatesRequest request,
+        GuidedTemplatesCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -639,20 +627,16 @@ public partial class TemplatesClient : ITemplatesClient
     /// values without inheritance, use GET /documents/templates/{templateID}/versions/{versionID}.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.GetAsync(
-    ///     "templateID",
-    ///     new Corti.Documents.GetTemplatesRequest { TenantName = "base" }
-    /// );
+    /// await client.Documents.Templates.GetAsync("templateID");
     /// </code></example>
     public WithRawResponseTask<GuidedTemplate> GetAsync(
         string templateId,
-        GetTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<GuidedTemplate>(
-            GetAsyncCore(templateId, request, options, cancellationToken)
+            GetAsyncCore(templateId, options, cancellationToken)
         );
     }
 
@@ -660,21 +644,15 @@ public partial class TemplatesClient : ITemplatesClient
     /// Deletes a template and its versions. Returns 409 if other templates or sections inherit from this template.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.DeleteAsync(
-    ///     "templateID",
-    ///     new DeleteTemplatesRequest { TenantName = "base" }
-    /// );
+    /// await client.Documents.Templates.DeleteAsync("templateID");
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string templateId,
-        DeleteTemplatesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(
-            DeleteAsyncCore(templateId, request, options, cancellationToken)
-        );
+        return new WithRawResponseTask(DeleteAsyncCore(templateId, options, cancellationToken));
     }
 
     /// <summary>
@@ -683,10 +661,7 @@ public partial class TemplatesClient : ITemplatesClient
     /// and cannot be updated here.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Templates.UpdateAsync(
-    ///     "templateID",
-    ///     new GuidedTemplatesUpdateRequest { TenantName = "base" }
-    /// );
+    /// await client.Documents.Templates.UpdateAsync("templateID", new GuidedTemplatesUpdateRequest());
     /// </code></example>
     public WithRawResponseTask<GuidedTemplate> UpdateAsync(
         string templateId,

@@ -22,7 +22,7 @@ public partial interface ISectionsClient
     /// (section inheritance chain walked to fill missing fields).
     /// </summary>
     WithRawResponseTask<GuidedSection> CreateAsync(
-        CreateSectionsRequest request,
+        GuidedSectionsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -34,7 +34,6 @@ public partial interface ISectionsClient
     /// </summary>
     WithRawResponseTask<GuidedSection> GetAsync(
         string sectionId,
-        GetSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -44,7 +43,6 @@ public partial interface ISectionsClient
     /// </summary>
     WithRawResponseTask DeleteAsync(
         string sectionId,
-        DeleteSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

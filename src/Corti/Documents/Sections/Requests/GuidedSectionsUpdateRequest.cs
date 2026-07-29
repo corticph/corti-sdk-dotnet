@@ -8,12 +8,6 @@ namespace Corti.Documents;
 public record GuidedSectionsUpdateRequest
 {
     /// <summary>
-    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
-    /// </summary>
-    [JsonIgnore]
-    public required string TenantName { get; set; }
-
-    /// <summary>
     /// A human-readable identifier for this section. Not passed to the LLM.
     /// </summary>
     [JsonPropertyName("name")]

@@ -27,7 +27,6 @@ public partial interface IInteractionsClient
     /// </summary>
     WithRawResponseTask<InteractionsGetResponse> GetAsync(
         string id,
-        InteractionsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -37,7 +36,6 @@ public partial interface IInteractionsClient
     /// </summary>
     WithRawResponseTask DeleteAsync(
         string id,
-        InteractionsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

@@ -12,7 +12,6 @@ public partial interface IDocumentsClient
     /// </summary>
     WithRawResponseTask<DocumentsListResponse> ListAsync(
         string id,
-        ListDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -22,7 +21,7 @@ public partial interface IDocumentsClient
     /// </summary>
     WithRawResponseTask<DocumentsGetResponse> CreateAsync(
         string id,
-        CreateDocumentsRequest request,
+        DocumentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -33,7 +32,6 @@ public partial interface IDocumentsClient
     WithRawResponseTask<DocumentsGetResponse> GetAsync(
         string id,
         string documentId,
-        GetDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -41,7 +39,6 @@ public partial interface IDocumentsClient
     WithRawResponseTask DeleteAsync(
         string id,
         string documentId,
-        DeleteDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -60,7 +57,7 @@ public partial interface IDocumentsClient
     /// With the exception of the plain `templateRef` path (no overrides), every call creates a new auto-generated template aggregate that snapshots the resolved prompts as a drift-proof receipt, persisted for 30 days.
     /// </summary>
     WithRawResponseTask<GuidedDocumentsCreateEphemeralResponse> GenerateAsync(
-        GenerateDocumentsRequest request,
+        GuidedDocumentsGenerateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

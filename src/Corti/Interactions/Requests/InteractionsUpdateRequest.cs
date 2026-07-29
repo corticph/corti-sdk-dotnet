@@ -7,12 +7,6 @@ namespace Corti;
 public record InteractionsUpdateRequest
 {
     /// <summary>
-    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
-    /// </summary>
-    [JsonIgnore]
-    public required string TenantName { get; set; }
-
-    /// <summary>
     /// The unique identifier of the medical professional responsible for this interaction.  If nulled, automatically set to a uuid.
     /// </summary>
     [JsonPropertyName("assignedUserId")]

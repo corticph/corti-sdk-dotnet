@@ -29,7 +29,6 @@ public partial class DocumentsClient : IDocumentsClient
 
     private async Task<WithRawResponse<DocumentsListResponse>> ListAsyncCore(
         string id,
-        ListDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -38,7 +37,6 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -189,7 +187,7 @@ public partial class DocumentsClient : IDocumentsClient
 
     private async Task<WithRawResponse<DocumentsGetResponse>> CreateAsyncCore(
         string id,
-        CreateDocumentsRequest request,
+        DocumentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -198,7 +196,6 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -214,9 +211,8 @@ public partial class DocumentsClient : IDocumentsClient
                                 "interactions/{0}/documents/",
                                 ValueConvert.ToPathParameterString(id)
                             ),
-                            Body = request.Body,
+                            Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -352,7 +348,6 @@ public partial class DocumentsClient : IDocumentsClient
     private async Task<WithRawResponse<DocumentsGetResponse>> GetAsyncCore(
         string id,
         string documentId,
-        GetDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -361,7 +356,6 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -514,7 +508,6 @@ public partial class DocumentsClient : IDocumentsClient
     private async Task<RawResponse> DeleteAsyncCore(
         string id,
         string documentId,
-        DeleteDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -523,7 +516,6 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -653,7 +645,6 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -806,7 +797,7 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     private async Task<WithRawResponse<GuidedDocumentsCreateEphemeralResponse>> GenerateAsyncCore(
-        GenerateDocumentsRequest request,
+        GuidedDocumentsGenerateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -815,7 +806,6 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -828,9 +818,8 @@ public partial class DocumentsClient : IDocumentsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
                             Path = "documents/",
-                            Body = request.Body,
+                            Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -968,20 +957,16 @@ public partial class DocumentsClient : IDocumentsClient
     /// List Documents
     /// </summary>
     /// <example><code>
-    /// await client.Documents.ListAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new ListDocumentsRequest { TenantName = "base" }
-    /// );
+    /// await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
     /// </code></example>
     public WithRawResponseTask<DocumentsListResponse> ListAsync(
         string id,
-        ListDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<DocumentsListResponse>(
-            ListAsyncCore(id, request, options, cancellationToken)
+            ListAsyncCore(id, options, cancellationToken)
         );
     }
 
@@ -991,28 +976,24 @@ public partial class DocumentsClient : IDocumentsClient
     /// <example><code>
     /// await client.Documents.CreateAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new CreateDocumentsRequest
+    ///     new DocumentsCreateRequestWithTemplateKey
     ///     {
-    ///         TenantName = "base",
-    ///         Body = new DocumentsCreateRequestWithTemplateKey
+    ///         Context = new List&lt;DocumentsContext&gt;()
     ///         {
-    ///             Context = new List&lt;DocumentsContext&gt;()
+    ///             new DocumentsContextWithFacts
     ///             {
-    ///                 new DocumentsContextWithFacts
-    ///                 {
-    ///                     Type = DocumentsContextWithFactsType.Facts,
-    ///                     Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
-    ///                 },
+    ///                 Type = DocumentsContextWithFactsType.Facts,
+    ///                 Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
     ///             },
-    ///             TemplateKey = "templateKey",
-    ///             OutputLanguage = "outputLanguage",
     ///         },
+    ///         TemplateKey = "templateKey",
+    ///         OutputLanguage = "outputLanguage",
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> CreateAsync(
         string id,
-        CreateDocumentsRequest request,
+        DocumentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -1028,48 +1009,42 @@ public partial class DocumentsClient : IDocumentsClient
     /// <example><code>
     /// await client.Documents.GetAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new GetDocumentsRequest { TenantName = "base" }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> GetAsync(
         string id,
         string documentId,
-        GetDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<DocumentsGetResponse>(
-            GetAsyncCore(id, documentId, request, options, cancellationToken)
+            GetAsyncCore(id, documentId, options, cancellationToken)
         );
     }
 
     /// <example><code>
     /// await client.Documents.DeleteAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new DeleteDocumentsRequest { TenantName = "base" }
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
     /// );
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string id,
         string documentId,
-        DeleteDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(
-            DeleteAsyncCore(id, documentId, request, options, cancellationToken)
-        );
+        return new WithRawResponseTask(DeleteAsyncCore(id, documentId, options, cancellationToken));
     }
 
     /// <example><code>
     /// await client.Documents.UpdateAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new DocumentsUpdateRequest { TenantName = "base" }
+    ///     new DocumentsUpdateRequest()
     /// );
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
@@ -1092,19 +1067,15 @@ public partial class DocumentsClient : IDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.GenerateAsync(
-    ///     new GenerateDocumentsRequest
+    ///     new GuidedDocumentsGenerateByTemplateRef
     ///     {
-    ///         TenantName = "base",
-    ///         Body = new GuidedDocumentsGenerateByTemplateRef
-    ///         {
-    ///             OutputLanguage = "outputLanguage",
-    ///             TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
-    ///         },
+    ///         OutputLanguage = "outputLanguage",
+    ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedDocumentsCreateEphemeralResponse> GenerateAsync(
-        GenerateDocumentsRequest request,
+        GuidedDocumentsGenerateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

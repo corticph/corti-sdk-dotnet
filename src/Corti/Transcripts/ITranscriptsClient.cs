@@ -28,7 +28,6 @@ public partial interface ITranscriptsClient
     WithRawResponseTask<TranscriptsResponse> GetAsync(
         string id,
         string transcriptId,
-        TranscriptsGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -39,7 +38,6 @@ public partial interface ITranscriptsClient
     WithRawResponseTask DeleteAsync(
         string id,
         string transcriptId,
-        TranscriptsDeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -50,7 +48,6 @@ public partial interface ITranscriptsClient
     WithRawResponseTask<TranscriptsStatusResponse> GetStatusAsync(
         string id,
         string transcriptId,
-        TranscriptsGetStatusRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

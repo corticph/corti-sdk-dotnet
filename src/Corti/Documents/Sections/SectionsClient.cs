@@ -43,7 +43,6 @@ public partial class SectionsClient : ISectionsClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -125,7 +124,7 @@ public partial class SectionsClient : ISectionsClient
     }
 
     private async Task<WithRawResponse<GuidedSection>> CreateAsyncCore(
-        CreateSectionsRequest request,
+        GuidedSectionsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -134,7 +133,6 @@ public partial class SectionsClient : ISectionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -147,9 +145,8 @@ public partial class SectionsClient : ISectionsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
                             Path = "documents/sections/",
-                            Body = request.Body,
+                            Body = request,
                             Headers = _headers,
-                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -240,7 +237,6 @@ public partial class SectionsClient : ISectionsClient
 
     private async Task<WithRawResponse<GuidedSection>> GetAsyncCore(
         string sectionId,
-        GetSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -249,7 +245,6 @@ public partial class SectionsClient : ISectionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -356,7 +351,6 @@ public partial class SectionsClient : ISectionsClient
 
     private async Task<RawResponse> DeleteAsyncCore(
         string sectionId,
-        DeleteSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -365,7 +359,6 @@ public partial class SectionsClient : ISectionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -465,7 +458,6 @@ public partial class SectionsClient : ISectionsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add("Tenant-Name", request.TenantName)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -591,7 +583,7 @@ public partial class SectionsClient : ISectionsClient
     /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.ListAsync(new GuidedSectionsListRequest { TenantName = "base" });
+    /// await client.Documents.Sections.ListAsync(new GuidedSectionsListRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<GuidedSectionListItem>> ListAsync(
         GuidedSectionsListRequest request,
@@ -611,19 +603,15 @@ public partial class SectionsClient : ISectionsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.CreateAsync(
-    ///     new CreateSectionsRequest
+    ///     new GuidedSectionsCreateFromInheritanceRequest
     ///     {
-    ///         TenantName = "base",
-    ///         Body = new GuidedSectionsCreateFromInheritanceRequest
-    ///         {
-    ///             Name = "name",
-    ///             InheritFromId = "inheritFromId",
-    ///         },
+    ///         Name = "name",
+    ///         InheritFromId = "inheritFromId",
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedSection> CreateAsync(
-        CreateSectionsRequest request,
+        GuidedSectionsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -639,20 +627,16 @@ public partial class SectionsClient : ISectionsClient
     /// GET /documents/sections/{sectionID}/versions/{versionID}.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.GetAsync(
-    ///     "sectionID",
-    ///     new GetSectionsRequest { TenantName = "base" }
-    /// );
+    /// await client.Documents.Sections.GetAsync("sectionID");
     /// </code></example>
     public WithRawResponseTask<GuidedSection> GetAsync(
         string sectionId,
-        GetSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<GuidedSection>(
-            GetAsyncCore(sectionId, request, options, cancellationToken)
+            GetAsyncCore(sectionId, options, cancellationToken)
         );
     }
 
@@ -660,21 +644,15 @@ public partial class SectionsClient : ISectionsClient
     /// Deletes a section and its versions. Returns 409 if other sections inherit from this section.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.DeleteAsync(
-    ///     "sectionID",
-    ///     new DeleteSectionsRequest { TenantName = "base" }
-    /// );
+    /// await client.Documents.Sections.DeleteAsync("sectionID");
     /// </code></example>
     public WithRawResponseTask DeleteAsync(
         string sectionId,
-        DeleteSectionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(
-            DeleteAsyncCore(sectionId, request, options, cancellationToken)
-        );
+        return new WithRawResponseTask(DeleteAsyncCore(sectionId, options, cancellationToken));
     }
 
     /// <summary>
@@ -682,10 +660,7 @@ public partial class SectionsClient : ISectionsClient
     /// Generation content (instructions, output schema) is managed through versions and cannot be updated here.
     /// </summary>
     /// <example><code>
-    /// await client.Documents.Sections.UpdateAsync(
-    ///     "sectionID",
-    ///     new GuidedSectionsUpdateRequest { TenantName = "base" }
-    /// );
+    /// await client.Documents.Sections.UpdateAsync("sectionID", new GuidedSectionsUpdateRequest());
     /// </code></example>
     public WithRawResponseTask<GuidedSection> UpdateAsync(
         string sectionId,

@@ -8,12 +8,6 @@ namespace Corti.Documents;
 public record GuidedTemplatesUpdateRequest
 {
     /// <summary>
-    /// Identifies a distinct entity within Corti's multi-tenant system. Ensures correct routing and authentication of the request.
-    /// </summary>
-    [JsonIgnore]
-    public required string TenantName { get; set; }
-
-    /// <summary>
     /// The name of this template. Not passed to the LLM.
     /// </summary>
     [JsonPropertyName("name")]
