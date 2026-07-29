@@ -28,9 +28,6 @@ public partial interface IFeedbackClient
         CancellationToken cancellationToken = default
     );
 
-    /// <summary>
-    /// Soft-deletes every feedback resource the authenticated user submitted for the task. The task must exist, belong to the supplied context, and belong to the authenticated customer. Idempotent: deleting when there is no feedback returns `204`.
-    /// </summary>
     WithRawResponseTask DeleteAsync(
         string contextId,
         string taskId,

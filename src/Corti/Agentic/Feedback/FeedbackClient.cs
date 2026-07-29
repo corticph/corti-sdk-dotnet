@@ -360,44 +360,6 @@ public partial class FeedbackClient : IFeedbackClient
                     var responseBody = await response
                         .Raw.Content.ReadAsStringAsync(cancellationToken)
                         .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 401:
-                                throw new UnauthorizedError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 404:
-                                throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
                     throw new CortiClientApiException(
                         $"Error with status code {response.StatusCode}",
                         response.StatusCode,
@@ -464,9 +426,6 @@ public partial class FeedbackClient : IFeedbackClient
         );
     }
 
-    /// <summary>
-    /// Soft-deletes every feedback resource the authenticated user submitted for the task. The task must exist, belong to the supplied context, and belong to the authenticated customer. Idempotent: deleting when there is no feedback returns `204`.
-    /// </summary>
     /// <example><code>
     /// await client.Agentic.Feedback.DeleteAsync(
     ///     "ctx.0192f4c8-3d6b-7c4f-a02b-4d9e7f3c8b51",
