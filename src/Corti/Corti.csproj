@@ -40,7 +40,6 @@
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.13" />
     <PackageReference Include="System.Threading.Channels" Version="9.0.13" />
-    <PackageReference Include="System.Net.ServerSentEvents" Version="9.0.14" />
   </ItemGroup>
   <ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
     <PackageReference Include="System.Text.Json" Version="9.0.9" />
