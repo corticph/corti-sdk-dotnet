@@ -26,8 +26,8 @@ public record GuidedEphemeralDocument : IJsonOnDeserialized
     /// <summary>
     /// The BCP 47 language tag of the generated output.
     /// </summary>
-    [JsonPropertyName("language")]
-    public required string Language { get; set; }
+    [JsonPropertyName("outputLanguage")]
+    public required string OutputLanguage { get; set; }
 
     /// <summary>
     /// The interaction whose context was used to generate this document, if supplied.
