@@ -859,7 +859,7 @@ public partial class AgentsClient : IAgentsClient
 
     private async Task<WithRawResponse<AgentsMessageSendResponse>> MessageSendAsyncCore(
         string id,
-        AgentsMessageSendParams request,
+        AgentsMessageSendBody request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -1717,7 +1717,7 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// await client.Agents.MessageSendAsync(
     ///     "12345678-90ab-cdef-gh12-34567890abc",
-    ///     new AgentsMessageSendParams
+    ///     new AgentsMessageSendBody
     ///     {
     ///         Message = new AgentsMessage
     ///         {
@@ -1734,7 +1734,7 @@ public partial class AgentsClient : IAgentsClient
     /// </code></example>
     public WithRawResponseTask<AgentsMessageSendResponse> MessageSendAsync(
         string id,
-        AgentsMessageSendParams request,
+        AgentsMessageSendBody request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
