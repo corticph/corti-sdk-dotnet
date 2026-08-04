@@ -35,12 +35,24 @@ public record GuidedEphemeralDocument : IJsonOnDeserialized
     [JsonPropertyName("interactionId")]
     public string? InteractionId { get; set; }
 
+    /// <summary>
+    /// The generated document as a map of section ID to rendered string output. The `sections` array lists every section ID and its heading.
+    /// </summary>
     [JsonPropertyName("stringDocument")]
     public Dictionary<string, string> StringDocument { get; set; } =
         new Dictionary<string, string>();
 
+    /// <summary>
+    /// The generated document as a structured object keyed by section ID. The `sections` array lists every section ID and its heading.
+    /// </summary>
     [JsonPropertyName("structuredDocument")]
     public Dictionary<string, object?>? StructuredDocument { get; set; }
+
+    /// <summary>
+    /// Every section in the template version, in template order, including sections the model left empty. Use `sectionId` as the key into `stringDocument` and `structuredDocument`. The `heading` lets you render the section label without a GET request per section.
+    /// </summary>
+    [JsonPropertyName("sections")]
+    public IEnumerable<GuidedDocumentSection>? Sections { get; set; }
 
     /// <summary>
     /// Key/value labels attached to this document.
