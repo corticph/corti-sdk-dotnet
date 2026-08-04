@@ -53,6 +53,27 @@ public enum CommonCodingSystemEnum
 
     [EnumMember(Value = "snomedctint")]
     Snomedctint,
+
+    [EnumMember(Value = "snomedctde")]
+    Snomedctde,
+
+    [EnumMember(Value = "snomedctfr")]
+    Snomedctfr,
+
+    [EnumMember(Value = "snomedctuk")]
+    Snomedctuk,
+
+    [EnumMember(Value = "snomedctes")]
+    Snomedctes,
+
+    [EnumMember(Value = "snomedctdk")]
+    Snomedctdk,
+
+    [EnumMember(Value = "snomedctse")]
+    Snomedctse,
+
+    [EnumMember(Value = "snomedctus")]
+    Snomedctus,
 }
 
 internal class CommonCodingSystemEnumSerializer
@@ -79,6 +100,13 @@ internal class CommonCodingSystemEnumSerializer
         { "ops", CommonCodingSystemEnum.Ops },
         { "ccam", CommonCodingSystemEnum.Ccam },
         { "snomedctint", CommonCodingSystemEnum.Snomedctint },
+        { "snomedctde", CommonCodingSystemEnum.Snomedctde },
+        { "snomedctfr", CommonCodingSystemEnum.Snomedctfr },
+        { "snomedctuk", CommonCodingSystemEnum.Snomedctuk },
+        { "snomedctes", CommonCodingSystemEnum.Snomedctes },
+        { "snomedctdk", CommonCodingSystemEnum.Snomedctdk },
+        { "snomedctse", CommonCodingSystemEnum.Snomedctse },
+        { "snomedctus", CommonCodingSystemEnum.Snomedctus },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -102,6 +130,13 @@ internal class CommonCodingSystemEnumSerializer
         { CommonCodingSystemEnum.Ops, "ops" },
         { CommonCodingSystemEnum.Ccam, "ccam" },
         { CommonCodingSystemEnum.Snomedctint, "snomedctint" },
+        { CommonCodingSystemEnum.Snomedctde, "snomedctde" },
+        { CommonCodingSystemEnum.Snomedctfr, "snomedctfr" },
+        { CommonCodingSystemEnum.Snomedctuk, "snomedctuk" },
+        { CommonCodingSystemEnum.Snomedctes, "snomedctes" },
+        { CommonCodingSystemEnum.Snomedctdk, "snomedctdk" },
+        { CommonCodingSystemEnum.Snomedctse, "snomedctse" },
+        { CommonCodingSystemEnum.Snomedctus, "snomedctus" },
     };
 
     public override CommonCodingSystemEnum Read(

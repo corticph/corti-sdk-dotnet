@@ -62,7 +62,7 @@ public partial interface IAgentsClient
     /// </summary>
     WithRawResponseTask<AgentsMessageSendResponse> MessageSendAsync(
         string id,
-        AgentsMessageSendBody request,
+        AgentsMessageSendParams request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
