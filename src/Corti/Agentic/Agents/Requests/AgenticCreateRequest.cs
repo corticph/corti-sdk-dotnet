@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti.Agentic;
 
 [Serializable]
-public record AgentsCreateRequest
+public record AgenticCreateRequest
 {
     /// <summary>
     /// Human-readable, unique-per-tenant agent name.
@@ -32,10 +32,10 @@ public record AgentsCreateRequest
     public string? Model { get; set; }
 
     [JsonPropertyName("visibility")]
-    public AgentsVisibility? Visibility { get; set; }
+    public AgenticVisibility? Visibility { get; set; }
 
     [JsonPropertyName("lifecycle")]
-    public AgentsLifecycle? Lifecycle { get; set; }
+    public AgenticLifecycle? Lifecycle { get; set; }
 
     /// <summary>
     /// Connectors to attach at creation. Defaults to an empty array.

@@ -8,7 +8,7 @@ namespace Corti;
 /// A configured agent — its metadata, model, and attached connectors.
 /// </summary>
 [Serializable]
-public record AgentsResponse : IJsonOnDeserialized
+public record AgenticResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -43,10 +43,10 @@ public record AgentsResponse : IJsonOnDeserialized
     public string? Model { get; set; }
 
     [JsonPropertyName("visibility")]
-    public required AgentsVisibility Visibility { get; set; }
+    public required AgenticVisibility Visibility { get; set; }
 
     [JsonPropertyName("lifecycle")]
-    public required AgentsLifecycle Lifecycle { get; set; }
+    public required AgenticLifecycle Lifecycle { get; set; }
 
     /// <summary>
     /// Connectors attached to the agent, discriminated by `type`.
