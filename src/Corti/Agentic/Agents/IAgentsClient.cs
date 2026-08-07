@@ -52,4 +52,15 @@ public partial interface IAgentsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Returns the A2A v1.0 agent card describing the agent's capabilities,
+    /// skills, and supported protocol interfaces. Served at the standard
+    /// `.well-known` location for agent discovery.
+    /// </summary>
+    WithRawResponseTask<AgenticAgentsAgentCard> GetCardAsync(
+        string agentId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }
