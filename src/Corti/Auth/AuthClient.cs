@@ -111,7 +111,7 @@ public partial class AuthClient : IAuthClient
 
     private async Task<WithRawResponse<AuthTokenResponse>> TokenAsyncCore(
         string tenantName,
-        AuthTokenRequest request,
+        AuthTokenRequestBody request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -268,7 +268,7 @@ public partial class AuthClient : IAuthClient
     /// </code></example>
     public WithRawResponseTask<AuthTokenResponse> TokenAsync(
         string tenantName,
-        AuthTokenRequest request,
+        AuthTokenRequestBody request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
