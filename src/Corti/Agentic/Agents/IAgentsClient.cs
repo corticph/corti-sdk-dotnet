@@ -12,7 +12,7 @@ public partial interface IAgentsClient
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
     Task<Pager<AgentsResponse>> ListAsync(
-        AgentsListParams request,
+        ListAgentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

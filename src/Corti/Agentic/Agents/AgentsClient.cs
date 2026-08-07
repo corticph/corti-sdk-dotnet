@@ -28,7 +28,7 @@ public partial class AgentsClient : IAgentsClient
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
     private WithRawResponseTask<AgentsListResponse> ListInternalAsync(
-        AgentsListParams request,
+        ListAgentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -39,7 +39,7 @@ public partial class AgentsClient : IAgentsClient
     }
 
     private async Task<WithRawResponse<AgentsListResponse>> ListInternalAsyncCore(
-        AgentsListParams request,
+        ListAgentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -350,7 +350,7 @@ public partial class AgentsClient : IAgentsClient
     /// </summary>
     /// <example><code>
     /// await client.Agentic.Agents.ListAsync(
-    ///     new AgentsListParams
+    ///     new ListAgentsRequest
     ///     {
     ///         Label = new List&lt;string&gt;() { "team=coding" },
     ///         Q = "coder",
@@ -358,7 +358,7 @@ public partial class AgentsClient : IAgentsClient
     /// );
     /// </code></example>
     public async Task<Pager<AgentsResponse>> ListAsync(
-        AgentsListParams request,
+        ListAgentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -371,7 +371,7 @@ public partial class AgentsClient : IAgentsClient
                     request = request with { };
                 }
                 var pager = await CursorPager<
-                    AgentsListParams,
+                    ListAgentsRequest,
                     RequestOptions?,
                     AgentsListResponse,
                     string?,

@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti.Agentic;
 
 [Serializable]
-public record AgentsListParams
+public record ListAgentsRequest
 {
     /// <summary>
     /// Maximum number of items per page.
