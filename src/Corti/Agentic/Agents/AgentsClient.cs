@@ -27,19 +27,19 @@ public partial class AgentsClient : IAgentsClient
     /// ID instead); `public` agents are listed tenant-wide.
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
-    private WithRawResponseTask<AgenticListResponse> ListInternalAsync(
-        ListAgentsRequest request,
+    private WithRawResponseTask<AgenticAgentsListResponse> ListInternalAsync(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticListResponse>(
+        return new WithRawResponseTask<AgenticAgentsListResponse>(
             ListInternalAsyncCore(request, options, cancellationToken)
         );
     }
 
-    private async Task<WithRawResponse<AgenticListResponse>> ListInternalAsyncCore(
-        ListAgentsRequest request,
+    private async Task<WithRawResponse<AgenticAgentsListResponse>> ListInternalAsyncCore(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -83,10 +83,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticListResponse>(
+                        var responseData = JsonUtils.Deserialize<AgenticAgentsListResponse>(
                             responseBody
                         )!;
-                        return new WithRawResponse<AgenticListResponse>()
+                        return new WithRawResponse<AgenticAgentsListResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -183,15 +183,15 @@ public partial class AgentsClient : IAgentsClient
     /// </summary>
     /// <example><code>
     /// await client.Agentic.Agents.ListAsync(
-    ///     new ListAgentsRequest
+    ///     new AgenticAgentsListRequest
     ///     {
     ///         Label = new List&lt;string&gt;() { "team=coding" },
     ///         Q = "coder",
     ///     }
     /// );
     /// </code></example>
-    public async Task<Pager<AgenticResponse>> ListAsync(
-        ListAgentsRequest request,
+    public async Task<Pager<AgenticAgentsResponse>> ListAsync(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -204,11 +204,11 @@ public partial class AgentsClient : IAgentsClient
                     request = request with { };
                 }
                 var pager = await CursorPager<
-                    ListAgentsRequest,
+                    AgenticAgentsListRequest,
                     RequestOptions?,
-                    AgenticListResponse,
+                    AgenticAgentsListResponse,
                     string?,
-                    AgenticResponse
+                    AgenticAgentsResponse
                 >
                     .CreateInstanceAsync(
                         request,

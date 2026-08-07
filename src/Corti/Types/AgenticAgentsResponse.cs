@@ -8,7 +8,7 @@ namespace Corti;
 /// A configured agent — its metadata, model, and attached connectors.
 /// </summary>
 [Serializable]
-public record AgenticResponse : IJsonOnDeserialized
+public record AgenticAgentsResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

@@ -11,8 +11,8 @@ public partial interface IAgentsClient
     /// ID instead); `public` agents are listed tenant-wide.
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
-    Task<Pager<AgenticResponse>> ListAsync(
-        ListAgentsRequest request,
+    Task<Pager<AgenticAgentsResponse>> ListAsync(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
