@@ -187,7 +187,7 @@ public partial class DocumentsClient : IDocumentsClient
 
     private async Task<WithRawResponse<DocumentsGetResponse>> CreateAsyncCore(
         string id,
-        DocumentsCreateRequest request,
+        CreateDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -196,6 +196,7 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("X-Corti-Retention-Policy", request.CortiRetentionPolicy)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -211,8 +212,9 @@ public partial class DocumentsClient : IDocumentsClient
                                 "interactions/{0}/documents/",
                                 ValueConvert.ToPathParameterString(id)
                             ),
-                            Body = request,
+                            Body = request.Body,
                             Headers = _headers,
+                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -797,7 +799,7 @@ public partial class DocumentsClient : IDocumentsClient
     }
 
     private async Task<WithRawResponse<GuidedDocumentsCreateEphemeralResponse>> GenerateAsyncCore(
-        GuidedDocumentsGenerateRequest request,
+        GenerateDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -806,6 +808,7 @@ public partial class DocumentsClient : IDocumentsClient
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("X-Corti-Retention-Policy", request.CortiRetentionPolicy)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -818,8 +821,9 @@ public partial class DocumentsClient : IDocumentsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Post,
                             Path = "documents/",
-                            Body = request,
+                            Body = request.Body,
                             Headers = _headers,
+                            ContentType = "application/json",
                             Options = options,
                         },
                         cancellationToken
@@ -975,25 +979,28 @@ public partial class DocumentsClient : IDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.CreateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new DocumentsCreateRequestWithTemplateKey
+    ///     "id",
+    ///     new CreateDocumentsRequest
     ///     {
-    ///         Context = new List&lt;DocumentsContext&gt;()
+    ///         Body = new DocumentsCreateRequestWithTemplateKey
     ///         {
-    ///             new DocumentsContextWithFacts
+    ///             Context = new List&lt;DocumentsContext&gt;()
     ///             {
-    ///                 Type = DocumentsContextWithFactsType.Facts,
-    ///                 Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
+    ///                 new DocumentsContextWithFacts
+    ///                 {
+    ///                     Type = DocumentsContextWithFactsType.Facts,
+    ///                     Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
+    ///                 },
     ///             },
+    ///             TemplateKey = "templateKey",
+    ///             OutputLanguage = "outputLanguage",
     ///         },
-    ///         TemplateKey = "templateKey",
-    ///         OutputLanguage = "outputLanguage",
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<DocumentsGetResponse> CreateAsync(
         string id,
-        DocumentsCreateRequest request,
+        CreateDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -1067,15 +1074,18 @@ public partial class DocumentsClient : IDocumentsClient
     /// </summary>
     /// <example><code>
     /// await client.Documents.GenerateAsync(
-    ///     new GuidedDocumentsGenerateByTemplateRef
+    ///     new GenerateDocumentsRequest
     ///     {
-    ///         OutputLanguage = "outputLanguage",
-    ///         TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
+    ///         Body = new GuidedDocumentsGenerateByTemplateRef
+    ///         {
+    ///             OutputLanguage = "outputLanguage",
+    ///             TemplateRef = new GuidedTemplateRef { TemplateId = "templateId" },
+    ///         },
     ///     }
     /// );
     /// </code></example>
     public WithRawResponseTask<GuidedDocumentsCreateEphemeralResponse> GenerateAsync(
-        GuidedDocumentsGenerateRequest request,
+        GenerateDocumentsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
