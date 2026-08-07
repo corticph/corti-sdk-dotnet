@@ -27,19 +27,19 @@ public partial class AgentsClient : IAgentsClient
     /// ID instead); `public` agents are listed tenant-wide.
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
-    private WithRawResponseTask<AgenticListResponse> ListInternalAsync(
-        AgenticListRequest request,
+    private WithRawResponseTask<AgenticAgentsListResponse> ListInternalAsync(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticListResponse>(
+        return new WithRawResponseTask<AgenticAgentsListResponse>(
             ListInternalAsyncCore(request, options, cancellationToken)
         );
     }
 
-    private async Task<WithRawResponse<AgenticListResponse>> ListInternalAsyncCore(
-        AgenticListRequest request,
+    private async Task<WithRawResponse<AgenticAgentsListResponse>> ListInternalAsyncCore(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -83,10 +83,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticListResponse>(
+                        var responseData = JsonUtils.Deserialize<AgenticAgentsListResponse>(
                             responseBody
                         )!;
-                        return new WithRawResponse<AgenticListResponse>()
+                        return new WithRawResponse<AgenticAgentsListResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -175,8 +175,8 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgenticResponse>> CreateAsyncCore(
-        AgenticCreateRequest request,
+    private async Task<WithRawResponse<AgenticAgentsResponse>> CreateAsyncCore(
+        AgenticAgentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -212,8 +212,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticResponse>(responseBody)!;
-                        return new WithRawResponse<AgenticResponse>()
+                        var responseData = JsonUtils.Deserialize<AgenticAgentsResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<AgenticAgentsResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -344,7 +346,7 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgenticResponse>> GetAsyncCore(
+    private async Task<WithRawResponse<AgenticAgentsResponse>> GetAsyncCore(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -382,8 +384,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticResponse>(responseBody)!;
-                        return new WithRawResponse<AgenticResponse>()
+                        var responseData = JsonUtils.Deserialize<AgenticAgentsResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<AgenticAgentsResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -598,9 +602,9 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgenticResponse>> UpdateAsyncCore(
+    private async Task<WithRawResponse<AgenticAgentsResponse>> UpdateAsyncCore(
         string agentId,
-        AgenticPatchRequest request,
+        AgenticAgentsPatchRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -639,8 +643,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticResponse>(responseBody)!;
-                        return new WithRawResponse<AgenticResponse>()
+                        var responseData = JsonUtils.Deserialize<AgenticAgentsResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<AgenticAgentsResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -779,15 +785,15 @@ public partial class AgentsClient : IAgentsClient
     /// </summary>
     /// <example><code>
     /// await client.Agentic.Agents.ListAsync(
-    ///     new AgenticListRequest
+    ///     new AgenticAgentsListRequest
     ///     {
     ///         Label = new List&lt;string&gt;() { "team=coding" },
     ///         Q = "coder",
     ///     }
     /// );
     /// </code></example>
-    public async Task<Pager<AgenticResponse>> ListAsync(
-        AgenticListRequest request,
+    public async Task<Pager<AgenticAgentsResponse>> ListAsync(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -800,11 +806,11 @@ public partial class AgentsClient : IAgentsClient
                     request = request with { };
                 }
                 var pager = await CursorPager<
-                    AgenticListRequest,
+                    AgenticAgentsListRequest,
                     RequestOptions?,
-                    AgenticListResponse,
+                    AgenticAgentsListResponse,
                     string?,
-                    AgenticResponse
+                    AgenticAgentsResponse
                 >
                     .CreateInstanceAsync(
                         request,
@@ -831,14 +837,14 @@ public partial class AgentsClient : IAgentsClient
     /// </summary>
     /// <example><code>
     /// await client.Agentic.Agents.CreateAsync(
-    ///     new AgenticCreateRequest
+    ///     new AgenticAgentsCreateRequest
     ///     {
     ///         Name = "coder",
     ///         Description = "Returns ICD-10 codes for a clinical encounter.",
     ///         SystemPrompt = "Respond with only the ICD-10 code.",
     ///         Model = "corti-default",
-    ///         Visibility = AgenticVisibility.Private,
-    ///         Lifecycle = AgenticLifecycle.Persistent,
+    ///         Visibility = AgentsVisibility.Private,
+    ///         Lifecycle = AgentsLifecycle.Persistent,
     ///         Connectors = new List&lt;CommonConnectorCreateRequest&gt;()
     ///         {
     ///             new CommonRegistryConnectorCreate { Name = "@corti/coding-expert" },
@@ -896,13 +902,13 @@ public partial class AgentsClient : IAgentsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<AgenticResponse> CreateAsync(
-        AgenticCreateRequest request,
+    public WithRawResponseTask<AgenticAgentsResponse> CreateAsync(
+        AgenticAgentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticResponse>(
+        return new WithRawResponseTask<AgenticAgentsResponse>(
             CreateAsyncCore(request, options, cancellationToken)
         );
     }
@@ -910,13 +916,13 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// await client.Agentic.Agents.GetAsync("agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40");
     /// </code></example>
-    public WithRawResponseTask<AgenticResponse> GetAsync(
+    public WithRawResponseTask<AgenticAgentsResponse> GetAsync(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticResponse>(
+        return new WithRawResponseTask<AgenticAgentsResponse>(
             GetAsyncCore(agentId, options, cancellationToken)
         );
     }
@@ -944,7 +950,7 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// await client.Agentic.Agents.UpdateAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
-    ///     new AgenticPatchRequest
+    ///     new AgenticAgentsPatchRequest
     ///     {
     ///         Name = "coder-v2",
     ///         Connectors = new List&lt;CommonConnectorCreateRequest&gt;()
@@ -954,14 +960,14 @@ public partial class AgentsClient : IAgentsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<AgenticResponse> UpdateAsync(
+    public WithRawResponseTask<AgenticAgentsResponse> UpdateAsync(
         string agentId,
-        AgenticPatchRequest request,
+        AgenticAgentsPatchRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticResponse>(
+        return new WithRawResponseTask<AgenticAgentsResponse>(
             UpdateAsyncCore(agentId, request, options, cancellationToken)
         );
     }

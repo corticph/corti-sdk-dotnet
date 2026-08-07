@@ -3,43 +3,38 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgenticVisibilitySerializer))]
-public enum AgenticVisibility
+[JsonConverter(typeof(AgentsLifecycleSerializer))]
+public enum AgentsLifecycle
 {
-    [EnumMember(Value = "private")]
-    Private,
+    [EnumMember(Value = "ephemeral")]
+    Ephemeral,
 
-    [EnumMember(Value = "unlisted")]
-    Unlisted,
-
-    [EnumMember(Value = "public")]
-    Public,
+    [EnumMember(Value = "persistent")]
+    Persistent,
 }
 
-internal class AgenticVisibilitySerializer
-    : global::System.Text.Json.Serialization.JsonConverter<AgenticVisibility>
+internal class AgentsLifecycleSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsLifecycle>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        AgenticVisibility
+        AgentsLifecycle
     > _stringToEnum = new()
     {
-        { "private", AgenticVisibility.Private },
-        { "unlisted", AgenticVisibility.Unlisted },
-        { "public", AgenticVisibility.Public },
+        { "ephemeral", AgentsLifecycle.Ephemeral },
+        { "persistent", AgentsLifecycle.Persistent },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        AgenticVisibility,
+        AgentsLifecycle,
         string
     > _enumToString = new()
     {
-        { AgenticVisibility.Private, "private" },
-        { AgenticVisibility.Unlisted, "unlisted" },
-        { AgenticVisibility.Public, "public" },
+        { AgentsLifecycle.Ephemeral, "ephemeral" },
+        { AgentsLifecycle.Persistent, "persistent" },
     };
 
-    public override AgenticVisibility Read(
+    public override AgentsLifecycle Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -53,7 +48,7 @@ internal class AgenticVisibilitySerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticVisibility value,
+        AgentsLifecycle value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -62,7 +57,7 @@ internal class AgenticVisibilitySerializer
         );
     }
 
-    public override AgenticVisibility ReadAsPropertyName(
+    public override AgentsLifecycle ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -78,7 +73,7 @@ internal class AgenticVisibilitySerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticVisibility value,
+        AgentsLifecycle value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

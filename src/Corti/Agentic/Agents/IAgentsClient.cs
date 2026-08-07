@@ -11,8 +11,8 @@ public partial interface IAgentsClient
     /// ID instead); `public` agents are listed tenant-wide.
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
-    Task<Pager<AgenticResponse>> ListAsync(
-        AgenticListRequest request,
+    Task<Pager<AgenticAgentsResponse>> ListAsync(
+        AgenticAgentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -20,13 +20,13 @@ public partial interface IAgentsClient
     /// <summary>
     /// Creates a new agent. The server assigns the UUIDv7 `id`.
     /// </summary>
-    WithRawResponseTask<AgenticResponse> CreateAsync(
-        AgenticCreateRequest request,
+    WithRawResponseTask<AgenticAgentsResponse> CreateAsync(
+        AgenticAgentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
-    WithRawResponseTask<AgenticResponse> GetAsync(
+    WithRawResponseTask<AgenticAgentsResponse> GetAsync(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -46,9 +46,9 @@ public partial interface IAgentsClient
     /// Partially updates an agent using JSON Merge Patch (RFC 7386).
     /// Omitted fields are unchanged; `null` clears a field; arrays replace.
     /// </summary>
-    WithRawResponseTask<AgenticResponse> UpdateAsync(
+    WithRawResponseTask<AgenticAgentsResponse> UpdateAsync(
         string agentId,
-        AgenticPatchRequest request,
+        AgenticAgentsPatchRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

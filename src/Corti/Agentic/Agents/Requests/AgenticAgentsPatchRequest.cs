@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti.Agentic;
 
 [Serializable]
-public record AgenticPatchRequest
+public record AgenticAgentsPatchRequest
 {
     /// <summary>
     /// New agent name.
@@ -32,10 +32,10 @@ public record AgenticPatchRequest
     public string? Model { get; set; }
 
     [JsonPropertyName("visibility")]
-    public AgenticVisibility? Visibility { get; set; }
+    public AgentsVisibility? Visibility { get; set; }
 
     [JsonPropertyName("lifecycle")]
-    public AgenticLifecycle? Lifecycle { get; set; }
+    public AgentsLifecycle? Lifecycle { get; set; }
 
     /// <summary>
     /// Replacement connector list; `null` clears connectors.
