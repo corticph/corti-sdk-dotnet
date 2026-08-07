@@ -8,7 +8,7 @@ namespace Corti;
 /// A page of agents.
 /// </summary>
 [Serializable]
-public record AgenticAgentsListResponse : IJsonOnDeserialized
+public record AgentsListResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -18,8 +18,7 @@ public record AgenticAgentsListResponse : IJsonOnDeserialized
     /// Agents on the current page.
     /// </summary>
     [JsonPropertyName("agents")]
-    public IEnumerable<AgenticAgentsResponse> Agents { get; set; } =
-        new List<AgenticAgentsResponse>();
+    public IEnumerable<AgentsResponse> Agents { get; set; } = new List<AgentsResponse>();
 
     [JsonPropertyName("nextPageToken")]
     public string? NextPageToken { get; set; }

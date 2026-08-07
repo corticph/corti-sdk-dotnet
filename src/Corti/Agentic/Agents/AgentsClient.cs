@@ -27,19 +27,19 @@ public partial class AgentsClient : IAgentsClient
     /// ID instead); `public` agents are listed tenant-wide.
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
-    private WithRawResponseTask<AgenticAgentsListResponse> ListInternalAsync(
-        AgenticAgentsListRequest request,
+    private WithRawResponseTask<AgentsListResponse> ListInternalAsync(
+        AgentsListParams request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticAgentsListResponse>(
+        return new WithRawResponseTask<AgentsListResponse>(
             ListInternalAsyncCore(request, options, cancellationToken)
         );
     }
 
-    private async Task<WithRawResponse<AgenticAgentsListResponse>> ListInternalAsyncCore(
-        AgenticAgentsListRequest request,
+    private async Task<WithRawResponse<AgentsListResponse>> ListInternalAsyncCore(
+        AgentsListParams request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -83,10 +83,8 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticAgentsListResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<AgenticAgentsListResponse>()
+                        var responseData = JsonUtils.Deserialize<AgentsListResponse>(responseBody)!;
+                        return new WithRawResponse<AgentsListResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -175,6 +173,175 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
+    private async Task<WithRawResponse<AgentsResponse>> CreateAsyncCore(
+        AgentsCreateRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Post,
+                            Path = "agentic/agents",
+                            Body = request,
+                            Headers = _headers,
+                            ContentType = "application/json",
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<AgentsResponse>(responseBody)!;
+                        return new WithRawResponse<AgentsResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 401:
+                                throw new UnauthorizedError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 403:
+                                throw new ForbiddenError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 409:
+                                throw new ConflictError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 422:
+                                throw new UnprocessableEntityError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
     /// <summary>
     /// Lists agents visible to the caller. `private` agents are visible only to
     /// their creator/service principal; `unlisted` agents are omitted (fetch by
@@ -183,15 +350,15 @@ public partial class AgentsClient : IAgentsClient
     /// </summary>
     /// <example><code>
     /// await client.Agentic.Agents.ListAsync(
-    ///     new AgenticAgentsListRequest
+    ///     new AgentsListParams
     ///     {
     ///         Label = new List&lt;string&gt;() { "team=coding" },
     ///         Q = "coder",
     ///     }
     /// );
     /// </code></example>
-    public async Task<Pager<AgenticAgentsResponse>> ListAsync(
-        AgenticAgentsListRequest request,
+    public async Task<Pager<AgentsResponse>> ListAsync(
+        AgentsListParams request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -204,11 +371,11 @@ public partial class AgentsClient : IAgentsClient
                     request = request with { };
                 }
                 var pager = await CursorPager<
-                    AgenticAgentsListRequest,
+                    AgentsListParams,
                     RequestOptions?,
-                    AgenticAgentsListResponse,
+                    AgentsListResponse,
                     string?,
-                    AgenticAgentsResponse
+                    AgentsResponse
                 >
                     .CreateInstanceAsync(
                         request,
@@ -228,5 +395,86 @@ public partial class AgentsClient : IAgentsClient
                 return pager;
             })
             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Creates a new agent. The server assigns the UUIDv7 `id`.
+    /// </summary>
+    /// <example><code>
+    /// await client.Agentic.Agents.CreateAsync(
+    ///     new AgentsCreateRequest
+    ///     {
+    ///         Name = "coder",
+    ///         Description = "Returns ICD-10 codes for a clinical encounter.",
+    ///         SystemPrompt = "Respond with only the ICD-10 code.",
+    ///         Model = "corti-default",
+    ///         Visibility = AgentsVisibility.Private,
+    ///         Lifecycle = AgentsLifecycle.Persistent,
+    ///         Connectors = new List&lt;CommonConnectorCreateRequest&gt;()
+    ///         {
+    ///             new CommonRegistryConnectorCreate { Name = "@corti/coding-expert" },
+    ///             new CommonMcpConnectorCreate
+    ///             {
+    ///                 Name = "policybot",
+    ///                 Url = "https://mcp.example.com",
+    ///                 Auth = new CommonConnectorAuth
+    ///                 {
+    ///                     Type = CommonConnectorAuthType.Oauth2,
+    ///                     Scope = "read:policies",
+    ///                     RedirectUrl = "https://app.corti.ai/oauth/callback",
+    ///                 },
+    ///             },
+    ///             new CommonSchemaConnectorCreate
+    ///             {
+    ///                 Name = "submit_code",
+    ///                 Description =
+    ///                     "Submit the final ICD-10 code for the encounter along with a confidence score.",
+    ///                 Schema = new Dictionary&lt;string, object?&gt;()
+    ///                 {
+    ///                     { "type", "object" },
+    ///                     {
+    ///                         "properties",
+    ///                         new Dictionary&lt;object, object?&gt;()
+    ///                         {
+    ///                             {
+    ///                                 "code",
+    ///                                 new Dictionary&lt;object, object?&gt;()
+    ///                                 {
+    ///                                     { "description", "The selected ICD-10 code." },
+    ///                                     { "type", "string" },
+    ///                                 }
+    ///                             },
+    ///                             {
+    ///                                 "confidence",
+    ///                                 new Dictionary&lt;object, object?&gt;()
+    ///                                 {
+    ///                                     { "maximum", 1 },
+    ///                                     { "minimum", 0 },
+    ///                                     { "type", "number" },
+    ///                                 }
+    ///                             },
+    ///                         }
+    ///                     },
+    ///                     {
+    ///                         "required",
+    ///                         new List&lt;object?&gt;() { "code" }
+    ///                     },
+    ///                 },
+    ///                 Transition = CommonSchemaConnectorCreateTransition.Complete,
+    ///             },
+    ///         },
+    ///         Labels = new Dictionary&lt;string, string&gt;() { { "team", "coding" }, { "env", "prod" } },
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<AgentsResponse> CreateAsync(
+        AgentsCreateRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<AgentsResponse>(
+            CreateAsyncCore(request, options, cancellationToken)
+        );
     }
 }

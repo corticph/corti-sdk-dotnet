@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti.Agentic;
 
 [Serializable]
-public record AgenticAgentsListRequest
+public record AgentsListParams
 {
     /// <summary>
     /// Maximum number of items per page.
@@ -23,13 +23,13 @@ public record AgenticAgentsListRequest
     /// Filter by one or more visibility levels.
     /// </summary>
     [JsonIgnore]
-    public IEnumerable<AgenticVisibility> Visibility { get; set; } = new List<AgenticVisibility>();
+    public IEnumerable<AgentsVisibility> Visibility { get; set; } = new List<AgentsVisibility>();
 
     /// <summary>
     /// Filter by lifecycle.
     /// </summary>
     [JsonIgnore]
-    public AgenticLifecycle? Lifecycle { get; set; }
+    public AgentsLifecycle? Lifecycle { get; set; }
 
     /// <summary>
     /// Filter by label equality, repeated `key=value` pairs (AND-combined).

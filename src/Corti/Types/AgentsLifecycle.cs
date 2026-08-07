@@ -3,8 +3,8 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgenticLifecycleSerializer))]
-public enum AgenticLifecycle
+[JsonConverter(typeof(AgentsLifecycleSerializer))]
+public enum AgentsLifecycle
 {
     [EnumMember(Value = "ephemeral")]
     Ephemeral,
@@ -13,28 +13,28 @@ public enum AgenticLifecycle
     Persistent,
 }
 
-internal class AgenticLifecycleSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<AgenticLifecycle>
+internal class AgentsLifecycleSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsLifecycle>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        AgenticLifecycle
+        AgentsLifecycle
     > _stringToEnum = new()
     {
-        { "ephemeral", AgenticLifecycle.Ephemeral },
-        { "persistent", AgenticLifecycle.Persistent },
+        { "ephemeral", AgentsLifecycle.Ephemeral },
+        { "persistent", AgentsLifecycle.Persistent },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        AgenticLifecycle,
+        AgentsLifecycle,
         string
     > _enumToString = new()
     {
-        { AgenticLifecycle.Ephemeral, "ephemeral" },
-        { AgenticLifecycle.Persistent, "persistent" },
+        { AgentsLifecycle.Ephemeral, "ephemeral" },
+        { AgentsLifecycle.Persistent, "persistent" },
     };
 
-    public override AgenticLifecycle Read(
+    public override AgentsLifecycle Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -48,7 +48,7 @@ internal class AgenticLifecycleSerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticLifecycle value,
+        AgentsLifecycle value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -57,7 +57,7 @@ internal class AgenticLifecycleSerializer
         );
     }
 
-    public override AgenticLifecycle ReadAsPropertyName(
+    public override AgentsLifecycle ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -73,7 +73,7 @@ internal class AgenticLifecycleSerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticLifecycle value,
+        AgentsLifecycle value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

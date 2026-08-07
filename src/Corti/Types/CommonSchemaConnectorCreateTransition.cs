@@ -3,43 +3,38 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgenticVisibilitySerializer))]
-public enum AgenticVisibility
+[JsonConverter(typeof(CommonSchemaConnectorCreateTransitionSerializer))]
+public enum CommonSchemaConnectorCreateTransition
 {
-    [EnumMember(Value = "private")]
-    Private,
+    [EnumMember(Value = "complete")]
+    Complete,
 
-    [EnumMember(Value = "unlisted")]
-    Unlisted,
-
-    [EnumMember(Value = "public")]
-    Public,
+    [EnumMember(Value = "input_required")]
+    InputRequired,
 }
 
-internal class AgenticVisibilitySerializer
-    : global::System.Text.Json.Serialization.JsonConverter<AgenticVisibility>
+internal class CommonSchemaConnectorCreateTransitionSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<CommonSchemaConnectorCreateTransition>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        AgenticVisibility
+        CommonSchemaConnectorCreateTransition
     > _stringToEnum = new()
     {
-        { "private", AgenticVisibility.Private },
-        { "unlisted", AgenticVisibility.Unlisted },
-        { "public", AgenticVisibility.Public },
+        { "complete", CommonSchemaConnectorCreateTransition.Complete },
+        { "input_required", CommonSchemaConnectorCreateTransition.InputRequired },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        AgenticVisibility,
+        CommonSchemaConnectorCreateTransition,
         string
     > _enumToString = new()
     {
-        { AgenticVisibility.Private, "private" },
-        { AgenticVisibility.Unlisted, "unlisted" },
-        { AgenticVisibility.Public, "public" },
+        { CommonSchemaConnectorCreateTransition.Complete, "complete" },
+        { CommonSchemaConnectorCreateTransition.InputRequired, "input_required" },
     };
 
-    public override AgenticVisibility Read(
+    public override CommonSchemaConnectorCreateTransition Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -53,7 +48,7 @@ internal class AgenticVisibilitySerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticVisibility value,
+        CommonSchemaConnectorCreateTransition value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -62,7 +57,7 @@ internal class AgenticVisibilitySerializer
         );
     }
 
-    public override AgenticVisibility ReadAsPropertyName(
+    public override CommonSchemaConnectorCreateTransition ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -78,7 +73,7 @@ internal class AgenticVisibilitySerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticVisibility value,
+        CommonSchemaConnectorCreateTransition value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

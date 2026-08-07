@@ -11,8 +11,17 @@ public partial interface IAgentsClient
     /// ID instead); `public` agents are listed tenant-wide.
     /// The `visibility`, `lifecycle`, `label`, and `q` filter parameters are accepted but not yet honored by the server; the response is unfiltered.
     /// </summary>
-    Task<Pager<AgenticAgentsResponse>> ListAsync(
-        AgenticAgentsListRequest request,
+    Task<Pager<AgentsResponse>> ListAsync(
+        AgentsListParams request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Creates a new agent. The server assigns the UUIDv7 `id`.
+    /// </summary>
+    WithRawResponseTask<AgentsResponse> CreateAsync(
+        AgentsCreateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
