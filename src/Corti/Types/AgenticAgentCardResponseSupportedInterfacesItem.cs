@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record AgenticAgentsAgentCardSupportedInterfacesItem : IJsonOnDeserialized
+public record AgenticAgentCardResponseSupportedInterfacesItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -15,14 +15,14 @@ public record AgenticAgentsAgentCardSupportedInterfacesItem : IJsonOnDeserialize
     /// A2A protocol binding type.
     /// </summary>
     [JsonPropertyName("protocolBinding")]
-    public required AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding ProtocolBinding { get; set; }
+    public required AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding ProtocolBinding { get; set; }
 
     /// <summary>
     /// A2A protocol version; always `1.0`.
     /// </summary>
     [JsonRequired]
     [JsonPropertyName("protocolVersion")]
-    public AgenticAgentsAgentCardSupportedInterfacesItem.ProtocolVersionLiteral ProtocolVersion { get;
+    public AgenticAgentCardResponseSupportedInterfacesItem.ProtocolVersionLiteral ProtocolVersion { get;
 #if NET5_0_OR_GREATER
         init;
 #else

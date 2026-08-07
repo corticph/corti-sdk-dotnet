@@ -4,28 +4,30 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-/// <summary>
-/// Agent capability flags (streaming, push notifications).
-/// </summary>
 [Serializable]
-public record AgenticAgentsAgentCardCapabilities : IJsonOnDeserialized
+public record AgenticAgentCardResponseSignaturesItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Whether the agent supports streaming responses.
+    /// Base64url-encoded protected JWS header.
     /// </summary>
-    [JsonPropertyName("streaming")]
-    public bool? Streaming { get; set; }
+    [JsonPropertyName("protected")]
+    public required string Protected { get; set; }
 
     /// <summary>
-    /// Whether the agent can push task updates to a client-supplied webhook.
-    /// **Future scope**: the `tasks/pushNotificationConfig/*` management endpoints are not yet implemented. Expect this to be `false` until they ship.
+    /// Unprotected JWS header values.
     /// </summary>
-    [JsonPropertyName("pushNotifications")]
-    public bool? PushNotifications { get; set; }
+    [JsonPropertyName("header")]
+    public Dictionary<string, object?>? Header { get; set; }
+
+    /// <summary>
+    /// Base64url-encoded signature.
+    /// </summary>
+    [JsonPropertyName("signature")]
+    public required string Signature { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

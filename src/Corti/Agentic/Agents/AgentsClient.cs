@@ -777,7 +777,7 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgenticAgentsAgentCard>> GetCardAsyncCore(
+    private async Task<WithRawResponse<AgenticAgentCardResponse>> GetCardAsyncCore(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -815,10 +815,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticAgentsAgentCard>(
+                        var responseData = JsonUtils.Deserialize<AgenticAgentCardResponse>(
                             responseBody
                         )!;
-                        return new WithRawResponse<AgenticAgentsAgentCard>()
+                        return new WithRawResponse<AgenticAgentCardResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -1110,13 +1110,13 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// await client.Agentic.Agents.GetCardAsync("agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40");
     /// </code></example>
-    public WithRawResponseTask<AgenticAgentsAgentCard> GetCardAsync(
+    public WithRawResponseTask<AgenticAgentCardResponse> GetCardAsync(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticAgentsAgentCard>(
+        return new WithRawResponseTask<AgenticAgentCardResponse>(
             GetCardAsyncCore(agentId, options, cancellationToken)
         );
     }

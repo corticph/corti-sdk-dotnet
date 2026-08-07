@@ -58,7 +58,7 @@ public partial interface IAgentsClient
     /// skills, and supported protocol interfaces. Served at the standard
     /// `.well-known` location for agent discovery.
     /// </summary>
-    WithRawResponseTask<AgenticAgentsAgentCard> GetCardAsync(
+    WithRawResponseTask<AgenticAgentCardResponse> GetCardAsync(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

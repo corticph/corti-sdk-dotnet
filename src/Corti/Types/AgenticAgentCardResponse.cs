@@ -8,7 +8,7 @@ namespace Corti;
 /// An A2A agent card describing capabilities, skills, and supported interfaces.
 /// </summary>
 [Serializable]
-public record AgenticAgentsAgentCard : IJsonOnDeserialized
+public record AgenticAgentCardResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -48,7 +48,7 @@ public record AgenticAgentsAgentCard : IJsonOnDeserialized
     /// Agent capability flags (streaming, push notifications).
     /// </summary>
     [JsonPropertyName("capabilities")]
-    public required AgenticAgentsAgentCardCapabilities Capabilities { get; set; }
+    public required AgenticAgentCardResponseCapabilities Capabilities { get; set; }
 
     /// <summary>
     /// Default input media types.
@@ -66,7 +66,7 @@ public record AgenticAgentsAgentCard : IJsonOnDeserialized
     /// Publishing organization and URL.
     /// </summary>
     [JsonPropertyName("provider")]
-    public AgenticAgentsAgentCardProvider? Provider { get; set; }
+    public AgenticAgentCardResponseProvider? Provider { get; set; }
 
     /// <summary>
     /// Security requirements for contacting the agent.
@@ -84,20 +84,20 @@ public record AgenticAgentsAgentCard : IJsonOnDeserialized
     /// JSON Web Signatures (JWS, RFC 7515) computed for this agent card.
     /// </summary>
     [JsonPropertyName("signatures")]
-    public IEnumerable<AgenticAgentsAgentCardSignaturesItem>? Signatures { get; set; }
+    public IEnumerable<AgenticAgentCardResponseSignaturesItem>? Signatures { get; set; }
 
     /// <summary>
     /// Skills the agent exposes.
     /// </summary>
     [JsonPropertyName("skills")]
-    public IEnumerable<AgenticAgentsAgentCardSkillsItem>? Skills { get; set; }
+    public IEnumerable<AgenticAgentCardResponseSkillsItem>? Skills { get; set; }
 
     /// <summary>
     /// A2A protocol bindings. v2 advertises protocolVersion `1.0` only.
     /// </summary>
     [JsonPropertyName("supportedInterfaces")]
-    public IEnumerable<AgenticAgentsAgentCardSupportedInterfacesItem> SupportedInterfaces { get; set; } =
-        new List<AgenticAgentsAgentCardSupportedInterfacesItem>();
+    public IEnumerable<AgenticAgentCardResponseSupportedInterfacesItem> SupportedInterfaces { get; set; } =
+        new List<AgenticAgentCardResponseSupportedInterfacesItem>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -3,8 +3,8 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgenticAgentsAgentCardSupportedInterfacesItemProtocolBindingSerializer))]
-public enum AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding
+[JsonConverter(typeof(AgenticAgentCardResponseSupportedInterfacesItemProtocolBindingSerializer))]
+public enum AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding
 {
     [EnumMember(Value = "JSONRPC")]
     Jsonrpc,
@@ -13,28 +13,28 @@ public enum AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding
     HttpJson,
 }
 
-internal class AgenticAgentsAgentCardSupportedInterfacesItemProtocolBindingSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding>
+internal class AgenticAgentCardResponseSupportedInterfacesItemProtocolBindingSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding
+        AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding
     > _stringToEnum = new()
     {
-        { "JSONRPC", AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding.Jsonrpc },
-        { "HTTP+JSON", AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding.HttpJson },
+        { "JSONRPC", AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding.Jsonrpc },
+        { "HTTP+JSON", AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding.HttpJson },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding,
+        AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding,
         string
     > _enumToString = new()
     {
-        { AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding.Jsonrpc, "JSONRPC" },
-        { AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding.HttpJson, "HTTP+JSON" },
+        { AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding.Jsonrpc, "JSONRPC" },
+        { AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding.HttpJson, "HTTP+JSON" },
     };
 
-    public override AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding Read(
+    public override AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -48,7 +48,7 @@ internal class AgenticAgentsAgentCardSupportedInterfacesItemProtocolBindingSeria
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding value,
+        AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -57,7 +57,7 @@ internal class AgenticAgentsAgentCardSupportedInterfacesItemProtocolBindingSeria
         );
     }
 
-    public override AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding ReadAsPropertyName(
+    public override AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -73,7 +73,7 @@ internal class AgenticAgentsAgentCardSupportedInterfacesItemProtocolBindingSeria
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticAgentsAgentCardSupportedInterfacesItemProtocolBinding value,
+        AgenticAgentCardResponseSupportedInterfacesItemProtocolBinding value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

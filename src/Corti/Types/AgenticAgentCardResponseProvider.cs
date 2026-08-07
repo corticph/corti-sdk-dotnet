@@ -4,30 +4,27 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
+/// <summary>
+/// Publishing organization and URL.
+/// </summary>
 [Serializable]
-public record AgenticAgentsAgentCardSignaturesItem : IJsonOnDeserialized
+public record AgenticAgentCardResponseProvider : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Base64url-encoded protected JWS header.
+    /// Publishing organization name.
     /// </summary>
-    [JsonPropertyName("protected")]
-    public required string Protected { get; set; }
+    [JsonPropertyName("organization")]
+    public string? Organization { get; set; }
 
     /// <summary>
-    /// Unprotected JWS header values.
+    /// Publishing organization URL.
     /// </summary>
-    [JsonPropertyName("header")]
-    public Dictionary<string, object?>? Header { get; set; }
-
-    /// <summary>
-    /// Base64url-encoded signature.
-    /// </summary>
-    [JsonPropertyName("signature")]
-    public required string Signature { get; set; }
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

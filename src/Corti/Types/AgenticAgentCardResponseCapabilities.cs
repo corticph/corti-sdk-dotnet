@@ -5,26 +5,27 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Publishing organization and URL.
+/// Agent capability flags (streaming, push notifications).
 /// </summary>
 [Serializable]
-public record AgenticAgentsAgentCardProvider : IJsonOnDeserialized
+public record AgenticAgentCardResponseCapabilities : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Publishing organization name.
+    /// Whether the agent supports streaming responses.
     /// </summary>
-    [JsonPropertyName("organization")]
-    public string? Organization { get; set; }
+    [JsonPropertyName("streaming")]
+    public bool? Streaming { get; set; }
 
     /// <summary>
-    /// Publishing organization URL.
+    /// Whether the agent can push task updates to a client-supplied webhook.
+    /// **Future scope**: the `tasks/pushNotificationConfig/*` management endpoints are not yet implemented. Expect this to be `false` until they ship.
     /// </summary>
-    [JsonPropertyName("url")]
-    public string? Url { get; set; }
+    [JsonPropertyName("pushNotifications")]
+    public bool? PushNotifications { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
