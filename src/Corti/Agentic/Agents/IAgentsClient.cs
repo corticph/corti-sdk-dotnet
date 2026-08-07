@@ -25,4 +25,31 @@ public partial interface IAgentsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    WithRawResponseTask<AgenticResponse> GetAsync(
+        string agentId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Deletes a `persistent` agent. `ephemeral` agents are expired in place.
+    /// Idempotent: deleting an already-deleted agent returns `204`.
+    /// </summary>
+    WithRawResponseTask DeleteAsync(
+        string agentId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Partially updates an agent using JSON Merge Patch (RFC 7386).
+    /// Omitted fields are unchanged; `null` clears a field; arrays replace.
+    /// </summary>
+    WithRawResponseTask<AgenticResponse> UpdateAsync(
+        string agentId,
+        AgenticPatchRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }
