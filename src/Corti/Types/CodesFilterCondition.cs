@@ -30,7 +30,7 @@ public record CodesFilterCondition : IJsonOnDeserialized
     /// Comparison value; type depends on `op`.
     /// </summary>
     [JsonPropertyName("value")]
-    public CodesFilterConditionValue? Value { get; set; }
+    public required CodesFilterConditionValue Value { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
