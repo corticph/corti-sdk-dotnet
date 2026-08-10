@@ -15,7 +15,7 @@ public record CodesFilterCondition : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The attribute to filter on, e.g. `code` (matches the `code` field on predicted codes), or a system-specific attribute such as `semantic_tag`.
+    /// The attribute to filter on, e.g. `code`.
     /// </summary>
     [JsonPropertyName("property")]
     public required string Property { get; set; }
