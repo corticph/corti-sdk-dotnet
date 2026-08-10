@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti.Agentic;
 
 [Serializable]
-public record AgenticAgentsGetUsageRequest
+public record AgenticAgentsUsageRequest
 {
     /// <summary>
     /// Inclusive start of the range, as an RFC 3339 timestamp (UTC).

@@ -402,21 +402,21 @@ public partial class ContextsClient : IContextsClient
     /// ordered newest-first and paginated; each page returns up to `pageSize`
     /// traces with their spans inlined.
     /// </summary>
-    private WithRawResponseTask<AgenticContextsTraceResponse> GetTraceInternalAsync(
+    private WithRawResponseTask<AgenticContextsTraceResponse> TraceInternalAsync(
         string contextId,
-        AgenticContextsGetTraceRequest request,
+        AgenticContextsTraceRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<AgenticContextsTraceResponse>(
-            GetTraceInternalAsyncCore(contextId, request, options, cancellationToken)
+            TraceInternalAsyncCore(contextId, request, options, cancellationToken)
         );
     }
 
-    private async Task<WithRawResponse<AgenticContextsTraceResponse>> GetTraceInternalAsyncCore(
+    private async Task<WithRawResponse<AgenticContextsTraceResponse>> TraceInternalAsyncCore(
         string contextId,
-        AgenticContextsGetTraceRequest request,
+        AgenticContextsTraceRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -655,14 +655,14 @@ public partial class ContextsClient : IContextsClient
     /// traces with their spans inlined.
     /// </summary>
     /// <example><code>
-    /// await client.Agentic.Contexts.GetTraceAsync(
+    /// await client.Agentic.Contexts.TraceAsync(
     ///     "ctx.0192f4c8-3d6b-7c4f-a02b-4d9e7f3c8b51",
-    ///     new AgenticContextsGetTraceRequest()
+    ///     new AgenticContextsTraceRequest()
     /// );
     /// </code></example>
-    public async Task<Pager<AgenticContextsTraceItem>> GetTraceAsync(
+    public async Task<Pager<AgenticContextsTraceItem>> TraceAsync(
         string contextId,
-        AgenticContextsGetTraceRequest request,
+        AgenticContextsTraceRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -675,7 +675,7 @@ public partial class ContextsClient : IContextsClient
                     request = request with { };
                 }
                 var pager = await CursorPager<
-                    AgenticContextsGetTraceRequest,
+                    AgenticContextsTraceRequest,
                     RequestOptions?,
                     AgenticContextsTraceResponse,
                     string?,
@@ -685,12 +685,7 @@ public partial class ContextsClient : IContextsClient
                         request,
                         options,
                         async (request, options, cancellationToken) =>
-                            await GetTraceInternalAsync(
-                                    contextId,
-                                    request,
-                                    options,
-                                    cancellationToken
-                                )
+                            await TraceInternalAsync(contextId, request, options, cancellationToken)
                                 .WithRawResponse(),
                         (request, cursor) =>
                         {

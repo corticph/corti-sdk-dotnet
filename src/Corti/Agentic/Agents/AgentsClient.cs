@@ -907,9 +907,9 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgentsUsageReportResponse>> GetUsageAsyncCore(
+    private async Task<WithRawResponse<AgentsUsageReportResponse>> UsageAsyncCore(
         string agentId,
-        AgenticAgentsGetUsageRequest request,
+        AgenticAgentsUsageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -1282,24 +1282,24 @@ public partial class AgentsClient : IAgentsClient
     /// range defaults to the last 30 days.
     /// </summary>
     /// <example><code>
-    /// await client.Agentic.Agents.GetUsageAsync(
+    /// await client.Agentic.Agents.UsageAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
-    ///     new AgenticAgentsGetUsageRequest
+    ///     new AgenticAgentsUsageRequest
     ///     {
     ///         From = new DateTime(2026, 05, 19, 00, 00, 00, 000),
     ///         To = new DateTime(2026, 05, 20, 00, 00, 00, 000),
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<AgentsUsageReportResponse> GetUsageAsync(
+    public WithRawResponseTask<AgentsUsageReportResponse> UsageAsync(
         string agentId,
-        AgenticAgentsGetUsageRequest request,
+        AgenticAgentsUsageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<AgentsUsageReportResponse>(
-            GetUsageAsyncCore(agentId, request, options, cancellationToken)
+            UsageAsyncCore(agentId, request, options, cancellationToken)
         );
     }
 }

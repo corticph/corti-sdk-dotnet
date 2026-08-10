@@ -43,9 +43,9 @@ public partial interface IContextsClient
     /// ordered newest-first and paginated; each page returns up to `pageSize`
     /// traces with their spans inlined.
     /// </summary>
-    Task<Pager<AgenticContextsTraceItem>> GetTraceAsync(
+    Task<Pager<AgenticContextsTraceItem>> TraceAsync(
         string contextId,
-        AgenticContextsGetTraceRequest request,
+        AgenticContextsTraceRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
