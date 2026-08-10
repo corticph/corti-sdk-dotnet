@@ -5,6 +5,8 @@ namespace Corti.Agentic;
 
 public partial interface IAgentsClient
 {
+    public Corti.Agentic.Agents.IConnectorsClient Connectors { get; }
+
     /// <summary>
     /// Lists agents visible to the caller. `private` agents are visible only to
     /// their creator/service principal; `unlisted` agents are omitted (fetch by
