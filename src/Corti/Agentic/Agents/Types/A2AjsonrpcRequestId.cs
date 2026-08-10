@@ -6,7 +6,7 @@ using Corti.Core;
 using global::System.Text.Json;
 using global::System.Text.Json.Serialization;
 
-namespace Corti.Agentic.Agents;
+namespace Corti.Agentic;
 
 [JsonConverter(typeof(A2AjsonrpcRequestId.JsonConverter))]
 [Serializable]

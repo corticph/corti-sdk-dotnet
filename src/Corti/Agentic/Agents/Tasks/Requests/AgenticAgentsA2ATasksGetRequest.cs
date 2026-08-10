@@ -1,28 +1,16 @@
 using Corti.Core;
 using global::System.Text.Json.Serialization;
 
-namespace Corti.Agentic.Agents.A2A;
+namespace Corti.Agentic.Agents;
 
 [Serializable]
-public record AgenticAgentsA2ATasksListRequest
+public record AgenticAgentsA2ATasksGetRequest
 {
     /// <summary>
-    /// Maximum number of items per page.
+    /// Cap the number of history messages returned.
     /// </summary>
     [JsonIgnore]
-    public int? PageSize { get; set; }
-
-    /// <summary>
-    /// Opaque cursor from a prior response's `nextPageToken`. Omit on the first request.
-    /// </summary>
-    [JsonIgnore]
-    public string? PageToken { get; set; }
-
-    /// <summary>
-    /// Restrict to tasks within this context.
-    /// </summary>
-    [JsonIgnore]
-    public string? ContextId { get; set; }
+    public int? HistoryLength { get; set; }
 
     /// <summary>
     /// A2A protocol version in `Major.Minor` form (A2A §3.6). Optional; defaults to `1.0` when absent. This surface implements `1.0` only. Patch versions MUST NOT be sent and are not considered during negotiation.

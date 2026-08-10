@@ -1,7 +1,7 @@
 using Corti;
 using Corti.Core;
 
-namespace Corti.Agentic.Agents.A2A;
+namespace Corti.Agentic.Agents;
 
 public partial interface ITasksClient
 {

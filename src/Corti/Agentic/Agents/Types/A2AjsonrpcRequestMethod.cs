@@ -1,7 +1,7 @@
 using global::System.Runtime.Serialization;
 using global::System.Text.Json.Serialization;
 
-namespace Corti.Agentic.Agents;
+namespace Corti.Agentic;
 
 [JsonConverter(typeof(A2AjsonrpcRequestMethodSerializer))]
 public enum A2AjsonrpcRequestMethod
