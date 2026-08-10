@@ -6,6 +6,7 @@ namespace Corti.Agentic.Contexts;
 
 public partial interface ITasksClient
 {
+    public IArtifactsClient Artifacts { get; }
     public IFeedbackClient Feedback { get; }
     Task<Pager<CommonTaskResponse>> ListAsync(
         string contextId,

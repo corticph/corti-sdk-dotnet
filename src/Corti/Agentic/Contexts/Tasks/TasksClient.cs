@@ -14,6 +14,7 @@ public partial class TasksClient : ITasksClient
         try
         {
             _client = client;
+            Artifacts = new ArtifactsClient(_client);
             Feedback = new FeedbackClient(_client);
         }
         catch (Exception ex)
@@ -22,6 +23,8 @@ public partial class TasksClient : ITasksClient
             throw;
         }
     }
+
+    public IArtifactsClient Artifacts { get; }
 
     public IFeedbackClient Feedback { get; }
 
