@@ -1,10 +1,12 @@
 using Corti;
+using Corti.Agentic.Agents;
 using Corti.Core;
 
 namespace Corti.Agentic;
 
 public partial interface IAgentsClient
 {
+    public IA2AClient A2A { get; }
     public Corti.Agentic.Agents.IConnectorsClient Connectors { get; }
 
     /// <summary>
@@ -60,7 +62,7 @@ public partial interface IAgentsClient
     /// skills, and supported protocol interfaces. Served at the standard
     /// `.well-known` location for agent discovery.
     /// </summary>
-    WithRawResponseTask<AgenticAgentCardResponse> GetCardAsync(
+    WithRawResponseTask<AgenticAgentCardResponse> CardAsync(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

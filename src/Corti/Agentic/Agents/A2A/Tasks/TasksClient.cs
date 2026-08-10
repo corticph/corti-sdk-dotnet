@@ -1,19 +1,20 @@
 using Corti;
 using Corti.Core;
+using global::System.Net.ServerSentEvents;
+using global::System.Runtime.CompilerServices;
 using global::System.Text.Json;
 
-namespace Corti.Agentic;
+namespace Corti.Agentic.Agents.A2A;
 
-public partial class ContextsClient : IContextsClient
+public partial class TasksClient : ITasksClient
 {
     private readonly RawClient _client;
 
-    internal ContextsClient(RawClient client)
+    internal TasksClient(RawClient client)
     {
         try
         {
             _client = client;
-            Tasks = new Corti.Agentic.Contexts.TasksClient(_client);
         }
         catch (Exception ex)
         {
@@ -22,25 +23,21 @@ public partial class ContextsClient : IContextsClient
         }
     }
 
-    public Corti.Agentic.Contexts.ITasksClient Tasks { get; }
-
-    /// <summary>
-    /// Lists contexts matching the filters.
-    /// **Future scope**: not yet implemented; the server currently returns an empty page and ignores all parameters.
-    /// </summary>
-    private WithRawResponseTask<AgenticContextsListResponse> ListInternalAsync(
-        AgenticContextsListRequest request,
+    private WithRawResponseTask<CommonTaskListResponse> ListInternalAsync(
+        string agentId,
+        AgenticAgentsA2ATasksListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticContextsListResponse>(
-            ListInternalAsyncCore(request, options, cancellationToken)
+        return new WithRawResponseTask<CommonTaskListResponse>(
+            ListInternalAsyncCore(agentId, request, options, cancellationToken)
         );
     }
 
-    private async Task<WithRawResponse<AgenticContextsListResponse>> ListInternalAsyncCore(
-        AgenticContextsListRequest request,
+    private async Task<WithRawResponse<CommonTaskListResponse>> ListInternalAsyncCore(
+        string agentId,
+        AgenticAgentsA2ATasksListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -48,15 +45,14 @@ public partial class ContextsClient : IContextsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 5)
-                    .Add("agentId", request.AgentId)
-                    .Add("from", request.From)
-                    .Add("to", request.To)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
                     .Add("pageSize", request.PageSize)
                     .Add("pageToken", request.PageToken)
+                    .Add("contextId", request.ContextId)
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("A2A-Version", request.A2AVersion)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -68,7 +64,10 @@ public partial class ContextsClient : IContextsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
-                            Path = "agentic/contexts",
+                            Path = string.Format(
+                                "agentic/agents/{0}/a2a/tasks",
+                                ValueConvert.ToPathParameterString(agentId)
+                            ),
                             QueryString = _queryString,
                             Headers = _headers,
                             Options = options,
@@ -83,10 +82,10 @@ public partial class ContextsClient : IContextsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticContextsListResponse>(
+                        var responseData = JsonUtils.Deserialize<CommonTaskListResponse>(
                             responseBody
                         )!;
-                        return new WithRawResponse<AgenticContextsListResponse>()
+                        return new WithRawResponse<CommonTaskListResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -161,9 +160,10 @@ public partial class ContextsClient : IContextsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgenticContextsDetailResponse>> GetAsyncCore(
-        string contextId,
-        AgenticContextsGetRequest request,
+    private async Task<WithRawResponse<CommonTaskResponse>> GetAsyncCore(
+        string agentId,
+        string taskId,
+        AgenticAgentsA2ATasksGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -176,6 +176,7 @@ public partial class ContextsClient : IContextsClient
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add("A2A-Version", request.A2AVersion)
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
                     .Add(options?.AdditionalHeaders)
@@ -188,8 +189,9 @@ public partial class ContextsClient : IContextsClient
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
                             Path = string.Format(
-                                "agentic/contexts/{0}",
-                                ValueConvert.ToPathParameterString(contextId)
+                                "agentic/agents/{0}/a2a/tasks/{1}",
+                                ValueConvert.ToPathParameterString(agentId),
+                                ValueConvert.ToPathParameterString(taskId)
                             ),
                             QueryString = _queryString,
                             Headers = _headers,
@@ -205,10 +207,8 @@ public partial class ContextsClient : IContextsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticContextsDetailResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<AgenticContextsDetailResponse>()
+                        var responseData = JsonUtils.Deserialize<CommonTaskResponse>(responseBody)!;
+                        return new WithRawResponse<CommonTaskResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -297,8 +297,9 @@ public partial class ContextsClient : IContextsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<RawResponse> DeleteAsyncCore(
-        string contextId,
+    private async Task<WithRawResponse<CommonTaskResponse>> CancelAsyncCore(
+        string agentId,
+        string taskId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -317,10 +318,11 @@ public partial class ContextsClient : IContextsClient
                         new JsonRequest
                         {
                             BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Delete,
+                            Method = HttpMethod.Post,
                             Path = string.Format(
-                                "agentic/contexts/{0}",
-                                ValueConvert.ToPathParameterString(contextId)
+                                "agentic/agents/{0}/a2a/tasks/{1}:cancel",
+                                ValueConvert.ToPathParameterString(agentId),
+                                ValueConvert.ToPathParameterString(taskId)
                             ),
                             Headers = _headers,
                             Options = options,
@@ -330,11 +332,161 @@ public partial class ContextsClient : IContextsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    return new Corti.RawResponse()
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
                     {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        var responseData = JsonUtils.Deserialize<CommonTaskResponse>(responseBody)!;
+                        return new WithRawResponse<CommonTaskResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 401:
+                                throw new UnauthorizedError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 409:
+                                throw new ConflictError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
+    private async Task<
+        WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>
+    > SubscribeAsyncCore(
+        string agentId,
+        string taskId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Post,
+                            Path = string.Format(
+                                "agentic/agents/{0}/a2a/tasks/{1}:subscribe",
+                                ValueConvert.ToPathParameterString(agentId),
+                                ValueConvert.ToPathParameterString(taskId)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    return new WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>()
+                    {
+                        Data = SubscribeAsyncBody(response, cancellationToken),
+                        RawResponse = new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        },
                     };
                 }
                 {
@@ -395,184 +547,49 @@ public partial class ContextsClient : IContextsClient
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Returns the execution traces for the context — LLM calls, tool
-    /// executions, and token usage — in OpenInference format. Traces are
-    /// ordered newest-first and paginated; each page returns up to `pageSize`
-    /// traces with their spans inlined.
-    /// </summary>
-    private WithRawResponseTask<AgenticContextsTraceResponse> TraceInternalAsync(
-        string contextId,
-        AgenticContextsTraceRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<AgenticContextsTraceResponse>(
-            TraceInternalAsyncCore(contextId, request, options, cancellationToken)
-        );
-    }
-
-    private async Task<WithRawResponse<AgenticContextsTraceResponse>> TraceInternalAsyncCore(
-        string contextId,
-        AgenticContextsTraceRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
+    private async IAsyncEnumerable<A2AStreamEventResponse> SubscribeAsyncBody(
+        ApiResponse response,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default
     )
     {
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 2)
-                    .Add("pageSize", request.PageSize)
-                    .Add("pageToken", request.PageToken)
-                    .MergeAdditional(options?.AdditionalQueryParameters)
-                    .Build();
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Get,
-                            Path = string.Format(
-                                "agentic/contexts/{0}/trace",
-                                ValueConvert.ToPathParameterString(contextId)
-                            ),
-                            QueryString = _queryString,
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
+                await foreach (
+                    var item in SseParser
+                        .Create(await response.Raw.Content.ReadAsStreamAsync())
+                        .EnumerateAsync(cancellationToken)
+                )
                 {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
+                    if (!string.IsNullOrEmpty(item.Data))
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticContextsTraceResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<AgenticContextsTraceResponse>()
+                        A2AStreamEventResponse? result;
+                        try
                         {
-                            Data = responseData,
-                            RawResponse = new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e,
-                            rawResponse: new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            }
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 400:
-                                throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 401:
-                                throw new UnauthorizedError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 404:
-                                throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
+                            result = JsonUtils.Deserialize<A2AStreamEventResponse>(item.Data);
                         }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody,
-                        rawResponse: new Corti.RawResponse()
+                        catch (JsonException)
                         {
-                            StatusCode = response.Raw.StatusCode,
-                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            throw new CortiClientException(
+                                $"Unable to deserialize JSON response 'item.Data'"
+                            );
                         }
-                    );
+                        yield return result!;
+                    }
                 }
             })
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Lists contexts matching the filters.
-    /// **Future scope**: not yet implemented; the server currently returns an empty page and ignores all parameters.
-    /// </summary>
     /// <example><code>
-    /// await client.Agentic.Contexts.ListAsync(new AgenticContextsListRequest());
+    /// await client.Agentic.Agents.A2A.Tasks.ListAsync(
+    ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
+    ///     new AgenticAgentsA2ATasksListRequest { A2AVersion = "1.0" }
+    /// );
     /// </code></example>
-    public async Task<Pager<AgenticContext>> ListAsync(
-        AgenticContextsListRequest request,
+    public async Task<Pager<CommonTaskResponse>> ListAsync(
+        string agentId,
+        AgenticAgentsA2ATasksListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -585,24 +602,24 @@ public partial class ContextsClient : IContextsClient
                     request = request with { };
                 }
                 var pager = await CursorPager<
-                    AgenticContextsListRequest,
+                    AgenticAgentsA2ATasksListRequest,
                     RequestOptions?,
-                    AgenticContextsListResponse,
+                    CommonTaskListResponse,
                     string?,
-                    AgenticContext
+                    CommonTaskResponse
                 >
                     .CreateInstanceAsync(
                         request,
                         options,
                         async (request, options, cancellationToken) =>
-                            await ListInternalAsync(request, options, cancellationToken)
+                            await ListInternalAsync(agentId, request, options, cancellationToken)
                                 .WithRawResponse(),
                         (request, cursor) =>
                         {
                             request.PageToken = cursor;
                         },
                         response => response.NextPageToken,
-                        response => response.Contexts?.ToList(),
+                        response => response.Tasks?.ToList(),
                         cancellationToken
                     )
                     .ConfigureAwait(false);
@@ -611,92 +628,63 @@ public partial class ContextsClient : IContextsClient
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Returns the context's metadata together with its `tasks`, oldest first.
-    /// Each task carries its full message `history`; the user's prompt for a
-    /// task is the `ROLE_USER` message within that task's history (there is no
-    /// separate top-level message list).
-    /// </summary>
     /// <example><code>
-    /// await client.Agentic.Contexts.GetAsync(
-    ///     "ctx.0192f4c8-3d6b-7c4f-a02b-4d9e7f3c8b51",
-    ///     new AgenticContextsGetRequest()
+    /// await client.Agentic.Agents.A2A.Tasks.GetAsync(
+    ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
+    ///     "task.0192f4c8-4e7c-7d50-b13c-5eaf8a4d9c62",
+    ///     new AgenticAgentsA2ATasksGetRequest { A2AVersion = "1.0" }
     /// );
     /// </code></example>
-    public WithRawResponseTask<AgenticContextsDetailResponse> GetAsync(
-        string contextId,
-        AgenticContextsGetRequest request,
+    public WithRawResponseTask<CommonTaskResponse> GetAsync(
+        string agentId,
+        string taskId,
+        AgenticAgentsA2ATasksGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticContextsDetailResponse>(
-            GetAsyncCore(contextId, request, options, cancellationToken)
+        return new WithRawResponseTask<CommonTaskResponse>(
+            GetAsyncCore(agentId, taskId, request, options, cancellationToken)
         );
     }
 
     /// <example><code>
-    /// await client.Agentic.Contexts.DeleteAsync("ctx.0192f4c8-3d6b-7c4f-a02b-4d9e7f3c8b51");
+    /// await client.Agentic.Agents.A2A.Tasks.CancelAsync(
+    ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
+    ///     "task.0192f4c8-4e7c-7d50-b13c-5eaf8a4d9c62"
+    /// );
     /// </code></example>
-    public WithRawResponseTask DeleteAsync(
-        string contextId,
+    public WithRawResponseTask<CommonTaskResponse> CancelAsync(
+        string agentId,
+        string taskId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(DeleteAsyncCore(contextId, options, cancellationToken));
+        return new WithRawResponseTask<CommonTaskResponse>(
+            CancelAsyncCore(agentId, taskId, options, cancellationToken)
+        );
     }
 
     /// <summary>
-    /// Returns the execution traces for the context — LLM calls, tool
-    /// executions, and token usage — in OpenInference format. Traces are
-    /// ordered newest-first and paginated; each page returns up to `pageSize`
-    /// traces with their spans inlined.
+    /// Resubscribe to an in-flight task's event stream over SSE.
     /// </summary>
     /// <example><code>
-    /// await client.Agentic.Contexts.TraceAsync(
-    ///     "ctx.0192f4c8-3d6b-7c4f-a02b-4d9e7f3c8b51",
-    ///     new AgenticContextsTraceRequest()
+    /// client.Agentic.Agents.A2A.Tasks.SubscribeAsync(
+    ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
+    ///     "task.0192f4c8-4e7c-7d50-b13c-5eaf8a4d9c62"
     /// );
     /// </code></example>
-    public async Task<Pager<AgenticContextsTraceItem>> TraceAsync(
-        string contextId,
-        AgenticContextsTraceRequest request,
+    public WithRawResponseStream<A2AStreamEventResponse> SubscribeAsync(
+        string agentId,
+        string taskId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                if (request is not null)
-                {
-                    request = request with { };
-                }
-                var pager = await CursorPager<
-                    AgenticContextsTraceRequest,
-                    RequestOptions?,
-                    AgenticContextsTraceResponse,
-                    string?,
-                    AgenticContextsTraceItem
-                >
-                    .CreateInstanceAsync(
-                        request,
-                        options,
-                        async (request, options, cancellationToken) =>
-                            await TraceInternalAsync(contextId, request, options, cancellationToken)
-                                .WithRawResponse(),
-                        (request, cursor) =>
-                        {
-                            request.PageToken = cursor;
-                        },
-                        response => response.NextPageToken,
-                        response => response.Traces?.ToList(),
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                return pager;
-            })
-            .ConfigureAwait(false);
+        return new WithRawResponseStream<A2AStreamEventResponse>(
+            SubscribeAsyncCore(agentId, taskId, options, cancellationToken),
+            cancellationToken
+        );
     }
 }

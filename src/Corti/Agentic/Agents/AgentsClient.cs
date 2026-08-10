@@ -1,4 +1,5 @@
 using Corti;
+using Corti.Agentic.Agents;
 using Corti.Core;
 using global::System.Text.Json;
 
@@ -13,6 +14,7 @@ public partial class AgentsClient : IAgentsClient
         try
         {
             _client = client;
+            A2A = new A2AClient(_client);
             Connectors = new Corti.Agentic.Agents.ConnectorsClient(_client);
         }
         catch (Exception ex)
@@ -21,6 +23,8 @@ public partial class AgentsClient : IAgentsClient
             throw;
         }
     }
+
+    public IA2AClient A2A { get; }
 
     public Corti.Agentic.Agents.IConnectorsClient Connectors { get; }
 
@@ -780,7 +784,7 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgenticAgentCardResponse>> GetCardAsyncCore(
+    private async Task<WithRawResponse<AgenticAgentCardResponse>> CardAsyncCore(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -1263,16 +1267,16 @@ public partial class AgentsClient : IAgentsClient
     /// `.well-known` location for agent discovery.
     /// </summary>
     /// <example><code>
-    /// await client.Agentic.Agents.GetCardAsync("agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40");
+    /// await client.Agentic.Agents.CardAsync("agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40");
     /// </code></example>
-    public WithRawResponseTask<AgenticAgentCardResponse> GetCardAsync(
+    public WithRawResponseTask<AgenticAgentCardResponse> CardAsync(
         string agentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<AgenticAgentCardResponse>(
-            GetCardAsyncCore(agentId, options, cancellationToken)
+            CardAsyncCore(agentId, options, cancellationToken)
         );
     }
 

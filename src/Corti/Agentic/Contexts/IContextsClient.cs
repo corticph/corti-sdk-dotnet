@@ -1,12 +1,11 @@
 using Corti;
-using Corti.Agentic.Contexts;
 using Corti.Core;
 
 namespace Corti.Agentic;
 
 public partial interface IContextsClient
 {
-    public ITasksClient Tasks { get; }
+    public Corti.Agentic.Contexts.ITasksClient Tasks { get; }
 
     /// <summary>
     /// Lists contexts matching the filters.
