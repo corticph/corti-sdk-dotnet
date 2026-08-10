@@ -5,20 +5,27 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// List of available LLM models.
+/// A single trace with its inlined OpenInference spans.
 /// </summary>
 [Serializable]
-public record AgenticModelsListResponse : IJsonOnDeserialized
+public record AgenticContextsTraceItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Available models.
+    /// The trace-level record.
     /// </summary>
-    [JsonPropertyName("data")]
-    public IEnumerable<AgenticModel> Data { get; set; } = new List<AgenticModel>();
+    [JsonPropertyName("trace")]
+    public required AgenticContextsTraceItemTrace Trace { get; set; }
+
+    /// <summary>
+    /// Spans in this trace, ordered by start time.
+    /// </summary>
+    [JsonPropertyName("spans")]
+    public IEnumerable<AgenticContextsOpenInferenceSpan> Spans { get; set; } =
+        new List<AgenticContextsOpenInferenceSpan>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

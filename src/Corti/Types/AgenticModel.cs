@@ -8,7 +8,7 @@ namespace Corti;
 /// An LLM model available on the gateway.
 /// </summary>
 [Serializable]
-public record AgenticModelsModel : IJsonOnDeserialized
+public record AgenticModel : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

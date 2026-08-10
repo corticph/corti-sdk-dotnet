@@ -5,20 +5,26 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// List of available LLM models.
+/// A page of contexts.
 /// </summary>
 [Serializable]
-public record AgenticModelsListResponse : IJsonOnDeserialized
+public record AgenticContextsListResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Available models.
+    /// Contexts on the current page.
     /// </summary>
-    [JsonPropertyName("data")]
-    public IEnumerable<AgenticModel> Data { get; set; } = new List<AgenticModel>();
+    [JsonPropertyName("contexts")]
+    public IEnumerable<AgenticContext> Contexts { get; set; } = new List<AgenticContext>();
+
+    [JsonPropertyName("nextPageToken")]
+    public string? NextPageToken { get; set; }
+
+    [JsonPropertyName("totalSize")]
+    public int? TotalSize { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

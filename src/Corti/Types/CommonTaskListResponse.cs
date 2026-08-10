@@ -5,20 +5,32 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// List of available LLM models.
+/// A page of tasks.
 /// </summary>
 [Serializable]
-public record AgenticModelsListResponse : IJsonOnDeserialized
+public record CommonTaskListResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Available models.
+    /// The page size used for this response.
     /// </summary>
-    [JsonPropertyName("data")]
-    public IEnumerable<AgenticModel> Data { get; set; } = new List<AgenticModel>();
+    [JsonPropertyName("pageSize")]
+    public int? PageSize { get; set; }
+
+    /// <summary>
+    /// Tasks on the current page.
+    /// </summary>
+    [JsonPropertyName("tasks")]
+    public IEnumerable<CommonTaskResponse> Tasks { get; set; } = new List<CommonTaskResponse>();
+
+    [JsonPropertyName("nextPageToken")]
+    public string? NextPageToken { get; set; }
+
+    [JsonPropertyName("totalSize")]
+    public int? TotalSize { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

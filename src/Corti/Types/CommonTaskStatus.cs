@@ -5,20 +5,26 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// List of available LLM models.
+/// A task's current state, with an optional status message and timestamp.
 /// </summary>
 [Serializable]
-public record AgenticModelsListResponse : IJsonOnDeserialized
+public record CommonTaskStatus : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    [JsonPropertyName("state")]
+    public required CommonTaskState State { get; set; }
+
+    [JsonPropertyName("message")]
+    public CommonMessage? Message { get; set; }
+
     /// <summary>
-    /// Available models.
+    /// When the status was last updated.
     /// </summary>
-    [JsonPropertyName("data")]
-    public IEnumerable<AgenticModel> Data { get; set; } = new List<AgenticModel>();
+    [JsonPropertyName("timestamp")]
+    public DateTime? Timestamp { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
