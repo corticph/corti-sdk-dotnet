@@ -3,8 +3,8 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(AgenticUsageGranularitySerializer))]
-public enum AgenticUsageGranularity
+[JsonConverter(typeof(AgentsUsageGranularitySerializer))]
+public enum AgentsUsageGranularity
 {
     [EnumMember(Value = "minute")]
     Minute,
@@ -19,32 +19,32 @@ public enum AgenticUsageGranularity
     Week,
 }
 
-internal class AgenticUsageGranularitySerializer
-    : global::System.Text.Json.Serialization.JsonConverter<AgenticUsageGranularity>
+internal class AgentsUsageGranularitySerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsUsageGranularity>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        AgenticUsageGranularity
+        AgentsUsageGranularity
     > _stringToEnum = new()
     {
-        { "minute", AgenticUsageGranularity.Minute },
-        { "hour", AgenticUsageGranularity.Hour },
-        { "day", AgenticUsageGranularity.Day },
-        { "week", AgenticUsageGranularity.Week },
+        { "minute", AgentsUsageGranularity.Minute },
+        { "hour", AgentsUsageGranularity.Hour },
+        { "day", AgentsUsageGranularity.Day },
+        { "week", AgentsUsageGranularity.Week },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        AgenticUsageGranularity,
+        AgentsUsageGranularity,
         string
     > _enumToString = new()
     {
-        { AgenticUsageGranularity.Minute, "minute" },
-        { AgenticUsageGranularity.Hour, "hour" },
-        { AgenticUsageGranularity.Day, "day" },
-        { AgenticUsageGranularity.Week, "week" },
+        { AgentsUsageGranularity.Minute, "minute" },
+        { AgentsUsageGranularity.Hour, "hour" },
+        { AgentsUsageGranularity.Day, "day" },
+        { AgentsUsageGranularity.Week, "week" },
     };
 
-    public override AgenticUsageGranularity Read(
+    public override AgentsUsageGranularity Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -58,7 +58,7 @@ internal class AgenticUsageGranularitySerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticUsageGranularity value,
+        AgentsUsageGranularity value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -67,7 +67,7 @@ internal class AgenticUsageGranularitySerializer
         );
     }
 
-    public override AgenticUsageGranularity ReadAsPropertyName(
+    public override AgentsUsageGranularity ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -83,7 +83,7 @@ internal class AgenticUsageGranularitySerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        AgenticUsageGranularity value,
+        AgentsUsageGranularity value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

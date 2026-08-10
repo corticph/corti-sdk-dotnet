@@ -5,26 +5,14 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Usage metrics for a single time bucket.
+/// Invocation metrics for a single period.
 /// </summary>
 [Serializable]
-public record AgenticUsageBucket : IJsonOnDeserialized
+public record AgentsUsageMetrics : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
-
-    /// <summary>
-    /// Inclusive start of the bucket (UTC).
-    /// </summary>
-    [JsonPropertyName("periodStart")]
-    public required DateTime PeriodStart { get; set; }
-
-    /// <summary>
-    /// Exclusive end of the bucket (UTC).
-    /// </summary>
-    [JsonPropertyName("periodEnd")]
-    public required DateTime PeriodEnd { get; set; }
 
     /// <summary>
     /// Number of agent invocations in the period.

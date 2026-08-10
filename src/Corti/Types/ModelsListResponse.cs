@@ -5,26 +5,20 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Invocation metrics for a single period.
+/// List of available LLM models.
 /// </summary>
 [Serializable]
-public record AgenticUsageMetrics : IJsonOnDeserialized
+public record ModelsListResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Number of agent invocations in the period.
+    /// Available models.
     /// </summary>
-    [JsonPropertyName("invocations")]
-    public required long Invocations { get; set; }
-
-    /// <summary>
-    /// Number of distinct contexts invoked in the period.
-    /// </summary>
-    [JsonPropertyName("uniqueContexts")]
-    public required long UniqueContexts { get; set; }
+    [JsonPropertyName("data")]
+    public IEnumerable<ModelsModel> Data { get; set; } = new List<ModelsModel>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

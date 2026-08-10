@@ -8,14 +8,14 @@ namespace Corti;
 /// An agent's bucketed usage over a date range, with range-wide totals.
 /// </summary>
 [Serializable]
-public record AgenticUsageReportResponse : IJsonOnDeserialized
+public record AgentsUsageReportResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("granularity")]
-    public required AgenticUsageGranularity Granularity { get; set; }
+    public required AgentsUsageGranularity Granularity { get; set; }
 
     /// <summary>
     /// Resolved inclusive start of the range (UTC).
@@ -33,13 +33,13 @@ public record AgenticUsageReportResponse : IJsonOnDeserialized
     /// Aggregate metrics across the whole range.
     /// </summary>
     [JsonPropertyName("totals")]
-    public required AgenticUsageMetrics Totals { get; set; }
+    public required AgentsUsageMetrics Totals { get; set; }
 
     /// <summary>
     /// One entry per period with activity, ordered oldest first.
     /// </summary>
     [JsonPropertyName("buckets")]
-    public IEnumerable<AgenticUsageBucket> Buckets { get; set; } = new List<AgenticUsageBucket>();
+    public IEnumerable<AgentsUsageBucket> Buckets { get; set; } = new List<AgentsUsageBucket>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
