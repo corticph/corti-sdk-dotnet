@@ -3,8 +3,8 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(UsageGranularitySerializer))]
-public enum UsageGranularity
+[JsonConverter(typeof(AgenticUsageGranularitySerializer))]
+public enum AgenticUsageGranularity
 {
     [EnumMember(Value = "minute")]
     Minute,
@@ -19,32 +19,32 @@ public enum UsageGranularity
     Week,
 }
 
-internal class UsageGranularitySerializer
-    : global::System.Text.Json.Serialization.JsonConverter<UsageGranularity>
+internal class AgenticUsageGranularitySerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgenticUsageGranularity>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        UsageGranularity
+        AgenticUsageGranularity
     > _stringToEnum = new()
     {
-        { "minute", UsageGranularity.Minute },
-        { "hour", UsageGranularity.Hour },
-        { "day", UsageGranularity.Day },
-        { "week", UsageGranularity.Week },
+        { "minute", AgenticUsageGranularity.Minute },
+        { "hour", AgenticUsageGranularity.Hour },
+        { "day", AgenticUsageGranularity.Day },
+        { "week", AgenticUsageGranularity.Week },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        UsageGranularity,
+        AgenticUsageGranularity,
         string
     > _enumToString = new()
     {
-        { UsageGranularity.Minute, "minute" },
-        { UsageGranularity.Hour, "hour" },
-        { UsageGranularity.Day, "day" },
-        { UsageGranularity.Week, "week" },
+        { AgenticUsageGranularity.Minute, "minute" },
+        { AgenticUsageGranularity.Hour, "hour" },
+        { AgenticUsageGranularity.Day, "day" },
+        { AgenticUsageGranularity.Week, "week" },
     };
 
-    public override UsageGranularity Read(
+    public override AgenticUsageGranularity Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -58,7 +58,7 @@ internal class UsageGranularitySerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        UsageGranularity value,
+        AgenticUsageGranularity value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -67,7 +67,7 @@ internal class UsageGranularitySerializer
         );
     }
 
-    public override UsageGranularity ReadAsPropertyName(
+    public override AgenticUsageGranularity ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -83,7 +83,7 @@ internal class UsageGranularitySerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        UsageGranularity value,
+        AgenticUsageGranularity value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

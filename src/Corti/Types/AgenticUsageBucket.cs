@@ -8,7 +8,7 @@ namespace Corti;
 /// Usage metrics for a single time bucket.
 /// </summary>
 [Serializable]
-public record UsageBucket : IJsonOnDeserialized
+public record AgenticUsageBucket : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

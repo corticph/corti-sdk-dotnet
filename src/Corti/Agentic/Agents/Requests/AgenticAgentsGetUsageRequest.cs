@@ -25,7 +25,7 @@ public record AgenticAgentsGetUsageRequest
     /// Size of each reporting bucket. Defaults to `day`.
     /// </summary>
     [JsonIgnore]
-    public UsageGranularity? Granularity { get; set; }
+    public AgenticUsageGranularity? Granularity { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

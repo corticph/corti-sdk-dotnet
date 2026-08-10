@@ -72,7 +72,7 @@ public partial interface IAgentsClient
     /// array is empty when there was none). When `from`/`to` are omitted, the
     /// range defaults to the last 30 days.
     /// </summary>
-    WithRawResponseTask<UsageReportResponse> GetUsageAsync(
+    WithRawResponseTask<AgenticUsageReportResponse> GetUsageAsync(
         string agentId,
         AgenticAgentsGetUsageRequest request,
         RequestOptions? options = null,

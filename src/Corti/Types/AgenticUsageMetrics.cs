@@ -8,7 +8,7 @@ namespace Corti;
 /// Invocation metrics for a single period.
 /// </summary>
 [Serializable]
-public record UsageMetrics : IJsonOnDeserialized
+public record AgenticUsageMetrics : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

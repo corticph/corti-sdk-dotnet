@@ -907,7 +907,7 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<UsageReportResponse>> GetUsageAsyncCore(
+    private async Task<WithRawResponse<AgenticUsageReportResponse>> GetUsageAsyncCore(
         string agentId,
         AgenticAgentsGetUsageRequest request,
         RequestOptions? options = null,
@@ -953,10 +953,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<UsageReportResponse>(
+                        var responseData = JsonUtils.Deserialize<AgenticUsageReportResponse>(
                             responseBody
                         )!;
-                        return new WithRawResponse<UsageReportResponse>()
+                        return new WithRawResponse<AgenticUsageReportResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -1291,14 +1291,14 @@ public partial class AgentsClient : IAgentsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<UsageReportResponse> GetUsageAsync(
+    public WithRawResponseTask<AgenticUsageReportResponse> GetUsageAsync(
         string agentId,
         AgenticAgentsGetUsageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<UsageReportResponse>(
+        return new WithRawResponseTask<AgenticUsageReportResponse>(
             GetUsageAsyncCore(agentId, request, options, cancellationToken)
         );
     }
