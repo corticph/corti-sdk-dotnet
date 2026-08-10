@@ -9,7 +9,7 @@ public partial interface IModelsClient
     /// cached at server startup and refreshed periodically; it may lag briefly
     /// behind the gateway's actual model catalog.
     /// </summary>
-    WithRawResponseTask<ModelsListResponse> ListAsync(
+    WithRawResponseTask<AgenticModelsListResponse> ListAsync(
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

@@ -21,7 +21,7 @@ public partial class ModelsClient : IModelsClient
         }
     }
 
-    private async Task<WithRawResponse<ModelsListResponse>> ListAsyncCore(
+    private async Task<WithRawResponse<AgenticModelsListResponse>> ListAsyncCore(
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -55,8 +55,10 @@ public partial class ModelsClient : IModelsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<ModelsListResponse>(responseBody)!;
-                        return new WithRawResponse<ModelsListResponse>()
+                        var responseData = JsonUtils.Deserialize<AgenticModelsListResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<AgenticModelsListResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -153,12 +155,12 @@ public partial class ModelsClient : IModelsClient
     /// <example><code>
     /// await client.Agentic.Models.ListAsync();
     /// </code></example>
-    public WithRawResponseTask<ModelsListResponse> ListAsync(
+    public WithRawResponseTask<AgenticModelsListResponse> ListAsync(
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<ModelsListResponse>(
+        return new WithRawResponseTask<AgenticModelsListResponse>(
             ListAsyncCore(options, cancellationToken)
         );
     }

@@ -5,20 +5,32 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// List of available LLM models.
+/// An LLM model available on the gateway.
 /// </summary>
 [Serializable]
-public record ModelsListResponse : IJsonOnDeserialized
+public record AgenticModelsModel : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Available models.
+    /// Model identifier, usable as the `model` field on agent create/update.
     /// </summary>
-    [JsonPropertyName("data")]
-    public IEnumerable<ModelsModel> Data { get; set; } = new List<ModelsModel>();
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    /// <summary>
+    /// Unix timestamp (seconds) when the model was created.
+    /// </summary>
+    [JsonPropertyName("created")]
+    public long? Created { get; set; }
+
+    /// <summary>
+    /// Owner of the model.
+    /// </summary>
+    [JsonPropertyName("ownedBy")]
+    public string? OwnedBy { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
