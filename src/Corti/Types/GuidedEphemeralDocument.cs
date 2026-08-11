@@ -49,7 +49,7 @@ public record GuidedEphemeralDocument : IJsonOnDeserialized
     public Dictionary<string, object?>? StructuredDocument { get; set; }
 
     /// <summary>
-    /// Every section in the template version, in template order, including sections the model left empty. Use `sectionId` as the key into `stringDocument` and `structuredDocument`. The `heading` lets you render the section label without a GET request per section.
+    /// Every section in the template version, in template order, including sections the model left empty. Use `sectionId` as the key into `stringDocument` and `structuredDocument`. The `heading` and `labels` let you render the section without a GET request per section.
     /// </summary>
     [JsonPropertyName("sections")]
     public IEnumerable<GuidedDocumentSection>? Sections { get; set; }

@@ -26,6 +26,12 @@ public record GuidedDocumentSection : IJsonOnDeserialized
     [JsonPropertyName("heading")]
     public required string Heading { get; set; }
 
+    /// <summary>
+    /// Key/value labels attached to this section.
+    /// </summary>
+    [JsonPropertyName("labels")]
+    public IEnumerable<GuidedLabel>? Labels { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
