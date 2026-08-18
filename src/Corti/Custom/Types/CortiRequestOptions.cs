@@ -17,4 +17,10 @@ public class CortiRequestOptions
 
     /// <summary>Additional headers. If null, none.</summary>
     public IEnumerable<KeyValuePair<string, string?>>? AdditionalHeaders { get; init; }
+
+    /// <summary>
+    /// Additional call-site metadata merged into the <c>x-corti-analytics</c> payload on every
+    /// request. <c>sdk_version</c> and <c>sdk_type</c> are reserved and always set by the SDK.
+    /// </summary>
+    public Dictionary<string, string>? Analytics { get; init; }
 }
