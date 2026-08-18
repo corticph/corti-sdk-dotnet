@@ -1,4 +1,6 @@
 using Corti.Core;
+using AgenticClient = Corti.Agentic.AgenticClient;
+using IAgenticClient = Corti.Agentic.IAgenticClient;
 
 namespace Corti;
 
@@ -117,6 +119,7 @@ public partial class CortiClient : ICortiClient
             Codes = new CodesClient(_client);
             Languages = new LanguagesClient(_client);
             Agents = new AgentsClient(_client);
+            Agentic = new AgenticClient(_client);
         }
         catch (Exception ex)
         {
@@ -260,6 +263,8 @@ public partial class CortiClient : ICortiClient
     public ILanguagesClient Languages { get; }
 
     public IAgentsClient Agents { get; }
+
+    public IAgenticClient Agentic { get; }
 
     public async Task<IStreamApi> CreateStreamApiAsync(
         string interactionId,
