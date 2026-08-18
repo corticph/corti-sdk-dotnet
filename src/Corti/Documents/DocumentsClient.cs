@@ -13,6 +13,7 @@ public partial class DocumentsClient : IDocumentsClient
         try
         {
             _client = client;
+            Classic = new ClassicClient(_client);
             Templates = new Corti.Documents.TemplatesClient(_client);
             Sections = new SectionsClient(_client);
         }
@@ -23,12 +24,14 @@ public partial class DocumentsClient : IDocumentsClient
         }
     }
 
+    public IClassicClient Classic { get; }
+
     public Corti.Documents.ITemplatesClient Templates { get; }
 
     public ISectionsClient Sections { get; }
 
-    private async Task<WithRawResponse<DocumentsListResponse>> ListAsyncCore(
-        string id,
+    private async Task<WithRawResponse<IEnumerable<GuidedDocument>>> ListAsyncCore(
+        GuidedDocumentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -36,6 +39,12 @@ public partial class DocumentsClient : IDocumentsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
+                    .Add("templateId", request.TemplateId)
+                    .Add("interactionId", request.InteractionId)
+                    .Add("label", request.Label)
+                    .MergeAdditional(options?.AdditionalQueryParameters)
+                    .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
@@ -48,10 +57,8 @@ public partial class DocumentsClient : IDocumentsClient
                         {
                             BaseUrl = _client.Options.Environment.Base,
                             Method = HttpMethod.Get,
-                            Path = string.Format(
-                                "interactions/{0}/documents/",
-                                ValueConvert.ToPathParameterString(id)
-                            ),
+                            Path = "documents/",
+                            QueryString = _queryString,
                             Headers = _headers,
                             Options = options,
                         },
@@ -65,10 +72,10 @@ public partial class DocumentsClient : IDocumentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<DocumentsListResponse>(
+                        var responseData = JsonUtils.Deserialize<IEnumerable<GuidedDocument>>(
                             responseBody
                         )!;
-                        return new WithRawResponse<DocumentsListResponse>()
+                        return new WithRawResponse<IEnumerable<GuidedDocument>>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -110,659 +117,6 @@ public partial class DocumentsClient : IDocumentsClient
                             case 400:
                                 throw new BadRequestError(
                                     JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody,
-                        rawResponse: new Corti.RawResponse()
-                        {
-                            StatusCode = response.Raw.StatusCode,
-                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                        }
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    private async Task<WithRawResponse<DocumentsGetResponse>> CreateAsyncCore(
-        string id,
-        DocumentsCreateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Post,
-                            Path = string.Format(
-                                "interactions/{0}/documents/",
-                                ValueConvert.ToPathParameterString(id)
-                            ),
-                            Body = request,
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<DocumentsGetResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e,
-                            rawResponse: new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            }
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 400:
-                                throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody,
-                        rawResponse: new Corti.RawResponse()
-                        {
-                            StatusCode = response.Raw.StatusCode,
-                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                        }
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    private async Task<WithRawResponse<DocumentsGetResponse>> GetAsyncCore(
-        string id,
-        string documentId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Get,
-                            Path = string.Format(
-                                "interactions/{0}/documents/{1}",
-                                ValueConvert.ToPathParameterString(id),
-                                ValueConvert.ToPathParameterString(documentId)
-                            ),
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<DocumentsGetResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e,
-                            rawResponse: new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            }
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 400:
-                                throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody,
-                        rawResponse: new Corti.RawResponse()
-                        {
-                            StatusCode = response.Raw.StatusCode,
-                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                        }
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    private async Task<RawResponse> DeleteAsyncCore(
-        string id,
-        string documentId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethod.Delete,
-                            Path = string.Format(
-                                "interactions/{0}/documents/{1}",
-                                ValueConvert.ToPathParameterString(id),
-                                ValueConvert.ToPathParameterString(documentId)
-                            ),
-                            Headers = _headers,
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    return new Corti.RawResponse()
-                    {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                    };
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 404:
-                                throw new NotFoundError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        // unable to map error response, throwing generic error
-                    }
-                    throw new CortiClientApiException(
-                        $"Error with status code {response.StatusCode}",
-                        response.StatusCode,
-                        responseBody,
-                        rawResponse: new Corti.RawResponse()
-                        {
-                            StatusCode = response.Raw.StatusCode,
-                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                        }
-                    );
-                }
-            })
-            .ConfigureAwait(false);
-    }
-
-    private async Task<WithRawResponse<DocumentsGetResponse>> UpdateAsyncCore(
-        string id,
-        string documentId,
-        DocumentsUpdateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
-            {
-                var _headers = await new Corti.Core.HeadersBuilder.Builder()
-                    .Add(_client.Options.Headers)
-                    .Add(_client.Options.AdditionalHeaders)
-                    .Add(options?.AdditionalHeaders)
-                    .BuildAsync()
-                    .ConfigureAwait(false);
-                var response = await _client
-                    .SendRequestAsync(
-                        new JsonRequest
-                        {
-                            BaseUrl = _client.Options.Environment.Base,
-                            Method = HttpMethodExtensions.Patch,
-                            Path = string.Format(
-                                "interactions/{0}/documents/{1}",
-                                ValueConvert.ToPathParameterString(id),
-                                ValueConvert.ToPathParameterString(documentId)
-                            ),
-                            Body = request,
-                            Headers = _headers,
-                            ContentType = "application/json",
-                            Options = options,
-                        },
-                        cancellationToken
-                    )
-                    .ConfigureAwait(false);
-                if (response.StatusCode is >= 200 and < 400)
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        var responseData = JsonUtils.Deserialize<DocumentsGetResponse>(
-                            responseBody
-                        )!;
-                        return new WithRawResponse<DocumentsGetResponse>()
-                        {
-                            Data = responseData,
-                            RawResponse = new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            },
-                        };
-                    }
-                    catch (JsonException e)
-                    {
-                        throw new CortiClientApiException(
-                            "Failed to deserialize response",
-                            response.StatusCode,
-                            responseBody,
-                            e,
-                            rawResponse: new Corti.RawResponse()
-                            {
-                                StatusCode = response.Raw.StatusCode,
-                                Url =
-                                    response.Raw.RequestMessage?.RequestUri
-                                    ?? new Uri("about:blank"),
-                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                            }
-                        );
-                    }
-                }
-                {
-                    var responseBody = await response
-                        .Raw.Content.ReadAsStringAsync(cancellationToken)
-                        .ConfigureAwait(false);
-                    try
-                    {
-                        switch (response.StatusCode)
-                        {
-                            case 400:
-                                throw new BadRequestError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 403:
-                                throw new ForbiddenError(
-                                    JsonUtils.Deserialize<object>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
-                            case 504:
-                                throw new GatewayTimeoutError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
                                     rawResponse: new Corti.RawResponse()
                                     {
                                         StatusCode = response.Raw.StatusCode,
@@ -953,110 +307,352 @@ public partial class DocumentsClient : IDocumentsClient
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// List Documents
-    /// </summary>
-    /// <example><code>
-    /// await client.Documents.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
-    /// </code></example>
-    public WithRawResponseTask<DocumentsListResponse> ListAsync(
-        string id,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<DocumentsListResponse>(
-            ListAsyncCore(id, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
-    /// </summary>
-    /// <example><code>
-    /// await client.Documents.CreateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new DocumentsCreateRequestWithTemplateKey
-    ///     {
-    ///         Context = new List&lt;DocumentsContext&gt;()
-    ///         {
-    ///             new DocumentsContextWithFacts
-    ///             {
-    ///                 Type = DocumentsContextWithFactsType.Facts,
-    ///                 Data = new List&lt;FactsContext&gt;() { new FactsContext { Text = "text" } },
-    ///             },
-    ///         },
-    ///         TemplateKey = "templateKey",
-    ///         OutputLanguage = "outputLanguage",
-    ///     }
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> CreateAsync(
-        string id,
-        DocumentsCreateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<DocumentsGetResponse>(
-            CreateAsyncCore(id, request, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Get Document.
-    /// </summary>
-    /// <example><code>
-    /// await client.Documents.GetAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> GetAsync(
-        string id,
+    private async Task<WithRawResponse<GuidedDocument>> GetAsyncCore(
         string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<DocumentsGetResponse>(
-            GetAsyncCore(id, documentId, options, cancellationToken)
-        );
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Get,
+                            Path = string.Format(
+                                "documents/{0}",
+                                ValueConvert.ToPathParameterString(documentId)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<GuidedDocument>(responseBody)!;
+                        return new WithRawResponse<GuidedDocument>()
+                        {
+                            Data = responseData,
+                            RawResponse = new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
-    /// <example><code>
-    /// await client.Documents.DeleteAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-    /// );
-    /// </code></example>
-    public WithRawResponseTask DeleteAsync(
-        string id,
+    private async Task<RawResponse> DeleteAsyncCore(
         string documentId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask(DeleteAsyncCore(id, documentId, options, cancellationToken));
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Delete,
+                            Path = string.Format(
+                                "documents/{0}",
+                                ValueConvert.ToPathParameterString(documentId)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    return new Corti.RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    };
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
     }
 
-    /// <example><code>
-    /// await client.Documents.UpdateAsync(
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new DocumentsUpdateRequest()
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
-        string id,
+    private async Task<WithRawResponse<GuidedDocument>> UpdateAsyncCore(
         string documentId,
-        DocumentsUpdateRequest request,
+        GuidedDocumentsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<DocumentsGetResponse>(
-            UpdateAsyncCore(id, documentId, request, options, cancellationToken)
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethodExtensions.Patch,
+                            Path = string.Format(
+                                "documents/{0}",
+                                ValueConvert.ToPathParameterString(documentId)
+                            ),
+                            Body = request,
+                            Headers = _headers,
+                            ContentType = "application/json",
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<GuidedDocument>(responseBody)!;
+                        return new WithRawResponse<GuidedDocument>()
+                        {
+                            Data = responseData,
+                            RawResponse = new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 400:
+                                throw new BadRequestError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Guided Documents list (`GET /documents/`). For classic interaction-scoped documents, use `client.documents.classic.list`.
+    ///
+    /// Returns a list of previously generated documents.
+    /// Use query parameters to filter by template, interaction, or label.
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.ListAsync(new GuidedDocumentsListRequest());
+    /// </code></example>
+    public WithRawResponseTask<IEnumerable<GuidedDocument>> ListAsync(
+        GuidedDocumentsListRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<IEnumerable<GuidedDocument>>(
+            ListAsyncCore(request, options, cancellationToken)
         );
     }
 
@@ -1082,6 +678,64 @@ public partial class DocumentsClient : IDocumentsClient
     {
         return new WithRawResponseTask<GuidedDocumentsCreateEphemeralResponse>(
             GenerateAsyncCore(request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Guided Documents get (`GET /documents/{documentID}`). For classic interaction-scoped documents, use `client.documents.classic.get`.
+    ///
+    /// Returns a previously generated document by ID, including its rendered string output
+    /// and structured object.
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.GetAsync("documentID");
+    /// </code></example>
+    public WithRawResponseTask<GuidedDocument> GetAsync(
+        string documentId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<GuidedDocument>(
+            GetAsyncCore(documentId, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Guided Documents delete (`DELETE /documents/{documentID}`). For classic interaction-scoped documents, use `client.documents.classic.delete`.
+    ///
+    /// Deletes the document. This cannot be undone.
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.DeleteAsync("documentID");
+    /// </code></example>
+    public WithRawResponseTask DeleteAsync(
+        string documentId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask(DeleteAsyncCore(documentId, options, cancellationToken));
+    }
+
+    /// <summary>
+    /// Guided Documents update (`PATCH /documents/{documentID}`). For classic interaction-scoped documents, use `client.documents.classic.update`.
+    ///
+    /// Updates the document's `name`, `labels`, or rendered output (`stringDocument` / `structuredDocument`).
+    /// Use this to persist edits made to a previously generated document.
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.UpdateAsync("documentID", new GuidedDocumentsUpdateRequest());
+    /// </code></example>
+    public WithRawResponseTask<GuidedDocument> UpdateAsync(
+        string documentId,
+        GuidedDocumentsUpdateRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<GuidedDocument>(
+            UpdateAsyncCore(documentId, request, options, cancellationToken)
         );
     }
 }
