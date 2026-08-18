@@ -108,6 +108,47 @@ public class CortiClientAnalyticsTests
     }
 
     [Test]
+    public async Task ClientAnalytics_IsSnapshottedAtConstruction()
+    {
+        var handler = new CapturingHandler();
+        using var http = new HttpClient(handler);
+        var analytics = new Dictionary<string, string> { ["visit_type"] = "outpatient" };
+
+        var client = new CortiClient(
+            "test",
+            TestEnvironment,
+            new CortiClientAuth.Bearer("fake-token"),
+            new CortiRequestOptions
+            {
+                HttpClient = http,
+                MaxRetries = 0,
+                Analytics = analytics,
+            }
+        );
+
+        analytics["visit_type"] = "inpatient";
+
+        await client.Languages.ListAsync(new LanguagesListRequest());
+        Assert.That(
+            handler.Request!.Headers.TryGetValues(AnalyticsHelper.XCortiAnalytics, out var values),
+            Is.True
+        );
+        var restPayload = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+            values!.First()
+        )!;
+        Assert.That(restPayload["visit_type"].GetString(), Is.EqualTo("outpatient"));
+
+        using var api = (StreamApi)
+            await client.CreateStreamApiAsync("00000000-0000-0000-0000-000000000001");
+        var wsPayload = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+            System.Web.HttpUtility.ParseQueryString(GetWebSocketUri(api).Query)[
+                AnalyticsHelper.XCortiAnalytics
+            ] ?? "{}"
+        )!;
+        Assert.That(wsPayload["visit_type"].GetString(), Is.EqualTo("outpatient"));
+    }
+
+    [Test]
     public async Task RestCall_MergesPerRequestAnalyticsOverlay()
     {
         var handler = new CapturingHandler();

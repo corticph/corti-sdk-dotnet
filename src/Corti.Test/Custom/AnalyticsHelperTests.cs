@@ -131,4 +131,31 @@ public class AnalyticsHelperTests
         Assert.That(payload["sdk_version"].GetString(), Is.EqualTo(Version.Current));
         Assert.That(payload["sdk_type"].GetString(), Is.EqualTo("corti-sdk-dotnet"));
     }
+
+    [Test]
+    public void WithAnalytics_LowercasesIncomingKeys()
+    {
+        var merged = AnalyticsHelper.WithAnalytics(
+            new Dictionary<string, string>
+            {
+                ["SDK_VERSION"] = "hack",
+                ["Visit_Type"] = "outpatient",
+            },
+            new Dictionary<string, string>
+            {
+                [AnalyticsHelper.XCortiAnalytics] = """{"VISIT_TYPE":"inpatient","Source":"ehr"}""",
+            }
+        );
+        var payload = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+            merged[AnalyticsHelper.XCortiAnalytics]
+        )!;
+
+        Assert.That(payload.ContainsKey("SDK_VERSION"), Is.False);
+        Assert.That(payload.ContainsKey("Visit_Type"), Is.False);
+        Assert.That(payload["visit_type"].GetString(), Is.EqualTo("inpatient"));
+        Assert.That(payload["source"].GetString(), Is.EqualTo("ehr"));
+        Assert.That(payload["sdk_version"].GetString(), Is.EqualTo(Version.Current));
+        Assert.That(payload["sdk_type"].GetString(), Is.EqualTo("corti-sdk-dotnet"));
+        Assert.That(payload.Count, Is.EqualTo(4));
+    }
 }

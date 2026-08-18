@@ -87,4 +87,21 @@ public class HeadersBuilderAnalyticsTests
         Assert.That(payload["sdk_version"].GetString(), Is.EqualTo(Version.Current));
         Assert.That(payload["sdk_type"].GetString(), Is.EqualTo("corti-sdk-dotnet"));
     }
+
+    [Test]
+    public async Task BuildAsync_LowercasesAnalyticsKeys()
+    {
+        var headers = await new HeadersBuilder.Builder()
+            .Add("x-corti-analytics", """{"Source":"web","SDK_VERSION":"hack"}""")
+            .BuildAsync()
+            .ConfigureAwait(false);
+
+        var payload = ParsePayload(headers);
+        Assert.That(payload.ContainsKey("Source"), Is.False);
+        Assert.That(payload.ContainsKey("SDK_VERSION"), Is.False);
+        Assert.That(payload["source"].GetString(), Is.EqualTo("web"));
+        Assert.That(payload["sdk_version"].GetString(), Is.EqualTo(Version.Current));
+        Assert.That(payload["sdk_type"].GetString(), Is.EqualTo("corti-sdk-dotnet"));
+        Assert.That(payload.Count, Is.EqualTo(3));
+    }
 }

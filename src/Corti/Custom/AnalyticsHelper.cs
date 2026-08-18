@@ -57,7 +57,7 @@ internal static class AnalyticsHelper
 
         if (parsed is Dictionary<string, object> objectDict)
         {
-            return new Dictionary<string, object>(objectDict, StringComparer.Ordinal);
+            return WithLowercasedKeys(objectDict);
         }
 
         return null;
@@ -96,7 +96,7 @@ internal static class AnalyticsHelper
         {
             foreach (var kvp in analytics)
             {
-                payload[kvp.Key] = kvp.Value;
+                payload[kvp.Key.ToLowerInvariant()] = kvp.Value;
             }
         }
         if (overlay is not null)
@@ -122,6 +122,18 @@ internal static class AnalyticsHelper
             }
         }
         result[XCortiAnalytics] = JsonSerializer.Serialize(payload, AnalyticsJsonOptions);
+        return result;
+    }
+
+    private static Dictionary<string, object> WithLowercasedKeys(
+        IReadOnlyDictionary<string, object> source
+    )
+    {
+        var result = new Dictionary<string, object>(source.Count, StringComparer.Ordinal);
+        foreach (var kvp in source)
+        {
+            result[kvp.Key.ToLowerInvariant()] = kvp.Value;
+        }
         return result;
     }
 }

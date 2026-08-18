@@ -56,7 +56,10 @@ public partial class CortiClient : ICortiClient
             throw new ArgumentException("TenantName is required.", nameof(options));
 
         var clientOptions = BuildClientOptions(options);
-        _analytics = options.RequestOptions?.Analytics;
+        _analytics =
+            options.RequestOptions?.Analytics is { } analytics
+                ? new Dictionary<string, string>(analytics, StringComparer.Ordinal)
+                : null;
         clientOptions.Headers[AnalyticsHelper.XCortiAnalytics] = AnalyticsHelper
             .WithAnalytics(_analytics)[AnalyticsHelper.XCortiAnalytics];
 
