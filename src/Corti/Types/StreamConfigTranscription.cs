@@ -30,13 +30,13 @@ public record StreamConfigTranscription : IJsonOnDeserialized
     public bool? IsDiarization { get; set; }
 
     /// <summary>
-    /// Enable multi-channel audio processing
+    /// Enable multi-channel audio processing. When false, all participants are collapsed to channel 0 and the audio is downmixed to mono.
     /// </summary>
     [JsonPropertyName("isMultichannel")]
     public bool? IsMultichannel { get; set; }
 
     /// <summary>
-    /// List of participants with roles assigned to a channel
+    /// List of participants, each assigning a free-form role to a channel. The number of audio channels is resolved from the audio stream, not from the declared participants. When isMultichannel is false, all participants are collapsed to channel 0.
     /// </summary>
     [JsonPropertyName("participants")]
     public IEnumerable<StreamConfigParticipant> Participants { get; set; } =

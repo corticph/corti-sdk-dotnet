@@ -3,43 +3,48 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TranscriptsParticipantRoleEnumSerializer))]
-public enum TranscriptsParticipantRoleEnum
+[JsonConverter(typeof(AgentsUsageGranularitySerializer))]
+public enum AgentsUsageGranularity
 {
-    [EnumMember(Value = "doctor")]
-    Doctor,
+    [EnumMember(Value = "minute")]
+    Minute,
 
-    [EnumMember(Value = "patient")]
-    Patient,
+    [EnumMember(Value = "hour")]
+    Hour,
 
-    [EnumMember(Value = "multiple")]
-    Multiple,
+    [EnumMember(Value = "day")]
+    Day,
+
+    [EnumMember(Value = "week")]
+    Week,
 }
 
-internal class TranscriptsParticipantRoleEnumSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<TranscriptsParticipantRoleEnum>
+internal class AgentsUsageGranularitySerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgentsUsageGranularity>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        TranscriptsParticipantRoleEnum
+        AgentsUsageGranularity
     > _stringToEnum = new()
     {
-        { "doctor", TranscriptsParticipantRoleEnum.Doctor },
-        { "patient", TranscriptsParticipantRoleEnum.Patient },
-        { "multiple", TranscriptsParticipantRoleEnum.Multiple },
+        { "minute", AgentsUsageGranularity.Minute },
+        { "hour", AgentsUsageGranularity.Hour },
+        { "day", AgentsUsageGranularity.Day },
+        { "week", AgentsUsageGranularity.Week },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        TranscriptsParticipantRoleEnum,
+        AgentsUsageGranularity,
         string
     > _enumToString = new()
     {
-        { TranscriptsParticipantRoleEnum.Doctor, "doctor" },
-        { TranscriptsParticipantRoleEnum.Patient, "patient" },
-        { TranscriptsParticipantRoleEnum.Multiple, "multiple" },
+        { AgentsUsageGranularity.Minute, "minute" },
+        { AgentsUsageGranularity.Hour, "hour" },
+        { AgentsUsageGranularity.Day, "day" },
+        { AgentsUsageGranularity.Week, "week" },
     };
 
-    public override TranscriptsParticipantRoleEnum Read(
+    public override AgentsUsageGranularity Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -53,7 +58,7 @@ internal class TranscriptsParticipantRoleEnumSerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        TranscriptsParticipantRoleEnum value,
+        AgentsUsageGranularity value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -62,7 +67,7 @@ internal class TranscriptsParticipantRoleEnumSerializer
         );
     }
 
-    public override TranscriptsParticipantRoleEnum ReadAsPropertyName(
+    public override AgentsUsageGranularity ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -78,7 +83,7 @@ internal class TranscriptsParticipantRoleEnumSerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        TranscriptsParticipantRoleEnum value,
+        AgentsUsageGranularity value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
