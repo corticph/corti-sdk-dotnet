@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti.Agentic;
 
 [Serializable]
-public record A2AjsonrpcRequest
+public record AgenticAgentsJsonRpcRequest
 {
     /// <summary>
     /// A2A protocol version in `Major.Minor` form (A2A §3.6). Optional; defaults to `1.0` when absent. This surface implements `1.0` only. Patch versions MUST NOT be sent and are not considered during negotiation.
@@ -18,7 +18,7 @@ public record A2AjsonrpcRequest
     /// </summary>
     [JsonRequired]
     [JsonPropertyName("jsonrpc")]
-    public A2AjsonrpcRequest.JsonrpcLiteral Jsonrpc { get;
+    public AgenticAgentsJsonRpcRequest.JsonrpcLiteral Jsonrpc { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -27,13 +27,13 @@ public record A2AjsonrpcRequest
     } = new();
 
     [JsonPropertyName("id")]
-    public required A2AjsonrpcRequestId Id { get; set; }
+    public required AgenticAgentsJsonRpcRequestId Id { get; set; }
 
     /// <summary>
     /// JSON-RPC method name (PascalCase on the wire).
     /// </summary>
     [JsonPropertyName("method")]
-    public required A2AjsonrpcRequestMethod Method { get; set; }
+    public required AgenticAgentsJsonRpcRequestMethod Method { get; set; }
 
     /// <summary>
     /// JSON-RPC params object.

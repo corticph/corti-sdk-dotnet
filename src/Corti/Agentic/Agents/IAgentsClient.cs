@@ -75,9 +75,9 @@ public partial interface IAgentsClient
     /// Streaming methods (`SendStreamingMessage`, `SubscribeToTask`) respond with
     /// `text/event-stream`; all others respond with a single JSON-RPC response.
     /// </summary>
-    WithRawResponseTask<A2AjsonrpcResponse> JsonRpcAsync(
+    WithRawResponseTask<AgenticAgentsJsonRpcResponse> JsonRpcAsync(
         string agentId,
-        A2AjsonrpcRequest request,
+        AgenticAgentsJsonRpcRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -85,9 +85,9 @@ public partial interface IAgentsClient
     /// <summary>
     /// The `HTTP+JSON` binding of A2A `SendMessage`.
     /// </summary>
-    WithRawResponseTask<A2ASendMessageResponse> SendMessageAsync(
+    WithRawResponseTask<AgenticAgentsSendMessageResponse> SendMessageAsync(
         string agentId,
-        A2ASendMessageRequest request,
+        AgenticAgentsSendMessageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -96,9 +96,9 @@ public partial interface IAgentsClient
     /// The `HTTP+JSON` binding of A2A `SendStreamingMessage`. Responds with a
     /// `text/event-stream` of `Task`, `statusUpdate`, and `artifactUpdate` events.
     /// </summary>
-    WithRawResponseStream<A2AStreamEventResponse> StreamMessageAsync(
+    WithRawResponseStream<AgenticAgentsStreamEventResponse> StreamMessageAsync(
         string agentId,
-        A2ASendMessageRequest request,
+        AgenticAgentsSendMessageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

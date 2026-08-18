@@ -3,8 +3,8 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti.Agentic;
 
-[JsonConverter(typeof(A2AjsonrpcRequestMethodSerializer))]
-public enum A2AjsonrpcRequestMethod
+[JsonConverter(typeof(AgenticAgentsJsonRpcRequestMethodSerializer))]
+public enum AgenticAgentsJsonRpcRequestMethod
 {
     [EnumMember(Value = "SendMessage")]
     SendMessage,
@@ -25,36 +25,36 @@ public enum A2AjsonrpcRequestMethod
     SubscribeToTask,
 }
 
-internal class A2AjsonrpcRequestMethodSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<A2AjsonrpcRequestMethod>
+internal class AgenticAgentsJsonRpcRequestMethodSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<AgenticAgentsJsonRpcRequestMethod>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        A2AjsonrpcRequestMethod
+        AgenticAgentsJsonRpcRequestMethod
     > _stringToEnum = new()
     {
-        { "SendMessage", A2AjsonrpcRequestMethod.SendMessage },
-        { "SendStreamingMessage", A2AjsonrpcRequestMethod.SendStreamingMessage },
-        { "GetTask", A2AjsonrpcRequestMethod.GetTask },
-        { "ListTasks", A2AjsonrpcRequestMethod.ListTasks },
-        { "CancelTask", A2AjsonrpcRequestMethod.CancelTask },
-        { "SubscribeToTask", A2AjsonrpcRequestMethod.SubscribeToTask },
+        { "SendMessage", AgenticAgentsJsonRpcRequestMethod.SendMessage },
+        { "SendStreamingMessage", AgenticAgentsJsonRpcRequestMethod.SendStreamingMessage },
+        { "GetTask", AgenticAgentsJsonRpcRequestMethod.GetTask },
+        { "ListTasks", AgenticAgentsJsonRpcRequestMethod.ListTasks },
+        { "CancelTask", AgenticAgentsJsonRpcRequestMethod.CancelTask },
+        { "SubscribeToTask", AgenticAgentsJsonRpcRequestMethod.SubscribeToTask },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        A2AjsonrpcRequestMethod,
+        AgenticAgentsJsonRpcRequestMethod,
         string
     > _enumToString = new()
     {
-        { A2AjsonrpcRequestMethod.SendMessage, "SendMessage" },
-        { A2AjsonrpcRequestMethod.SendStreamingMessage, "SendStreamingMessage" },
-        { A2AjsonrpcRequestMethod.GetTask, "GetTask" },
-        { A2AjsonrpcRequestMethod.ListTasks, "ListTasks" },
-        { A2AjsonrpcRequestMethod.CancelTask, "CancelTask" },
-        { A2AjsonrpcRequestMethod.SubscribeToTask, "SubscribeToTask" },
+        { AgenticAgentsJsonRpcRequestMethod.SendMessage, "SendMessage" },
+        { AgenticAgentsJsonRpcRequestMethod.SendStreamingMessage, "SendStreamingMessage" },
+        { AgenticAgentsJsonRpcRequestMethod.GetTask, "GetTask" },
+        { AgenticAgentsJsonRpcRequestMethod.ListTasks, "ListTasks" },
+        { AgenticAgentsJsonRpcRequestMethod.CancelTask, "CancelTask" },
+        { AgenticAgentsJsonRpcRequestMethod.SubscribeToTask, "SubscribeToTask" },
     };
 
-    public override A2AjsonrpcRequestMethod Read(
+    public override AgenticAgentsJsonRpcRequestMethod Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -68,7 +68,7 @@ internal class A2AjsonrpcRequestMethodSerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        A2AjsonrpcRequestMethod value,
+        AgenticAgentsJsonRpcRequestMethod value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -77,7 +77,7 @@ internal class A2AjsonrpcRequestMethodSerializer
         );
     }
 
-    public override A2AjsonrpcRequestMethod ReadAsPropertyName(
+    public override AgenticAgentsJsonRpcRequestMethod ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -93,7 +93,7 @@ internal class A2AjsonrpcRequestMethodSerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        A2AjsonrpcRequestMethod value,
+        AgenticAgentsJsonRpcRequestMethod value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {

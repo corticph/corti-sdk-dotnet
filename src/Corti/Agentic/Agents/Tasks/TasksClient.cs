@@ -25,7 +25,7 @@ public partial class TasksClient : ITasksClient
 
     private WithRawResponseTask<CommonTaskListResponse> ListInternalAsync(
         string agentId,
-        AgenticAgentsA2ATasksListRequest request,
+        AgenticAgentsTasksListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -37,7 +37,7 @@ public partial class TasksClient : ITasksClient
 
     private async Task<WithRawResponse<CommonTaskListResponse>> ListInternalAsyncCore(
         string agentId,
-        AgenticAgentsA2ATasksListRequest request,
+        AgenticAgentsTasksListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -163,7 +163,7 @@ public partial class TasksClient : ITasksClient
     private async Task<WithRawResponse<CommonTaskResponse>> GetAsyncCore(
         string agentId,
         string taskId,
-        AgenticAgentsA2ATasksGetRequest request,
+        AgenticAgentsTasksGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -442,7 +442,7 @@ public partial class TasksClient : ITasksClient
     }
 
     private async Task<
-        WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>
+        WithRawResponse<IAsyncEnumerable<AgenticAgentsStreamEventResponse>>
     > SubscribeAsyncCore(
         string agentId,
         string taskId,
@@ -478,7 +478,7 @@ public partial class TasksClient : ITasksClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    return new WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>()
+                    return new WithRawResponse<IAsyncEnumerable<AgenticAgentsStreamEventResponse>>()
                     {
                         Data = SubscribeAsyncBody(response, cancellationToken),
                         RawResponse = new Corti.RawResponse()
@@ -547,7 +547,7 @@ public partial class TasksClient : ITasksClient
             .ConfigureAwait(false);
     }
 
-    private async IAsyncEnumerable<A2AStreamEventResponse> SubscribeAsyncBody(
+    private async IAsyncEnumerable<AgenticAgentsStreamEventResponse> SubscribeAsyncBody(
         ApiResponse response,
         [EnumeratorCancellation] CancellationToken cancellationToken = default
     )
@@ -563,10 +563,12 @@ public partial class TasksClient : ITasksClient
                 {
                     if (!string.IsNullOrEmpty(item.Data))
                     {
-                        A2AStreamEventResponse? result;
+                        AgenticAgentsStreamEventResponse? result;
                         try
                         {
-                            result = JsonUtils.Deserialize<A2AStreamEventResponse>(item.Data);
+                            result = JsonUtils.Deserialize<AgenticAgentsStreamEventResponse>(
+                                item.Data
+                            );
                         }
                         catch (JsonException)
                         {
@@ -584,12 +586,12 @@ public partial class TasksClient : ITasksClient
     /// <example><code>
     /// await client.Agentic.Agents.Tasks.ListAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
-    ///     new AgenticAgentsA2ATasksListRequest { A2AVersion = "1.0" }
+    ///     new AgenticAgentsTasksListRequest { A2AVersion = "1.0" }
     /// );
     /// </code></example>
     public async Task<Pager<CommonTaskResponse>> ListAsync(
         string agentId,
-        AgenticAgentsA2ATasksListRequest request,
+        AgenticAgentsTasksListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -602,7 +604,7 @@ public partial class TasksClient : ITasksClient
                     request = request with { };
                 }
                 var pager = await CursorPager<
-                    AgenticAgentsA2ATasksListRequest,
+                    AgenticAgentsTasksListRequest,
                     RequestOptions?,
                     CommonTaskListResponse,
                     string?,
@@ -632,13 +634,13 @@ public partial class TasksClient : ITasksClient
     /// await client.Agentic.Agents.Tasks.GetAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
     ///     "task.0192f4c8-4e7c-7d50-b13c-5eaf8a4d9c62",
-    ///     new AgenticAgentsA2ATasksGetRequest { A2AVersion = "1.0" }
+    ///     new AgenticAgentsTasksGetRequest { A2AVersion = "1.0" }
     /// );
     /// </code></example>
     public WithRawResponseTask<CommonTaskResponse> GetAsync(
         string agentId,
         string taskId,
-        AgenticAgentsA2ATasksGetRequest request,
+        AgenticAgentsTasksGetRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -675,14 +677,14 @@ public partial class TasksClient : ITasksClient
     ///     "task.0192f4c8-4e7c-7d50-b13c-5eaf8a4d9c62"
     /// );
     /// </code></example>
-    public WithRawResponseStream<A2AStreamEventResponse> SubscribeAsync(
+    public WithRawResponseStream<AgenticAgentsStreamEventResponse> SubscribeAsync(
         string agentId,
         string taskId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseStream<A2AStreamEventResponse>(
+        return new WithRawResponseStream<AgenticAgentsStreamEventResponse>(
             SubscribeAsyncCore(agentId, taskId, options, cancellationToken),
             cancellationToken
         );

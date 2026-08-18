@@ -8,7 +8,7 @@ namespace Corti;
 /// An SSE event carrying an A2A `HTTP+JSON` streaming response.
 /// </summary>
 [Serializable]
-public record A2AStreamEventResponse : IJsonOnDeserialized
+public record AgenticAgentsStreamEventResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

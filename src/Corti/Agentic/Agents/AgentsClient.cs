@@ -915,9 +915,9 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<A2AjsonrpcResponse>> JsonRpcAsyncCore(
+    private async Task<WithRawResponse<AgenticAgentsJsonRpcResponse>> JsonRpcAsyncCore(
         string agentId,
-        A2AjsonrpcRequest request,
+        AgenticAgentsJsonRpcRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -957,8 +957,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<A2AjsonrpcResponse>(responseBody)!;
-                        return new WithRawResponse<A2AjsonrpcResponse>()
+                        var responseData = JsonUtils.Deserialize<AgenticAgentsJsonRpcResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<AgenticAgentsJsonRpcResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -1047,9 +1049,9 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<A2ASendMessageResponse>> SendMessageAsyncCore(
+    private async Task<WithRawResponse<AgenticAgentsSendMessageResponse>> SendMessageAsyncCore(
         string agentId,
-        A2ASendMessageRequest request,
+        AgenticAgentsSendMessageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -1088,10 +1090,10 @@ public partial class AgentsClient : IAgentsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<A2ASendMessageResponse>(
+                        var responseData = JsonUtils.Deserialize<AgenticAgentsSendMessageResponse>(
                             responseBody
                         )!;
-                        return new WithRawResponse<A2ASendMessageResponse>()
+                        return new WithRawResponse<AgenticAgentsSendMessageResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -1195,10 +1197,10 @@ public partial class AgentsClient : IAgentsClient
     }
 
     private async Task<
-        WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>
+        WithRawResponse<IAsyncEnumerable<AgenticAgentsStreamEventResponse>>
     > StreamMessageAsyncCore(
         string agentId,
-        A2ASendMessageRequest request,
+        AgenticAgentsSendMessageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -1232,7 +1234,7 @@ public partial class AgentsClient : IAgentsClient
                     .ConfigureAwait(false);
                 if (response.StatusCode is >= 200 and < 400)
                 {
-                    return new WithRawResponse<IAsyncEnumerable<A2AStreamEventResponse>>()
+                    return new WithRawResponse<IAsyncEnumerable<AgenticAgentsStreamEventResponse>>()
                     {
                         Data = StreamMessageAsyncBody(response, cancellationToken),
                         RawResponse = new Corti.RawResponse()
@@ -1315,7 +1317,7 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
-    private async IAsyncEnumerable<A2AStreamEventResponse> StreamMessageAsyncBody(
+    private async IAsyncEnumerable<AgenticAgentsStreamEventResponse> StreamMessageAsyncBody(
         ApiResponse response,
         [EnumeratorCancellation] CancellationToken cancellationToken = default
     )
@@ -1331,10 +1333,12 @@ public partial class AgentsClient : IAgentsClient
                 {
                     if (!string.IsNullOrEmpty(item.Data))
                     {
-                        A2AStreamEventResponse? result;
+                        AgenticAgentsStreamEventResponse? result;
                         try
                         {
-                            result = JsonUtils.Deserialize<A2AStreamEventResponse>(item.Data);
+                            result = JsonUtils.Deserialize<AgenticAgentsStreamEventResponse>(
+                                item.Data
+                            );
                         }
                         catch (JsonException)
                         {
@@ -1726,11 +1730,11 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// await client.Agentic.Agents.JsonRpcAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
-    ///     new A2AjsonrpcRequest
+    ///     new AgenticAgentsJsonRpcRequest
     ///     {
     ///         A2AVersion = "1.0",
     ///         Id = "1",
-    ///         Method = A2AjsonrpcRequestMethod.SendMessage,
+    ///         Method = AgenticAgentsJsonRpcRequestMethod.SendMessage,
     ///         Params = new Dictionary&lt;string, object?&gt;()
     ///         {
     ///             {
@@ -1755,14 +1759,14 @@ public partial class AgentsClient : IAgentsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<A2AjsonrpcResponse> JsonRpcAsync(
+    public WithRawResponseTask<AgenticAgentsJsonRpcResponse> JsonRpcAsync(
         string agentId,
-        A2AjsonrpcRequest request,
+        AgenticAgentsJsonRpcRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<A2AjsonrpcResponse>(
+        return new WithRawResponseTask<AgenticAgentsJsonRpcResponse>(
             JsonRpcAsyncCore(agentId, request, options, cancellationToken)
         );
     }
@@ -1773,7 +1777,7 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// await client.Agentic.Agents.SendMessageAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
-    ///     new A2ASendMessageRequest
+    ///     new AgenticAgentsSendMessageRequest
     ///     {
     ///         Message = new CommonMessage
     ///         {
@@ -1787,14 +1791,14 @@ public partial class AgentsClient : IAgentsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<A2ASendMessageResponse> SendMessageAsync(
+    public WithRawResponseTask<AgenticAgentsSendMessageResponse> SendMessageAsync(
         string agentId,
-        A2ASendMessageRequest request,
+        AgenticAgentsSendMessageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<A2ASendMessageResponse>(
+        return new WithRawResponseTask<AgenticAgentsSendMessageResponse>(
             SendMessageAsyncCore(agentId, request, options, cancellationToken)
         );
     }
@@ -1806,7 +1810,7 @@ public partial class AgentsClient : IAgentsClient
     /// <example><code>
     /// client.Agentic.Agents.StreamMessageAsync(
     ///     "agt.0192f4c8-2c5a-7b3e-9f1a-3c8d6e2b7a40",
-    ///     new A2ASendMessageRequest
+    ///     new AgenticAgentsSendMessageRequest
     ///     {
     ///         Message = new CommonMessage
     ///         {
@@ -1820,14 +1824,14 @@ public partial class AgentsClient : IAgentsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseStream<A2AStreamEventResponse> StreamMessageAsync(
+    public WithRawResponseStream<AgenticAgentsStreamEventResponse> StreamMessageAsync(
         string agentId,
-        A2ASendMessageRequest request,
+        AgenticAgentsSendMessageRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseStream<A2AStreamEventResponse>(
+        return new WithRawResponseStream<AgenticAgentsStreamEventResponse>(
             StreamMessageAsyncCore(agentId, request, options, cancellationToken),
             cancellationToken
         );

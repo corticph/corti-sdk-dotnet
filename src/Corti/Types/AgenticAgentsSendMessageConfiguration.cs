@@ -8,7 +8,7 @@ namespace Corti;
 /// Per-request options controlling how a message is processed.
 /// </summary>
 [Serializable]
-public record A2ASendMessageConfiguration : IJsonOnDeserialized
+public record AgenticAgentsSendMessageConfiguration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

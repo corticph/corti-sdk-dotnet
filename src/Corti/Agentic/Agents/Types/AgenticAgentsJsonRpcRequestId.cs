@@ -8,11 +8,11 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti.Agentic;
 
-[JsonConverter(typeof(A2AjsonrpcRequestId.JsonConverter))]
+[JsonConverter(typeof(AgenticAgentsJsonRpcRequestId.JsonConverter))]
 [Serializable]
-public class A2AjsonrpcRequestId
+public class AgenticAgentsJsonRpcRequestId
 {
-    private A2AjsonrpcRequestId(string type, object? value)
+    private AgenticAgentsJsonRpcRequestId(string type, object? value)
     {
         Type = type;
         Value = value;
@@ -33,12 +33,12 @@ public class A2AjsonrpcRequestId
     /// <summary>
     /// Factory method to create a union from a string value.
     /// </summary>
-    public static A2AjsonrpcRequestId FromString(string value) => new("string", value);
+    public static AgenticAgentsJsonRpcRequestId FromString(string value) => new("string", value);
 
     /// <summary>
     /// Factory method to create a union from a int value.
     /// </summary>
-    public static A2AjsonrpcRequestId FromInt(int value) => new("int", value);
+    public static AgenticAgentsJsonRpcRequestId FromInt(int value) => new("int", value);
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "string"
@@ -136,7 +136,7 @@ public class A2AjsonrpcRequestId
             return false;
         if (ReferenceEquals(this, obj))
             return true;
-        if (obj is not A2AjsonrpcRequestId other)
+        if (obj is not AgenticAgentsJsonRpcRequestId other)
             return false;
 
         // Compare type discriminators
@@ -152,14 +152,15 @@ public class A2AjsonrpcRequestId
 
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator A2AjsonrpcRequestId(string value) => new("string", value);
+    public static implicit operator AgenticAgentsJsonRpcRequestId(string value) =>
+        new("string", value);
 
-    public static implicit operator A2AjsonrpcRequestId(int value) => new("int", value);
+    public static implicit operator AgenticAgentsJsonRpcRequestId(int value) => new("int", value);
 
     [Serializable]
-    internal sealed class JsonConverter : JsonConverter<A2AjsonrpcRequestId>
+    internal sealed class JsonConverter : JsonConverter<AgenticAgentsJsonRpcRequestId>
     {
-        public override A2AjsonrpcRequestId? Read(
+        public override AgenticAgentsJsonRpcRequestId? Read(
             ref Utf8JsonReader reader,
             global::System.Type typeToConvert,
             JsonSerializerOptions options
@@ -174,7 +175,7 @@ public class A2AjsonrpcRequestId
             {
                 if (reader.TryGetInt32(out var intValue))
                 {
-                    A2AjsonrpcRequestId intResult = new("int", intValue);
+                    AgenticAgentsJsonRpcRequestId intResult = new("int", intValue);
                     return intResult;
                 }
             }
@@ -185,22 +186,25 @@ public class A2AjsonrpcRequestId
 
                 if (int.TryParse(stringValue, out var intFromStringValue))
                 {
-                    A2AjsonrpcRequestId intFromStringResult = new("int", intFromStringValue);
+                    AgenticAgentsJsonRpcRequestId intFromStringResult = new(
+                        "int",
+                        intFromStringValue
+                    );
                     return intFromStringResult;
                 }
 
-                A2AjsonrpcRequestId stringResult = new("string", stringValue);
+                AgenticAgentsJsonRpcRequestId stringResult = new("string", stringValue);
                 return stringResult;
             }
 
             throw new JsonException(
-                $"Cannot deserialize JSON token {reader.TokenType} into A2AjsonrpcRequestId"
+                $"Cannot deserialize JSON token {reader.TokenType} into AgenticAgentsJsonRpcRequestId"
             );
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            A2AjsonrpcRequestId value,
+            AgenticAgentsJsonRpcRequestId value,
             JsonSerializerOptions options
         )
         {
@@ -213,20 +217,20 @@ public class A2AjsonrpcRequestId
             value.Visit(str => writer.WriteStringValue(str), num => writer.WriteNumberValue(num));
         }
 
-        public override A2AjsonrpcRequestId ReadAsPropertyName(
+        public override AgenticAgentsJsonRpcRequestId ReadAsPropertyName(
             ref Utf8JsonReader reader,
             global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
             var stringValue = reader.GetString()!;
-            A2AjsonrpcRequestId result = new("string", stringValue);
+            AgenticAgentsJsonRpcRequestId result = new("string", stringValue);
             return result;
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            A2AjsonrpcRequestId value,
+            AgenticAgentsJsonRpcRequestId value,
             JsonSerializerOptions options
         )
         {

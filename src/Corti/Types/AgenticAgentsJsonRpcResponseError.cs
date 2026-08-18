@@ -8,7 +8,7 @@ namespace Corti;
 /// JSON-RPC error object (present on failure).
 /// </summary>
 [Serializable]
-public record A2AjsonrpcResponseError : IJsonOnDeserialized
+public record AgenticAgentsJsonRpcResponseError : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

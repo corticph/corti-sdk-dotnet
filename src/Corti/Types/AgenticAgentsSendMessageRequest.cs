@@ -8,7 +8,7 @@ namespace Corti;
 /// Request body for sending a message to an agent.
 /// </summary>
 [Serializable]
-public record A2ASendMessageRequest : IJsonOnDeserialized
+public record AgenticAgentsSendMessageRequest : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -18,7 +18,7 @@ public record A2ASendMessageRequest : IJsonOnDeserialized
     public required CommonMessage Message { get; set; }
 
     [JsonPropertyName("configuration")]
-    public A2ASendMessageConfiguration? Configuration { get; set; }
+    public AgenticAgentsSendMessageConfiguration? Configuration { get; set; }
 
     /// <summary>
     /// Free-form request metadata.

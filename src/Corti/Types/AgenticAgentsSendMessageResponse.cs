@@ -10,11 +10,11 @@ namespace Corti;
 /// <summary>
 /// Exactly one of `task` or `message` is present.
 /// </summary>
-[JsonConverter(typeof(A2ASendMessageResponse.JsonConverter))]
+[JsonConverter(typeof(AgenticAgentsSendMessageResponse.JsonConverter))]
 [Serializable]
-public class A2ASendMessageResponse
+public class AgenticAgentsSendMessageResponse
 {
-    private A2ASendMessageResponse(string type, object? value)
+    private AgenticAgentsSendMessageResponse(string type, object? value)
     {
         Type = type;
         Value = value;
@@ -35,7 +35,8 @@ public class A2ASendMessageResponse
     /// <summary>
     /// Factory method to create a union from a object value.
     /// </summary>
-    public static A2ASendMessageResponse FromUnknown(object value) => new("unknown", value);
+    public static AgenticAgentsSendMessageResponse FromUnknown(object value) =>
+        new("unknown", value);
 
     /// <summary>
     /// Returns true if <see cref="Type"/> is "unknown"
@@ -103,7 +104,7 @@ public class A2ASendMessageResponse
             return false;
         if (ReferenceEquals(this, obj))
             return true;
-        if (obj is not A2ASendMessageResponse other)
+        if (obj is not AgenticAgentsSendMessageResponse other)
             return false;
 
         // Compare type discriminators
@@ -120,9 +121,9 @@ public class A2ASendMessageResponse
     public override string ToString() => JsonUtils.Serialize(this);
 
     [Serializable]
-    internal sealed class JsonConverter : JsonConverter<A2ASendMessageResponse>
+    internal sealed class JsonConverter : JsonConverter<AgenticAgentsSendMessageResponse>
     {
-        public override A2ASendMessageResponse? Read(
+        public override AgenticAgentsSendMessageResponse? Read(
             ref Utf8JsonReader reader,
             global::System.Type typeToConvert,
             JsonSerializerOptions options
@@ -134,13 +135,13 @@ public class A2ASendMessageResponse
             }
 
             throw new JsonException(
-                $"Cannot deserialize JSON token {reader.TokenType} into A2ASendMessageResponse"
+                $"Cannot deserialize JSON token {reader.TokenType} into AgenticAgentsSendMessageResponse"
             );
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            A2ASendMessageResponse value,
+            AgenticAgentsSendMessageResponse value,
             JsonSerializerOptions options
         )
         {
@@ -153,20 +154,20 @@ public class A2ASendMessageResponse
             value.Visit(obj => JsonSerializer.Serialize(writer, obj, options));
         }
 
-        public override A2ASendMessageResponse ReadAsPropertyName(
+        public override AgenticAgentsSendMessageResponse ReadAsPropertyName(
             ref Utf8JsonReader reader,
             global::System.Type typeToConvert,
             JsonSerializerOptions options
         )
         {
             var stringValue = reader.GetString()!;
-            A2ASendMessageResponse result = new("string", stringValue);
+            AgenticAgentsSendMessageResponse result = new("string", stringValue);
             return result;
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            A2ASendMessageResponse value,
+            AgenticAgentsSendMessageResponse value,
             JsonSerializerOptions options
         )
         {

@@ -8,7 +8,7 @@ namespace Corti;
 /// A JSON-RPC 2.0 response envelope.
 /// </summary>
 [Serializable]
-public record A2AjsonrpcResponse : IJsonOnDeserialized
+public record AgenticAgentsJsonRpcResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -19,7 +19,7 @@ public record A2AjsonrpcResponse : IJsonOnDeserialized
     /// </summary>
     [JsonRequired]
     [JsonPropertyName("jsonrpc")]
-    public A2AjsonrpcResponse.JsonrpcLiteral Jsonrpc { get;
+    public AgenticAgentsJsonRpcResponse.JsonrpcLiteral Jsonrpc { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -28,7 +28,7 @@ public record A2AjsonrpcResponse : IJsonOnDeserialized
     } = new();
 
     [JsonPropertyName("id")]
-    public A2AjsonrpcResponseId? Id { get; set; }
+    public AgenticAgentsJsonRpcResponseId? Id { get; set; }
 
     /// <summary>
     /// JSON-RPC result object (present on success).
@@ -40,7 +40,7 @@ public record A2AjsonrpcResponse : IJsonOnDeserialized
     /// JSON-RPC error object (present on failure).
     /// </summary>
     [JsonPropertyName("error")]
-    public A2AjsonrpcResponseError? Error { get; set; }
+    public AgenticAgentsJsonRpcResponseError? Error { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
