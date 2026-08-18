@@ -1,3 +1,5 @@
+using IAgenticClient = Corti.Agentic.IAgenticClient;
+
 namespace Corti;
 
 public partial interface ICortiClient
@@ -13,6 +15,7 @@ public partial interface ICortiClient
     public ICodesClient Codes { get; }
     public ILanguagesClient Languages { get; }
     public IAgentsClient Agents { get; }
+    public IAgenticClient Agentic { get; }
     Task<IStreamApi> CreateStreamApiAsync(
         string interactionId,
         IEnumerable<KeyValuePair<string, string>>? additionalQueryParameters = null);
