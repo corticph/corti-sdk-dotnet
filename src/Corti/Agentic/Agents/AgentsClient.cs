@@ -1317,40 +1317,37 @@ public partial class AgentsClient : IAgentsClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Patch: Fern wraps this iterator in ExceptionHandler.TryCatchAsync, which is invalid C#
+    /// (yield cannot appear in a lambda; iterators cannot return a Task). Iterate SSE directly.
+    /// </summary>
     private async IAsyncEnumerable<AgenticAgentsStreamEventResponse> StreamMessageAsyncBody(
         ApiResponse response,
         [EnumeratorCancellation] CancellationToken cancellationToken = default
     )
     {
-        return await _client
-            .Options.ExceptionHandler.TryCatchAsync(async () =>
+        await foreach (
+            var item in SseParser
+                .Create(await response.Raw.Content.ReadAsStreamAsync())
+                .EnumerateAsync(cancellationToken)
+        )
+        {
+            if (!string.IsNullOrEmpty(item.Data))
             {
-                await foreach (
-                    var item in SseParser
-                        .Create(await response.Raw.Content.ReadAsStreamAsync())
-                        .EnumerateAsync(cancellationToken)
-                )
+                AgenticAgentsStreamEventResponse? result;
+                try
                 {
-                    if (!string.IsNullOrEmpty(item.Data))
-                    {
-                        AgenticAgentsStreamEventResponse? result;
-                        try
-                        {
-                            result = JsonUtils.Deserialize<AgenticAgentsStreamEventResponse>(
-                                item.Data
-                            );
-                        }
-                        catch (JsonException)
-                        {
-                            throw new CortiClientException(
-                                $"Unable to deserialize JSON response 'item.Data'"
-                            );
-                        }
-                        yield return result!;
-                    }
+                    result = JsonUtils.Deserialize<AgenticAgentsStreamEventResponse>(item.Data);
                 }
-            })
-            .ConfigureAwait(false);
+                catch (JsonException)
+                {
+                    throw new CortiClientException(
+                        $"Unable to deserialize JSON response 'item.Data'"
+                    );
+                }
+                yield return result!;
+            }
+        }
     }
 
     private async Task<WithRawResponse<AgentsUsageReportResponse>> UsageAsyncCore(
