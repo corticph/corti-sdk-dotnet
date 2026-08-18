@@ -13,6 +13,9 @@ public partial interface ICortiClient
     public ICodesClient Codes { get; }
     public ILanguagesClient Languages { get; }
     public IAgentsClient Agents { get; }
-    Task<IStreamApi> CreateStreamApiAsync(string interactionId);
-    Task<ITranscribeApi> CreateTranscribeApiAsync();
+    Task<IStreamApi> CreateStreamApiAsync(
+        string interactionId,
+        IEnumerable<KeyValuePair<string, string>>? additionalQueryParameters = null);
+    Task<ITranscribeApi> CreateTranscribeApiAsync(
+        IEnumerable<KeyValuePair<string, string>>? additionalQueryParameters = null);
 }

@@ -1,7 +1,38 @@
+using Corti.Core;
+using Corti.Core.WebSockets;
+
 namespace Corti;
 
 public partial class StreamApi
 {
+    /// <summary>
+    /// Patch: stamp x-corti-analytics onto the WebSocket query, merged with extra parameters.
+    /// </summary>
+    public StreamApi(
+        StreamApi.Options options,
+        IEnumerable<KeyValuePair<string, string>>? additionalQueryParameters,
+        Dictionary<string, string>? analytics)
+    {
+        _options = options;
+        var uri = new UriBuilder(_options.BaseUrl)
+        {
+            Query = new QueryStringBuilder.Builder(capacity: 2)
+                .Add("tenant-name", _options.TenantName)
+                .Add("token", _options.Token)
+                .MergeAdditional(AnalyticsHelper.WithAnalytics(analytics, additionalQueryParameters))
+                .Build(),
+        };
+        uri.Path =
+            $"{uri.Path.TrimEnd('/')}/interactions/{Uri.EscapeDataString(_options.Id)}/streams";
+        _client = new WebSocketClient(uri.Uri, OnTextMessage);
+        _client.HttpInvoker = _options.HttpInvoker;
+        _client.IsReconnectionEnabled = _options.IsReconnectionEnabled;
+        _client.ReconnectTimeout = _options.ReconnectTimeout;
+        _client.ErrorReconnectTimeout = _options.ErrorReconnectTimeout;
+        _client.LostReconnectTimeout = _options.LostReconnectTimeout;
+        _client.Backoff = _options.ReconnectBackoff;
+    }
+
     /// <summary>
     /// Connects and sends configuration, resolving only after CONFIG_ACCEPTED.
     /// Throws <see cref="InvalidOperationException"/> on CONFIG_DENIED / CONFIG_MISSING /
