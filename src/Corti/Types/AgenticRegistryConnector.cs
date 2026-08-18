@@ -16,7 +16,7 @@ public record AgenticRegistryConnector : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Stable, namespaced registry identifier; use as a `registry` connector's `name`.
+    /// Stable registry identifier; use as a `registry` connector's `name`.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }

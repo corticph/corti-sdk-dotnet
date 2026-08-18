@@ -1571,7 +1571,7 @@ public partial class AgentsClient : IAgentsClient
     ///         Lifecycle = AgentsLifecycle.Persistent,
     ///         Connectors = new List&lt;CommonConnectorCreateRequest&gt;()
     ///         {
-    ///             new CommonRegistryConnectorCreate { Name = "@corti/coding-expert" },
+    ///             new CommonRegistryConnectorCreate { Name = "pubmed-expert" },
     ///             new CommonMcpConnectorCreate
     ///             {
     ///                 Name = "policybot",
@@ -1679,7 +1679,7 @@ public partial class AgentsClient : IAgentsClient
     ///         Name = "coder-v2",
     ///         Connectors = new List&lt;CommonConnectorCreateRequest&gt;()
     ///         {
-    ///             new CommonRegistryConnectorCreate { Name = "@corti/coding-expert" },
+    ///             new CommonRegistryConnectorCreate { Name = "pubmed-expert" },
     ///         },
     ///     }
     /// );

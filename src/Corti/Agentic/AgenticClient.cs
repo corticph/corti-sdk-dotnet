@@ -14,7 +14,6 @@ public partial class AgenticClient : IAgenticClient
             _client = client;
             Agents = new AgentsClient(_client);
             Contexts = new ContextsClient(_client);
-            Models = new ModelsClient(_client);
             Registry = new RegistryClient(_client);
         }
         catch (Exception ex)
@@ -27,8 +26,6 @@ public partial class AgenticClient : IAgenticClient
     public IAgentsClient Agents { get; }
 
     public IContextsClient Contexts { get; }
-
-    public IModelsClient Models { get; }
 
     public IRegistryClient Registry { get; }
 }
