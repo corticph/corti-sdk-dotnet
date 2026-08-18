@@ -1,7 +1,5 @@
 using Corti;
 using Corti.Core;
-using global::System.Net.ServerSentEvents;
-using global::System.Runtime.CompilerServices;
 using global::System.Text.Json;
 
 namespace Corti.Agentic.Agents;
@@ -549,36 +547,12 @@ public partial class TasksClient : ITasksClient
 
     /// <summary>
     /// Patch: Fern wraps this iterator in ExceptionHandler.TryCatchAsync, which is invalid C#
-    /// (yield cannot appear in a lambda; iterators cannot return a Task). Iterate SSE directly.
+    /// (yield cannot appear in a lambda). Delegate SSE parse/yield to <see cref="SseJsonStream"/>.
     /// </summary>
-    private async IAsyncEnumerable<AgenticAgentsStreamEventResponse> SubscribeAsyncBody(
+    private IAsyncEnumerable<AgenticAgentsStreamEventResponse> SubscribeAsyncBody(
         ApiResponse response,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default
-    )
-    {
-        await foreach (
-            var item in SseParser
-                .Create(await response.Raw.Content.ReadAsStreamAsync())
-                .EnumerateAsync(cancellationToken)
-        )
-        {
-            if (!string.IsNullOrEmpty(item.Data))
-            {
-                AgenticAgentsStreamEventResponse? result;
-                try
-                {
-                    result = JsonUtils.Deserialize<AgenticAgentsStreamEventResponse>(item.Data);
-                }
-                catch (JsonException)
-                {
-                    throw new CortiClientException(
-                        $"Unable to deserialize JSON response 'item.Data'"
-                    );
-                }
-                yield return result!;
-            }
-        }
-    }
+        CancellationToken cancellationToken = default
+    ) => SseJsonStream.ReadEventsAsync<AgenticAgentsStreamEventResponse>(response, cancellationToken);
 
     /// <example><code>
     /// await client.Agentic.Agents.Tasks.ListAsync(

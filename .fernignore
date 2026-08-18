@@ -24,3 +24,8 @@ src/Corti.Test/Core/WebSockets/QueryTests.cs
 
 # CI/release workflows and GitHub config — hand-maintained, Fern must not overwrite
 .github/
+
+# Generated clients patched for SSE iterators (invalid Fern yield-in-lambda).
+# Logic lives in src/Corti/Custom/SseJsonStream.cs; these files call it.
+src/Corti/Agentic/Agents/AgentsClient.cs
+src/Corti/Agentic/Agents/Tasks/TasksClient.cs
