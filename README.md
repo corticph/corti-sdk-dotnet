@@ -20,6 +20,7 @@ The Corti C# library provides convenient access to the Corti APIs from C#.
   - [Raw Response](#raw-response)
   - [Additional Headers](#additional-headers)
   - [Additional Query Parameters](#additional-query-parameters)
+  - [Analytics](#analytics)
   - [Forward Compatible Enums](#forward-compatible-enums)
 - [Contributing](#contributing)
 
@@ -269,6 +270,70 @@ var response = await client.Interactions.CreateAsync(
     }
 );
 ```
+
+### Analytics
+
+The SDK sends metadata about itself (`sdk_version`, `sdk_type`) with every request via the `X-Corti-Analytics` header (REST) or the `x-corti-analytics` query parameter (WebSocket). You can extend this payload with your own fields on `CortiRequestOptions.Analytics`, and overlay extra fields on individual REST calls or WebSocket connections.
+
+> **Reserved keys**: `sdk_version` and `sdk_type` are always set by the SDK and cannot be overridden at any level.
+
+#### Client-level
+
+Pass `Analytics` when constructing the client. The payload is sent with every request.
+
+```csharp
+var client = new CortiClient(
+    "YOUR_TENANT_NAME",
+    "YOUR_ENVIRONMENT_ID",
+    new CortiClientAuth.ClientCredentials("YOUR_CLIENT_ID", "YOUR_CLIENT_SECRET"),
+    new CortiRequestOptions
+    {
+        Analytics = new Dictionary<string, string>
+        {
+            ["integration"] = "epic-hyperspace",
+            ["workflow"] = "ambient-scribe",
+        },
+    }
+);
+
+// Every REST call includes: X-Corti-Analytics: {"sdk_version":"...","sdk_type":"corti-sdk-dotnet","integration":"epic-hyperspace","workflow":"ambient-scribe"}
+await client.Interactions.ListAsync(new InteractionsListRequest());
+```
+
+#### Per-request (HTTP)
+
+For a single REST call, pass an `x-corti-analytics` header in `RequestOptions.AdditionalHeaders`. The value is a JSON string. Per-request fields are merged with the client-level context — they extend rather than replace it.
+
+```csharp
+await client.Documents.GenerateAsync(
+    ...,
+    new RequestOptions
+    {
+        AdditionalHeaders = new Dictionary<string, string?>
+        {
+            ["x-corti-analytics"] = """{"document_type":"progress-note"}""",
+        },
+    }
+);
+// X-Corti-Analytics includes: {"sdk_version":"...","sdk_type":"corti-sdk-dotnet","integration":"epic-hyperspace","workflow":"ambient-scribe","document_type":"progress-note"}
+```
+
+#### Per-connection (WebSocket)
+
+Pass `x-corti-analytics` in `additionalQueryParameters` on `CreateStreamApiAsync` / `CreateTranscribeApiAsync`. Per-connection fields are merged with the client-level context.
+
+```csharp
+var stream = await client.CreateStreamApiAsync(
+    interactionId,
+    new Dictionary<string, string>
+    {
+        ["x-corti-analytics"] = """{"visit_type":"inpatient"}""",
+    }
+);
+// Handshake query includes: x-corti-analytics={"sdk_version":"...","sdk_type":"corti-sdk-dotnet","integration":"epic-hyperspace","workflow":"ambient-scribe","visit_type":"inpatient"}
+```
+
+> **Note**: This value is in the query string and may appear in access logs — avoid personally identifiable information.
 
 ### Forward Compatible Enums
 
