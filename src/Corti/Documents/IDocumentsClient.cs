@@ -4,49 +4,18 @@ namespace Corti;
 
 public partial interface IDocumentsClient
 {
+    public IClassicClient Classic { get; }
     public Corti.Documents.ITemplatesClient Templates { get; }
     public ISectionsClient Sections { get; }
 
     /// <summary>
-    /// List Documents
+    /// Guided Documents list (`GET /documents/`). For classic interaction-scoped documents, use `client.documents.classic.list`.
+    ///
+    /// Returns a list of previously generated documents.
+    /// Use query parameters to filter by template, interaction, or label.
     /// </summary>
-    WithRawResponseTask<DocumentsListResponse> ListAsync(
-        string id,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    /// <summary>
-    /// This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
-    /// </summary>
-    WithRawResponseTask<DocumentsGetResponse> CreateAsync(
-        string id,
-        DocumentsCreateRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    /// <summary>
-    /// Get Document.
-    /// </summary>
-    WithRawResponseTask<DocumentsGetResponse> GetAsync(
-        string id,
-        string documentId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    WithRawResponseTask DeleteAsync(
-        string id,
-        string documentId,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    );
-
-    WithRawResponseTask<DocumentsGetResponse> UpdateAsync(
-        string id,
-        string documentId,
-        DocumentsUpdateRequest request,
+    WithRawResponseTask<IEnumerable<GuidedDocument>> ListAsync(
+        GuidedDocumentsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -58,6 +27,42 @@ public partial interface IDocumentsClient
     /// </summary>
     WithRawResponseTask<GuidedDocumentsCreateEphemeralResponse> GenerateAsync(
         GuidedDocumentsGenerateRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Guided Documents get (`GET /documents/{documentID}`). For classic interaction-scoped documents, use `client.documents.classic.get`.
+    ///
+    /// Returns a previously generated document by ID, including its rendered string output
+    /// and structured object.
+    /// </summary>
+    WithRawResponseTask<GuidedDocument> GetAsync(
+        string documentId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Guided Documents delete (`DELETE /documents/{documentID}`). For classic interaction-scoped documents, use `client.documents.classic.delete`.
+    ///
+    /// Deletes the document. This cannot be undone.
+    /// </summary>
+    WithRawResponseTask DeleteAsync(
+        string documentId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Guided Documents update (`PATCH /documents/{documentID}`). For classic interaction-scoped documents, use `client.documents.classic.update`.
+    ///
+    /// Updates the document's `name`, `labels`, or rendered output (`stringDocument` / `structuredDocument`).
+    /// Use this to persist edits made to a previously generated document.
+    /// </summary>
+    WithRawResponseTask<GuidedDocument> UpdateAsync(
+        string documentId,
+        GuidedDocumentsUpdateRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );

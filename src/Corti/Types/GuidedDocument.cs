@@ -5,21 +5,30 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A generated document that was not saved to the database.
+/// A generated document saved to the database.
 /// </summary>
 [Serializable]
-public record GuidedEphemeralDocument : IJsonOnDeserialized
+public record GuidedDocument : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    /// <summary>
+    /// The template ID used for generation. For a plain `templateRef` with no overrides this is the referenced template. For other paths it is the newly saved auto-generated template aggregate.
+    /// </summary>
     [JsonPropertyName("templateId")]
     public required string TemplateId { get; set; }
 
+    /// <summary>
+    /// The specific template version that was used for generation.
+    /// </summary>
     [JsonPropertyName("templateVersionId")]
     public required string TemplateVersionId { get; set; }
 
@@ -59,6 +68,12 @@ public record GuidedEphemeralDocument : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("labels")]
     public IEnumerable<GuidedLabel> Labels { get; set; } = new List<GuidedLabel>();
+
+    [JsonPropertyName("createdAt")]
+    public required DateTime CreatedAt { get; set; }
+
+    [JsonPropertyName("updatedAt")]
+    public required DateTime UpdatedAt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
