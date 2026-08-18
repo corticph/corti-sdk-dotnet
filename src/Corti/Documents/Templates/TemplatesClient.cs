@@ -413,7 +413,7 @@ public partial class TemplatesClient : ITemplatesClient
                                 );
                             case 409:
                                 throw new ConflictError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
+                                    JsonUtils.Deserialize<object>(responseBody),
                                     rawResponse: new Corti.RawResponse()
                                     {
                                         StatusCode = response.Raw.StatusCode,

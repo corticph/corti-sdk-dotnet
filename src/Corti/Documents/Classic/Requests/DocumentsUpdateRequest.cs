@@ -1,7 +1,8 @@
+using Corti;
 using Corti.Core;
 using global::System.Text.Json.Serialization;
 
-namespace Corti;
+namespace Corti.Documents;
 
 [Serializable]
 public record DocumentsUpdateRequest
