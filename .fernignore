@@ -11,6 +11,7 @@ src/Corti/Custom/
 src/Corti/CortiClient.cs
 src/Corti/ICortiClient.cs
 src/Corti/Core/OAuthTokenProvider.cs
+src/Corti/Core/HeadersBuilder.cs
 
 # Name of the package
 src/Corti/Corti.Custom.props

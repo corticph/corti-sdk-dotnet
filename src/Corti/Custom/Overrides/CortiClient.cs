@@ -8,6 +8,7 @@ public partial class CortiClient : ICortiClient
     private readonly IAuthTokenProvider _tokenProvider;
     private readonly string? _tenantName;
     private readonly string _wssUrl;
+    private readonly Dictionary<string, string>? _analytics;
 
     /// <summary>
     /// Explicit tenant + environment: use for ClientCredentials, Ropc, or any Bearer variant when
@@ -55,6 +56,12 @@ public partial class CortiClient : ICortiClient
             throw new ArgumentException("TenantName is required.", nameof(options));
 
         var clientOptions = BuildClientOptions(options);
+        _analytics =
+            options.RequestOptions?.Analytics is { } analytics
+                ? new Dictionary<string, string>(analytics, StringComparer.Ordinal)
+                : null;
+        clientOptions.Headers[AnalyticsHelper.XCortiAnalytics] = AnalyticsHelper
+            .WithAnalytics(_analytics)[AnalyticsHelper.XCortiAnalytics];
 
         try
         {
@@ -254,34 +261,45 @@ public partial class CortiClient : ICortiClient
 
     public IAgentsClient Agents { get; }
 
-    public async Task<IStreamApi> CreateStreamApiAsync(string interactionId)
+    public async Task<IStreamApi> CreateStreamApiAsync(
+        string interactionId,
+        IEnumerable<KeyValuePair<string, string>>? additionalQueryParameters = null)
     {
         var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
 
         if (string.IsNullOrEmpty(_tenantName))
             throw new InvalidOperationException("TenantName is required for Stream WebSocket. Use the (tenantName, environment, auth) constructor.");
 
-        return new StreamApi(new StreamApi.Options
-        {
-            Id = interactionId,
-            TenantName = _tenantName,
-            Token = token,
-            BaseUrl = _wssUrl,
-        });
+        return new StreamApi(
+            new StreamApi.Options
+            {
+                Id = interactionId,
+                TenantName = _tenantName,
+                Token = token,
+                BaseUrl = _wssUrl,
+            },
+            additionalQueryParameters,
+            _analytics
+        );
     }
 
-    public async Task<ITranscribeApi> CreateTranscribeApiAsync()
+    public async Task<ITranscribeApi> CreateTranscribeApiAsync(
+        IEnumerable<KeyValuePair<string, string>>? additionalQueryParameters = null)
     {
         var token = await _tokenProvider.GetAccessTokenAsync().ConfigureAwait(false) ?? string.Empty;
 
         if (string.IsNullOrEmpty(_tenantName))
             throw new InvalidOperationException("TenantName is required for Transcribe WebSocket. Use the (tenantName, environment, auth) constructor.");
 
-        return new TranscribeApi(new TranscribeApi.Options
-        {
-            TenantName = _tenantName,
-            Token = token,
-            BaseUrl = _wssUrl,
-        });
+        return new TranscribeApi(
+            new TranscribeApi.Options
+            {
+                TenantName = _tenantName,
+                Token = token,
+                BaseUrl = _wssUrl,
+            },
+            additionalQueryParameters,
+            _analytics
+        );
     }
 }
