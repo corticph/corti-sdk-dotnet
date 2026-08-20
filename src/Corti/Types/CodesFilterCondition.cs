@@ -21,7 +21,7 @@ public record CodesFilterCondition : IJsonOnDeserialized
     public required string Property { get; set; }
 
     /// <summary>
-    /// Comparison operator: `=` (equal), `is-a` (code plus descendants), `descendent-of` (strict descendants), `exists` (has any value), `in` (membership).
+    /// Comparison operator: `=` (equal), `is-a` (code plus descendants), `descendent-of` (strict descendants), `exists` (`value: true`/`false` for set/unset), `in` (membership).
     /// </summary>
     [JsonPropertyName("op")]
     public CodesFilterConditionOp? Op { get; set; }
