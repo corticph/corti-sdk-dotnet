@@ -5,29 +5,23 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Template-level override patch. `generation` is the canonical shape. The flat `instructions` and `sections` fields are deprecated and remain for backward compatibility. Use `generation` instead. If a request sets both `generation` and a flat field, the server rejects it with a 400.
+/// The canonical template-level override wrapper. Holds the template instructions and the per-section override patches.
 /// </summary>
 [Serializable]
-public record GuidedTemplateOverrides : IJsonOnDeserialized
+public record GuidedTemplateOverridesGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The canonical override wrapper for this template.
-    /// </summary>
-    [JsonPropertyName("generation")]
-    public GuidedTemplateOverridesGeneration? Generation { get; set; }
-
-    /// <summary>
-    /// **Deprecated** — use `generation.instructions`. Replaces the template-level instructions for this call.
+    /// Replaces the template-level instructions for this call.
     /// </summary>
     [JsonPropertyName("instructions")]
     public GuidedTemplateInstructions? Instructions { get; set; }
 
     /// <summary>
-    /// **Deprecated** — use `generation.sections`. Per-section override patches. Each entry must reference a section already linked to the base template version.
+    /// Per-section override patches. Each entry must reference a section already linked to the base template version.
     /// </summary>
     [JsonPropertyName("sections")]
     public IEnumerable<GuidedSectionOverride>? Sections { get; set; }
