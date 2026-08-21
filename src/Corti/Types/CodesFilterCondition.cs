@@ -5,26 +5,32 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Optional filter to restrict the set of codes the model can predict.
+/// Single property/op/value filter clause for attribute-based code filtering.
 /// </summary>
 [Serializable]
-public record CodesFilter : IJsonOnDeserialized
+public record CodesFilterCondition : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Condition objects to include. When empty, the full set of codes for the requested systems is used.
+    /// The attribute to filter on, e.g. `code`.
     /// </summary>
-    [JsonPropertyName("include")]
-    public IEnumerable<CodesFilterCondition>? Include { get; set; }
+    [JsonPropertyName("property")]
+    public required string Property { get; set; }
 
     /// <summary>
-    /// Condition objects to subtract from the include set.
+    /// Comparison operator: `=` (equal), `is-a` (code plus descendants), `descendent-of` (strict descendants), `exists` (`value: true`/`false` for set/unset), `in` (membership).
     /// </summary>
-    [JsonPropertyName("exclude")]
-    public IEnumerable<CodesFilterCondition>? Exclude { get; set; }
+    [JsonPropertyName("op")]
+    public CodesFilterConditionOp? Op { get; set; }
+
+    /// <summary>
+    /// Comparison value; type depends on `op`.
+    /// </summary>
+    [JsonPropertyName("value")]
+    public required CodesFilterConditionValue Value { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
