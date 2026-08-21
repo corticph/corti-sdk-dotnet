@@ -30,6 +30,9 @@ public record TranscriptsCreateRequest
     [JsonPropertyName("automaticPunctuation")]
     public bool? AutomaticPunctuation { get; set; }
 
+    [JsonPropertyName("formatting")]
+    public TranscriptsFormatting? Formatting { get; set; }
+
     /// <summary>
     /// **Deprecated** — replaced by `spokenPunctuation` and `automaticPunctuation`. Ignored when either of those fields is provided. When `true` and neither new field is provided, it is treated as `spokenPunctuation: true` (automatic punctuation off). No removal date is currently planned.
     /// </summary>
@@ -71,6 +74,12 @@ public record TranscriptsCreateRequest
     /// </summary>
     [JsonPropertyName("keyterms")]
     public TranscriptsCreateRequestKeyterms? Keyterms { get; set; }
+
+    /// <summary>
+    /// When enabled, the transcript is stored and returned at word level instead of phrase/utterance level. Fixed for the lifetime of the transcript once created.
+    /// </summary>
+    [JsonPropertyName("wordLevel")]
+    public TranscriptsCreateRequestWordLevel? WordLevel { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

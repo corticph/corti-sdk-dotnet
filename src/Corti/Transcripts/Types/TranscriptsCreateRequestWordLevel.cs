@@ -5,26 +5,17 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Optional filter to restrict the set of codes the model can predict.
+/// When enabled, the transcript is stored and returned at word level instead of phrase/utterance level. Fixed for the lifetime of the transcript once created.
 /// </summary>
 [Serializable]
-public record CodesFilter : IJsonOnDeserialized
+public record TranscriptsCreateRequestWordLevel : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Condition objects to include. When empty, the full set of codes for the requested systems is used.
-    /// </summary>
-    [JsonPropertyName("include")]
-    public IEnumerable<CodesFilterCondition>? Include { get; set; }
-
-    /// <summary>
-    /// Condition objects to subtract from the include set.
-    /// </summary>
-    [JsonPropertyName("exclude")]
-    public IEnumerable<CodesFilterCondition>? Exclude { get; set; }
+    [JsonPropertyName("enabled")]
+    public bool? Enabled { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
