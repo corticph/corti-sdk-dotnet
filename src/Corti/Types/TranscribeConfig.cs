@@ -18,6 +18,12 @@ public record TranscribeConfig : IJsonOnDeserialized
     public required string PrimaryLanguage { get; set; }
 
     /// <summary>
+    /// Controls how recognized transcript text is processed before it is returned. `standard` (default) applies Corti's standard transcript processing and configured transcript features. `raw` returns the core speech recognition result without transcript transformations or enhancements, which can reduce latency and processing cost but may reduce transcript accuracy. When `raw` is defined, features that transform transcript text (such as formatting or replacements) are not available; features that describe the recognition result (such as timestamps, word-level output, diarization, and audio events) remain supported where applicable. The `text` and `rawTranscriptText` fields contain the same core recognition result.
+    /// </summary>
+    [JsonPropertyName("transcriptProcessing")]
+    public TranscribeConfigTranscriptProcessing? TranscriptProcessing { get; set; }
+
+    /// <summary>
     /// When true, returns interim (preview) transcript results (`isFinal=false`) for reduced latency than final transcripts. Defaults to false.
     /// </summary>
     [JsonPropertyName("interimResults")]
