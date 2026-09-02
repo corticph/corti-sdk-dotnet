@@ -36,7 +36,7 @@ public record StreamConfigTranscription : IJsonOnDeserialized
     public bool? IsMultichannel { get; set; }
 
     /// <summary>
-    /// List of participants, each assigning a free-form role to a channel. For raw PCM, the channel count must be defined; otherwise, the number of audio channels is resolved from the audio itself, not from the declared participants. Leave empty when diarize: true. See [audio formatting](https://docs.corti.ai/stt/audio) for full details. When isMultichannel is false, all participants are collapsed to channel 0.
+    /// List of participants, each assigning a free-form role to a channel. For raw PCM, the channel count must be defined; otherwise, the number of audio channels is resolved from the audio itself, not from the declared participants. See [audio formatting](https://docs.corti.ai/stt/audio) for full details. When isMultichannel is false, all participants channels above 0 are collapsed to channel 0.
     /// </summary>
     [JsonPropertyName("participants")]
     public IEnumerable<StreamConfigParticipant> Participants { get; set; } =
