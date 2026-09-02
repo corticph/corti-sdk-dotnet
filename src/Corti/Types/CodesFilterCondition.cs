@@ -5,29 +5,32 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Per-section reference for the assembly path.
+/// Single property/op/value filter clause for attribute-based code filtering.
 /// </summary>
 [Serializable]
-public record GuidedAssemblySectionRef : IJsonOnDeserialized
+public record CodesFilterCondition : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("sectionId")]
-    public required string SectionId { get; set; }
+    /// <summary>
+    /// The attribute to filter on.
+    /// </summary>
+    [JsonPropertyName("property")]
+    public required string Property { get; set; }
 
     /// <summary>
-    /// Optional explicit section version. Defaults to the section's published version when omitted.
+    /// Comparison operator: `=` (equal), `is-a` (code plus descendants), `descendent-of` (strict descendants), `exists` (`value: true`/`false` for set/unset), `in` (membership).
     /// </summary>
-    [JsonPropertyName("sectionVersionId")]
-    public string? SectionVersionId { get; set; }
+    [JsonPropertyName("op")]
+    public CodesFilterConditionOp? Op { get; set; }
 
     /// <summary>
-    /// Runtime override patch for this section. `generation` is the canonical shape. The flat fields are deprecated.
+    /// Comparison value; type depends on `op`.
     /// </summary>
-    [JsonPropertyName("overrides")]
-    public GuidedSectionOverridePatch? Overrides { get; set; }
+    [JsonPropertyName("value")]
+    public required CodesFilterConditionValue Value { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
