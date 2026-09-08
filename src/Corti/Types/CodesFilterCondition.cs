@@ -15,7 +15,7 @@ public record CodesFilterCondition : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The attribute to filter on, e.g. `code`.
+    /// The attribute to filter on.
     /// </summary>
     [JsonPropertyName("property")]
     public required string Property { get; set; }

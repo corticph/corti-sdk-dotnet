@@ -23,8 +23,11 @@ public record GuidedAssemblySectionRef : IJsonOnDeserialized
     [JsonPropertyName("sectionVersionId")]
     public string? SectionVersionId { get; set; }
 
+    /// <summary>
+    /// Runtime override patch for this section. `generation` is the canonical shape. The flat fields are deprecated.
+    /// </summary>
     [JsonPropertyName("overrides")]
-    public GuidedSectionOverrides? Overrides { get; set; }
+    public GuidedSectionOverridePatch? Overrides { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
