@@ -30,7 +30,7 @@ public record CommonTranscriptResponse : IJsonOnDeserialized
     public required int SpeakerId { get; set; }
 
     /// <summary>
-    /// The spoken phrase or utterance extracted from the audio.
+    /// The spoken phrase or utterance extracted from the audio. Will be a single word or entity if `wordLevel.enabled` was set to `true` when the transcript was created.
     /// </summary>
     [JsonPropertyName("text")]
     public required string Text { get; set; }
