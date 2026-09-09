@@ -65,6 +65,24 @@ public record InteractionsGetResponse : IJsonOnDeserialized
     [JsonPropertyName("lastUpdated")]
     public required DateTime LastUpdated { get; set; }
 
+    /// <summary>
+    /// `null` while the interaction is live. Set with `deletedAt` when deleted.
+    /// </summary>
+    [JsonPropertyName("deletionReason")]
+    public required InteractionsDeletionReasonEnum DeletionReason { get; set; }
+
+    /// <summary>
+    /// The timestamp when the retention policy deletes the interaction (UTC). `null` when no deletion is scheduled.
+    /// </summary>
+    [JsonPropertyName("scheduleDeletionAt")]
+    public DateTime? ScheduleDeletionAt { get; set; }
+
+    /// <summary>
+    /// Present when the interaction is deleted (UTC). `null` while the interaction is live.
+    /// </summary>
+    [JsonPropertyName("deletedAt")]
+    public DateTime? DeletedAt { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
