@@ -12,6 +12,12 @@ public record TranscriptsListRequest
     [JsonIgnore]
     public bool? Full { get; set; }
 
+    /// <summary>
+    /// Sorting order. Allowed values: [asc, desc]. Default is desc.
+    /// </summary>
+    [JsonIgnore]
+    public CommonSortingDirectionEnum? Direction { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {
