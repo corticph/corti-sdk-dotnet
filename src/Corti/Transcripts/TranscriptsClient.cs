@@ -30,8 +30,9 @@ public partial class TranscriptsClient : ITranscriptsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 1)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 2)
                     .Add("full", request.Full)
+                    .Add("direction", request.Direction)
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
@@ -808,7 +809,7 @@ public partial class TranscriptsClient : ITranscriptsClient
     }
 
     /// <summary>
-    /// Retrieves a list of transcripts for a given interaction.
+    /// Retrieves a list of transcripts for a given interaction. Transcripts are ordered based on their creation time. Default ordering (desc) will return the most recent transcript first in the list. Use query parameter to define the order of the list (`asc` for ascending and `desc` for descending).
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.ListAsync(
