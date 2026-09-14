@@ -79,6 +79,13 @@ public record AgenticAgentsResponse : IJsonOnDeserialized
     [JsonPropertyName("createdBy")]
     public string? CreatedBy { get; set; }
 
+    /// <summary>
+    /// When the agent expires; `null` means it does not expire. Ephemeral agents get a 24h expiry at creation time; persistent agents never expire.
+    /// </summary>
+    [JsonAccess(JsonAccessType.ReadOnly)]
+    [JsonPropertyName("expiresAt")]
+    public DateTime? ExpiresAt { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

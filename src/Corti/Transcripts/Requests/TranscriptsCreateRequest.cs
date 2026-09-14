@@ -30,6 +30,9 @@ public record TranscriptsCreateRequest
     [JsonPropertyName("automaticPunctuation")]
     public bool? AutomaticPunctuation { get; set; }
 
+    [JsonPropertyName("formatting")]
+    public TranscriptsFormatting? Formatting { get; set; }
+
     /// <summary>
     /// **Deprecated** — replaced by `spokenPunctuation` and `automaticPunctuation`. Ignored when either of those fields is provided. When `true` and neither new field is provided, it is treated as `spokenPunctuation: true` (automatic punctuation off). No removal date is currently planned.
     /// </summary>

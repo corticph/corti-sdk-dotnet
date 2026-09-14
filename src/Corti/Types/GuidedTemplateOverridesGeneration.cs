@@ -5,29 +5,26 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Per-section reference for the assembly path.
+/// The canonical template-level override wrapper. Holds the template instructions and the per-section override patches.
 /// </summary>
 [Serializable]
-public record GuidedAssemblySectionRef : IJsonOnDeserialized
+public record GuidedTemplateOverridesGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("sectionId")]
-    public required string SectionId { get; set; }
+    /// <summary>
+    /// Replaces the template-level instructions for this call.
+    /// </summary>
+    [JsonPropertyName("instructions")]
+    public GuidedTemplateInstructions? Instructions { get; set; }
 
     /// <summary>
-    /// Optional explicit section version. Defaults to the section's published version when omitted.
+    /// Per-section override patches. Each entry must reference a section already linked to the base template version.
     /// </summary>
-    [JsonPropertyName("sectionVersionId")]
-    public string? SectionVersionId { get; set; }
-
-    /// <summary>
-    /// Runtime override patch for this section. `generation` is the canonical shape. The flat fields are deprecated.
-    /// </summary>
-    [JsonPropertyName("overrides")]
-    public GuidedSectionOverridePatch? Overrides { get; set; }
+    [JsonPropertyName("sections")]
+    public IEnumerable<GuidedSectionOverride>? Sections { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
