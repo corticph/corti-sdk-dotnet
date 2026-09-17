@@ -5,23 +5,29 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record TranscriptsParticipant : IJsonOnDeserialized
+public record LanguagesEndpoint : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The audio channel to associate with a participant role.
+    /// Streams endpoint with its supported attributes.
     /// </summary>
-    [JsonPropertyName("channel")]
-    public required int Channel { get; set; }
+    [JsonPropertyName("streams")]
+    public required LanguagesEndpointAttributes Streams { get; set; }
 
     /// <summary>
-    /// Free-form label for the participant role (e.g., 'doctor', 'patient', 'Attending Physician'). Must not be empty or whitespace-only after trimming, must not contain control characters, and must not exceed 100 characters or 10 words.
+    /// Transcribe endpoint with its supported attributes.
     /// </summary>
-    [JsonPropertyName("role")]
-    public required string Role { get; set; }
+    [JsonPropertyName("transcribe")]
+    public required LanguagesEndpointAttributes Transcribe { get; set; }
+
+    /// <summary>
+    /// Transcripts endpoint with its supported attributes.
+    /// </summary>
+    [JsonPropertyName("transcripts")]
+    public required LanguagesEndpointAttributes Transcripts { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
