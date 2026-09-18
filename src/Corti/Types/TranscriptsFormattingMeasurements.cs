@@ -3,43 +3,38 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(TranscriptsParticipantRoleEnumSerializer))]
-public enum TranscriptsParticipantRoleEnum
+[JsonConverter(typeof(TranscriptsFormattingMeasurementsSerializer))]
+public enum TranscriptsFormattingMeasurements
 {
-    [EnumMember(Value = "doctor")]
-    Doctor,
+    [EnumMember(Value = "abbreviated")]
+    Abbreviated,
 
-    [EnumMember(Value = "patient")]
-    Patient,
-
-    [EnumMember(Value = "multiple")]
-    Multiple,
+    [EnumMember(Value = "as_dictated")]
+    AsDictated,
 }
 
-internal class TranscriptsParticipantRoleEnumSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<TranscriptsParticipantRoleEnum>
+internal class TranscriptsFormattingMeasurementsSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TranscriptsFormattingMeasurements>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        TranscriptsParticipantRoleEnum
+        TranscriptsFormattingMeasurements
     > _stringToEnum = new()
     {
-        { "doctor", TranscriptsParticipantRoleEnum.Doctor },
-        { "patient", TranscriptsParticipantRoleEnum.Patient },
-        { "multiple", TranscriptsParticipantRoleEnum.Multiple },
+        { "abbreviated", TranscriptsFormattingMeasurements.Abbreviated },
+        { "as_dictated", TranscriptsFormattingMeasurements.AsDictated },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        TranscriptsParticipantRoleEnum,
+        TranscriptsFormattingMeasurements,
         string
     > _enumToString = new()
     {
-        { TranscriptsParticipantRoleEnum.Doctor, "doctor" },
-        { TranscriptsParticipantRoleEnum.Patient, "patient" },
-        { TranscriptsParticipantRoleEnum.Multiple, "multiple" },
+        { TranscriptsFormattingMeasurements.Abbreviated, "abbreviated" },
+        { TranscriptsFormattingMeasurements.AsDictated, "as_dictated" },
     };
 
-    public override TranscriptsParticipantRoleEnum Read(
+    public override TranscriptsFormattingMeasurements Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -53,7 +48,7 @@ internal class TranscriptsParticipantRoleEnumSerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        TranscriptsParticipantRoleEnum value,
+        TranscriptsFormattingMeasurements value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -62,7 +57,7 @@ internal class TranscriptsParticipantRoleEnumSerializer
         );
     }
 
-    public override TranscriptsParticipantRoleEnum ReadAsPropertyName(
+    public override TranscriptsFormattingMeasurements ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -78,7 +73,7 @@ internal class TranscriptsParticipantRoleEnumSerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        TranscriptsParticipantRoleEnum value,
+        TranscriptsFormattingMeasurements value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
