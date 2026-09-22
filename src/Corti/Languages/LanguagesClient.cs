@@ -116,20 +116,6 @@ public partial class LanguagesClient : ILanguagesClient
                                         ),
                                     }
                                 );
-                            case 500:
-                                throw new InternalServerError(
-                                    JsonUtils.Deserialize<ErrorResponse>(responseBody),
-                                    rawResponse: new Corti.RawResponse()
-                                    {
-                                        StatusCode = response.Raw.StatusCode,
-                                        Url =
-                                            response.Raw.RequestMessage?.RequestUri
-                                            ?? new Uri("about:blank"),
-                                        Headers = ResponseHeaders.FromHttpResponseMessage(
-                                            response.Raw
-                                        ),
-                                    }
-                                );
                         }
                     }
                     catch (JsonException)

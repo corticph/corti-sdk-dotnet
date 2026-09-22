@@ -12,7 +12,8 @@ public record LanguagesListResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("languages")]
-    public Dictionary<string, object?> Languages { get; set; } = new Dictionary<string, object?>();
+    public Dictionary<string, LanguagesEndpoint> Languages { get; set; } =
+        new Dictionary<string, LanguagesEndpoint>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
