@@ -11,23 +11,8 @@ public record LanguagesEndpoint : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Streams endpoint with its supported attributes.
-    /// </summary>
-    [JsonPropertyName("streams")]
-    public required LanguagesEndpointAttributes Streams { get; set; }
-
-    /// <summary>
-    /// Transcribe endpoint with its supported attributes.
-    /// </summary>
-    [JsonPropertyName("transcribe")]
-    public required LanguagesEndpointAttributes Transcribe { get; set; }
-
-    /// <summary>
-    /// Transcripts endpoint with its supported attributes.
-    /// </summary>
-    [JsonPropertyName("transcripts")]
-    public required LanguagesEndpointAttributes Transcripts { get; set; }
+    [JsonPropertyName("endpoints")]
+    public required LanguagesEndpoints Endpoints { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
