@@ -809,7 +809,7 @@ public partial class TranscriptsClient : ITranscriptsClient
     }
 
     /// <summary>
-    /// Retrieves a list of transcripts for a given interaction. Transcripts are ordered based on their creation time. Default ordering (desc) will return the most recent transcript first in the list. Use query parameter to define the order of the list (`asc` for ascending and `desc` for descending).
+    /// Retrieves a list of transcripts for a given interaction. Transcripts are ordered based on their creation time. Default ordering (desc) will return the most recent transcript first in the list. Use query parameter `direction` to define the order of the list (`asc` for ascending and `desc` for descending).
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.ListAsync(
