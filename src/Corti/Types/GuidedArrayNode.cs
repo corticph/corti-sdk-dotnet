@@ -51,6 +51,12 @@ public record GuidedArrayNode : IJsonOnDeserialized
     [JsonPropertyName("maxItems")]
     public int? MaxItems { get; set; }
 
+    /// <summary>
+    /// Text rendered in place of the array when no items have relevant input/output.
+    /// </summary>
+    [JsonPropertyName("fallbackString")]
+    public string? FallbackString { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
