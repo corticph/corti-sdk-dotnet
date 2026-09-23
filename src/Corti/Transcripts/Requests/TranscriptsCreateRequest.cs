@@ -30,6 +30,9 @@ public record TranscriptsCreateRequest
     [JsonPropertyName("automaticPunctuation")]
     public bool? AutomaticPunctuation { get; set; }
 
+    [JsonPropertyName("formatting")]
+    public TranscriptsFormatting? Formatting { get; set; }
+
     /// <summary>
     /// **Deprecated** — replaced by `spokenPunctuation` and `automaticPunctuation`. Ignored when either of those fields is provided. When `true` and neither new field is provided, it is treated as `spokenPunctuation: true` (automatic punctuation off). No removal date is currently planned.
     /// </summary>
@@ -49,7 +52,7 @@ public record TranscriptsCreateRequest
     public bool? Diarize { get; set; }
 
     /// <summary>
-    /// An array of participants, each specifying a role and an assigned audio channel in the recording. Leave empty when shouldDiarize: true
+    /// An array of participants, each specifying a free-form role and an assigned audio channel in the recording. For raw PCM, the channel count must be defined; otherwise, the number of audio channels is resolved from the audio itself, not from the declared participants. Leave empty when diarize: true. See [audio formatting](https://docs.corti.ai/stt/audio) for full details.
     /// </summary>
     [JsonPropertyName("participants")]
     public IEnumerable<TranscriptsParticipant>? Participants { get; set; }
@@ -61,7 +64,7 @@ public record TranscriptsCreateRequest
     public bool? Async { get; set; }
 
     /// <summary>
-    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream.
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream. A defined replacement can have a maximum length of 50 characters and 5-words for `find` and 100 characters and 10-words for `replace`.
     /// </summary>
     [JsonPropertyName("replacements")]
     public IEnumerable<TranscriptsCreateRequestReplacementsItem>? Replacements { get; set; }
@@ -71,6 +74,12 @@ public record TranscriptsCreateRequest
     /// </summary>
     [JsonPropertyName("keyterms")]
     public TranscriptsCreateRequestKeyterms? Keyterms { get; set; }
+
+    /// <summary>
+    /// When enabled, the transcript is stored and returned at word level instead of phrase/utterance level. Fixed for the lifetime of the transcript once created.
+    /// </summary>
+    [JsonPropertyName("wordLevel")]
+    public TranscriptsCreateRequestWordLevel? WordLevel { get; set; }
 
     /// <inheritdoc />
     public override string ToString()
