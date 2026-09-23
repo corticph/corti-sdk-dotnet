@@ -36,7 +36,7 @@ public record StreamConfig : IJsonOnDeserialized
     public string? AudioFormat { get; set; }
 
     /// <summary>
-    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream.
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream. A defined replacement can have a maximum length of 50 characters and 5-words for `find` and 100 characters and 10-words for `replace`.
     /// </summary>
     [JsonPropertyName("replacements")]
     public IEnumerable<StreamConfigReplacementsItem>? Replacements { get; set; }
