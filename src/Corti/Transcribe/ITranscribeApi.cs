@@ -18,6 +18,8 @@ public partial interface ITranscribeApi : IAsyncDisposable, IDisposable
     public Event<TranscribeCommandMessage> TranscribeCommandMessage { get; }
     public Event<TranscribeConfigStatusMessage> TranscribeConfigStatusMessage { get; }
     public Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage { get; }
+    public Event<TranscribeCommandsUpdateAcceptedMessage> TranscribeCommandsUpdateAcceptedMessage { get; }
+    public Event<TranscribeCommandsUpdateDeniedMessage> TranscribeCommandsUpdateDeniedMessage { get; }
     public Event<JsonElement> UnknownMessage { get; }
     public ConnectionStatus Status { get; }
     Task ConnectAsync(CancellationToken cancellationToken = default);
@@ -29,6 +31,11 @@ public partial interface ITranscribeApi : IAsyncDisposable, IDisposable
     Task Send(TranscribeFlushMessage message, CancellationToken cancellationToken = default);
 
     Task Send(TranscribeEndMessage message, CancellationToken cancellationToken = default);
+
+    Task Send(
+        TranscribeCommandsUpdateMessage message,
+        CancellationToken cancellationToken = default
+    );
 
     Task CloseAsync(CancellationToken cancellationToken = default);
 }

@@ -4,8 +4,11 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
+/// <summary>
+/// Patch-based command update. Include only the commands being added, updated, or removed, not the full command list. At least one of add or remove must be present. Updates are applied atomically; if validation fails, the existing command configuration remains unchanged.
+/// </summary>
 [Serializable]
-public record GuidedObjectNode : IJsonOnDeserialized
+public record TranscribeCommandsUpdateMessage : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -13,7 +16,7 @@ public record GuidedObjectNode : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public GuidedObjectNode.TypeLiteral Type { get;
+    public TranscribeCommandsUpdateMessage.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -22,34 +25,16 @@ public record GuidedObjectNode : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Guide the LLM in what to output for this node. Supplements the section-level instructions.
+    /// Commands to add or update. Adding a command with an id that already exists overwrites the existing command. Each command must include the full definition (id, phrases, variables).
     /// </summary>
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
+    [JsonPropertyName("add")]
+    public TranscribeCommandsPatchAdd? Add { get; set; }
 
     /// <summary>
-    /// Free-form format string that controls how an object's fields are rendered into the final text output. Operates in one of two modes determined by which placeholders appear:
-    ///
-    /// **Subheading mode** (default: `"{key}: {value}\n"`): triggered when the format contains both `{key}` and `{value}`. Applied per field — each field becomes a key/value line. When a field has no relevant input/output and no `default` is set, the entire key/value line for that field is omitted from the rendered output.
-    ///
-    /// **Object mode** (e.g. `"{name} ({age})"`): triggered when `{key}` and `{value}` are absent. Placeholders must be actual field keys defined in `fields`. Applied once for the whole object, composing all fields into a single string. When a field has no relevant input/output and no `default` is set, its placeholder is replaced with an empty string (`""`).
-    ///
-    /// Validation rules: format must not be empty; if either `{key}` or `{value}` appears, both must be present; in subheading mode no extra placeholders are allowed; in object mode every placeholder must match a defined field key.
+    /// Commands to remove by exact id match. Only the id field is required and allowed in remove definitions.
     /// </summary>
-    [JsonPropertyName("fieldFormat")]
-    public string? FieldFormat { get; set; }
-
-    /// <summary>
-    /// Define what fields are possible to return in the object.
-    /// </summary>
-    [JsonPropertyName("fields")]
-    public IEnumerable<GuidedFieldDefinition>? Fields { get; set; }
-
-    /// <summary>
-    /// Text rendered in place of the object when no field has relevant input/output and no field-level `default` is set.
-    /// </summary>
-    [JsonPropertyName("fallbackString")]
-    public string? FallbackString { get; set; }
+    [JsonPropertyName("remove")]
+    public TranscribeCommandsPatchRemove? Remove { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -66,7 +51,7 @@ public record GuidedObjectNode : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "object";
+        public const string Value = "commands_update";
 
         public static implicit operator string(TypeLiteral _) => Value;
 
