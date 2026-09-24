@@ -18,10 +18,10 @@ public record StreamConfigParticipant : IJsonOnDeserialized
     public required int Channel { get; set; }
 
     /// <summary>
-    /// Role of the participant (e.g., doctor, patient, or multiple)
+    /// Free-form label for the participant role (e.g., 'doctor', 'patient', 'Attending Physician'). Must not be empty or whitespace-only after trimming, must not contain control characters, and must not exceed 100 characters or 10 words.
     /// </summary>
     [JsonPropertyName("role")]
-    public required StreamConfigParticipantRole Role { get; set; }
+    public required string Role { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
