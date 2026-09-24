@@ -48,10 +48,10 @@ public record AgentsMcpServer : IJsonOnDeserialized
     public required string Url { get; set; }
 
     /// <summary>
-    /// Redirect URI for OAuth2.0 authorization.
+    /// Token URL override for the OAuth2.0 token endpoint.
     /// </summary>
-    [JsonPropertyName("redirectUrl")]
-    public string? RedirectUrl { get; set; }
+    [JsonPropertyName("tokenUrl")]
+    public string? TokenUrl { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

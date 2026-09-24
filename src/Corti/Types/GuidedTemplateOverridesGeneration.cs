@@ -4,24 +4,27 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
+/// <summary>
+/// The canonical template-level override wrapper. Holds the template instructions and the per-section override patches.
+/// </summary>
 [Serializable]
-public record TranscriptsParticipant : IJsonOnDeserialized
+public record GuidedTemplateOverridesGeneration : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The audio channel to associate with a participant role.
+    /// Replaces the template-level instructions for this call.
     /// </summary>
-    [JsonPropertyName("channel")]
-    public required int Channel { get; set; }
+    [JsonPropertyName("instructions")]
+    public GuidedTemplateInstructions? Instructions { get; set; }
 
     /// <summary>
-    /// Free-form label for the participant role (e.g., 'doctor', 'patient', 'Attending Physician'). Must not be empty or whitespace-only after trimming, must not contain control characters, and must not exceed 100 characters or 10 words.
+    /// Per-section override patches. Each entry must reference a section already linked to the base template version.
     /// </summary>
-    [JsonPropertyName("role")]
-    public required string Role { get; set; }
+    [JsonPropertyName("sections")]
+    public IEnumerable<GuidedSectionOverride>? Sections { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
