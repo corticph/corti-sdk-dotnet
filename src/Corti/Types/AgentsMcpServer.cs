@@ -53,6 +53,18 @@ public record AgentsMcpServer : IJsonOnDeserialized
     [JsonPropertyName("redirectUrl")]
     public string? RedirectUrl { get; set; }
 
+    /// <summary>
+    /// Header names the MCP server requires the client to send.
+    /// </summary>
+    [JsonPropertyName("requiredHeaders")]
+    public IEnumerable<string>? RequiredHeaders { get; set; }
+
+    /// <summary>
+    /// Header names the client may optionally send.
+    /// </summary>
+    [JsonPropertyName("optionalHeaders")]
+    public IEnumerable<string>? OptionalHeaders { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

@@ -5,20 +5,14 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Override patch applied to a section linked to the base template version. Override semantics are per-field for `instructions` (any field you omit is inherited from the parent's published version) and wholesale for `outputSchema` (whatever you submit fully replaces the parent schema — partial schemas are not merged). The same rule applies when a section is forked via `inheritFromId`.
+/// Per-section override patch. `generation` is the canonical shape. The flat `heading`, `instructions`, and `outputSchema` fields are deprecated and remain for backward compatibility. Use `generation` instead. If a request sets both `generation` and a flat field for one section, the server rejects it with a 400. Override semantics are per-field for `instructions` and wholesale for `outputSchema`.
 /// </summary>
 [Serializable]
-public record GuidedSectionOverride : IJsonOnDeserialized
+public record GuidedSectionOverridePatch : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
-
-    /// <summary>
-    /// The UUID of a section linked to the base template version.
-    /// </summary>
-    [JsonPropertyName("sectionId")]
-    public required string SectionId { get; set; }
 
     /// <summary>
     /// The canonical override patch for this section.
