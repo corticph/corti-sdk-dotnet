@@ -30,7 +30,7 @@ public record StreamConfigTranscription : IJsonOnDeserialized
     public bool? IsDiarization { get; set; }
 
     /// <summary>
-    /// Enable multi-channel audio processing. When false, all participants are collapsed to channel 0 and the audio is downmixed to mono.
+    /// Enable multi-channel audio processing. When false, all participants are collapsed to channel 0 and the audio is converted to mono.
     /// </summary>
     [JsonPropertyName("isMultichannel")]
     public bool? IsMultichannel { get; set; }
