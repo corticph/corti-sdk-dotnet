@@ -74,8 +74,8 @@ public record InteractionsGetResponse : IJsonOnDeserialized
     /// <summary>
     /// The timestamp when the retention policy deletes the interaction (UTC). `null` when no deletion is scheduled.
     /// </summary>
-    [JsonPropertyName("scheduleDeletionAt")]
-    public DateTime? ScheduleDeletionAt { get; set; }
+    [JsonPropertyName("scheduledDeletionAt")]
+    public DateTime? ScheduledDeletionAt { get; set; }
 
     /// <summary>
     /// Present when the interaction is deleted (UTC). `null` while the interaction is live.
