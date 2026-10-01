@@ -28,13 +28,13 @@ public record TranscribeCommandsUpdateMessage : IJsonOnDeserialized
     /// Commands to add or update. Adding a command with an id that already exists overwrites the existing command. Each command must include the full definition (id, phrases, variables).
     /// </summary>
     [JsonPropertyName("add")]
-    public TranscribeCommandsPatchAdd? Add { get; set; }
+    public IEnumerable<TranscribeCommand>? Add { get; set; }
 
     /// <summary>
     /// Commands to remove by exact id match. Only the id field is required and allowed in remove definitions.
     /// </summary>
     [JsonPropertyName("remove")]
-    public TranscribeCommandsPatchRemove? Remove { get; set; }
+    public IEnumerable<TranscribeCommandRemove>? Remove { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
