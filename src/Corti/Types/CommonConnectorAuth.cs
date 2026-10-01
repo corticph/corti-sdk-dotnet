@@ -41,6 +41,18 @@ public record CommonConnectorAuth : IJsonOnDeserialized
     [JsonPropertyName("ref")]
     public string? Ref { get; set; }
 
+    /// <summary>
+    /// Header names the MCP server requires the client to send in the authorization data part. The client must supply values for each listed name; missing headers trigger an auth-required challenge that lists them.
+    /// </summary>
+    [JsonPropertyName("requiredHeaders")]
+    public IEnumerable<string>? RequiredHeaders { get; set; }
+
+    /// <summary>
+    /// Header names the client may optionally send. Headers not in requiredHeaders or optionalHeaders are rejected as undeclared.
+    /// </summary>
+    [JsonPropertyName("optionalHeaders")]
+    public IEnumerable<string>? OptionalHeaders { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
