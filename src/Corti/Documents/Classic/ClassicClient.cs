@@ -792,6 +792,10 @@ public partial class ClassicClient : IClassicClient
 
     /// <summary>
     /// List Documents
+    ///
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
     /// </summary>
     /// <example><code>
     /// await client.Documents.Classic.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
@@ -809,6 +813,10 @@ public partial class ClassicClient : IClassicClient
 
     /// <summary>
     /// This endpoint offers different ways to generate a document. Find guides to document generation [here](/textgen/documents-standard).
+    ///
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
     /// </summary>
     /// <example><code>
     /// await client.Documents.Classic.CreateAsync(
@@ -842,6 +850,10 @@ public partial class ClassicClient : IClassicClient
 
     /// <summary>
     /// Get Document.
+    ///
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
     /// </summary>
     /// <example><code>
     /// await client.Documents.Classic.GetAsync(
@@ -861,6 +873,11 @@ public partial class ClassicClient : IClassicClient
         );
     }
 
+    /// <summary>
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Classic.DeleteAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
@@ -877,6 +894,11 @@ public partial class ClassicClient : IClassicClient
         return new WithRawResponseTask(DeleteAsyncCore(id, documentId, options, cancellationToken));
     }
 
+    /// <summary>
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
+    /// </summary>
     /// <example><code>
     /// await client.Documents.Classic.UpdateAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
