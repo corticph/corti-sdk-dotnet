@@ -417,6 +417,10 @@ public partial class TemplatesClient : ITemplatesClient
 
     /// <summary>
     /// Retrieves a list of template sections with optional filters for organization and language.
+    ///
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
     /// </summary>
     /// <example><code>
     /// await client.Templates.SectionListAsync(new TemplatesSectionListRequest());
@@ -434,6 +438,10 @@ public partial class TemplatesClient : ITemplatesClient
 
     /// <summary>
     /// Retrieves a list of templates with optional filters for organization, language, and status.
+    ///
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
     /// </summary>
     /// <example><code>
     /// await client.Templates.ListAsync(new TemplatesListRequest());
@@ -451,6 +459,10 @@ public partial class TemplatesClient : ITemplatesClient
 
     /// <summary>
     /// Retrieves template by key.
+    ///
+    /// &lt;Note&gt;
+    /// This endpoint is deprecated in favour of the corresponding GUIDED endpoint. See the [deprecation notice](/release-notes/changelog-upcoming#2026-08-21) for more details and migration guidance.
+    /// &lt;/Note&gt;
     /// </summary>
     /// <example><code>
     /// await client.Templates.GetAsync("key");

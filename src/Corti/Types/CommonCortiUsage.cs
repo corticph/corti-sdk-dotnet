@@ -5,29 +5,34 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Per-section reference for the assembly path.
+/// Per-request usage accounting emitted by the agent service under
+/// `metadata.corti.usage`. `creditsConsumed` is always populated;
+/// `inputTokens` and `outputTokens` may appear in the future.
 /// </summary>
 [Serializable]
-public record GuidedAssemblySectionRef : IJsonOnDeserialized
+public record CommonCortiUsage : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("sectionId")]
-    public required string SectionId { get; set; }
+    /// <summary>
+    /// Corti billing credits charged for the task.
+    /// </summary>
+    [JsonPropertyName("creditsConsumed")]
+    public required double CreditsConsumed { get; set; }
 
     /// <summary>
-    /// Optional explicit section version. Defaults to the section's published version when omitted.
+    /// Prompt tokens consumed.
     /// </summary>
-    [JsonPropertyName("sectionVersionId")]
-    public string? SectionVersionId { get; set; }
+    [JsonPropertyName("inputTokens")]
+    public long? InputTokens { get; set; }
 
     /// <summary>
-    /// Runtime override patch for this section. `generation` is the canonical shape. The flat fields are deprecated.
+    /// Completion tokens produced.
     /// </summary>
-    [JsonPropertyName("overrides")]
-    public GuidedSectionOverridePatch? Overrides { get; set; }
+    [JsonPropertyName("outputTokens")]
+    public long? OutputTokens { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
