@@ -30,10 +30,10 @@ public record CommonConnectorAuth : IJsonOnDeserialized
     public string? Scope { get; set; }
 
     /// <summary>
-    /// OAuth2 redirect URL.
+    /// Token URL override for the OAuth2.0 token endpoint.
     /// </summary>
-    [JsonPropertyName("redirectUrl")]
-    public string? RedirectUrl { get; set; }
+    [JsonPropertyName("tokenUrl")]
+    public string? TokenUrl { get; set; }
 
     /// <summary>
     /// Reference to a server-side stored secret. Mutually exclusive with inline credentials passed at call time.
