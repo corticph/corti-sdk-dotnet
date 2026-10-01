@@ -5,14 +5,14 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record LanguagesEndpoint : IJsonOnDeserialized
+public record LanguagesListResponseLanguagesValue : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     [JsonPropertyName("endpoints")]
-    public required LanguagesEndpoints Endpoints { get; set; }
+    public required LanguagesListResponseLanguagesValueEndpoints Endpoints { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

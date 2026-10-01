@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record LanguagesEndpoints : IJsonOnDeserialized
+public record LanguagesListResponseLanguagesValueEndpoints : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
