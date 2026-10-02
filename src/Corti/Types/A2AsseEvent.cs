@@ -5,10 +5,10 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// An SSE event carrying an A2A `HTTP+JSON` streaming response.
+/// A single Server-Sent Event frame (W3C SSE wire format). The server currently writes only `id` and `data` lines; `event` and `retry` are declared for forward compatibility but not sent.
 /// </summary>
 [Serializable]
-public record AgenticAgentsStreamEventResponse : IJsonOnDeserialized
+public record A2AsseEvent : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
