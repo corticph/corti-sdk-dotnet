@@ -69,7 +69,7 @@ public record InteractionsGetResponse : IJsonOnDeserialized
     /// `null` while the interaction is live. Set with `deletedAt` when deleted.
     /// </summary>
     [JsonPropertyName("deletionReason")]
-    public required InteractionsDeletionReasonEnum DeletionReason { get; set; }
+    public InteractionsDeletionReasonEnum? DeletionReason { get; set; }
 
     /// <summary>
     /// The timestamp when the retention policy deletes the interaction (UTC). `null` when no deletion is scheduled.

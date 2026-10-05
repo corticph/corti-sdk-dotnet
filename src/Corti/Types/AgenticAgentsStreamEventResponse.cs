@@ -15,10 +15,10 @@ public record AgenticAgentsStreamEventResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// SSE payload (JSON-encoded).
+    /// SSE payload: an A2A HTTP+JSON streaming response.
     /// </summary>
     [JsonPropertyName("data")]
-    public required string Data { get; set; }
+    public string? Data { get; set; }
 
     /// <summary>
     /// Event type. Absent for the default `message` event.
