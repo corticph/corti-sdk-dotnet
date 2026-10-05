@@ -5,35 +5,29 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record AgentsRegistryMcpServer : IJsonOnDeserialized
+public record LanguagesListResponseLanguagesValueEndpoints : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Name of the MCP server.
+    /// Streams endpoint with its supported attributes.
     /// </summary>
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonPropertyName("streams")]
+    public required LanguagesEndpointAttributes Streams { get; set; }
 
     /// <summary>
-    /// Type of authorization used by the MCP server.
+    /// Transcribe endpoint with its supported attributes.
     /// </summary>
-    [JsonPropertyName("authorizationType")]
-    public required AgentsRegistryMcpServerAuthorizationType AuthorizationType { get; set; }
+    [JsonPropertyName("transcribe")]
+    public required LanguagesEndpointAttributes Transcribe { get; set; }
 
     /// <summary>
-    /// Header names the MCP server requires the client to send.
+    /// Transcripts endpoint with its supported attributes.
     /// </summary>
-    [JsonPropertyName("requiredHeaders")]
-    public IEnumerable<string>? RequiredHeaders { get; set; }
-
-    /// <summary>
-    /// Header names the client may optionally send.
-    /// </summary>
-    [JsonPropertyName("optionalHeaders")]
-    public IEnumerable<string>? OptionalHeaders { get; set; }
+    [JsonPropertyName("transcripts")]
+    public required LanguagesEndpointAttributes Transcripts { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

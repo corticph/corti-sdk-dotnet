@@ -4,36 +4,35 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
+/// <summary>
+/// Per-request usage accounting emitted by the agent service under
+/// `metadata.corti.usage`. `creditsConsumed` is always populated;
+/// `inputTokens` and `outputTokens` may appear in the future.
+/// </summary>
 [Serializable]
-public record AgentsRegistryMcpServer : IJsonOnDeserialized
+public record CommonCortiUsage : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Name of the MCP server.
+    /// Corti billing credits charged for the task.
     /// </summary>
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    [JsonPropertyName("creditsConsumed")]
+    public required double CreditsConsumed { get; set; }
 
     /// <summary>
-    /// Type of authorization used by the MCP server.
+    /// Prompt tokens consumed.
     /// </summary>
-    [JsonPropertyName("authorizationType")]
-    public required AgentsRegistryMcpServerAuthorizationType AuthorizationType { get; set; }
+    [JsonPropertyName("inputTokens")]
+    public long? InputTokens { get; set; }
 
     /// <summary>
-    /// Header names the MCP server requires the client to send.
+    /// Completion tokens produced.
     /// </summary>
-    [JsonPropertyName("requiredHeaders")]
-    public IEnumerable<string>? RequiredHeaders { get; set; }
-
-    /// <summary>
-    /// Header names the client may optionally send.
-    /// </summary>
-    [JsonPropertyName("optionalHeaders")]
-    public IEnumerable<string>? OptionalHeaders { get; set; }
+    [JsonPropertyName("outputTokens")]
+    public long? OutputTokens { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
