@@ -1,0 +1,89 @@
+using global::System.Runtime.Serialization;
+using global::System.Text.Json.Serialization;
+
+namespace Corti;
+
+[JsonConverter(typeof(StreamFormattingNumbersSerializer))]
+public enum StreamFormattingNumbers
+{
+    [EnumMember(Value = "numerals_above_nine")]
+    NumeralsAboveNine,
+
+    [EnumMember(Value = "numerals")]
+    Numerals,
+
+    [EnumMember(Value = "as_dictated")]
+    AsDictated,
+}
+
+internal class StreamFormattingNumbersSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<StreamFormattingNumbers>
+{
+    private static readonly global::System.Collections.Generic.Dictionary<
+        string,
+        StreamFormattingNumbers
+    > _stringToEnum = new()
+    {
+        { "numerals_above_nine", StreamFormattingNumbers.NumeralsAboveNine },
+        { "numerals", StreamFormattingNumbers.Numerals },
+        { "as_dictated", StreamFormattingNumbers.AsDictated },
+    };
+
+    private static readonly global::System.Collections.Generic.Dictionary<
+        StreamFormattingNumbers,
+        string
+    > _enumToString = new()
+    {
+        { StreamFormattingNumbers.NumeralsAboveNine, "numerals_above_nine" },
+        { StreamFormattingNumbers.Numerals, "numerals" },
+        { StreamFormattingNumbers.AsDictated, "as_dictated" },
+    };
+
+    public override StreamFormattingNumbers Read(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception("The JSON value could not be read as a string.");
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
+    }
+
+    public override void Write(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamFormattingNumbers value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        writer.WriteStringValue(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : null
+        );
+    }
+
+    public override StreamFormattingNumbers ReadAsPropertyName(
+        ref global::System.Text.Json.Utf8JsonReader reader,
+        global::System.Type typeToConvert,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        var stringValue =
+            reader.GetString()
+            ?? throw new global::System.Exception(
+                "The JSON property name could not be read as a string."
+            );
+        return _stringToEnum.TryGetValue(stringValue, out var enumValue) ? enumValue : default;
+    }
+
+    public override void WriteAsPropertyName(
+        global::System.Text.Json.Utf8JsonWriter writer,
+        StreamFormattingNumbers value,
+        global::System.Text.Json.JsonSerializerOptions options
+    )
+    {
+        writer.WritePropertyName(
+            _enumToString.TryGetValue(value, out var stringValue) ? stringValue : value.ToString()
+        );
+    }
+}

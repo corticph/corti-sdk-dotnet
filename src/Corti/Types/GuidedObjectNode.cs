@@ -45,6 +45,12 @@ public record GuidedObjectNode : IJsonOnDeserialized
     [JsonPropertyName("fields")]
     public IEnumerable<GuidedFieldDefinition>? Fields { get; set; }
 
+    /// <summary>
+    /// Text rendered in place of the object when no field has relevant input/output and no field-level `default` is set.
+    /// </summary>
+    [JsonPropertyName("fallbackString")]
+    public string? FallbackString { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
