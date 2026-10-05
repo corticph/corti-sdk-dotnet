@@ -20,10 +20,16 @@ public record CodesGeneralPredictRequest
     public IEnumerable<CommonAiContext> Context { get; set; } = new List<CommonAiContext>();
 
     /// <summary>
-    /// Optional filter to restrict predicted codes.
+    /// Deprecated: use `filters` instead.
     /// </summary>
     [JsonPropertyName("filter")]
     public CodesFilter? Filter { get; set; }
+
+    /// <summary>
+    /// Optional list of system-scoped filters to restrict predicted codes, one per coding system.
+    /// </summary>
+    [JsonPropertyName("filters")]
+    public IEnumerable<CodesSystemFilter>? Filters { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

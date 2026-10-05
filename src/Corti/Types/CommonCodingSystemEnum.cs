@@ -74,6 +74,33 @@ public enum CommonCodingSystemEnum
 
     [EnumMember(Value = "snomedctus")]
     Snomedctus,
+
+    [EnumMember(Value = "meddra-it")]
+    MeddraIt,
+
+    [EnumMember(Value = "meddra-en")]
+    MeddraEn,
+
+    [EnumMember(Value = "meddra-fr")]
+    MeddraFr,
+
+    [EnumMember(Value = "meddra-es")]
+    MeddraEs,
+
+    [EnumMember(Value = "meddra-de")]
+    MeddraDe,
+
+    [EnumMember(Value = "meddra-dk")]
+    MeddraDk,
+
+    [EnumMember(Value = "meddra-se")]
+    MeddraSe,
+
+    [EnumMember(Value = "sks")]
+    Sks,
+
+    [EnumMember(Value = "kvaa")]
+    Kvaa,
 }
 
 internal class CommonCodingSystemEnumSerializer
@@ -107,6 +134,15 @@ internal class CommonCodingSystemEnumSerializer
         { "snomedctdk", CommonCodingSystemEnum.Snomedctdk },
         { "snomedctse", CommonCodingSystemEnum.Snomedctse },
         { "snomedctus", CommonCodingSystemEnum.Snomedctus },
+        { "meddra-it", CommonCodingSystemEnum.MeddraIt },
+        { "meddra-en", CommonCodingSystemEnum.MeddraEn },
+        { "meddra-fr", CommonCodingSystemEnum.MeddraFr },
+        { "meddra-es", CommonCodingSystemEnum.MeddraEs },
+        { "meddra-de", CommonCodingSystemEnum.MeddraDe },
+        { "meddra-dk", CommonCodingSystemEnum.MeddraDk },
+        { "meddra-se", CommonCodingSystemEnum.MeddraSe },
+        { "sks", CommonCodingSystemEnum.Sks },
+        { "kvaa", CommonCodingSystemEnum.Kvaa },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -137,6 +173,15 @@ internal class CommonCodingSystemEnumSerializer
         { CommonCodingSystemEnum.Snomedctdk, "snomedctdk" },
         { CommonCodingSystemEnum.Snomedctse, "snomedctse" },
         { CommonCodingSystemEnum.Snomedctus, "snomedctus" },
+        { CommonCodingSystemEnum.MeddraIt, "meddra-it" },
+        { CommonCodingSystemEnum.MeddraEn, "meddra-en" },
+        { CommonCodingSystemEnum.MeddraFr, "meddra-fr" },
+        { CommonCodingSystemEnum.MeddraEs, "meddra-es" },
+        { CommonCodingSystemEnum.MeddraDe, "meddra-de" },
+        { CommonCodingSystemEnum.MeddraDk, "meddra-dk" },
+        { CommonCodingSystemEnum.MeddraSe, "meddra-se" },
+        { CommonCodingSystemEnum.Sks, "sks" },
+        { CommonCodingSystemEnum.Kvaa, "kvaa" },
     };
 
     public override CommonCodingSystemEnum Read(
