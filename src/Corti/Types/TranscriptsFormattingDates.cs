@@ -3,43 +3,53 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-[JsonConverter(typeof(StreamConfigParticipantRoleSerializer))]
-public enum StreamConfigParticipantRole
+[JsonConverter(typeof(TranscriptsFormattingDatesSerializer))]
+public enum TranscriptsFormattingDates
 {
-    [EnumMember(Value = "doctor")]
-    Doctor,
+    [EnumMember(Value = "locale:long")]
+    LocaleLong,
 
-    [EnumMember(Value = "patient")]
-    Patient,
+    [EnumMember(Value = "locale:medium")]
+    LocaleMedium,
 
-    [EnumMember(Value = "multiple")]
-    Multiple,
+    [EnumMember(Value = "locale:short")]
+    LocaleShort,
+
+    [EnumMember(Value = "as_dictated")]
+    AsDictated,
+
+    [EnumMember(Value = "iso")]
+    Iso,
 }
 
-internal class StreamConfigParticipantRoleSerializer
-    : global::System.Text.Json.Serialization.JsonConverter<StreamConfigParticipantRole>
+internal class TranscriptsFormattingDatesSerializer
+    : global::System.Text.Json.Serialization.JsonConverter<TranscriptsFormattingDates>
 {
     private static readonly global::System.Collections.Generic.Dictionary<
         string,
-        StreamConfigParticipantRole
+        TranscriptsFormattingDates
     > _stringToEnum = new()
     {
-        { "doctor", StreamConfigParticipantRole.Doctor },
-        { "patient", StreamConfigParticipantRole.Patient },
-        { "multiple", StreamConfigParticipantRole.Multiple },
+        { "locale:long", TranscriptsFormattingDates.LocaleLong },
+        { "locale:medium", TranscriptsFormattingDates.LocaleMedium },
+        { "locale:short", TranscriptsFormattingDates.LocaleShort },
+        { "as_dictated", TranscriptsFormattingDates.AsDictated },
+        { "iso", TranscriptsFormattingDates.Iso },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
-        StreamConfigParticipantRole,
+        TranscriptsFormattingDates,
         string
     > _enumToString = new()
     {
-        { StreamConfigParticipantRole.Doctor, "doctor" },
-        { StreamConfigParticipantRole.Patient, "patient" },
-        { StreamConfigParticipantRole.Multiple, "multiple" },
+        { TranscriptsFormattingDates.LocaleLong, "locale:long" },
+        { TranscriptsFormattingDates.LocaleMedium, "locale:medium" },
+        { TranscriptsFormattingDates.LocaleShort, "locale:short" },
+        { TranscriptsFormattingDates.AsDictated, "as_dictated" },
+        { TranscriptsFormattingDates.Iso, "iso" },
     };
 
-    public override StreamConfigParticipantRole Read(
+    public override TranscriptsFormattingDates Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -53,7 +63,7 @@ internal class StreamConfigParticipantRoleSerializer
 
     public override void Write(
         global::System.Text.Json.Utf8JsonWriter writer,
-        StreamConfigParticipantRole value,
+        TranscriptsFormattingDates value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
@@ -62,7 +72,7 @@ internal class StreamConfigParticipantRoleSerializer
         );
     }
 
-    public override StreamConfigParticipantRole ReadAsPropertyName(
+    public override TranscriptsFormattingDates ReadAsPropertyName(
         ref global::System.Text.Json.Utf8JsonReader reader,
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options
@@ -78,7 +88,7 @@ internal class StreamConfigParticipantRoleSerializer
 
     public override void WriteAsPropertyName(
         global::System.Text.Json.Utf8JsonWriter writer,
-        StreamConfigParticipantRole value,
+        TranscriptsFormattingDates value,
         global::System.Text.Json.JsonSerializerOptions options
     )
     {
