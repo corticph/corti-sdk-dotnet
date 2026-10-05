@@ -31,6 +31,12 @@ public record AgenticAgentsPatchRequest
     [JsonPropertyName("model")]
     public string? Model { get; set; }
 
+    /// <summary>
+    /// New cap on the orchestrator's ReAct loop iterations per run. Omitted leaves the current value unchanged; there is no `null`-reset — send 10 to restore the default.
+    /// </summary>
+    [JsonPropertyName("maxLoops")]
+    public int? MaxLoops { get; set; }
+
     [JsonPropertyName("visibility")]
     public AgentsVisibility? Visibility { get; set; }
 

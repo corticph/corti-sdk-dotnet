@@ -31,6 +31,12 @@ public record AgenticAgentsCreateRequest
     [JsonPropertyName("model")]
     public string? Model { get; set; }
 
+    /// <summary>
+    /// Caps the orchestrator's ReAct loop iterations per run. Server default 10 if omitted.
+    /// </summary>
+    [JsonPropertyName("maxLoops")]
+    public int? MaxLoops { get; set; }
+
     [JsonPropertyName("visibility")]
     public AgentsVisibility? Visibility { get; set; }
 

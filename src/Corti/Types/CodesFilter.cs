@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Optional filter to restrict the set of codes the model can predict.
+/// Deprecated: use `filters` with `CodesSystemFilter` instead.
 /// </summary>
 [Serializable]
 public record CodesFilter : IJsonOnDeserialized
@@ -15,22 +15,16 @@ public record CodesFilter : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Codes or categories to include. When empty, the full set of codes for the requested systems is used.
+    /// Condition objects to include. When empty, the full set of codes for the requested systems is used.
     /// </summary>
     [JsonPropertyName("include")]
-    public IEnumerable<string>? Include { get; set; }
+    public IEnumerable<CodesFilterCondition>? Include { get; set; }
 
     /// <summary>
-    /// Codes or categories to subtract from the include set.
+    /// Condition objects to subtract from the include set.
     /// </summary>
     [JsonPropertyName("exclude")]
-    public IEnumerable<string>? Exclude { get; set; }
-
-    /// <summary>
-    /// When true (default), category codes are expanded to their leaf codes.
-    /// </summary>
-    [JsonPropertyName("expand")]
-    public bool? Expand { get; set; }
+    public IEnumerable<CodesFilterCondition>? Exclude { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

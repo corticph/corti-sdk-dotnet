@@ -36,7 +36,7 @@ public record CommonTaskResponse : IJsonOnDeserialized
     public IEnumerable<CommonArtifactResponse>? Artifacts { get; set; }
 
     /// <summary>
-    /// Task metadata, including `$usage` token/credit accounting. Not yet exposed through the REST binding (deferred); only the JSON-RPC binding populates this field.
+    /// Task metadata, including `corti.usage` credit accounting. Populated by both the REST and JSON-RPC v2 bindings; the deprecated v1 bindings do not include it.
     /// </summary>
     [JsonPropertyName("metadata")]
     public CommonTaskMetadata? Metadata { get; set; }
