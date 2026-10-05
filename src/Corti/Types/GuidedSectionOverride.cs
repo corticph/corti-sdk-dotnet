@@ -20,8 +20,29 @@ public record GuidedSectionOverride : IJsonOnDeserialized
     [JsonPropertyName("sectionId")]
     public required string SectionId { get; set; }
 
+    /// <summary>
+    /// The canonical override patch for this section.
+    /// </summary>
     [JsonPropertyName("generation")]
     public GuidedSectionOverrides? Generation { get; set; }
+
+    /// <summary>
+    /// **Deprecated** — use `generation.heading`. Replaces the section's heading for this call.
+    /// </summary>
+    [JsonPropertyName("heading")]
+    public string? Heading { get; set; }
+
+    /// <summary>
+    /// **Deprecated** — use `generation.instructions`.
+    /// </summary>
+    [JsonPropertyName("instructions")]
+    public GuidedSectionInstructionsOverride? Instructions { get; set; }
+
+    /// <summary>
+    /// **Deprecated** — use `generation.outputSchema`.
+    /// </summary>
+    [JsonPropertyName("outputSchema")]
+    public GuidedOutputSchema? OutputSchema { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
