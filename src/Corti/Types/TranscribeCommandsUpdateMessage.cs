@@ -5,10 +5,10 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A connector that delegates to a remote A2A agent by endpoint URL.
+/// Patch-based command update. Include only the commands being added, updated, or removed, not the full command list. At least one of add or remove must be present. Updates are applied atomically; if validation fails, the existing command configuration remains unchanged.
 /// </summary>
 [Serializable]
-public record CommonA2AConnector : IJsonOnDeserialized
+public record TranscribeCommandsUpdateMessage : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -16,7 +16,7 @@ public record CommonA2AConnector : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public CommonA2AConnector.TypeLiteral Type { get;
+    public TranscribeCommandsUpdateMessage.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -25,31 +25,16 @@ public record CommonA2AConnector : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Optional display name for the remote A2A agent.
+    /// Commands to add or update. Adding a command with an id that already exists overwrites the existing command. Each command must include the full definition (id, phrases, variables).
     /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    [JsonPropertyName("add")]
+    public IEnumerable<TranscribeCommand>? Add { get; set; }
 
     /// <summary>
-    /// The remote agent's A2A endpoint (typically a `.well-known/agent-card.json`).
+    /// Commands to remove by exact id match. Only the id field is required and allowed in remove definitions.
     /// </summary>
-    [JsonPropertyName("url")]
-    public required string Url { get; set; }
-
-    /// <summary>
-    /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
-    /// replacements where the underlying spec is unchanged. Used by
-    /// observability/HITL to reference a connector unambiguously.
-    /// </summary>
-    [JsonAccess(JsonAccessType.ReadOnly)]
-    [JsonPropertyName("id")]
-    public string? Id { get; set; }
-
-    /// <summary>
-    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `registry`, `agent`, and `a2a` connectors omit it (treat as enabled).
-    /// </summary>
-    [JsonPropertyName("enabled")]
-    public bool? Enabled { get; set; }
+    [JsonPropertyName("remove")]
+    public IEnumerable<TranscribeCommandRemove>? Remove { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -66,7 +51,7 @@ public record CommonA2AConnector : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "a2a";
+        public const string Value = "commands_update";
 
         public static implicit operator string(TypeLiteral _) => Value;
 

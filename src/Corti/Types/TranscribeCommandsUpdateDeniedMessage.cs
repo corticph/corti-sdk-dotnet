@@ -4,11 +4,8 @@ using global::System.Text.Json.Serialization;
 
 namespace Corti;
 
-/// <summary>
-/// A connector that delegates to a remote A2A agent by endpoint URL.
-/// </summary>
 [Serializable]
-public record CommonA2AConnector : IJsonOnDeserialized
+public record TranscribeCommandsUpdateDeniedMessage : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -16,7 +13,7 @@ public record CommonA2AConnector : IJsonOnDeserialized
 
     [JsonRequired]
     [JsonPropertyName("type")]
-    public CommonA2AConnector.TypeLiteral Type { get;
+    public TranscribeCommandsUpdateDeniedMessage.TypeLiteral Type { get;
 #if NET5_0_OR_GREATER
         init;
 #else
@@ -25,31 +22,28 @@ public record CommonA2AConnector : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Optional display name for the remote A2A agent.
+    /// The reason the update was denied. Possible values include "No active session. Send a valid config message first.", "unknown parameter(s)", "ineligible parameter(s): <list>", and "invalid definition".</list>
     /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
 
     /// <summary>
-    /// The remote agent's A2A endpoint (typically a `.well-known/agent-card.json`).
+    /// List of invalid field names that caused the rejection, when applicable.
     /// </summary>
-    [JsonPropertyName("url")]
-    public required string Url { get; set; }
+    [JsonPropertyName("fields")]
+    public IEnumerable<string>? Fields { get; set; }
 
     /// <summary>
-    /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
-    /// replacements where the underlying spec is unchanged. Used by
-    /// observability/HITL to reference a connector unambiguously.
+    /// The session ID.
     /// </summary>
-    [JsonAccess(JsonAccessType.ReadOnly)]
-    [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    [JsonPropertyName("sessionId")]
+    public required string SessionId { get; set; }
 
     /// <summary>
-    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `registry`, `agent`, and `a2a` connectors omit it (treat as enabled).
+    /// Empty array. The existing command configuration is unchanged.
     /// </summary>
-    [JsonPropertyName("enabled")]
-    public bool? Enabled { get; set; }
+    [JsonPropertyName("commands")]
+    public IEnumerable<TranscribeCommand> Commands { get; set; } = new List<TranscribeCommand>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -66,7 +60,7 @@ public record CommonA2AConnector : IJsonOnDeserialized
     [JsonConverter(typeof(TypeLiteralConverter))]
     public readonly struct TypeLiteral
     {
-        public const string Value = "a2a";
+        public const string Value = "commands_update_denied";
 
         public static implicit operator string(TypeLiteral _) => Value;
 
