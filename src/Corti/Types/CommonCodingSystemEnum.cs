@@ -90,8 +90,8 @@ public enum CommonCodingSystemEnum
     [EnumMember(Value = "meddra-de")]
     MeddraDe,
 
-    [EnumMember(Value = "meddra-dk")]
-    MeddraDk,
+    [EnumMember(Value = "meddra-no")]
+    MeddraNo,
 
     [EnumMember(Value = "meddra-se")]
     MeddraSe,
@@ -139,7 +139,7 @@ internal class CommonCodingSystemEnumSerializer
         { "meddra-fr", CommonCodingSystemEnum.MeddraFr },
         { "meddra-es", CommonCodingSystemEnum.MeddraEs },
         { "meddra-de", CommonCodingSystemEnum.MeddraDe },
-        { "meddra-dk", CommonCodingSystemEnum.MeddraDk },
+        { "meddra-no", CommonCodingSystemEnum.MeddraNo },
         { "meddra-se", CommonCodingSystemEnum.MeddraSe },
         { "sks", CommonCodingSystemEnum.Sks },
         { "kvaa", CommonCodingSystemEnum.Kvaa },
@@ -178,7 +178,7 @@ internal class CommonCodingSystemEnumSerializer
         { CommonCodingSystemEnum.MeddraFr, "meddra-fr" },
         { CommonCodingSystemEnum.MeddraEs, "meddra-es" },
         { CommonCodingSystemEnum.MeddraDe, "meddra-de" },
-        { CommonCodingSystemEnum.MeddraDk, "meddra-dk" },
+        { CommonCodingSystemEnum.MeddraNo, "meddra-no" },
         { CommonCodingSystemEnum.MeddraSe, "meddra-se" },
         { CommonCodingSystemEnum.Sks, "sks" },
         { CommonCodingSystemEnum.Kvaa, "kvaa" },
