@@ -17,7 +17,7 @@ public record CodesSystemFilter : IJsonOnDeserialized
     /// <summary>
     /// The coding system this filter applies to. Must match one of the systems in the `system` field.
     /// </summary>
-    [JsonPropertyName("system_id")]
+    [JsonPropertyName("systemId")]
     public required string SystemId { get; set; }
 
     /// <summary>
