@@ -5,20 +5,20 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Exactly one of `task` or `message` is present.
+/// Minimal command reference for removal. Only the id field is allowed; phrases, variables, and other fields are rejected.
 /// </summary>
 [Serializable]
-public record AgenticAgentsSendMessageResponse : IJsonOnDeserialized
+public record TranscribeCommandRemove : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("task")]
-    public CommonTaskResponse? Task { get; set; }
-
-    [JsonPropertyName("message")]
-    public CommonMessage? Message { get; set; }
+    /// <summary>
+    /// ID of the command to remove.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
