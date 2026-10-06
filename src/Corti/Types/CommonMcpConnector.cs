@@ -44,7 +44,6 @@ public record CommonMcpConnector : IJsonOnDeserialized
     /// replacements where the underlying spec is unchanged. Used by
     /// observability/HITL to reference a connector unambiguously.
     /// </summary>
-    [JsonAccess(JsonAccessType.ReadOnly)]
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
