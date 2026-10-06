@@ -16,6 +16,7 @@ public sealed class CustomAuthClient : AuthClient
         "X-Fern-SDK-Version",
         "User-Agent",
         "Tenant-Name",
+        AnalyticsHelper.XCortiAnalytics,
     ];
 
     internal CustomAuthClient(RawClient client)

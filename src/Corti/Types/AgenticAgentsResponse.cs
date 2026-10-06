@@ -42,6 +42,12 @@ public record AgenticAgentsResponse : IJsonOnDeserialized
     [JsonPropertyName("model")]
     public string? Model { get; set; }
 
+    /// <summary>
+    /// Effective cap on the orchestrator's ReAct loop iterations per run. Always present: agents created without `maxLoops` report the server default (10).
+    /// </summary>
+    [JsonPropertyName("maxLoops")]
+    public required int MaxLoops { get; set; }
+
     [JsonPropertyName("visibility")]
     public required AgentsVisibility Visibility { get; set; }
 
@@ -78,6 +84,13 @@ public record AgenticAgentsResponse : IJsonOnDeserialized
     [JsonAccess(JsonAccessType.ReadOnly)]
     [JsonPropertyName("createdBy")]
     public string? CreatedBy { get; set; }
+
+    /// <summary>
+    /// When the agent expires; `null` means it does not expire. Ephemeral agents get a 24h expiry at creation time; persistent agents never expire.
+    /// </summary>
+    [JsonAccess(JsonAccessType.ReadOnly)]
+    [JsonPropertyName("expiresAt")]
+    public DateTime? ExpiresAt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -33,7 +33,7 @@ public class CortiClientAnalyticsTests
                 {
                     RequestMessage = request,
                     Content = new StringContent(
-                        """{"languages":{"en":{}}}""",
+                        """{"languages":{"en":{"endpoints":{"streams":{"enabled":true},"transcribe":{"enabled":true},"transcripts":{"enabled":false}}}}}""",
                         Encoding.UTF8,
                         "application/json"
                     ),

@@ -5,14 +5,17 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 [Serializable]
-public record LanguagesListResponse : IJsonOnDeserialized
+public record LanguagesEndpointAttributes : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("languages")]
-    public Dictionary<string, object?> Languages { get; set; } = new Dictionary<string, object?>();
+    /// <summary>
+    /// Indicates if this endpoint is supported or not.
+    /// </summary>
+    [JsonPropertyName("enabled")]
+    public required bool Enabled { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
