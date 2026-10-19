@@ -11,6 +11,9 @@ public enum CommonSchemaConnectorTransition
 
     [EnumMember(Value = "input_required")]
     InputRequired,
+
+    [EnumMember(Value = "send")]
+    Send,
 }
 
 internal class CommonSchemaConnectorTransitionSerializer
@@ -23,6 +26,7 @@ internal class CommonSchemaConnectorTransitionSerializer
     {
         { "complete", CommonSchemaConnectorTransition.Complete },
         { "input_required", CommonSchemaConnectorTransition.InputRequired },
+        { "send", CommonSchemaConnectorTransition.Send },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -32,6 +36,7 @@ internal class CommonSchemaConnectorTransitionSerializer
     {
         { CommonSchemaConnectorTransition.Complete, "complete" },
         { CommonSchemaConnectorTransition.InputRequired, "input_required" },
+        { CommonSchemaConnectorTransition.Send, "send" },
     };
 
     public override CommonSchemaConnectorTransition Read(
