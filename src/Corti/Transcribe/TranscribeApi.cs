@@ -128,6 +128,20 @@ public partial class TranscribeApi
     public Event<TranscribeAudioEventMessage> TranscribeAudioEventMessage { get; } = new();
 
     /// <summary>
+    /// Event handler for TranscribeCommandsUpdateAcceptedMessage.
+    /// Use TranscribeCommandsUpdateAcceptedMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeCommandsUpdateAcceptedMessage> TranscribeCommandsUpdateAcceptedMessage { get; } =
+        new();
+
+    /// <summary>
+    /// Event handler for TranscribeCommandsUpdateDeniedMessage.
+    /// Use TranscribeCommandsUpdateDeniedMessage.Subscribe(...) to receive messages.
+    /// </summary>
+    public Event<TranscribeCommandsUpdateDeniedMessage> TranscribeCommandsUpdateDeniedMessage { get; } =
+        new();
+
+    /// <summary>
     /// Event handler for unknown/unrecognized message types.
     /// Use UnknownMessage.Subscribe(...) to handle messages from newer server versions.
     /// </summary>
@@ -147,6 +161,8 @@ public partial class TranscribeApi
         TranscribeCommandMessage.Dispose();
         TranscribeConfigStatusMessage.Dispose();
         TranscribeAudioEventMessage.Dispose();
+        TranscribeCommandsUpdateAcceptedMessage.Dispose();
+        TranscribeCommandsUpdateDeniedMessage.Dispose();
         UnknownMessage.Dispose();
     }
 
@@ -233,6 +249,28 @@ public partial class TranscribeApi
             if (JsonUtils.TryDeserialize(json, out TranscribeAudioEventMessage? message))
             {
                 await TranscribeAudioEventMessage.RaiseEvent(message!).ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (
+                JsonUtils.TryDeserialize(json, out TranscribeCommandsUpdateAcceptedMessage? message)
+            )
+            {
+                await TranscribeCommandsUpdateAcceptedMessage
+                    .RaiseEvent(message!)
+                    .ConfigureAwait(false);
+                return;
+            }
+        }
+
+        {
+            if (JsonUtils.TryDeserialize(json, out TranscribeCommandsUpdateDeniedMessage? message))
+            {
+                await TranscribeCommandsUpdateDeniedMessage
+                    .RaiseEvent(message!)
+                    .ConfigureAwait(false);
                 return;
             }
         }
@@ -346,6 +384,17 @@ public partial class TranscribeApi
     /// </summary>
     public async Task Send(
         TranscribeEndMessage message,
+        CancellationToken cancellationToken = default
+    )
+    {
+        await SendJsonAsync(message, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Sends a TranscribeCommandsUpdateMessage message to the server
+    /// </summary>
+    public async Task Send(
+        TranscribeCommandsUpdateMessage message,
         CancellationToken cancellationToken = default
     )
     {
