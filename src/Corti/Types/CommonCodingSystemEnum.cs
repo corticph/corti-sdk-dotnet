@@ -75,6 +75,15 @@ public enum CommonCodingSystemEnum
     [EnumMember(Value = "snomedctus")]
     Snomedctus,
 
+    [EnumMember(Value = "snomedctno")]
+    Snomedctno,
+
+    [EnumMember(Value = "snomedctat")]
+    Snomedctat,
+
+    [EnumMember(Value = "snomedctnl")]
+    Snomedctnl,
+
     [EnumMember(Value = "meddra-it")]
     MeddraIt,
 
@@ -134,6 +143,9 @@ internal class CommonCodingSystemEnumSerializer
         { "snomedctdk", CommonCodingSystemEnum.Snomedctdk },
         { "snomedctse", CommonCodingSystemEnum.Snomedctse },
         { "snomedctus", CommonCodingSystemEnum.Snomedctus },
+        { "snomedctno", CommonCodingSystemEnum.Snomedctno },
+        { "snomedctat", CommonCodingSystemEnum.Snomedctat },
+        { "snomedctnl", CommonCodingSystemEnum.Snomedctnl },
         { "meddra-it", CommonCodingSystemEnum.MeddraIt },
         { "meddra-en", CommonCodingSystemEnum.MeddraEn },
         { "meddra-fr", CommonCodingSystemEnum.MeddraFr },
@@ -173,6 +185,9 @@ internal class CommonCodingSystemEnumSerializer
         { CommonCodingSystemEnum.Snomedctdk, "snomedctdk" },
         { CommonCodingSystemEnum.Snomedctse, "snomedctse" },
         { CommonCodingSystemEnum.Snomedctus, "snomedctus" },
+        { CommonCodingSystemEnum.Snomedctno, "snomedctno" },
+        { CommonCodingSystemEnum.Snomedctat, "snomedctat" },
+        { CommonCodingSystemEnum.Snomedctnl, "snomedctnl" },
         { CommonCodingSystemEnum.MeddraIt, "meddra-it" },
         { CommonCodingSystemEnum.MeddraEn, "meddra-en" },
         { CommonCodingSystemEnum.MeddraFr, "meddra-fr" },
