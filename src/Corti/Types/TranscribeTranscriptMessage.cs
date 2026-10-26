@@ -21,8 +21,11 @@ public record TranscribeTranscriptMessage : IJsonOnDeserialized
 #endif
     } = new();
 
+    /// <summary>
+    /// The singular segment object, or a list of items when `wordLevel` is enabled: all word items finalized together in one message, or a one-element list carrying the in-progress segment for interim previews when `interimResults` is also enabled.
+    /// </summary>
     [JsonPropertyName("data")]
-    public required TranscribeTranscriptData Data { get; set; }
+    public required TranscribeTranscriptMessageData Data { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
