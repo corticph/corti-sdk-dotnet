@@ -43,7 +43,7 @@ public record CommonSchemaConnector : IJsonOnDeserialized
     public Dictionary<string, object?> Schema { get; set; } = new Dictionary<string, object?>();
 
     /// <summary>
-    /// If set, calling this tool terminates the loop in the given state after validating and storing the data part. No further LLM call.
+    /// If set, `complete`/`input_required` terminate the loop in that state after validating and storing the data part (no further LLM call). `send` is non-terminal: it validates and stores the data part, delivers it to the user as a data part, and continues the loop.
     /// </summary>
     [JsonPropertyName("transition")]
     public CommonSchemaConnectorTransition? Transition { get; set; }
@@ -62,6 +62,12 @@ public record CommonSchemaConnector : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
+
+    /// <summary>
+    /// Authentication configuration.
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public CommonConnectorAuth? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
