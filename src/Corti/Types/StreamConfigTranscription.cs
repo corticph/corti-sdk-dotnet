@@ -24,6 +24,12 @@ public record StreamConfigTranscription : IJsonOnDeserialized
     public bool? Diarize { get; set; }
 
     /// <summary>
+    /// When enabled, transcripts are returned at word level instead of phrase/utterance level: each transcript list item is a single word with its own timing. Defaults to false.
+    /// </summary>
+    [JsonPropertyName("wordLevel")]
+    public StreamConfigTranscriptionWordLevel? WordLevel { get; set; }
+
+    /// <summary>
     /// **Deprecated** — renamed to `diarize`. Still accepted for backward compatibility; `diarize` takes precedence when both are provided. `CONFIG_ACCEPTED` echoes both fields during the deprecation period. No removal date is currently planned.
     /// </summary>
     [JsonPropertyName("isDiarization")]
