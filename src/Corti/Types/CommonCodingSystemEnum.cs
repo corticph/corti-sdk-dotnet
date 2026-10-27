@@ -101,6 +101,15 @@ public enum CommonCodingSystemEnum
 
     [EnumMember(Value = "kvaa")]
     Kvaa,
+
+    [EnumMember(Value = "icdo3int")]
+    Icdo3Int,
+
+    [EnumMember(Value = "icdo3fr")]
+    Icdo3Fr,
+
+    [EnumMember(Value = "icdo3de")]
+    Icdo3De,
 }
 
 internal class CommonCodingSystemEnumSerializer
@@ -143,6 +152,9 @@ internal class CommonCodingSystemEnumSerializer
         { "meddra-se", CommonCodingSystemEnum.MeddraSe },
         { "sks", CommonCodingSystemEnum.Sks },
         { "kvaa", CommonCodingSystemEnum.Kvaa },
+        { "icdo3int", CommonCodingSystemEnum.Icdo3Int },
+        { "icdo3fr", CommonCodingSystemEnum.Icdo3Fr },
+        { "icdo3de", CommonCodingSystemEnum.Icdo3De },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -182,6 +194,9 @@ internal class CommonCodingSystemEnumSerializer
         { CommonCodingSystemEnum.MeddraSe, "meddra-se" },
         { CommonCodingSystemEnum.Sks, "sks" },
         { CommonCodingSystemEnum.Kvaa, "kvaa" },
+        { CommonCodingSystemEnum.Icdo3Int, "icdo3int" },
+        { CommonCodingSystemEnum.Icdo3Fr, "icdo3fr" },
+        { CommonCodingSystemEnum.Icdo3De, "icdo3de" },
     };
 
     public override CommonCodingSystemEnum Read(
