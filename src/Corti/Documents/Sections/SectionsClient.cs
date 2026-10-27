@@ -578,6 +578,122 @@ public partial class SectionsClient : ISectionsClient
             .ConfigureAwait(false);
     }
 
+    private async Task<WithRawResponse<GuidedSectionImpactResponse>> ImpactAsyncCore(
+        string sectionId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _client
+            .Options.ExceptionHandler.TryCatchAsync(async () =>
+            {
+                var _headers = await new Corti.Core.HeadersBuilder.Builder()
+                    .Add(_client.Options.Headers)
+                    .Add(_client.Options.AdditionalHeaders)
+                    .Add(options?.AdditionalHeaders)
+                    .BuildAsync()
+                    .ConfigureAwait(false);
+                var response = await _client
+                    .SendRequestAsync(
+                        new JsonRequest
+                        {
+                            BaseUrl = _client.Options.Environment.Base,
+                            Method = HttpMethod.Get,
+                            Path = string.Format(
+                                "documents/sections/{0}/impact",
+                                ValueConvert.ToPathParameterString(sectionId)
+                            ),
+                            Headers = _headers,
+                            Options = options,
+                        },
+                        cancellationToken
+                    )
+                    .ConfigureAwait(false);
+                if (response.StatusCode is >= 200 and < 400)
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        var responseData = JsonUtils.Deserialize<GuidedSectionImpactResponse>(
+                            responseBody
+                        )!;
+                        return new WithRawResponse<GuidedSectionImpactResponse>()
+                        {
+                            Data = responseData,
+                            RawResponse = new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            },
+                        };
+                    }
+                    catch (JsonException e)
+                    {
+                        throw new CortiClientApiException(
+                            "Failed to deserialize response",
+                            response.StatusCode,
+                            responseBody,
+                            e,
+                            rawResponse: new Corti.RawResponse()
+                            {
+                                StatusCode = response.Raw.StatusCode,
+                                Url =
+                                    response.Raw.RequestMessage?.RequestUri
+                                    ?? new Uri("about:blank"),
+                                Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                            }
+                        );
+                    }
+                }
+                {
+                    var responseBody = await response
+                        .Raw.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    try
+                    {
+                        switch (response.StatusCode)
+                        {
+                            case 404:
+                                throw new NotFoundError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // unable to map error response, throwing generic error
+                    }
+                    throw new CortiClientApiException(
+                        $"Error with status code {response.StatusCode}",
+                        response.StatusCode,
+                        responseBody,
+                        rawResponse: new Corti.RawResponse()
+                        {
+                            StatusCode = response.Raw.StatusCode,
+                            Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                            Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                        }
+                    );
+                }
+            })
+            .ConfigureAwait(false);
+    }
+
     /// <summary>
     /// Returns a list of sections and their metadata. Fetch a sectionId to get the full generation content.
     /// Use query parameters to filter by language, region, specialty, label, publish status, or source.
@@ -671,6 +787,40 @@ public partial class SectionsClient : ISectionsClient
     {
         return new WithRawResponseTask<GuidedSection>(
             UpdateAsyncCore(sectionId, request, options, cancellationToken)
+        );
+    }
+
+    /// <summary>
+    /// Returns the templates and sections that a change to this section can affect.
+    ///
+    /// The `templates` group lists templates whose published version links this section or a
+    /// descendant section. It also lists templates that inherit their section list from a parent
+    /// template that links the section. The `sections` group lists the descendant sections that
+    /// inherit from this section.
+    ///
+    /// Counts respect the caller's visibility, so the same section can return different
+    /// counts for different callers.
+    ///
+    /// A template appears once. When a template reaches the section through more than one
+    /// path, the response keeps the strongest path. The order is `direct`, then
+    /// `inheritedSection`, then `inheritedTemplate`.
+    ///
+    /// Each `items` array holds at most 50 entries. When the 50-entry display cap or the
+    /// inheritance depth cap removes entries, `truncated` is true.
+    ///
+    /// Returns 404 when the caller cannot see the section.
+    /// </summary>
+    /// <example><code>
+    /// await client.Documents.Sections.ImpactAsync("sectionID");
+    /// </code></example>
+    public WithRawResponseTask<GuidedSectionImpactResponse> ImpactAsync(
+        string sectionId,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<GuidedSectionImpactResponse>(
+            ImpactAsyncCore(sectionId, options, cancellationToken)
         );
     }
 }
