@@ -64,10 +64,10 @@ public record CommonSchemaConnector : IJsonOnDeserialized
     public bool? Enabled { get; set; }
 
     /// <summary>
-    /// Authentication configuration.
+    /// Authentication configuration
     /// </summary>
     [JsonPropertyName("auth")]
-    public CommonConnectorAuth? Auth { get; set; }
+    public IEnumerable<CommonConnectorAuthEntry>? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

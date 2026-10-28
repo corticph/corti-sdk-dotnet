@@ -5,10 +5,10 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Auth configuration for a single backing registry MCP server.
+/// Authentication configuration for a single backing registry MCP server.
 /// </summary>
 [Serializable]
-public record CommonRegistryConnectorAuthEntry : IJsonOnDeserialized
+public record CommonConnectorAuthEntry : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
