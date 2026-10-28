@@ -37,6 +37,12 @@ public record CommonRegistryConnectorProvisioned : IJsonOnDeserialized
     public Dictionary<string, object?>? Config { get; set; }
 
     /// <summary>
+    /// Per-server auth entries, overriding the connector's singular `auth`. One entry per backing registry MCP server, keyed by the server's unique name; a registry expert that provisions no MCP servers yields a single fallback entry `{ type: none }` with no `server`.
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public IEnumerable<CommonRegistryConnectorAuthEntry>? Auth { get; set; }
+
+    /// <summary>
     /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
     /// replacements where the underlying spec is unchanged. Used by
     /// observability/HITL to reference a connector unambiguously.
