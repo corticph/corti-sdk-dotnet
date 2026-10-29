@@ -17,8 +17,20 @@ public record TranscriptsListItem : IJsonOnDeserialized
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
+    /// <summary>
+    /// The unique identifier for the associated recording.
+    /// </summary>
+    [JsonPropertyName("recordingId")]
+    public required string RecordingId { get; set; }
+
     [JsonPropertyName("transcriptSample")]
     public required string TranscriptSample { get; set; }
+
+    /// <summary>
+    /// The timestamp when the transcript was created.
+    /// </summary>
+    [JsonPropertyName("createdAt")]
+    public required DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("transcript")]
     public TranscriptsData? Transcript { get; set; }
