@@ -41,6 +41,12 @@ public record StreamTranscript : IJsonOnDeserialized
     [JsonPropertyName("time")]
     public required StreamTranscriptTime Time { get; set; }
 
+    /// <summary>
+    /// The separator to prepend to `transcript` when joining this segment with previous output from the same speaker and channel: an ordinary space " ", no separator "" (for example, a segment beginning with punctuation, or the first segment of a stream), or a non-breaking space "\u00A0" used before some punctuation marks in some locales. If the property is omitted, treat it as an empty string. The spacing between different speakers or channels is not provided; see [Transcript Text Handling](https://docs.corti.ai/stt/best-practices-transcribe#join-words-and-segments-with-delimiterbefore)
+    /// </summary>
+    [JsonPropertyName("delimiterBefore")]
+    public string? DelimiterBefore { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

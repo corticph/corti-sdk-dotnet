@@ -47,6 +47,12 @@ public record CommonTranscriptResponse : IJsonOnDeserialized
     [JsonPropertyName("end")]
     public required int End { get; set; }
 
+    /// <summary>
+    /// The separator to prepend to this item's `text` when joining transcript output: an ordinary space " ", no separator "" (for example, punctuation that attaches to the previous item, or the first item of a stream), or a non-breaking space "\u00A0" used before some punctuation marks in some locales. If the property is omitted, treat it as an empty string.
+    /// </summary>
+    [JsonPropertyName("delimiterBefore")]
+    public string? DelimiterBefore { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
