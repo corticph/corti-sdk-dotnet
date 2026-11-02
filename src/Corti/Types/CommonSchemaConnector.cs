@@ -63,6 +63,12 @@ public record CommonSchemaConnector : IJsonOnDeserialized
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
 
+    /// <summary>
+    /// Authentication configuration.
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public CommonConnectorAuth? Auth { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
