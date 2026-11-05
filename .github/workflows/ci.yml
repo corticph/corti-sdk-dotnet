@@ -73,12 +73,17 @@ jobs:
       - name: Lint
         run: dotnet format src/Corti/Corti.csproj --include src/Corti/Custom/ --verify-no-changes
 
+  # NuGet Trusted Publishing (OIDC). The nuget.org trust policy is pinned to this repo,
+  # workflow file "ci.yml" and environment "nuget-release" — renaming either breaks publishing.
+  # NUGET_USER (environment secret) = nuget.org username of the policy creator, not the org.
   publish:
     needs: [compile, test, lint]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    environment: nuget-release
     permissions:
       contents: read
+      id-token: write
 
     steps:
       - name: Checkout repo
@@ -86,16 +91,22 @@ jobs:
 
       - name: Extract version from tag
         id: version
+        env:
+          TAG: ${{ github.ref_name }}
         run: |
-          TAG="${GITHUB_REF_NAME}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            echo "::error::Tag '$TAG' is not a release tag (expected vMAJOR.MINOR.PATCH[-prerelease])"
+            exit 1
+          fi
           VERSION="${TAG#v}"
           echo "tag=$TAG"
           echo "version=$VERSION"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Set version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
           sed -i "s/Current = \"[^\"]*\"/Current = \"${VERSION}\"/" src/Corti/Core/Public/Version.cs
           echo "Version.cs: $(grep Current src/Corti/Core/Public/Version.cs)"
 
@@ -114,11 +125,20 @@ jobs:
         run: dotnet build src/Corti/Corti.csproj --no-restore -c Release
 
       - name: Pack
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          dotnet pack src/Corti/Corti.csproj --no-restore -c Release -p:Version=${{ steps.version.outputs.version }}
-          echo "packed version: ${{ steps.version.outputs.version }}"
+          dotnet pack src/Corti/Corti.csproj --no-restore -c Release -p:Version="$VERSION"
+          echo "packed version: $VERSION"
+
+      # Mint the 1-hour key as late as possible (immediately before push).
+      - name: NuGet login (OIDC → temporary API key)
+        id: login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
 
       - name: Publish to NuGet.org
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: dotnet nuget push src/Corti/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source "nuget.org"
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push src/Corti/bin/Release/*.nupkg --api-key "$NUGET_API_KEY" --source "nuget.org"
