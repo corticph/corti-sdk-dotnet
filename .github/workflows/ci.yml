@@ -79,6 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
 
     steps:
       - name: Checkout repo
@@ -118,7 +119,13 @@ jobs:
           dotnet pack src/Corti/Corti.csproj --no-restore -c Release -p:Version=${{ steps.version.outputs.version }}
           echo "packed version: ${{ steps.version.outputs.version }}"
 
+      - name: NuGet login (OIDC → temporary API key)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Publish to NuGet.org
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: dotnet nuget push src/Corti/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source "nuget.org"
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push src/Corti/bin/Release/*.nupkg --api-key "$NUGET_API_KEY" --source "nuget.org"
