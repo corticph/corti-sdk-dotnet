@@ -30,8 +30,10 @@ public partial class TranscriptsClient : ITranscriptsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 2)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 4)
                     .Add("full", request.Full)
+                    .Add("recordingId", request.RecordingId)
+                    .Add("sort", request.Sort)
                     .Add("direction", request.Direction)
                     .MergeAdditional(options?.AdditionalQueryParameters)
                     .Build();
@@ -809,12 +811,12 @@ public partial class TranscriptsClient : ITranscriptsClient
     }
 
     /// <summary>
-    /// Retrieves a list of transcripts for a given interaction. Transcripts are ordered based on their creation time. Default ordering (desc) will return the most recent transcript first in the list. Use query parameter `direction` to define the order of the list (`asc` for ascending and `desc` for descending).
+    /// Retrieves a list of transcripts for a given interaction. Transcripts are ordered based on their creation time by default. Default ordering (desc) will return the most recent transcript first in the list. Use query parameter `sort` to choose the field and `direction` to define the order of the list (`asc` for ascending and `desc` for descending).
     /// </summary>
     /// <example><code>
     /// await client.Transcripts.ListAsync(
     ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    ///     new TranscriptsListRequest()
+    ///     new TranscriptsListRequest { RecordingId = "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
     /// );
     /// </code></example>
     public WithRawResponseTask<TranscriptsListResponse> ListAsync(

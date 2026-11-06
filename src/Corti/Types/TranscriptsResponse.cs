@@ -44,6 +44,12 @@ public record TranscriptsResponse : IJsonOnDeserialized
     [JsonPropertyName("status")]
     public required TranscriptsStatusEnum Status { get; set; }
 
+    /// <summary>
+    /// Key terms echoed from the create request. Not persisted; may be omitted on subsequent GETs.
+    /// </summary>
+    [JsonPropertyName("keyTerms")]
+    public TranscriptsResponseKeyTerms? KeyTerms { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
