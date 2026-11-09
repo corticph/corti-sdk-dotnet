@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Optional filter to restrict the set of codes the model can predict.
+/// Deprecated: use `filters` with `CodesSystemFilter` instead.
 /// </summary>
 [Serializable]
 public record CodesFilter : IJsonOnDeserialized
