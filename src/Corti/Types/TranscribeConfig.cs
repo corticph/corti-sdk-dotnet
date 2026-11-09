@@ -54,7 +54,7 @@ public record TranscribeConfig : IJsonOnDeserialized
     public string? AudioFormat { get; set; }
 
     /// <summary>
-    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream.
+    /// Define replacements to have terms (single words or multi-word phrases) replaced in final text output with your preferred style. For example, replace "BID" with "twice daily". Configuration is case insensitive and limited to 1,000 replacements per stream. A defined replacement can have a maximum length of 100 characters and 10-words for `find` and `replace` fields.
     /// </summary>
     [JsonPropertyName("replacements")]
     public IEnumerable<TranscribeConfigReplacementsItem>? Replacements { get; set; }
@@ -64,6 +64,12 @@ public record TranscribeConfig : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("keyterms")]
     public TranscribeConfigKeyterms? Keyterms { get; set; }
+
+    /// <summary>
+    /// When enabled, final transcripts are returned at word level instead of phrase/utterance level: all word items finalized together are delivered in a single message with `data` as a list. Interim previews remain segment level and arrive as a one-element list when `interimResults` is also enabled. Defaults to false.
+    /// </summary>
+    [JsonPropertyName("wordLevel")]
+    public TranscribeConfigWordLevel? WordLevel { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

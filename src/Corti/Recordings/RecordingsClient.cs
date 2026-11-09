@@ -22,6 +22,7 @@ public partial class RecordingsClient : IRecordingsClient
 
     private async Task<WithRawResponse<RecordingsListResponse>> ListAsyncCore(
         string id,
+        RecordingsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -29,6 +30,10 @@ public partial class RecordingsClient : IRecordingsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 1)
+                    .Add("direction", request.Direction)
+                    .MergeAdditional(options?.AdditionalQueryParameters)
+                    .Build();
                 var _headers = await new Corti.Core.HeadersBuilder.Builder()
                     .Add(_client.Options.Headers)
                     .Add(_client.Options.AdditionalHeaders)
@@ -45,6 +50,7 @@ public partial class RecordingsClient : IRecordingsClient
                                 "interactions/{0}/recordings/",
                                 ValueConvert.ToPathParameterString(id)
                             ),
+                            QueryString = _queryString,
                             Headers = _headers,
                             Options = options,
                         },
@@ -615,19 +621,23 @@ public partial class RecordingsClient : IRecordingsClient
     }
 
     /// <summary>
-    /// Retrieve a list of recordings for a given interaction.
+    /// Retrieve a list of recordings for a given interaction. Recordings are ordered based on their creation time. Default ordering (desc) will return the most recent recording first in the list. Use query parameter `direction` to define the order of the list (`asc` for ascending and `desc` for descending).
     /// </summary>
     /// <example><code>
-    /// await client.Recordings.ListAsync("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    /// await client.Recordings.ListAsync(
+    ///     "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    ///     new RecordingsListRequest()
+    /// );
     /// </code></example>
     public WithRawResponseTask<RecordingsListResponse> ListAsync(
         string id,
+        RecordingsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<RecordingsListResponse>(
-            ListAsyncCore(id, options, cancellationToken)
+            ListAsyncCore(id, request, options, cancellationToken)
         );
     }
 

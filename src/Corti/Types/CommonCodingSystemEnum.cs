@@ -74,6 +74,51 @@ public enum CommonCodingSystemEnum
 
     [EnumMember(Value = "snomedctus")]
     Snomedctus,
+
+    [EnumMember(Value = "snomedctno")]
+    Snomedctno,
+
+    [EnumMember(Value = "snomedctat")]
+    Snomedctat,
+
+    [EnumMember(Value = "snomedctnl")]
+    Snomedctnl,
+
+    [EnumMember(Value = "meddra-it")]
+    MeddraIt,
+
+    [EnumMember(Value = "meddra-en")]
+    MeddraEn,
+
+    [EnumMember(Value = "meddra-fr")]
+    MeddraFr,
+
+    [EnumMember(Value = "meddra-es")]
+    MeddraEs,
+
+    [EnumMember(Value = "meddra-de")]
+    MeddraDe,
+
+    [EnumMember(Value = "meddra-no")]
+    MeddraNo,
+
+    [EnumMember(Value = "meddra-se")]
+    MeddraSe,
+
+    [EnumMember(Value = "sks")]
+    Sks,
+
+    [EnumMember(Value = "kvaa")]
+    Kvaa,
+
+    [EnumMember(Value = "icdo3int")]
+    Icdo3Int,
+
+    [EnumMember(Value = "icdo3fr")]
+    Icdo3Fr,
+
+    [EnumMember(Value = "icdo3de")]
+    Icdo3De,
 }
 
 internal class CommonCodingSystemEnumSerializer
@@ -107,6 +152,21 @@ internal class CommonCodingSystemEnumSerializer
         { "snomedctdk", CommonCodingSystemEnum.Snomedctdk },
         { "snomedctse", CommonCodingSystemEnum.Snomedctse },
         { "snomedctus", CommonCodingSystemEnum.Snomedctus },
+        { "snomedctno", CommonCodingSystemEnum.Snomedctno },
+        { "snomedctat", CommonCodingSystemEnum.Snomedctat },
+        { "snomedctnl", CommonCodingSystemEnum.Snomedctnl },
+        { "meddra-it", CommonCodingSystemEnum.MeddraIt },
+        { "meddra-en", CommonCodingSystemEnum.MeddraEn },
+        { "meddra-fr", CommonCodingSystemEnum.MeddraFr },
+        { "meddra-es", CommonCodingSystemEnum.MeddraEs },
+        { "meddra-de", CommonCodingSystemEnum.MeddraDe },
+        { "meddra-no", CommonCodingSystemEnum.MeddraNo },
+        { "meddra-se", CommonCodingSystemEnum.MeddraSe },
+        { "sks", CommonCodingSystemEnum.Sks },
+        { "kvaa", CommonCodingSystemEnum.Kvaa },
+        { "icdo3int", CommonCodingSystemEnum.Icdo3Int },
+        { "icdo3fr", CommonCodingSystemEnum.Icdo3Fr },
+        { "icdo3de", CommonCodingSystemEnum.Icdo3De },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -137,6 +197,21 @@ internal class CommonCodingSystemEnumSerializer
         { CommonCodingSystemEnum.Snomedctdk, "snomedctdk" },
         { CommonCodingSystemEnum.Snomedctse, "snomedctse" },
         { CommonCodingSystemEnum.Snomedctus, "snomedctus" },
+        { CommonCodingSystemEnum.Snomedctno, "snomedctno" },
+        { CommonCodingSystemEnum.Snomedctat, "snomedctat" },
+        { CommonCodingSystemEnum.Snomedctnl, "snomedctnl" },
+        { CommonCodingSystemEnum.MeddraIt, "meddra-it" },
+        { CommonCodingSystemEnum.MeddraEn, "meddra-en" },
+        { CommonCodingSystemEnum.MeddraFr, "meddra-fr" },
+        { CommonCodingSystemEnum.MeddraEs, "meddra-es" },
+        { CommonCodingSystemEnum.MeddraDe, "meddra-de" },
+        { CommonCodingSystemEnum.MeddraNo, "meddra-no" },
+        { CommonCodingSystemEnum.MeddraSe, "meddra-se" },
+        { CommonCodingSystemEnum.Sks, "sks" },
+        { CommonCodingSystemEnum.Kvaa, "kvaa" },
+        { CommonCodingSystemEnum.Icdo3Int, "icdo3int" },
+        { CommonCodingSystemEnum.Icdo3Fr, "icdo3fr" },
+        { CommonCodingSystemEnum.Icdo3De, "icdo3de" },
     };
 
     public override CommonCodingSystemEnum Read(

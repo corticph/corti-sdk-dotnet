@@ -41,6 +41,7 @@ public record CommonA2AConnector : IJsonOnDeserialized
     /// replacements where the underlying spec is unchanged. Used by
     /// observability/HITL to reference a connector unambiguously.
     /// </summary>
+    [JsonAccess(JsonAccessType.ReadOnly)]
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
@@ -49,6 +50,12 @@ public record CommonA2AConnector : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
+
+    /// <summary>
+    /// Authentication configuration.
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public CommonConnectorAuth? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

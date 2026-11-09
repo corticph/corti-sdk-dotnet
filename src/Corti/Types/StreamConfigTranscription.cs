@@ -24,13 +24,19 @@ public record StreamConfigTranscription : IJsonOnDeserialized
     public bool? Diarize { get; set; }
 
     /// <summary>
+    /// When enabled, transcripts are returned at word level instead of phrase/utterance level: each transcript list item is a single word with its own timing. Defaults to false.
+    /// </summary>
+    [JsonPropertyName("wordLevel")]
+    public StreamConfigTranscriptionWordLevel? WordLevel { get; set; }
+
+    /// <summary>
     /// **Deprecated** — renamed to `diarize`. Still accepted for backward compatibility; `diarize` takes precedence when both are provided. `CONFIG_ACCEPTED` echoes both fields during the deprecation period. No removal date is currently planned.
     /// </summary>
     [JsonPropertyName("isDiarization")]
     public bool? IsDiarization { get; set; }
 
     /// <summary>
-    /// Enable multi-channel audio processing. When false, all participants are collapsed to channel 0 and the audio is downmixed to mono.
+    /// Enable multi-channel audio processing. When false, all participants are collapsed to channel 0 and the audio is converted to mono.
     /// </summary>
     [JsonPropertyName("isMultichannel")]
     public bool? IsMultichannel { get; set; }
