@@ -600,7 +600,7 @@ public partial class VersionsClient : IVersionsClient
 
     /// <summary>
     /// Returns raw authored template versions without inheritance resolution or section expansion.
-    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// To see resolved content, use GET /documents/templates/:id instead.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.Versions.ListAsync("templateID");
@@ -639,7 +639,7 @@ public partial class VersionsClient : IVersionsClient
 
     /// <summary>
     /// Returns the raw authored template version without inheritance resolution or section expansion.
-    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// To see resolved content, use GET /documents/templates/:id instead.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.Versions.GetAsync("templateID", "versionID");

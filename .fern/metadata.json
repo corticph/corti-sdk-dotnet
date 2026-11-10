@@ -1,7 +1,7 @@
 {
-  "cliVersion": "5.168.1",
+  "cliVersion": "5.193.1",
   "generatorName": "fernapi/fern-csharp-sdk",
-  "generatorVersion": "2.68.2",
+  "generatorVersion": "2.69.2",
   "generatorConfig": {
     "namespace": "Corti",
     "client-class-name": "CortiClient",
@@ -27,8 +27,8 @@
       }
     }
   },
-  "originGitCommit": "82ca9df690062053f561624ec3fed9284172db98",
-  "originGitCommitIsDirty": true,
+  "originGitCommit": "662fe45c8741154d6fadefa3df116158f3ccf3f8",
+  "originGitCommitIsDirty": false,
   "invokedBy": "ci",
   "requestedVersion": "0.0.0-dev",
   "ciProvider": "github",
