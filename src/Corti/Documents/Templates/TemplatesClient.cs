@@ -624,7 +624,7 @@ public partial class TemplatesClient : ITemplatesClient
     /// <summary>
     /// Returns the template with its published version fully resolved (inheritance walked,
     /// sections expanded with their own inheritance applied). To see raw authored
-    /// values without inheritance, use GET /documents/templates/{templateID}/versions/{versionID}.
+    /// values without inheritance, use GET /documents/templates/:id/versions/:id .
     /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.GetAsync("templateID");
@@ -641,7 +641,7 @@ public partial class TemplatesClient : ITemplatesClient
     }
 
     /// <summary>
-    /// Deletes a template and its versions. Returns 409 if other templates or sections inherit from this template.
+    /// Deletes a template and its versions. Returns `409` if other templates or sections inherit from this template.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Templates.DeleteAsync("templateID");

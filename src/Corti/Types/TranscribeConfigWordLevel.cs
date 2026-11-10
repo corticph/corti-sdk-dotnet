@@ -5,32 +5,17 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// An icon resource, following the MCP `Icon` shape.
+/// When enabled, final transcripts are returned at word level instead of phrase/utterance level: all word items finalized together are delivered in a single message with `data` as a list. Interim previews remain segment level and arrive as a one-element list when `interimResults` is also enabled. Defaults to false.
 /// </summary>
 [Serializable]
-public record AgenticRegistryIcon : IJsonOnDeserialized
+public record TranscribeConfigWordLevel : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Icon source URL.
-    /// </summary>
-    [JsonPropertyName("src")]
-    public required string Src { get; set; }
-
-    /// <summary>
-    /// MIME type of the icon resource.
-    /// </summary>
-    [JsonPropertyName("mimeType")]
-    public string? MimeType { get; set; }
-
-    /// <summary>
-    /// `WxH` size hints (e.g. `48x48`), or `any` for scalable icons.
-    /// </summary>
-    [JsonPropertyName("sizes")]
-    public IEnumerable<string>? Sizes { get; set; }
+    [JsonPropertyName("enabled")]
+    public bool? Enabled { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

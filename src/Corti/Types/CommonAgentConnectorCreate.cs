@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Request body for attaching an agent connector.
+/// Request body for attaching an agent connector, either an inline agent reference or a registry entry of type `agent`. Exactly one of `agentId` or the `registry` reference must be present; sending both, or neither, is rejected with `400`. For `agent`-type registry connectors, the entry's `payload.systemPrompt` is required and always exposed by the API.
 /// </summary>
 [Serializable]
 public record CommonAgentConnectorCreate : IJsonOnDeserialized
@@ -24,8 +24,17 @@ public record CommonAgentConnectorCreate : IJsonOnDeserialized
 #endif
     } = new();
 
+    /// <summary>
+    /// Required for inline definitions; must be omitted when `registry` is present.
+    /// </summary>
     [JsonPropertyName("agentId")]
-    public required string AgentId { get; set; }
+    public string? AgentId { get; set; }
+
+    /// <summary>
+    /// Marks the connector as registry-sourced. For `agent`-type registry connectors, `payload.systemPrompt` is required and always exposed by the API.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReference? Registry { get; set; }
 
     /// <summary>
     /// Whether the connector is active for invocations.

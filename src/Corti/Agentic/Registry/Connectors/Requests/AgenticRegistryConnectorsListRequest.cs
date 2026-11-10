@@ -1,3 +1,4 @@
+using Corti;
 using Corti.Core;
 using global::System.Text.Json.Serialization;
 
@@ -7,11 +8,40 @@ namespace Corti.Agentic.Registry;
 public record AgenticRegistryConnectorsListRequest
 {
     /// <summary>
-    /// Free-text search over name and description.
-    /// **Future scope**: not yet implemented; the server ignores this parameter and returns the unfiltered page.
+    /// Free-text search over `name`, `title`, `summary`, `description`, and `tags`.
     /// </summary>
     [JsonIgnore]
     public string? Q { get; set; }
+
+    /// <summary>
+    /// Filter by connector type.
+    /// </summary>
+    [JsonIgnore]
+    public CommonConnectorType? Type { get; set; }
+
+    /// <summary>
+    /// Filter by the publishing namespace (e.g. `corti`).
+    /// </summary>
+    [JsonIgnore]
+    public string? Publisher { get; set; }
+
+    /// <summary>
+    /// Filter by category (e.g. `literature`).
+    /// </summary>
+    [JsonIgnore]
+    public string? Category { get; set; }
+
+    /// <summary>
+    /// Filter by tags. Comma-separated; a connector matches when it carries any of the listed tags.
+    /// </summary>
+    [JsonIgnore]
+    public string? Tags { get; set; }
+
+    /// <summary>
+    /// Filter by lifecycle status.
+    /// </summary>
+    [JsonIgnore]
+    public AgenticRegistryConnectorStatus? Status { get; set; }
 
     /// <summary>
     /// Maximum number of items per page.

@@ -21,6 +21,9 @@ public partial class ConnectorsClient : IConnectorsClient
         }
     }
 
+    /// <summary>
+    /// Lists registry connector records (identity, lifecycle, and presentation metadata) with cursor pagination. Per-version configuration records are returned only by the detail endpoint.
+    /// </summary>
     private WithRawResponseTask<AgenticRegistryConnectorsListResponse> ListInternalAsync(
         AgenticRegistryConnectorsListRequest request,
         RequestOptions? options = null,
@@ -43,8 +46,13 @@ public partial class ConnectorsClient : IConnectorsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 8)
                     .Add("q", request.Q)
+                    .Add("type", request.Type)
+                    .Add("publisher", request.Publisher)
+                    .Add("category", request.Category)
+                    .Add("tags", request.Tags)
+                    .Add("status", request.Status)
                     .Add("pageSize", request.PageSize)
                     .Add("pageToken", request.PageToken)
                     .MergeAdditional(options?.AdditionalQueryParameters)
@@ -155,7 +163,7 @@ public partial class ConnectorsClient : IConnectorsClient
             .ConfigureAwait(false);
     }
 
-    private async Task<WithRawResponse<AgenticRegistryConnector>> GetAsyncCore(
+    private async Task<WithRawResponse<AgenticRegistryConnectorDetail>> GetAsyncCore(
         string connectorId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -193,10 +201,10 @@ public partial class ConnectorsClient : IConnectorsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<AgenticRegistryConnector>(
+                        var responseData = JsonUtils.Deserialize<AgenticRegistryConnectorDetail>(
                             responseBody
                         )!;
-                        return new WithRawResponse<AgenticRegistryConnector>()
+                        return new WithRawResponse<AgenticRegistryConnectorDetail>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -285,6 +293,9 @@ public partial class ConnectorsClient : IConnectorsClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Lists registry connector records (identity, lifecycle, and presentation metadata) with cursor pagination. Per-version configuration records are returned only by the detail endpoint.
+    /// </summary>
     /// <example><code>
     /// await client.Agentic.Registry.Connectors.ListAsync(new AgenticRegistryConnectorsListRequest());
     /// </code></example>
@@ -328,16 +339,19 @@ public partial class ConnectorsClient : IConnectorsClient
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Returns the full connector record — identity, lifecycle, and presentation metadata — plus the immutable per-version configuration records in `versions`, ordered newest first. Each version carries its own `configSchema` and `payload` (including `systemPrompt` and bundled MCP server definitions). The latest version is also addressable via the `latest` field.
+    /// </summary>
     /// <example><code>
     /// await client.Agentic.Registry.Connectors.GetAsync("connectorId");
     /// </code></example>
-    public WithRawResponseTask<AgenticRegistryConnector> GetAsync(
+    public WithRawResponseTask<AgenticRegistryConnectorDetail> GetAsync(
         string connectorId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<AgenticRegistryConnector>(
+        return new WithRawResponseTask<AgenticRegistryConnectorDetail>(
             GetAsyncCore(connectorId, options, cancellationToken)
         );
     }

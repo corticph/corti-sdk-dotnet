@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Request body for attaching a remote A2A agent connector.
+/// Request body for attaching a remote A2A agent connector, either inline or from the registry. Exactly one of the inline definition (`url`) or the `registry` reference must be present; sending both, or neither, is rejected with `400`.
 /// </summary>
 [Serializable]
 public record CommonA2AConnectorCreate : IJsonOnDeserialized
@@ -31,10 +31,16 @@ public record CommonA2AConnectorCreate : IJsonOnDeserialized
     public string? Name { get; set; }
 
     /// <summary>
-    /// Remote agent A2A endpoint URL.
+    /// Required for inline definitions; must be omitted when `registry` is present.
     /// </summary>
     [JsonPropertyName("url")]
-    public required string Url { get; set; }
+    public string? Url { get; set; }
+
+    /// <summary>
+    /// Marks the connector as registry-sourced.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReference? Registry { get; set; }
 
     /// <summary>
     /// Whether the connector is active for invocations.

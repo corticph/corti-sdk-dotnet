@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Request body for attaching an MCP connector.
+/// Request body for attaching an MCP connector, either inline or from the registry. Exactly one of the inline definition (`name` + `url`) or the `registry` reference must be present; sending both, or neither, is rejected with `400`.
 /// </summary>
 [Serializable]
 public record CommonMcpConnectorCreate : IJsonOnDeserialized
@@ -25,16 +25,22 @@ public record CommonMcpConnectorCreate : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Display name for the MCP connector.
+    /// Required for inline definitions; must be omitted when `registry` is present.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
-    /// MCP server endpoint URL.
+    /// Required for inline definitions; must be omitted when `registry` is present.
     /// </summary>
     [JsonPropertyName("url")]
-    public required string Url { get; set; }
+    public string? Url { get; set; }
+
+    /// <summary>
+    /// Marks the connector as registry-sourced.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReference? Registry { get; set; }
 
     /// <summary>
     /// Whether the connector is active for invocations.

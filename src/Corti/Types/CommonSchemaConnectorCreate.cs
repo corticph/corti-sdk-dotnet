@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Request body for attaching a schema connector.
+/// Request body for attaching a schema connector, either inline or from the registry. Exactly one of the inline definition (`name` + `schema`) or the `registry` reference must be present; sending both, or neither, is rejected with `400`.
 /// </summary>
 [Serializable]
 public record CommonSchemaConnectorCreate : IJsonOnDeserialized
@@ -25,10 +25,10 @@ public record CommonSchemaConnectorCreate : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Schema connector name.
+    /// Required for inline definitions; must be omitted when `registry` is present.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// What the tool does. Read by the LLM to decide when to call it.
@@ -37,16 +37,22 @@ public record CommonSchemaConnectorCreate : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// JSON Schema defining the tool's output shape.
+    /// Required for inline definitions; must be omitted when `registry` is present.
     /// </summary>
     [JsonPropertyName("schema")]
-    public Dictionary<string, object?> Schema { get; set; } = new Dictionary<string, object?>();
+    public Dictionary<string, object?>? Schema { get; set; }
 
     /// <summary>
-    /// If set, calling this tool terminates the loop in the given state.
+    /// If set, `complete`/`input_required` terminate the loop in that state after validating and storing the data part (no further LLM call). `send` is non-terminal: it validates and stores the data part, delivers it to the user as a data part, and continues the loop.
     /// </summary>
     [JsonPropertyName("transition")]
     public CommonSchemaConnectorCreateTransition? Transition { get; set; }
+
+    /// <summary>
+    /// Marks the connector as registry-sourced.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReference? Registry { get; set; }
 
     /// <summary>
     /// Whether the connector is active for invocations.

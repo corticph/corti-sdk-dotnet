@@ -5,8 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A discoverable, pre-built connector offered by the platform registry.
-/// Only `id`, `type`, `name`, `title`, `description`, and `configSchema` are populated by the server today. `version`, `provider`, `capabilities`, `tags`, and `documentationUrl` are declared for forward compatibility but are not yet returned.
+/// A registry connector record: identity, lifecycle, and presentation metadata. This is the mutable view returned by the list endpoint; the immutable per-version configuration records (`versions`) are included by the detail endpoint.
 /// </summary>
 [Serializable]
 public record AgenticRegistryConnector : IJsonOnDeserialized
@@ -16,67 +15,64 @@ public record AgenticRegistryConnector : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Stable registry identifier; use as a `registry` connector's `name`.
+    /// Scoped slug `@namespace/name` uniquely identifying the registry connector.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
     /// <summary>
-    /// The connector kind this entry provisions when attached to an agent.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public required CommonConnectorType Type { get; set; }
-
-    /// <summary>
-    /// Programmatic name (MCP convention).
+    /// Unscoped connector name.
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    [JsonPropertyName("type")]
+    public required CommonConnectorType Type { get; set; }
+
     /// <summary>
-    /// Human-readable display name (MCP convention).
+    /// Latest published configuration version.
+    /// </summary>
+    [JsonPropertyName("latest")]
+    public required string Latest { get; set; }
+
+    [JsonPropertyName("status")]
+    public required AgenticRegistryConnectorStatus Status { get; set; }
+
+    /// <summary>
+    /// Publishing namespace (e.g. `corti`).
+    /// </summary>
+    [JsonPropertyName("publisher")]
+    public string? Publisher { get; set; }
+
+    /// <summary>
+    /// Human-readable display name.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; set; }
 
     /// <summary>
-    /// Description for list and detail views. May contain CommonMark.
+    /// One-line summary for list views.
+    /// </summary>
+    [JsonPropertyName("summary")]
+    public string? Summary { get; set; }
+
+    /// <summary>
+    /// Statement of what the connector does once attached to an agent.
+    /// </summary>
+    [JsonPropertyName("capabilityStatement")]
+    public string? CapabilityStatement { get; set; }
+
+    /// <summary>
+    /// Full description in CommonMark (rendered by Console).
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
     /// <summary>
-    /// Latest published version (SemVer recommended).
+    /// Category for filtering (e.g. `literature`).
     /// </summary>
-    [JsonPropertyName("version")]
-    public string? Version { get; set; }
-
-    /// <summary>
-    /// Display icons (MCP convention).
-    /// </summary>
-    [JsonPropertyName("icons")]
-    public IEnumerable<AgenticRegistryIcon>? Icons { get; set; }
-
-    /// <summary>
-    /// Name of the publishing organisation.
-    /// </summary>
-    [JsonPropertyName("provider")]
-    public string? Provider { get; set; }
-
-    /// <summary>
-    /// Connector homepage (MCP convention).
-    /// </summary>
-    [JsonPropertyName("websiteUrl")]
-    public string? WebsiteUrl { get; set; }
-
-    /// <summary>
-    /// Documentation URL for the connector.
-    /// </summary>
-    [JsonPropertyName("documentationUrl")]
-    public string? DocumentationUrl { get; set; }
-
-    [JsonPropertyName("capabilities")]
-    public AgenticRegistryConnectorCapabilities? Capabilities { get; set; }
+    [JsonPropertyName("category")]
+    public string? Category { get; set; }
 
     /// <summary>
     /// Keywords for search and filtering.
@@ -84,11 +80,23 @@ public record AgenticRegistryConnector : IJsonOnDeserialized
     [JsonPropertyName("tags")]
     public IEnumerable<string>? Tags { get; set; }
 
+    [JsonPropertyName("media")]
+    public AgenticRegistryConnectorMedia? Media { get; set; }
+
+    [JsonPropertyName("links")]
+    public AgenticRegistryConnectorLinks? Links { get; set; }
+
     /// <summary>
-    /// JSON Schema (draft 2020-12) describing the connector's accepted `config`.
+    /// When the connector record was created.
     /// </summary>
-    [JsonPropertyName("configSchema")]
-    public Dictionary<string, object?>? ConfigSchema { get; set; }
+    [JsonPropertyName("createdAt")]
+    public DateTime? CreatedAt { get; set; }
+
+    /// <summary>
+    /// When the connector record was last updated.
+    /// </summary>
+    [JsonPropertyName("updatedAt")]
+    public DateTime? UpdatedAt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

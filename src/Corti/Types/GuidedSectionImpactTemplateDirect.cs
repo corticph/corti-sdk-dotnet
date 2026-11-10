@@ -5,42 +5,36 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Request body for attaching a registry connector.
+/// The template links this section directly.
 /// </summary>
 [Serializable]
-public record CommonRegistryConnectorCreate : IJsonOnDeserialized
+public record GuidedSectionImpactTemplateDirect : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The UUID of the template.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    /// <summary>
+    /// The name of the template.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
     [JsonRequired]
-    [JsonPropertyName("type")]
-    public CommonRegistryConnectorCreate.TypeLiteral Type { get;
+    [JsonPropertyName("via")]
+    public GuidedSectionImpactTemplateDirect.ViaLiteral Via { get;
 #if NET5_0_OR_GREATER
         init;
 #else
         set;
 #endif
     } = new();
-
-    /// <summary>
-    /// Registry connector name.
-    /// </summary>
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    /// <summary>
-    /// Whether the connector is active for invocations.
-    /// </summary>
-    [JsonPropertyName("enabled")]
-    public bool? Enabled { get; set; }
-
-    /// <summary>
-    /// Connector-specific configuration validated against the registry schema. Not yet persisted — the server currently drops `config` for registry connectors on create.
-    /// </summary>
-    [JsonPropertyName("config")]
-    public Dictionary<string, object?>? Config { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
@@ -54,77 +48,77 @@ public record CommonRegistryConnectorCreate : IJsonOnDeserialized
         return JsonUtils.Serialize(this);
     }
 
-    [JsonConverter(typeof(TypeLiteralConverter))]
-    public readonly struct TypeLiteral
+    [JsonConverter(typeof(ViaLiteralConverter))]
+    public readonly struct ViaLiteral
     {
-        public const string Value = "registry";
+        public const string Value = "direct";
 
-        public static implicit operator string(TypeLiteral _) => Value;
+        public static implicit operator string(ViaLiteral _) => Value;
 
         public override string ToString() => Value;
 
         public override int GetHashCode() =>
             global::System.StringComparer.Ordinal.GetHashCode(Value);
 
-        public override bool Equals(object? obj) => obj is TypeLiteral;
+        public override bool Equals(object? obj) => obj is ViaLiteral;
 
-        public static bool operator ==(TypeLiteral _, TypeLiteral __) => true;
+        public static bool operator ==(ViaLiteral _, ViaLiteral __) => true;
 
-        public static bool operator !=(TypeLiteral _, TypeLiteral __) => false;
+        public static bool operator !=(ViaLiteral _, ViaLiteral __) => false;
 
-        internal sealed class TypeLiteralConverter : JsonConverter<TypeLiteral>
+        internal sealed class ViaLiteralConverter : JsonConverter<ViaLiteral>
         {
-            public override TypeLiteral Read(
+            public override ViaLiteral Read(
                 ref Utf8JsonReader reader,
                 global::System.Type typeToConvert,
                 JsonSerializerOptions options
             )
             {
                 var value = reader.GetString();
-                if (value != TypeLiteral.Value)
+                if (value != ViaLiteral.Value)
                 {
                     throw new JsonException(
                         "Expected \""
-                            + TypeLiteral.Value
+                            + ViaLiteral.Value
                             + "\" for type discriminator but got \""
                             + value
                             + "\"."
                     );
                 }
-                return new TypeLiteral();
+                return new ViaLiteral();
             }
 
             public override void Write(
                 Utf8JsonWriter writer,
-                TypeLiteral value,
+                ViaLiteral value,
                 JsonSerializerOptions options
-            ) => writer.WriteStringValue(TypeLiteral.Value);
+            ) => writer.WriteStringValue(ViaLiteral.Value);
 
-            public override TypeLiteral ReadAsPropertyName(
+            public override ViaLiteral ReadAsPropertyName(
                 ref Utf8JsonReader reader,
                 global::System.Type typeToConvert,
                 JsonSerializerOptions options
             )
             {
                 var value = reader.GetString();
-                if (value != TypeLiteral.Value)
+                if (value != ViaLiteral.Value)
                 {
                     throw new JsonException(
                         "Expected \""
-                            + TypeLiteral.Value
+                            + ViaLiteral.Value
                             + "\" for type discriminator but got \""
                             + value
                             + "\"."
                     );
                 }
-                return new TypeLiteral();
+                return new ViaLiteral();
             }
 
             public override void WriteAsPropertyName(
                 Utf8JsonWriter writer,
-                TypeLiteral value,
+                ViaLiteral value,
                 JsonSerializerOptions options
-            ) => writer.WritePropertyName(TypeLiteral.Value);
+            ) => writer.WritePropertyName(ViaLiteral.Value);
         }
     }
 }

@@ -5,38 +5,38 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// What the connector can do once attached.
+/// Outbound links for a registry connector.
 /// </summary>
 [Serializable]
-public record AgenticRegistryConnectorCapabilities : IJsonOnDeserialized
+public record AgenticRegistryConnectorLinks : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Emits incremental updates during a task.
+    /// Documentation URL.
     /// </summary>
-    [JsonPropertyName("streaming")]
-    public bool? Streaming { get; set; }
+    [JsonPropertyName("documentation")]
+    public string? Documentation { get; set; }
 
     /// <summary>
-    /// Accepted input media types.
+    /// Website URL.
     /// </summary>
-    [JsonPropertyName("inputModes")]
-    public IEnumerable<string>? InputModes { get; set; }
+    [JsonPropertyName("website")]
+    public string? Website { get; set; }
 
     /// <summary>
-    /// Produced output media types.
+    /// Introduction or demo video URL.
     /// </summary>
-    [JsonPropertyName("outputModes")]
-    public IEnumerable<string>? OutputModes { get; set; }
+    [JsonPropertyName("video")]
+    public string? Video { get; set; }
 
     /// <summary>
-    /// Names of tools the connector exposes to the agent.
+    /// License URL.
     /// </summary>
-    [JsonPropertyName("tools")]
-    public IEnumerable<string>? Tools { get; set; }
+    [JsonPropertyName("license")]
+    public string? License { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

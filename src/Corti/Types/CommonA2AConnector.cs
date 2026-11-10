@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A connector that delegates to a remote A2A agent by endpoint URL.
+/// A connector that delegates to a remote A2A agent by endpoint URL, either inline or provisioned from a registry entry.
 /// </summary>
 [Serializable]
 public record CommonA2AConnector : IJsonOnDeserialized
@@ -31,10 +31,16 @@ public record CommonA2AConnector : IJsonOnDeserialized
     public string? Name { get; set; }
 
     /// <summary>
-    /// The remote agent's A2A endpoint (typically a `.well-known/agent-card.json`).
+    /// The remote agent's A2A endpoint (typically a `.well-known/agent-card.json`). Present on inline connectors.
     /// </summary>
     [JsonPropertyName("url")]
-    public required string Url { get; set; }
+    public string? Url { get; set; }
+
+    /// <summary>
+    /// Registry source of the connector. Present only on registry-sourced connectors; inline connectors omit `registry` entirely.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReferenceResolved? Registry { get; set; }
 
     /// <summary>
     /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
@@ -46,10 +52,16 @@ public record CommonA2AConnector : IJsonOnDeserialized
     public string? Id { get; set; }
 
     /// <summary>
-    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `registry`, `agent`, and `a2a` connectors omit it (treat as enabled).
+    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `agent`, and `a2a` connectors omit it (treat as enabled).
     /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
+
+    /// <summary>
+    /// Authentication configuration
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public IEnumerable<CommonConnectorAuth>? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

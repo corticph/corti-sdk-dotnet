@@ -6,9 +6,6 @@ namespace Corti;
 [JsonConverter(typeof(CommonConnectorTypeSerializer))]
 public enum CommonConnectorType
 {
-    [EnumMember(Value = "registry")]
-    Registry,
-
     [EnumMember(Value = "mcp")]
     Mcp,
 
@@ -30,7 +27,6 @@ internal class CommonConnectorTypeSerializer
         CommonConnectorType
     > _stringToEnum = new()
     {
-        { "registry", CommonConnectorType.Registry },
         { "mcp", CommonConnectorType.Mcp },
         { "agent", CommonConnectorType.Agent },
         { "a2a", CommonConnectorType.A2A },
@@ -42,7 +38,6 @@ internal class CommonConnectorTypeSerializer
         string
     > _enumToString = new()
     {
-        { CommonConnectorType.Registry, "registry" },
         { CommonConnectorType.Mcp, "mcp" },
         { CommonConnectorType.Agent, "agent" },
         { CommonConnectorType.A2A, "a2a" },

@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A connector backed by a remote MCP server.
+/// A connector backed by a remote MCP server, either inline or provisioned from a registry entry.
 /// </summary>
 [Serializable]
 public record CommonMcpConnector : IJsonOnDeserialized
@@ -25,19 +25,22 @@ public record CommonMcpConnector : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Display name for the MCP connector.
+    /// Display name for the MCP connector. Present on inline connectors; registry-sourced connectors take presentation metadata from the registry entry.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
-    /// MCP server endpoint URL.
+    /// MCP server endpoint URL. Present on inline connectors; registry-sourced connectors bundle their servers in the registry payload instead.
     /// </summary>
     [JsonPropertyName("url")]
-    public required string Url { get; set; }
+    public string? Url { get; set; }
 
-    [JsonPropertyName("auth")]
-    public CommonConnectorAuth? Auth { get; set; }
+    /// <summary>
+    /// Registry source of the connector. Present only on registry-sourced connectors; inline connectors omit `registry` entirely.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReferenceResolved? Registry { get; set; }
 
     /// <summary>
     /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
@@ -49,10 +52,16 @@ public record CommonMcpConnector : IJsonOnDeserialized
     public string? Id { get; set; }
 
     /// <summary>
-    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `registry`, `agent`, and `a2a` connectors omit it (treat as enabled).
+    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `agent`, and `a2a` connectors omit it (treat as enabled).
     /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
+
+    /// <summary>
+    /// Authentication configuration
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public IEnumerable<CommonConnectorAuth>? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
