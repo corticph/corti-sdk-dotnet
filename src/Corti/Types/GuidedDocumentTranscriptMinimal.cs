@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Minimal transcript shape accepted as guided-document input context. Decoupled from the transcript resource: only `transcripts` is required, and within each segment only `text` is required.
+/// Minimal transcript shape accepted as input context. Decoupled from the transcript resource: only `transcripts` is required, and within each segment only `text` is required.
 /// </summary>
 [Serializable]
 public record GuidedDocumentTranscriptMinimal : IJsonOnDeserialized
