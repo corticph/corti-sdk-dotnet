@@ -624,7 +624,7 @@ public partial class SectionsClient : ISectionsClient
     /// <summary>
     /// Returns the section with its published version fully resolved (inheritance chain walked
     /// to fill missing fields). To see raw authored values without inheritance, use
-    /// GET /documents/sections/{sectionID}/versions/{versionID}.
+    /// GET /documents/sections/:id/versions/:id .
     /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.GetAsync("sectionID");
@@ -641,7 +641,7 @@ public partial class SectionsClient : ISectionsClient
     }
 
     /// <summary>
-    /// Deletes a section and its versions. Returns 409 if other sections inherit from this section.
+    /// Deletes a section and its versions. Returns `409` if other sections inherit from this section.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.DeleteAsync("sectionID");

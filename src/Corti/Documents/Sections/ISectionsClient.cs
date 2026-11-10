@@ -30,7 +30,7 @@ public partial interface ISectionsClient
     /// <summary>
     /// Returns the section with its published version fully resolved (inheritance chain walked
     /// to fill missing fields). To see raw authored values without inheritance, use
-    /// GET /documents/sections/{sectionID}/versions/{versionID}.
+    /// GET /documents/sections/:id/versions/:id .
     /// </summary>
     WithRawResponseTask<GuidedSection> GetAsync(
         string sectionId,
@@ -39,7 +39,7 @@ public partial interface ISectionsClient
     );
 
     /// <summary>
-    /// Deletes a section and its versions. Returns 409 if other sections inherit from this section.
+    /// Deletes a section and its versions. Returns `409` if other sections inherit from this section.
     /// </summary>
     WithRawResponseTask DeleteAsync(
         string sectionId,
