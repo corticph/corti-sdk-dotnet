@@ -5,7 +5,7 @@ namespace Corti.Documents.Sections;
 public partial interface IVersionsClient
 {
     /// <summary>
-    /// Returns raw authored section versions without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
+    /// Returns raw authored section versions without inheritance resolution. To see resolved content, use GET /sections/:id instead.
     /// </summary>
     WithRawResponseTask<IEnumerable<GuidedSectionVersion>> ListAsync(
         string sectionId,
@@ -24,7 +24,7 @@ public partial interface IVersionsClient
     );
 
     /// <summary>
-    /// Returns raw authored section version without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
+    /// Returns raw authored section version without inheritance resolution. To see resolved content, use GET /sections/:id instead.
     /// </summary>
     WithRawResponseTask<GuidedSectionVersion> GetAsync(
         string sectionId,
