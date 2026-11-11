@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A connector that delegates to another agent.
+/// A connector that delegates to another agent, either an inline agent reference or a registry entry of type `agent`.
 /// </summary>
 [Serializable]
 public record CommonAgentConnector : IJsonOnDeserialized
@@ -25,7 +25,13 @@ public record CommonAgentConnector : IJsonOnDeserialized
     } = new();
 
     [JsonPropertyName("agentId")]
-    public required string AgentId { get; set; }
+    public string? AgentId { get; set; }
+
+    /// <summary>
+    /// Registry source of the connector. Present only on registry-sourced connectors; inline connectors omit `registry` entirely. For `agent`-type registry connectors, the registry entry's `payload.systemPrompt` is required and always exposed by the API.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReferenceResolved? Registry { get; set; }
 
     /// <summary>
     /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
@@ -37,10 +43,16 @@ public record CommonAgentConnector : IJsonOnDeserialized
     public string? Id { get; set; }
 
     /// <summary>
-    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `registry`, `agent`, and `a2a` connectors omit it (treat as enabled).
+    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `agent`, and `a2a` connectors omit it (treat as enabled).
     /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
+
+    /// <summary>
+    /// Authentication configuration
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public IEnumerable<CommonConnectorAuth>? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -1,3 +1,6 @@
+// ReSharper disable NullableWarningSuppressionIsUsed
+// ReSharper disable InconsistentNaming
+
 using Corti.Core;
 using global::System.Text.Json;
 using global::System.Text.Json.Serialization;
@@ -5,138 +8,169 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Request body for attaching a schema connector.
+/// Request body for attaching a schema connector, either inline or from the registry. Exactly one of the inline definition (`name` + `schema`) or the `registry` reference must be present; sending both, or neither, is rejected with `400`.
 /// </summary>
+[JsonConverter(typeof(CommonSchemaConnectorCreate.JsonConverter))]
 [Serializable]
-public record CommonSchemaConnectorCreate : IJsonOnDeserialized
+public class CommonSchemaConnectorCreate
 {
-    [JsonExtensionData]
-    private readonly IDictionary<string, JsonElement> _extensionData =
-        new Dictionary<string, JsonElement>();
-
-    [JsonRequired]
-    [JsonPropertyName("type")]
-    public CommonSchemaConnectorCreate.TypeLiteral Type { get;
-#if NET5_0_OR_GREATER
-        init;
-#else
-        set;
-#endif
-    } = new();
-
-    /// <summary>
-    /// Schema connector name.
-    /// </summary>
-    [JsonPropertyName("name")]
-    public required string Name { get; set; }
-
-    /// <summary>
-    /// What the tool does. Read by the LLM to decide when to call it.
-    /// </summary>
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    /// <summary>
-    /// JSON Schema defining the tool's output shape.
-    /// </summary>
-    [JsonPropertyName("schema")]
-    public Dictionary<string, object?> Schema { get; set; } = new Dictionary<string, object?>();
-
-    /// <summary>
-    /// If set, calling this tool terminates the loop in the given state.
-    /// </summary>
-    [JsonPropertyName("transition")]
-    public CommonSchemaConnectorCreateTransition? Transition { get; set; }
-
-    /// <summary>
-    /// Whether the connector is active for invocations.
-    /// </summary>
-    [JsonPropertyName("enabled")]
-    public bool? Enabled { get; set; }
-
-    [JsonIgnore]
-    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
-
-    void IJsonOnDeserialized.OnDeserialized() =>
-        AdditionalProperties.CopyFromExtensionData(_extensionData);
-
-    /// <inheritdoc />
-    public override string ToString()
+    private CommonSchemaConnectorCreate(string type, object? value)
     {
-        return JsonUtils.Serialize(this);
+        Type = type;
+        Value = value;
     }
 
-    [JsonConverter(typeof(TypeLiteralConverter))]
-    public readonly struct TypeLiteral
+    /// <summary>
+    /// Type discriminator
+    /// </summary>
+    [JsonIgnore]
+    public string Type { get; internal set; }
+
+    /// <summary>
+    /// Union value
+    /// </summary>
+    [JsonIgnore]
+    public object? Value { get; internal set; }
+
+    /// <summary>
+    /// Factory method to create a union from a object value.
+    /// </summary>
+    public static CommonSchemaConnectorCreate FromUnknown(object value) => new("unknown", value);
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "unknown"
+    /// </summary>
+    public bool IsUnknown() => Type == "unknown";
+
+    /// <summary>
+    /// Returns the value as a <see cref="object"/> if <see cref="Type"/> is 'unknown', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'unknown'.</exception>
+    public object AsUnknown() =>
+        IsUnknown() ? Value! : throw new CortiClientException("Union type is not 'unknown'");
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="object"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetUnknown(out object? value)
     {
-        public const string Value = "schema";
-
-        public static implicit operator string(TypeLiteral _) => Value;
-
-        public override string ToString() => Value;
-
-        public override int GetHashCode() =>
-            global::System.StringComparer.Ordinal.GetHashCode(Value);
-
-        public override bool Equals(object? obj) => obj is TypeLiteral;
-
-        public static bool operator ==(TypeLiteral _, TypeLiteral __) => true;
-
-        public static bool operator !=(TypeLiteral _, TypeLiteral __) => false;
-
-        internal sealed class TypeLiteralConverter : JsonConverter<TypeLiteral>
+        if (Type == "unknown")
         {
-            public override TypeLiteral Read(
-                ref Utf8JsonReader reader,
-                global::System.Type typeToConvert,
-                JsonSerializerOptions options
-            )
+            value = Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
+    public T Match<T>(Func<object, T> onUnknown)
+    {
+        return Type switch
+        {
+            "unknown" => onUnknown(AsUnknown()),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+        };
+    }
+
+    public void Visit(Action<object> onUnknown)
+    {
+        switch (Type)
+        {
+            case "unknown":
+                onUnknown(AsUnknown());
+                break;
+            default:
+                throw new CortiClientException($"Unknown union type: {Type}");
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = Type.GetHashCode();
+            if (Value != null)
             {
-                var value = reader.GetString();
-                if (value != TypeLiteral.Value)
-                {
-                    throw new JsonException(
-                        "Expected \""
-                            + TypeLiteral.Value
-                            + "\" for type discriminator but got \""
-                            + value
-                            + "\"."
-                    );
-                }
-                return new TypeLiteral();
+                hashCode = (hashCode * 397) ^ Value.GetHashCode();
+            }
+            return hashCode;
+        }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj is not CommonSchemaConnectorCreate other)
+            return false;
+
+        // Compare type discriminators
+        if (Type != other.Type)
+            return false;
+
+        // Compare values using EqualityComparer for deep comparison
+        return System.Collections.Generic.EqualityComparer<object?>.Default.Equals(
+            Value,
+            other.Value
+        );
+    }
+
+    public override string ToString() => JsonUtils.Serialize(this);
+
+    [Serializable]
+    internal sealed class JsonConverter : JsonConverter<CommonSchemaConnectorCreate>
+    {
+        public override CommonSchemaConnectorCreate? Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            if (reader.TokenType == JsonTokenType.Null)
+            {
+                return null;
             }
 
-            public override void Write(
-                Utf8JsonWriter writer,
-                TypeLiteral value,
-                JsonSerializerOptions options
-            ) => writer.WriteStringValue(TypeLiteral.Value);
+            throw new JsonException(
+                $"Cannot deserialize JSON token {reader.TokenType} into CommonSchemaConnectorCreate"
+            );
+        }
 
-            public override TypeLiteral ReadAsPropertyName(
-                ref Utf8JsonReader reader,
-                global::System.Type typeToConvert,
-                JsonSerializerOptions options
-            )
+        public override void Write(
+            Utf8JsonWriter writer,
+            CommonSchemaConnectorCreate value,
+            JsonSerializerOptions options
+        )
+        {
+            if (value == null)
             {
-                var value = reader.GetString();
-                if (value != TypeLiteral.Value)
-                {
-                    throw new JsonException(
-                        "Expected \""
-                            + TypeLiteral.Value
-                            + "\" for type discriminator but got \""
-                            + value
-                            + "\"."
-                    );
-                }
-                return new TypeLiteral();
+                writer.WriteNullValue();
+                return;
             }
 
-            public override void WriteAsPropertyName(
-                Utf8JsonWriter writer,
-                TypeLiteral value,
-                JsonSerializerOptions options
-            ) => writer.WritePropertyName(TypeLiteral.Value);
+            value.Visit(obj => JsonSerializer.Serialize(writer, obj, options));
+        }
+
+        public override CommonSchemaConnectorCreate ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue = reader.GetString()!;
+            CommonSchemaConnectorCreate result = new("string", stringValue);
+            return result;
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            CommonSchemaConnectorCreate value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value?.ToString() ?? "null");
         }
     }
 }

@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A page of registry connectors.
+/// A page of registry connector records (list view, without per-version records).
 /// </summary>
 [Serializable]
 public record AgenticRegistryConnectorsListResponse : IJsonOnDeserialized
@@ -15,7 +15,7 @@ public record AgenticRegistryConnectorsListResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Registry connectors on the current page.
+    /// Registry connector records on the current page.
     /// </summary>
     [JsonPropertyName("connectors")]
     public IEnumerable<AgenticRegistryConnector> Connectors { get; set; } =
@@ -23,9 +23,6 @@ public record AgenticRegistryConnectorsListResponse : IJsonOnDeserialized
 
     [JsonPropertyName("nextPageToken")]
     public string? NextPageToken { get; set; }
-
-    [JsonPropertyName("totalSize")]
-    public int? TotalSize { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

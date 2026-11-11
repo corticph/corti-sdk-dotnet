@@ -33,13 +33,6 @@ public class CommonConnectorResponse
     public object? Value { get; internal set; }
 
     /// <summary>
-    /// Factory method to create a union from a Corti.CommonRegistryConnectorProvisioned value.
-    /// </summary>
-    public static CommonConnectorResponse FromCommonRegistryConnectorProvisioned(
-        Corti.CommonRegistryConnectorProvisioned value
-    ) => new("commonRegistryConnectorProvisioned", value);
-
-    /// <summary>
     /// Factory method to create a union from a Corti.CommonMcpConnector value.
     /// </summary>
     public static CommonConnectorResponse FromCommonMcpConnector(Corti.CommonMcpConnector value) =>
@@ -66,12 +59,6 @@ public class CommonConnectorResponse
     ) => new("commonSchemaConnector", value);
 
     /// <summary>
-    /// Returns true if <see cref="Type"/> is "commonRegistryConnectorProvisioned"
-    /// </summary>
-    public bool IsCommonRegistryConnectorProvisioned() =>
-        Type == "commonRegistryConnectorProvisioned";
-
-    /// <summary>
     /// Returns true if <see cref="Type"/> is "commonMcpConnector"
     /// </summary>
     public bool IsCommonMcpConnector() => Type == "commonMcpConnector";
@@ -90,17 +77,6 @@ public class CommonConnectorResponse
     /// Returns true if <see cref="Type"/> is "commonSchemaConnector"
     /// </summary>
     public bool IsCommonSchemaConnector() => Type == "commonSchemaConnector";
-
-    /// <summary>
-    /// Returns the value as a <see cref="Corti.CommonRegistryConnectorProvisioned"/> if <see cref="Type"/> is 'commonRegistryConnectorProvisioned', otherwise throws an exception.
-    /// </summary>
-    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'commonRegistryConnectorProvisioned'.</exception>
-    public Corti.CommonRegistryConnectorProvisioned AsCommonRegistryConnectorProvisioned() =>
-        IsCommonRegistryConnectorProvisioned()
-            ? (Corti.CommonRegistryConnectorProvisioned)Value!
-            : throw new CortiClientException(
-                "Union type is not 'commonRegistryConnectorProvisioned'"
-            );
 
     /// <summary>
     /// Returns the value as a <see cref="Corti.CommonMcpConnector"/> if <see cref="Type"/> is 'commonMcpConnector', otherwise throws an exception.
@@ -137,22 +113,6 @@ public class CommonConnectorResponse
         IsCommonSchemaConnector()
             ? (Corti.CommonSchemaConnector)Value!
             : throw new CortiClientException("Union type is not 'commonSchemaConnector'");
-
-    /// <summary>
-    /// Attempts to cast the value to a <see cref="Corti.CommonRegistryConnectorProvisioned"/> and returns true if successful.
-    /// </summary>
-    public bool TryGetCommonRegistryConnectorProvisioned(
-        out Corti.CommonRegistryConnectorProvisioned? value
-    )
-    {
-        if (Type == "commonRegistryConnectorProvisioned")
-        {
-            value = (Corti.CommonRegistryConnectorProvisioned)Value!;
-            return true;
-        }
-        value = null;
-        return false;
-    }
 
     /// <summary>
     /// Attempts to cast the value to a <see cref="Corti.CommonMcpConnector"/> and returns true if successful.
@@ -211,7 +171,6 @@ public class CommonConnectorResponse
     }
 
     public T Match<T>(
-        Func<Corti.CommonRegistryConnectorProvisioned, T> onCommonRegistryConnectorProvisioned,
         Func<Corti.CommonMcpConnector, T> onCommonMcpConnector,
         Func<Corti.CommonAgentConnector, T> onCommonAgentConnector,
         Func<Corti.CommonA2AConnector, T> onCommonA2AConnector,
@@ -220,9 +179,6 @@ public class CommonConnectorResponse
     {
         return Type switch
         {
-            "commonRegistryConnectorProvisioned" => onCommonRegistryConnectorProvisioned(
-                AsCommonRegistryConnectorProvisioned()
-            ),
             "commonMcpConnector" => onCommonMcpConnector(AsCommonMcpConnector()),
             "commonAgentConnector" => onCommonAgentConnector(AsCommonAgentConnector()),
             "commonA2AConnector" => onCommonA2AConnector(AsCommonA2AConnector()),
@@ -232,7 +188,6 @@ public class CommonConnectorResponse
     }
 
     public void Visit(
-        Action<Corti.CommonRegistryConnectorProvisioned> onCommonRegistryConnectorProvisioned,
         Action<Corti.CommonMcpConnector> onCommonMcpConnector,
         Action<Corti.CommonAgentConnector> onCommonAgentConnector,
         Action<Corti.CommonA2AConnector> onCommonA2AConnector,
@@ -241,9 +196,6 @@ public class CommonConnectorResponse
     {
         switch (Type)
         {
-            case "commonRegistryConnectorProvisioned":
-                onCommonRegistryConnectorProvisioned(AsCommonRegistryConnectorProvisioned());
-                break;
             case "commonMcpConnector":
                 onCommonMcpConnector(AsCommonMcpConnector());
                 break;
@@ -296,10 +248,6 @@ public class CommonConnectorResponse
 
     public override string ToString() => JsonUtils.Serialize(this);
 
-    public static implicit operator CommonConnectorResponse(
-        Corti.CommonRegistryConnectorProvisioned value
-    ) => new("commonRegistryConnectorProvisioned", value);
-
     public static implicit operator CommonConnectorResponse(Corti.CommonMcpConnector value) =>
         new("commonMcpConnector", value);
 
@@ -332,10 +280,6 @@ public class CommonConnectorResponse
 
                 var types = new (string Key, System.Type Type)[]
                 {
-                    (
-                        "commonRegistryConnectorProvisioned",
-                        typeof(Corti.CommonRegistryConnectorProvisioned)
-                    ),
                     ("commonMcpConnector", typeof(Corti.CommonMcpConnector)),
                     ("commonAgentConnector", typeof(Corti.CommonAgentConnector)),
                     ("commonA2AConnector", typeof(Corti.CommonA2AConnector)),
@@ -378,7 +322,6 @@ public class CommonConnectorResponse
             }
 
             value.Visit(
-                obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),
                 obj => JsonSerializer.Serialize(writer, obj, options),

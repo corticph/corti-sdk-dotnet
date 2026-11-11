@@ -1,3 +1,6 @@
+// ReSharper disable NullableWarningSuppressionIsUsed
+// ReSharper disable InconsistentNaming
+
 using Corti.Core;
 using global::System.Text.Json;
 using global::System.Text.Json.Serialization;
@@ -5,126 +8,169 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// Request body for attaching a remote A2A agent connector.
+/// Request body for attaching a remote A2A agent connector, either inline or from the registry. Exactly one of the inline definition (`url`) or the `registry` reference must be present; sending both, or neither, is rejected with `400`.
 /// </summary>
+[JsonConverter(typeof(CommonA2AConnectorCreate.JsonConverter))]
 [Serializable]
-public record CommonA2AConnectorCreate : IJsonOnDeserialized
+public class CommonA2AConnectorCreate
 {
-    [JsonExtensionData]
-    private readonly IDictionary<string, JsonElement> _extensionData =
-        new Dictionary<string, JsonElement>();
-
-    [JsonRequired]
-    [JsonPropertyName("type")]
-    public CommonA2AConnectorCreate.TypeLiteral Type { get;
-#if NET5_0_OR_GREATER
-        init;
-#else
-        set;
-#endif
-    } = new();
-
-    /// <summary>
-    /// Optional display name for the remote A2A agent.
-    /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    /// <summary>
-    /// Remote agent A2A endpoint URL.
-    /// </summary>
-    [JsonPropertyName("url")]
-    public required string Url { get; set; }
-
-    /// <summary>
-    /// Whether the connector is active for invocations.
-    /// </summary>
-    [JsonPropertyName("enabled")]
-    public bool? Enabled { get; set; }
-
-    [JsonIgnore]
-    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
-
-    void IJsonOnDeserialized.OnDeserialized() =>
-        AdditionalProperties.CopyFromExtensionData(_extensionData);
-
-    /// <inheritdoc />
-    public override string ToString()
+    private CommonA2AConnectorCreate(string type, object? value)
     {
-        return JsonUtils.Serialize(this);
+        Type = type;
+        Value = value;
     }
 
-    [JsonConverter(typeof(TypeLiteralConverter))]
-    public readonly struct TypeLiteral
+    /// <summary>
+    /// Type discriminator
+    /// </summary>
+    [JsonIgnore]
+    public string Type { get; internal set; }
+
+    /// <summary>
+    /// Union value
+    /// </summary>
+    [JsonIgnore]
+    public object? Value { get; internal set; }
+
+    /// <summary>
+    /// Factory method to create a union from a object value.
+    /// </summary>
+    public static CommonA2AConnectorCreate FromUnknown(object value) => new("unknown", value);
+
+    /// <summary>
+    /// Returns true if <see cref="Type"/> is "unknown"
+    /// </summary>
+    public bool IsUnknown() => Type == "unknown";
+
+    /// <summary>
+    /// Returns the value as a <see cref="object"/> if <see cref="Type"/> is 'unknown', otherwise throws an exception.
+    /// </summary>
+    /// <exception cref="CortiClientException">Thrown when <see cref="Type"/> is not 'unknown'.</exception>
+    public object AsUnknown() =>
+        IsUnknown() ? Value! : throw new CortiClientException("Union type is not 'unknown'");
+
+    /// <summary>
+    /// Attempts to cast the value to a <see cref="object"/> and returns true if successful.
+    /// </summary>
+    public bool TryGetUnknown(out object? value)
     {
-        public const string Value = "a2a";
-
-        public static implicit operator string(TypeLiteral _) => Value;
-
-        public override string ToString() => Value;
-
-        public override int GetHashCode() =>
-            global::System.StringComparer.Ordinal.GetHashCode(Value);
-
-        public override bool Equals(object? obj) => obj is TypeLiteral;
-
-        public static bool operator ==(TypeLiteral _, TypeLiteral __) => true;
-
-        public static bool operator !=(TypeLiteral _, TypeLiteral __) => false;
-
-        internal sealed class TypeLiteralConverter : JsonConverter<TypeLiteral>
+        if (Type == "unknown")
         {
-            public override TypeLiteral Read(
-                ref Utf8JsonReader reader,
-                global::System.Type typeToConvert,
-                JsonSerializerOptions options
-            )
+            value = Value!;
+            return true;
+        }
+        value = null;
+        return false;
+    }
+
+    public T Match<T>(Func<object, T> onUnknown)
+    {
+        return Type switch
+        {
+            "unknown" => onUnknown(AsUnknown()),
+            _ => throw new CortiClientException($"Unknown union type: {Type}"),
+        };
+    }
+
+    public void Visit(Action<object> onUnknown)
+    {
+        switch (Type)
+        {
+            case "unknown":
+                onUnknown(AsUnknown());
+                break;
+            default:
+                throw new CortiClientException($"Unknown union type: {Type}");
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = Type.GetHashCode();
+            if (Value != null)
             {
-                var value = reader.GetString();
-                if (value != TypeLiteral.Value)
-                {
-                    throw new JsonException(
-                        "Expected \""
-                            + TypeLiteral.Value
-                            + "\" for type discriminator but got \""
-                            + value
-                            + "\"."
-                    );
-                }
-                return new TypeLiteral();
+                hashCode = (hashCode * 397) ^ Value.GetHashCode();
+            }
+            return hashCode;
+        }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj is not CommonA2AConnectorCreate other)
+            return false;
+
+        // Compare type discriminators
+        if (Type != other.Type)
+            return false;
+
+        // Compare values using EqualityComparer for deep comparison
+        return System.Collections.Generic.EqualityComparer<object?>.Default.Equals(
+            Value,
+            other.Value
+        );
+    }
+
+    public override string ToString() => JsonUtils.Serialize(this);
+
+    [Serializable]
+    internal sealed class JsonConverter : JsonConverter<CommonA2AConnectorCreate>
+    {
+        public override CommonA2AConnectorCreate? Read(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            if (reader.TokenType == JsonTokenType.Null)
+            {
+                return null;
             }
 
-            public override void Write(
-                Utf8JsonWriter writer,
-                TypeLiteral value,
-                JsonSerializerOptions options
-            ) => writer.WriteStringValue(TypeLiteral.Value);
+            throw new JsonException(
+                $"Cannot deserialize JSON token {reader.TokenType} into CommonA2AConnectorCreate"
+            );
+        }
 
-            public override TypeLiteral ReadAsPropertyName(
-                ref Utf8JsonReader reader,
-                global::System.Type typeToConvert,
-                JsonSerializerOptions options
-            )
+        public override void Write(
+            Utf8JsonWriter writer,
+            CommonA2AConnectorCreate value,
+            JsonSerializerOptions options
+        )
+        {
+            if (value == null)
             {
-                var value = reader.GetString();
-                if (value != TypeLiteral.Value)
-                {
-                    throw new JsonException(
-                        "Expected \""
-                            + TypeLiteral.Value
-                            + "\" for type discriminator but got \""
-                            + value
-                            + "\"."
-                    );
-                }
-                return new TypeLiteral();
+                writer.WriteNullValue();
+                return;
             }
 
-            public override void WriteAsPropertyName(
-                Utf8JsonWriter writer,
-                TypeLiteral value,
-                JsonSerializerOptions options
-            ) => writer.WritePropertyName(TypeLiteral.Value);
+            value.Visit(obj => JsonSerializer.Serialize(writer, obj, options));
+        }
+
+        public override CommonA2AConnectorCreate ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            global::System.Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue = reader.GetString()!;
+            CommonA2AConnectorCreate result = new("string", stringValue);
+            return result;
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            CommonA2AConnectorCreate value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value?.ToString() ?? "null");
         }
     }
 }

@@ -5,7 +5,7 @@ using global::System.Text.Json.Serialization;
 namespace Corti;
 
 /// <summary>
-/// A connector backed by a schema definition.
+/// A connector backed by a schema definition, either inline or provisioned from a registry entry.
 /// </summary>
 [Serializable]
 public record CommonSchemaConnector : IJsonOnDeserialized
@@ -25,10 +25,10 @@ public record CommonSchemaConnector : IJsonOnDeserialized
     } = new();
 
     /// <summary>
-    /// Schema connector name. Used as the tool name the LLM calls.
+    /// Schema connector name. Used as the tool name the LLM calls. Present on inline connectors; registry-sourced connectors take it from the registry entry's `name`.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// What the tool does. Read by the LLM to decide when to call it.
@@ -37,16 +37,22 @@ public record CommonSchemaConnector : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// JSON Schema defining the tool's output shape.
+    /// JSON Schema defining the tool's output shape. Present on inline connectors; registry-sourced connectors carry bundled schema definitions in the registry payload instead.
     /// </summary>
     [JsonPropertyName("schema")]
-    public Dictionary<string, object?> Schema { get; set; } = new Dictionary<string, object?>();
+    public Dictionary<string, object?>? Schema { get; set; }
 
     /// <summary>
-    /// If set, calling this tool terminates the loop in the given state after validating and storing the data part. No further LLM call.
+    /// If set, `complete`/`input_required` terminate the loop in that state after validating and storing the data part (no further LLM call). `send` is non-terminal: it validates and stores the data part, delivers it to the user as a data part, and continues the loop.
     /// </summary>
     [JsonPropertyName("transition")]
     public CommonSchemaConnectorTransition? Transition { get; set; }
+
+    /// <summary>
+    /// Registry source of the connector. Present only on registry-sourced connectors; inline connectors omit `registry` entirely.
+    /// </summary>
+    [JsonPropertyName("registry")]
+    public AgenticRegistryConnectorReferenceResolved? Registry { get; set; }
 
     /// <summary>
     /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
@@ -58,10 +64,16 @@ public record CommonSchemaConnector : IJsonOnDeserialized
     public string? Id { get; set; }
 
     /// <summary>
-    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `registry`, `agent`, and `a2a` connectors omit it (treat as enabled).
+    /// Whether the connector is active for invocations. Only `schema` connectors return this field today; `mcp`, `agent`, and `a2a` connectors omit it (treat as enabled).
     /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
+
+    /// <summary>
+    /// Authentication configuration
+    /// </summary>
+    [JsonPropertyName("auth")]
+    public IEnumerable<CommonConnectorAuth>? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
