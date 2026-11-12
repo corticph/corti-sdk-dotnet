@@ -36,6 +36,9 @@ public record CommonMcpConnector : IJsonOnDeserialized
     [JsonPropertyName("url")]
     public required string Url { get; set; }
 
+    [JsonPropertyName("auth")]
+    public CommonConnectorAuth? Auth { get; set; }
+
     /// <summary>
     /// Server-generated connector identifier (prefixed UUIDv7). Stable across PATCH
     /// replacements where the underlying spec is unchanged. Used by
@@ -50,12 +53,6 @@ public record CommonMcpConnector : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
-
-    /// <summary>
-    /// Authentication configuration
-    /// </summary>
-    [JsonPropertyName("auth")]
-    public IEnumerable<CommonConnectorAuth>? Auth { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

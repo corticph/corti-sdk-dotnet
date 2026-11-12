@@ -42,12 +42,6 @@ public record CommonAgentConnector : IJsonOnDeserialized
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
 
-    /// <summary>
-    /// Authentication configuration
-    /// </summary>
-    [JsonPropertyName("auth")]
-    public IEnumerable<CommonConnectorAuth>? Auth { get; set; }
-
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
