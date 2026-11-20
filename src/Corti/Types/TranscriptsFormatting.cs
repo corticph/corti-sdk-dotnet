@@ -47,6 +47,12 @@ public record TranscriptsFormatting : IJsonOnDeserialized
     [JsonPropertyName("ordinals")]
     public TranscriptsFormattingOrdinals? Ordinals { get; set; }
 
+    /// <summary>
+    /// Formatting for roman numerals.
+    /// </summary>
+    [JsonPropertyName("romanNumerals")]
+    public TranscriptsFormattingRomanNumerals? RomanNumerals { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
