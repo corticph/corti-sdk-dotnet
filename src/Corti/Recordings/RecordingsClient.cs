@@ -642,7 +642,7 @@ public partial class RecordingsClient : IRecordingsClient
     }
 
     /// <summary>
-    /// Upload a recording for a given interaction. There is a maximum limit of 120 minutes in audio duration and 150 MB in file size.
+    /// Upload a recording for a given interaction. There is a maximum limit of 240 minutes in audio duration and 500 MB in file size.
     /// </summary>
     public WithRawResponseTask<RecordingsCreateResponse> UploadAsync(
         string id,
