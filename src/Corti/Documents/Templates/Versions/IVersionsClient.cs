@@ -6,7 +6,7 @@ public partial interface IVersionsClient
 {
     /// <summary>
     /// Returns raw authored template versions without inheritance resolution or section expansion.
-    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// To see resolved content, use GET /documents/templates/:id instead.
     /// </summary>
     WithRawResponseTask<IEnumerable<GuidedShallowTemplateVersionResponse>> ListAsync(
         string templateId,
@@ -26,7 +26,7 @@ public partial interface IVersionsClient
 
     /// <summary>
     /// Returns the raw authored template version without inheritance resolution or section expansion.
-    /// To see resolved content, use GET /documents/templates/{templateID} instead.
+    /// To see resolved content, use GET /documents/templates/:id instead.
     /// </summary>
     WithRawResponseTask<GuidedShallowTemplateVersionResponse> GetAsync(
         string templateId,

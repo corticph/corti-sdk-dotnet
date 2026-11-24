@@ -593,7 +593,7 @@ public partial class VersionsClient : IVersionsClient
     }
 
     /// <summary>
-    /// Returns raw authored section versions without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
+    /// Returns raw authored section versions without inheritance resolution. To see resolved content, use GET /sections/:id instead.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.Versions.ListAsync("sectionID");
@@ -631,7 +631,7 @@ public partial class VersionsClient : IVersionsClient
     }
 
     /// <summary>
-    /// Returns raw authored section version without inheritance resolution. To see resolved content, use GET /sections/{sectionID} instead.
+    /// Returns raw authored section version without inheritance resolution. To see resolved content, use GET /sections/:id instead.
     /// </summary>
     /// <example><code>
     /// await client.Documents.Sections.Versions.GetAsync("sectionID", "versionID");

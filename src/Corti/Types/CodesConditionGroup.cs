@@ -24,7 +24,8 @@ public record CodesConditionGroup : IJsonOnDeserialized
     /// Conditions or nested groups combined per `match`. Maximum nesting depth: 3.
     /// </summary>
     [JsonPropertyName("conditions")]
-    public IEnumerable<CodesConditionGroupConditionsItem>? Conditions { get; set; }
+    public IEnumerable<CodesConditionGroupConditionsItem> Conditions { get; set; } =
+        new List<CodesConditionGroupConditionsItem>();
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
