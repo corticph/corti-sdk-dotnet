@@ -53,6 +53,12 @@ public record CommonConnectorAuth : IJsonOnDeserialized
     [JsonPropertyName("optionalHeaders")]
     public IEnumerable<string>? OptionalHeaders { get; set; }
 
+    /// <summary>
+    /// Name of the underlying resource to authenticate to. Set on connector responses that may be backed by multiple underlying resources. Never required on input and ignored when attaching connectors.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
