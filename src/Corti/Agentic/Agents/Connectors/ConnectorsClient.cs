@@ -727,11 +727,7 @@ public partial class ConnectorsClient : IConnectorsClient
     ///     {
     ///         {
     ///             "registry",
-    ///             new Dictionary&lt;object, object?&gt;()
-    ///             {
-    ///                 { "id", "@corti/pubmed-expert" },
-    ///                 { "version", "1.4.2" },
-    ///             }
+    ///             new Dictionary&lt;object, object?&gt;() { { "id", "pubmed-expert" }, { "version", "1.0.0" } }
     ///         },
     ///         { "type", "agent" },
     ///     }

@@ -15,7 +15,7 @@ public record AgenticRegistryConnectorReferenceResolved : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Scoped slug of the registry connector.
+    /// Name of the registry connector.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
