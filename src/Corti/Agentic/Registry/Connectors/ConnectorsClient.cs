@@ -46,13 +46,8 @@ public partial class ConnectorsClient : IConnectorsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 8)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
                     .Add("q", request.Q)
-                    .Add("type", request.Type)
-                    .Add("publisher", request.Publisher)
-                    .Add("category", request.Category)
-                    .Add("tags", request.Tags)
-                    .Add("status", request.Status)
                     .Add("pageSize", request.PageSize)
                     .Add("pageToken", request.PageToken)
                     .MergeAdditional(options?.AdditionalQueryParameters)
