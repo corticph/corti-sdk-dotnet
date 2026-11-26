@@ -278,6 +278,20 @@ public partial class InteractionsClient : IInteractionsClient
                                         ),
                                     }
                                 );
+                            case 409:
+                                throw new ConflictError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
                             case 500:
                                 throw new InternalServerError(
                                     JsonUtils.Deserialize<ErrorResponse>(responseBody),
@@ -653,6 +667,20 @@ public partial class InteractionsClient : IInteractionsClient
                                         ),
                                     }
                                 );
+                            case 409:
+                                throw new ConflictError(
+                                    JsonUtils.Deserialize<object>(responseBody),
+                                    rawResponse: new Corti.RawResponse()
+                                    {
+                                        StatusCode = response.Raw.StatusCode,
+                                        Url =
+                                            response.Raw.RequestMessage?.RequestUri
+                                            ?? new Uri("about:blank"),
+                                        Headers = ResponseHeaders.FromHttpResponseMessage(
+                                            response.Raw
+                                        ),
+                                    }
+                                );
                             case 504:
                                 throw new GatewayTimeoutError(
                                     JsonUtils.Deserialize<ErrorResponse>(responseBody),
@@ -744,7 +772,6 @@ public partial class InteractionsClient : IInteractionsClient
     ///     {
     ///         Encounter = new InteractionsEncounterCreateRequest
     ///         {
-    ///             Identifier = "identifier",
     ///             Status = InteractionsEncounterStatusEnum.Planned,
     ///             Type = InteractionsEncounterTypeEnum.FirstConsultation,
     ///         },
