@@ -20,7 +20,7 @@ public partial class RecordingsClient : IRecordingsClient
         }
     }
 
-    private async Task<WithRawResponse<RecordingsListResponse>> ListAsyncCore(
+    private async Task<WithRawResponse<RecordingsListUnionResponse>> ListAsyncCore(
         string id,
         RecordingsListRequest request,
         RequestOptions? options = null,
@@ -30,7 +30,8 @@ public partial class RecordingsClient : IRecordingsClient
         return await _client
             .Options.ExceptionHandler.TryCatchAsync(async () =>
             {
-                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 2)
+                var _queryString = new Corti.Core.QueryStringBuilder.Builder(capacity: 3)
+                    .Add("full", request.Full)
                     .Add("sort", request.Sort)
                     .Add("direction", request.Direction)
                     .MergeAdditional(options?.AdditionalQueryParameters)
@@ -65,10 +66,10 @@ public partial class RecordingsClient : IRecordingsClient
                         .ConfigureAwait(false);
                     try
                     {
-                        var responseData = JsonUtils.Deserialize<RecordingsListResponse>(
+                        var responseData = JsonUtils.Deserialize<RecordingsListUnionResponse>(
                             responseBody
                         )!;
-                        return new WithRawResponse<RecordingsListResponse>()
+                        return new WithRawResponse<RecordingsListUnionResponse>()
                         {
                             Data = responseData,
                             RawResponse = new Corti.RawResponse()
@@ -622,7 +623,7 @@ public partial class RecordingsClient : IRecordingsClient
     }
 
     /// <summary>
-    /// Retrieve a list of recordings for a given interaction. Recordings are ordered by their start time by default. Default ordering (desc) will return the most recently started recording first in the list. Use query parameter `sort` to choose the field and `direction` to define the order of the list (`asc` for ascending and `desc` for descending).
+    /// Retrieve a list of recordings for a given interaction. Recordings are ordered based on their creation time by default. Default ordering (desc) will return the most recent recording first in the list. Use query parameter `sort` to choose the field and `direction` to define the order of the list (`asc` for ascending and `desc` for descending). Use query parameter `full` to return recording objects with metadata instead of IDs.
     /// </summary>
     /// <example><code>
     /// await client.Recordings.ListAsync(
@@ -630,14 +631,14 @@ public partial class RecordingsClient : IRecordingsClient
     ///     new RecordingsListRequest()
     /// );
     /// </code></example>
-    public WithRawResponseTask<RecordingsListResponse> ListAsync(
+    public WithRawResponseTask<RecordingsListUnionResponse> ListAsync(
         string id,
         RecordingsListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<RecordingsListResponse>(
+        return new WithRawResponseTask<RecordingsListUnionResponse>(
             ListAsyncCore(id, request, options, cancellationToken)
         );
     }

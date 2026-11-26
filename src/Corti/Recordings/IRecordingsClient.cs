@@ -3,9 +3,9 @@ namespace Corti;
 public partial interface IRecordingsClient
 {
     /// <summary>
-    /// Retrieve a list of recordings for a given interaction. Recordings are ordered by their start time by default. Default ordering (desc) will return the most recently started recording first in the list. Use query parameter `sort` to choose the field and `direction` to define the order of the list (`asc` for ascending and `desc` for descending).
+    /// Retrieve a list of recordings for a given interaction. Recordings are ordered based on their creation time by default. Default ordering (desc) will return the most recent recording first in the list. Use query parameter `sort` to choose the field and `direction` to define the order of the list (`asc` for ascending and `desc` for descending). Use query parameter `full` to return recording objects with metadata instead of IDs.
     /// </summary>
-    WithRawResponseTask<RecordingsListResponse> ListAsync(
+    WithRawResponseTask<RecordingsListUnionResponse> ListAsync(
         string id,
         RecordingsListRequest request,
         RequestOptions? options = null,

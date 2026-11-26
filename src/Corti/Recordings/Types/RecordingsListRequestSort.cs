@@ -9,11 +9,8 @@ public enum RecordingsListRequestSort
     [EnumMember(Value = "id")]
     Id,
 
-    [EnumMember(Value = "startedAt")]
-    StartedAt,
-
-    [EnumMember(Value = "stoppedAt")]
-    StoppedAt,
+    [EnumMember(Value = "createdAt")]
+    CreatedAt,
 }
 
 internal class RecordingsListRequestSortSerializer
@@ -25,8 +22,7 @@ internal class RecordingsListRequestSortSerializer
     > _stringToEnum = new()
     {
         { "id", RecordingsListRequestSort.Id },
-        { "startedAt", RecordingsListRequestSort.StartedAt },
-        { "stoppedAt", RecordingsListRequestSort.StoppedAt },
+        { "createdAt", RecordingsListRequestSort.CreatedAt },
     };
 
     private static readonly global::System.Collections.Generic.Dictionary<
@@ -35,8 +31,7 @@ internal class RecordingsListRequestSortSerializer
     > _enumToString = new()
     {
         { RecordingsListRequestSort.Id, "id" },
-        { RecordingsListRequestSort.StartedAt, "startedAt" },
-        { RecordingsListRequestSort.StoppedAt, "stoppedAt" },
+        { RecordingsListRequestSort.CreatedAt, "createdAt" },
     };
 
     public override RecordingsListRequestSort Read(

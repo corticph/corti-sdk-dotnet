@@ -7,7 +7,13 @@ namespace Corti;
 public record RecordingsListRequest
 {
     /// <summary>
-    /// Field used to sort recordings. Default is startedAt.
+    /// Return recording objects with metadata instead of IDs. Default is false.
+    /// </summary>
+    [JsonIgnore]
+    public bool? Full { get; set; }
+
+    /// <summary>
+    /// Field used to sort recordings. Default is createdAt.
     /// </summary>
     [JsonIgnore]
     public RecordingsListRequestSort? Sort { get; set; }

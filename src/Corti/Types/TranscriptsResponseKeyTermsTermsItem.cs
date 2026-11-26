@@ -11,6 +11,9 @@ public record TranscriptsResponseKeyTermsTermsItem : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// A key term, in its expected written form.
+    /// </summary>
     [JsonPropertyName("term")]
     public required string Term { get; set; }
 

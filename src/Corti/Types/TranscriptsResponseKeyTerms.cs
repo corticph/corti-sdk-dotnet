@@ -14,6 +14,9 @@ public record TranscriptsResponseKeyTerms : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The key terms used to bias speech recognition for this transcript.
+    /// </summary>
     [JsonPropertyName("terms")]
     public IEnumerable<TranscriptsResponseKeyTermsTermsItem> Terms { get; set; } =
         new List<TranscriptsResponseKeyTermsTermsItem>();
