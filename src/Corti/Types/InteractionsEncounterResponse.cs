@@ -12,10 +12,10 @@ public record InteractionsEncounterResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// A unique identifier for the encounter, essential for tracking and referencing specific patient interactions.
+    /// A unique identifier for the encounter, essential for tracking and referencing specific patient interactions. Null when the interaction was created without one.
     /// </summary>
     [JsonPropertyName("identifier")]
-    public required string Identifier { get; set; }
+    public string? Identifier { get; set; }
 
     /// <summary>
     /// Indicates the current state of the encounter, crucial for understanding the progression and current state of care.
